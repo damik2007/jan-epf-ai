@@ -93,10 +93,44 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, [messages, isOpen]);
 
-  // Synchronize language when citizen language changes
+  // Synchronize persona and language changes dynamically
   useEffect(() => {
     setActiveSpeechLang(language || "en-IN");
-  }, [language]);
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+
+    const firstName = activeCitizen.full_name.split(" ")[0];
+    const isSenior = !!activeCitizen.pension_details;
+    const balanceStr = (activeCitizen.passbook_summary?.total_balance || 0).toLocaleString("en-IN");
+    const pensionStr = activeCitizen.pension_details?.monthly_pension_amount?.toLocaleString("en-IN") || "4,250";
+
+    let greeting = "";
+    if (language.startsWith("hi")) {
+      greeting = isSenior
+        ? `नमस्ते ${firstName} जी! आपके ईपीएस-95 खाते में मासिक पेंशन ₹${pensionStr} और कुल बचत ₹${balanceStr} है। डिजिटल जीवन प्रमाण पत्र या पेंशन के बारे में पूछें।`
+        : `नमस्ते ${firstName} जी! आपके पीएफ खाते में ₹${balanceStr} जमा हैं। आप मुझसे पैसे निकालने, कंपनी बदलने, या आधार सुधार के बारे में पूछ सकते हैं।`;
+    } else if (language.startsWith("te")) {
+      greeting = isSenior
+        ? `నమస్కారం ${firstName} గారు! మీ నెలవారీ పెన్షన్ ₹${pensionStr} మరియు మొత్తం బ్యాలెన్స్ ₹${balanceStr}. జీవన్ ప్రమాణ్ లేదా పెన్షన్ వివరాల కోసం అడగండి.`
+        : `నమస్కారం ${firstName} గారు! మీ పీఎఫ్ ఖాతాలో ₹${balanceStr} ఉన్నాయి. అడ్వాన్స్ లేదా జాబ్ బదిలీ కోసం మాట్లాడండి.`;
+    } else {
+      greeting = isSenior
+        ? `Hello ${firstName}! Welcome to your EPS-95 Pension portal. Your monthly pension is ₹${pensionStr}/mo with ₹${balanceStr} in passbook. How can I assist you today?`
+        : `Hello ${firstName}! I am your Jan-EPF AI Companion. Your active EPF balance is ₹${balanceStr}. How can I help you today?`;
+    }
+
+    setMessages([
+      {
+        id: `init-${activeCitizen.uan}-${Date.now()}`,
+        sender: "copilot",
+        text: greeting,
+        spokenText: greeting,
+        time: "Just now"
+      }
+    ]);
+  }, [activeCitizen.uan, activeCitizen.full_name, language]);
 
   // Initialize Speech Recognition on Mount
   useEffect(() => {
