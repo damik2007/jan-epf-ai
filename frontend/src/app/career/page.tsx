@@ -102,29 +102,29 @@ export default function ChangedJobsHub() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center">
               <Briefcase className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl font-black text-sovereign-navy">
+            <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.careerTitle}
             </h1>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.careerSubtitle}
           </p>
         </div>
 
         {/* Tab Toggle */}
-        <div className="flex bg-slate-200 p-1 rounded-xl text-xs font-bold">
+        <div className="flex bg-slate-200 dark:bg-slate-800 p-1 rounded-xl text-xs font-bold border border-slate-300 dark:border-slate-700">
           <button
             onClick={() => setActiveTab("TRANSFER")}
             className={`px-3 py-1.5 rounded-lg transition-all ${
               activeTab === "TRANSFER"
-                ? "bg-white text-sovereign-navy shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-white dark:bg-amber-500 text-sovereign-navy dark:text-slate-950 shadow-sm"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             🔄 {t.mergeTransferButton}
@@ -133,8 +133,8 @@ export default function ChangedJobsHub() {
             onClick={() => setActiveTab("SETTLEMENT")}
             className={`px-3 py-1.5 rounded-lg transition-all ${
               activeTab === "SETTLEMENT"
-                ? "bg-white text-sovereign-navy shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-white dark:bg-amber-500 text-sovereign-navy dark:text-slate-950 shadow-sm"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             📋 {t.finalSettlementTitle}
@@ -146,41 +146,41 @@ export default function ChangedJobsHub() {
       {activeTab === "TRANSFER" && (
         <div className="space-y-6">
           {/* Member ID Timeline */}
-          <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-sm space-y-4">
-            <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-              <h3 className="text-sm font-bold text-sovereign-navy">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
+            <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
+              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                 {t.jobTimelineTitle}
               </h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full">
+              <span className="text-[10px] font-bold px-2 py-0.5 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 rounded-full">
                 2 Establishments
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Previous Employer Card */}
-              <div className="p-4 rounded-xl border-2 border-amber-200 bg-amber-50/50 space-y-2 relative">
+              <div className="p-4 rounded-xl border-2 border-amber-200 dark:border-amber-800/60 bg-amber-50/50 dark:bg-amber-950/20 space-y-2 relative">
                 <div className="flex justify-between items-start">
-                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-200 text-amber-900 rounded">
+                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-200 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 rounded">
                     {t.previousCompany} ({t.pendingTransferBadge})
                   </span>
-                  <span className="font-mono text-xs font-bold text-amber-900">
+                  <span className="font-mono text-xs font-bold text-amber-900 dark:text-amber-300">
                     ₹{(previousJob.balance || 185000).toLocaleString("en-IN")}
                   </span>
                 </div>
-                <div className="font-bold text-sm text-slate-800">
+                <div className="font-bold text-sm text-slate-800 dark:text-slate-100">
                   {previousJob.establishment_name}
                 </div>
-                <div className="text-xs text-slate-500 font-mono">
+                <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                   Member ID: {previousJob.member_id}
                 </div>
 
                 {/* Automated Exit Date Badge */}
-                <div className="pt-2 border-t border-amber-200/60 flex items-center gap-1.5 text-xs text-amber-800">
-                  <CalendarCheck className="w-4 h-4 text-amber-600 shrink-0" />
+                <div className="pt-2 border-t border-amber-200/60 dark:border-amber-800/40 flex items-center gap-1.5 text-xs text-amber-800 dark:text-amber-300">
+                  <CalendarCheck className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                   <div>
                     <span className="font-semibold">{t.autoExitDateBadge}: </span>
-                    <strong className="text-slate-900">{deducedExitDate}</strong>
-                    <span className="text-[10px] text-amber-700 block">
+                    <strong className="text-slate-900 dark:text-white">{deducedExitDate}</strong>
+                    <span className="text-[10px] text-amber-700 dark:text-amber-400 block">
                       ({t.autoExitDateDesc})
                     </span>
                   </div>
@@ -188,23 +188,23 @@ export default function ChangedJobsHub() {
               </div>
 
               {/* Current Active Employer Card */}
-              <div className="p-4 rounded-xl border-2 border-emerald-200 bg-emerald-50/50 space-y-2">
+              <div className="p-4 rounded-xl border-2 border-emerald-200 dark:border-emerald-800/60 bg-emerald-50/50 dark:bg-emerald-950/20 space-y-2">
                 <div className="flex justify-between items-start">
-                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-emerald-200 text-emerald-900 rounded">
+                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-emerald-200 dark:bg-emerald-900/60 text-emerald-900 dark:text-emerald-200 rounded">
                     {t.currentCompany}
                   </span>
-                  <span className="font-mono text-xs font-bold text-emerald-900">
+                  <span className="font-mono text-xs font-bold text-emerald-900 dark:text-emerald-300">
                     ₹{(currentJob.balance || 290000).toLocaleString("en-IN")}
                   </span>
                 </div>
-                <div className="font-bold text-sm text-slate-800">
+                <div className="font-bold text-sm text-slate-800 dark:text-slate-100">
                   {currentJob.establishment_name}
                 </div>
-                <div className="text-xs text-slate-500 font-mono">
+                <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                   Member ID: {currentJob.member_id}
                 </div>
-                <div className="pt-2 border-t border-emerald-200/60 flex items-center gap-1.5 text-xs text-emerald-800">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <div className="pt-2 border-t border-emerald-200/60 dark:border-emerald-800/40 flex items-center gap-1.5 text-xs text-emerald-800 dark:text-emerald-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <span className="font-semibold">{t.verified}</span>
                 </div>
               </div>
@@ -212,27 +212,27 @@ export default function ChangedJobsHub() {
 
             {/* Transfer Action Bar */}
             {!transferSuccess ? (
-              <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <div className="text-xs text-slate-600">
+              <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+                <div className="text-xs text-slate-600 dark:text-slate-300">
                   {t.jobTimelineDesc} (₹{(previousJob.balance || 185000).toLocaleString("en-IN")})
                 </div>
                 <button
                   onClick={handle1ClickTransfer}
                   disabled={isTransferring}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 bg-sovereign-navy hover:bg-sovereign-light text-white px-6 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all whitespace-nowrap"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 hover:bg-sovereign-light text-white px-6 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all whitespace-nowrap"
                 >
-                  <ArrowRightLeft className="w-4 h-4 text-saffron" />
+                  <ArrowRightLeft className="w-4 h-4 text-saffron dark:text-slate-950" />
                   <span>{isTransferring ? t.mergingTransfer : t.mergeTransferButton}</span>
                 </button>
               </div>
             ) : (
-              <div className="p-4 bg-emerald-50 border-2 border-emerald-400 rounded-xl flex items-center gap-3 text-xs text-emerald-900">
-                <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0" />
+              <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl flex items-center gap-3 text-xs text-emerald-900 dark:text-emerald-200">
+                <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <div>
-                  <h4 className="font-extrabold text-sm text-emerald-900">
+                  <h4 className="font-extrabold text-sm text-emerald-900 dark:text-emerald-200">
                     {t.transferSuccessTitle}
                   </h4>
-                  <p className="text-emerald-700 mt-0.5">
+                  <p className="text-emerald-700 dark:text-emerald-400 mt-0.5">
                     {t.transferSuccessDesc}
                   </p>
                 </div>
@@ -244,51 +244,51 @@ export default function ChangedJobsHub() {
 
       {/* TAB 2: FULL & FINAL SETTLEMENT (FORM 19/10C + FORM 15G ZERO-TDS) */}
       {activeTab === "SETTLEMENT" && (
-        <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-sm space-y-6">
-          <div className="flex justify-between items-center pb-3 border-b border-slate-100">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-6">
+          <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h3 className="text-sm font-bold text-sovereign-navy">
+              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                 {t.finalSettlementTitle}
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.finalSettlementDesc}
               </p>
             </div>
-            <span className="text-[10px] font-bold px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-200 rounded-full">
+            <span className="text-[10px] font-bold px-2 py-0.5 bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 rounded-full">
               Form 15G Protected
             </span>
           </div>
 
           {/* Section 192A Tax Protection Card */}
-          <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3">
+          <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-slate-700">{t.finalSettlementTitle}:</span>
-              <span className="font-mono font-extrabold text-slate-900">
+              <span className="font-bold text-slate-700 dark:text-slate-300">{t.finalSettlementTitle}:</span>
+              <span className="font-mono font-extrabold text-slate-900 dark:text-white">
                 ₹{(activeCitizen.passbook_summary?.total_balance || 150000).toLocaleString("en-IN")}
               </span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-600">{t.serviceDuration}</span>
-              <span className="font-semibold text-slate-800">
+              <span className="text-slate-600 dark:text-slate-400">{t.serviceDuration}</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-200">
                 {activeCitizen.active_employment?.total_service_years || 3.0} Years
               </span>
             </div>
 
             {/* Form 15G Auto-Check Toggle */}
-            <div className="p-3 bg-white rounded-lg border border-slate-200 flex items-start gap-3">
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 flex items-start gap-3">
               <input
                 type="checkbox"
                 id="form15g"
                 checked={form15gAccepted}
                 onChange={(e) => setForm15gAccepted(e.target.checked)}
-                className="mt-1 w-4 h-4 accent-sovereign-navy rounded cursor-pointer"
+                className="mt-1 w-4 h-4 accent-amber-500 rounded cursor-pointer"
               />
               <label htmlFor="form15g" className="text-xs cursor-pointer">
-                <strong className="text-slate-900 block font-semibold">
+                <strong className="text-slate-900 dark:text-white block font-semibold">
                   {t.zeroTdsShieldTitle}
                 </strong>
-                <span className="text-slate-500 text-[11px]">
+                <span className="text-slate-500 dark:text-slate-400 text-[11px]">
                   {t.zeroTdsShieldDesc}
                 </span>
               </label>
@@ -296,15 +296,17 @@ export default function ChangedJobsHub() {
 
             {/* TDS Result Calculation */}
             <div className={`p-3 rounded-lg border text-xs flex justify-between items-center ${
-              tdsCalc.tdsAmount === 0 ? "bg-emerald-50 border-emerald-300 text-emerald-900" : "bg-amber-50 border-amber-300 text-amber-900"
+              tdsCalc.tdsAmount === 0
+                ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200"
+                : "bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200"
             }`}>
               <div>
                 <span className="font-bold block">TDS: ₹{tdsCalc.tdsAmount} ({tdsCalc.tdsRatePercent}%)</span>
                 <span className="text-[10px]">{tdsCalc.reason}</span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] text-slate-500 block">{t.amountSanctionedLabel}</span>
-                <span className="font-mono font-extrabold text-base text-slate-900">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block">{t.amountSanctionedLabel}</span>
+                <span className="font-mono font-extrabold text-base text-slate-900 dark:text-white">
                   ₹{tdsCalc.netDisbursement.toLocaleString("en-IN")}
                 </span>
               </div>
@@ -314,19 +316,19 @@ export default function ChangedJobsHub() {
           <div className="flex justify-end">
             <button
               onClick={() => setSettlementSuccess(true)}
-              className="flex items-center gap-2 bg-sovereign-navy hover:bg-sovereign-light text-white px-7 py-3 rounded-xl font-bold text-sm shadow-md transition-all"
+              className="flex items-center gap-2 bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 hover:bg-sovereign-light text-white px-7 py-3 rounded-xl font-bold text-sm shadow-md transition-all"
             >
-              <FileCheck2 className="w-4 h-4 text-saffron" />
+              <FileCheck2 className="w-4 h-4 text-saffron dark:text-slate-950" />
               <span>{t.claimSettlementButton}</span>
             </button>
           </div>
 
           {settlementSuccess && (
-            <div className="p-4 bg-emerald-50 border-2 border-emerald-400 rounded-xl flex items-center gap-3 text-xs text-emerald-900">
-              <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0" />
+            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl flex items-center gap-3 text-xs text-emerald-900 dark:text-emerald-200">
+              <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <div>
                 <h4 className="font-extrabold text-sm">{t.sanctionConfirmedTitle}</h4>
-                <p className="text-emerald-700 mt-0.5">
+                <p className="text-emerald-700 dark:text-emerald-400 mt-0.5">
                   ₹{tdsCalc.netDisbursement.toLocaleString("en-IN")} {t.disbursedToLabel} {activeCitizen.bank_kyc.bank_name}.
                 </p>
               </div>

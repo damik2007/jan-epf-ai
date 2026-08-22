@@ -62,74 +62,74 @@ export default function MySavingsHub() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center">
               <PiggyBank className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl font-black text-sovereign-navy">
+            <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.savingsTitle}
             </h1>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.savingsSubtitle}
           </p>
         </div>
 
         <button
           onClick={() => alert("Downloading official tamper-evident PDF passbook statement...")}
-          className="flex items-center gap-1.5 text-xs font-bold bg-white border border-slate-300 hover:border-sovereign-navy text-slate-700 px-3.5 py-2 rounded-xl shadow-sm transition-all"
+          className="flex items-center gap-1.5 text-xs font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-sovereign-navy text-slate-700 dark:text-slate-200 px-3.5 py-2 rounded-xl shadow-sm transition-all"
         >
-          <Download className="w-4 h-4 text-slate-500" />
+          <Download className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           <span>Statement PDF</span>
         </button>
       </div>
 
       {/* SENIOR CITIZEN EPS-95 SPECIAL CARD (IF SENIOR) */}
       {activeCitizen.pension_details && (
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-300 p-5 shadow-sm space-y-3">
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/40 dark:to-orange-950/30 rounded-2xl border-2 border-amber-300 dark:border-amber-800 p-5 shadow-sm space-y-3">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <div className="flex items-center gap-2">
-              <Award className="w-6 h-6 text-amber-600" />
+              <Award className="w-6 h-6 text-amber-600 dark:text-amber-400" />
               <div>
-                <h3 className="text-base font-extrabold text-amber-950">
+                <h3 className="text-base font-extrabold text-amber-950 dark:text-amber-300">
                   {t.pensionTitle}
                 </h3>
-                <p className="text-xs text-amber-800">PPO Number: {activeCitizen.pension_details.ppo_number}</p>
+                <p className="text-xs text-amber-800 dark:text-amber-400">PPO Number: {activeCitizen.pension_details.ppo_number}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold px-2.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1">
+              <span className="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 rounded-full flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" /> {dlcRenewed ? "DLC Active (Valid FY 26-27)" : t.activeDLCBadge}
               </span>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-            <div className="bg-white/80 p-3 rounded-xl border border-amber-200">
-              <div className="text-[10px] text-slate-500">{t.monthlyPensionLabel}</div>
-              <div className="text-xl font-extrabold text-amber-950 font-mono">
+            <div className="bg-white/80 dark:bg-slate-900/80 p-3 rounded-xl border border-amber-200 dark:border-amber-800/60">
+              <div className="text-[10px] text-slate-500 dark:text-slate-400">{t.monthlyPensionLabel}</div>
+              <div className="text-xl font-extrabold text-amber-950 dark:text-amber-300 font-mono">
                 ₹{activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")}/mo
               </div>
             </div>
-            <div className="bg-white/80 p-3 rounded-xl border border-amber-200">
-              <div className="text-[10px] text-slate-500">Disbursement</div>
-              <div className="text-sm font-bold text-slate-800">
+            <div className="bg-white/80 dark:bg-slate-900/80 p-3 rounded-xl border border-amber-200 dark:border-amber-800/60">
+              <div className="text-[10px] text-slate-500 dark:text-slate-400">Disbursement</div>
+              <div className="text-sm font-bold text-slate-800 dark:text-slate-200">
                 {activeCitizen.pension_details.last_disbursement_date}
               </div>
             </div>
-            <div className="bg-white/80 p-3 rounded-xl border border-amber-200">
-              <div className="text-[10px] text-slate-500">{t.lifeCertificateStatus}</div>
-              <div className="text-sm font-bold text-emerald-700">
+            <div className="bg-white/80 dark:bg-slate-900/80 p-3 rounded-xl border border-amber-200 dark:border-amber-800/60">
+              <div className="text-[10px] text-slate-500 dark:text-slate-400">{t.lifeCertificateStatus}</div>
+              <div className="text-sm font-bold text-emerald-700 dark:text-emerald-400">
                 {dlcRenewed ? "Auto-Verified (Face RD)" : t.verified}
               </div>
             </div>
           </div>
 
           {/* Interactive Jeevan Pramaan Renewal Action */}
-          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-t border-amber-200/60">
-            <p className="text-xs text-amber-900 font-medium">
+          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-t border-amber-200/60 dark:border-amber-800/40">
+            <p className="text-xs text-amber-900 dark:text-amber-300 font-medium">
               💡 Jeevan Pramaan Facial Biometric Authentication is ready.
             </p>
             <button
@@ -146,19 +146,19 @@ export default function MySavingsHub() {
       )}
 
       {/* TRIPLE-SPLIT VISUAL PASSBOOK */}
-      <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-sm space-y-5">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-5">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
-            <h3 className="text-sm font-bold text-sovereign-navy">
+            <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
               {t.tripleSplitTitle}
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {t.tripleSplitDesc}
             </p>
           </div>
           <div className="text-right">
-            <span className="text-xs text-slate-500">{t.totalBalanceLabel}</span>
-            <div className="text-2xl font-black text-sovereign-navy font-mono">
+            <span className="text-xs text-slate-500 dark:text-slate-400">{t.totalBalanceLabel}</span>
+            <div className="text-2xl font-black text-sovereign-navy dark:text-white font-mono">
               ₹{totalBal.toLocaleString("en-IN")}
             </div>
           </div>
@@ -166,7 +166,7 @@ export default function MySavingsHub() {
 
         {/* Visual Progress Ratio Bar */}
         <div className="space-y-1.5">
-          <div className="h-4 w-full bg-slate-100 rounded-full overflow-hidden flex shadow-inner">
+          <div className="h-4 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden flex shadow-inner">
             <div
               style={{ width: `${totalBal > 0 ? (empShare / totalBal) * 100 : 50}%` }}
               className="bg-emerald-500 h-full hover:opacity-90 transition-all"
@@ -183,7 +183,7 @@ export default function MySavingsHub() {
               title={t.pensionFundShare}
             />
           </div>
-          <div className="flex justify-between text-[11px] font-semibold text-slate-500">
+          <div className="flex justify-between text-[11px] font-semibold text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" /> {t.employeeShare}: ₹{empShare.toLocaleString("en-IN")}
             </span>
@@ -198,99 +198,99 @@ export default function MySavingsHub() {
 
         {/* Breakdown Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
-          <div className="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/40">
-            <span className="text-[10px] font-bold text-emerald-800 uppercase">{t.employeeShare}</span>
-            <div className="text-lg font-extrabold text-emerald-950 font-mono mt-1">
+          <div className="p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50/40 dark:bg-emerald-950/20">
+            <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 uppercase">{t.employeeShare}</span>
+            <div className="text-lg font-extrabold text-emerald-950 dark:text-emerald-200 font-mono mt-1">
               ₹{empShare.toLocaleString("en-IN")}
             </div>
-            <p className="text-[10px] text-slate-500 mt-0.5">Tax-Free Withdrawable</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Tax-Free Withdrawable</p>
           </div>
 
-          <div className="p-3.5 rounded-xl border border-blue-200 bg-blue-50/40">
-            <span className="text-[10px] font-bold text-blue-800 uppercase">{t.employerShare}</span>
-            <div className="text-lg font-extrabold text-blue-950 font-mono mt-1">
+          <div className="p-3.5 rounded-xl border border-blue-200 dark:border-blue-800/60 bg-blue-50/40 dark:bg-blue-950/20">
+            <span className="text-[10px] font-bold text-blue-800 dark:text-blue-300 uppercase">{t.employerShare}</span>
+            <div className="text-lg font-extrabold text-blue-950 dark:text-blue-200 font-mono mt-1">
               ₹{emprShare.toLocaleString("en-IN")}
             </div>
-            <p className="text-[10px] text-slate-500 mt-0.5">{t.interestAccrualBadge}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{t.interestAccrualBadge}</p>
           </div>
 
-          <div className="p-3.5 rounded-xl border border-amber-200 bg-amber-50/40">
-            <span className="text-[10px] font-bold text-amber-800 uppercase">{t.interestAccrualBadge}</span>
-            <div className="text-lg font-extrabold text-amber-950 font-mono mt-1">
+          <div className="p-3.5 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50/40 dark:bg-amber-950/20">
+            <span className="text-[10px] font-bold text-amber-800 dark:text-amber-300 uppercase">{t.interestAccrualBadge}</span>
+            <div className="text-lg font-extrabold text-amber-950 dark:text-amber-200 font-mono mt-1">
               ₹{(summary.interest_credited_current_fy || 27400).toLocaleString("en-IN")}
             </div>
-            <p className="text-[10px] text-slate-500 mt-0.5">Sovereign Yield</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Sovereign Yield</p>
           </div>
         </div>
       </div>
 
       {/* EMPLOYER ECR COMPLIANCE RADAR (PF THEFT ALERT WATCHDOG) */}
-      <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm space-y-3">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-slate-100">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <Radar className="w-5 h-5 text-emerald-600 animate-pulse" />
+            <Radar className="w-5 h-5 text-emerald-600 dark:text-emerald-400 animate-pulse" />
             <div>
-              <h3 className="text-sm font-extrabold text-sovereign-navy">
+              <h3 className="text-sm font-extrabold text-sovereign-navy dark:text-white">
                 Employer ECR Compliance Radar (PF Theft Alert Watchdog)
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Statutory monthly wage challan verification for {activeCitizen.active_employment?.establishment_name || "Active Employer"}
               </p>
             </div>
           </div>
-          <span className="text-xs font-bold px-2.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1">
+          <span className="text-xs font-bold px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 rounded-full flex items-center gap-1">
             <CheckCircle2 className="w-3.5 h-3.5" /> 100% On-Time Deposits (Zero Default)
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-            <span className="text-[10px] text-slate-500 block">Last Salary Deducted</span>
-            <strong className="text-slate-800 font-mono font-bold">₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")} (12% Emp Share)</strong>
+          <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Last Salary Deducted</span>
+            <strong className="text-slate-800 dark:text-slate-200 font-mono font-bold">₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")} (12% Emp Share)</strong>
           </div>
 
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-            <span className="text-[10px] text-slate-500 block">EPFO ECR Deposit Date</span>
-            <strong className="text-emerald-700 font-bold">14th July 2026 (Before 15th Deadline)</strong>
+          <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 block">EPFO ECR Deposit Date</span>
+            <strong className="text-emerald-700 dark:text-emerald-400 font-bold">14th July 2026 (Before 15th Deadline)</strong>
           </div>
 
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-            <span className="text-[10px] text-slate-500 block">Statutory Status</span>
-            <strong className="text-emerald-700 font-bold">Protected • No Missing Challans</strong>
+          <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Statutory Status</span>
+            <strong className="text-emerald-700 dark:text-emerald-400 font-bold">Protected • No Missing Challans</strong>
           </div>
         </div>
       </div>
 
       {/* 8.25% COMPOUNDING RETIREMENT WEALTH FORECASTER */}
-      <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-sm space-y-5">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-5">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-saffron" />
-              <h3 className="text-sm font-bold text-sovereign-navy">
+              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                 {t.forecasterTitle}
               </h3>
             </div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {t.forecasterDesc}
             </p>
           </div>
 
           {/* Samriddhi Pulse Tag */}
-          <div className="bg-amber-50 border border-amber-300 px-3 py-1 rounded-xl text-right">
-            <span className="text-[10px] text-amber-800 font-bold block">{t.estimatedRetirementCorpus}</span>
-            <span className="text-xl font-black text-amber-900 font-mono">
+          <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 px-3 py-1 rounded-xl text-right">
+            <span className="text-[10px] text-amber-800 dark:text-amber-300 font-bold block">{t.estimatedRetirementCorpus}</span>
+            <span className="text-xl font-black text-amber-900 dark:text-amber-300 font-mono">
               ₹{retirementTotal.toLocaleString("en-IN")}
             </span>
           </div>
         </div>
 
         {/* Interactive Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
           <div>
-            <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+            <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               <span>{t.currentAgeLabel}</span>
-              <span className="font-bold text-sovereign-navy">{currentAge} Years</span>
+              <span className="font-bold text-sovereign-navy dark:text-white">{currentAge} Years</span>
             </div>
             <input
               type="range"
@@ -298,7 +298,7 @@ export default function MySavingsHub() {
               max="57"
               value={currentAge}
               onChange={(e) => setCurrentAge(Number(e.target.value))}
-              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sovereign-navy"
+              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
             />
             <div className="flex justify-between text-[10px] text-slate-400 mt-1">
               <span>20 yrs</span>
@@ -307,9 +307,9 @@ export default function MySavingsHub() {
           </div>
 
           <div>
-            <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
+            <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               <span>Monthly Contribution:</span>
-              <span className="font-bold text-sovereign-navy">₹{(monthlyEmp + monthlyEmpr).toLocaleString("en-IN")}</span>
+              <span className="font-bold text-sovereign-navy dark:text-white">₹{(monthlyEmp + monthlyEmpr).toLocaleString("en-IN")}</span>
             </div>
             <input
               type="range"
@@ -321,7 +321,7 @@ export default function MySavingsHub() {
                 setMonthlyEmp(Number(e.target.value));
                 setMonthlyEmpr(Number(e.target.value));
               }}
-              className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sovereign-navy"
+              className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-amber-500"
             />
             <div className="flex justify-between text-[10px] text-slate-400 mt-1">
               <span>₹2,000/mo</span>
@@ -331,10 +331,10 @@ export default function MySavingsHub() {
         </div>
 
         {/* Visual Compounding Growth Trajectory Bars */}
-        <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
-          <div className="flex justify-between text-xs font-bold text-slate-700">
+        <div className="space-y-2 bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+          <div className="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
             <span>📈 Sovereign Compounding Wealth Trajectory (8.25% Annual Yield)</span>
-            <span className="text-amber-800 font-mono">₹{retirementTotal.toLocaleString("en-IN")} at Age 58</span>
+            <span className="text-amber-800 dark:text-amber-400 font-mono">₹{retirementTotal.toLocaleString("en-IN")} at Age 58</span>
           </div>
           <div className="h-28 flex items-end gap-1.5 pt-4 px-2">
             {forecast.filter((_, idx) => idx % Math.max(1, Math.floor(forecast.length / 14)) === 0 || idx === forecast.length - 1).map((point, i, arr) => {
@@ -347,12 +347,12 @@ export default function MySavingsHub() {
                     className="w-full bg-gradient-to-t from-sovereign-navy via-emerald-600 to-amber-400 rounded-t transition-all group-hover:brightness-110 relative"
                     title={`Age ${point.age} (${point.year}): ₹${point.totalBalance.toLocaleString("en-IN")}`}
                   />
-                  <span className="text-[9px] text-slate-500 font-mono hidden sm:inline">{point.age}y</span>
+                  <span className="text-[9px] text-slate-500 dark:text-slate-400 font-mono hidden sm:inline">{point.age}y</span>
                 </div>
               );
             })}
           </div>
-          <div className="flex justify-between text-[10px] text-slate-400 border-t border-slate-200 pt-1">
+          <div className="flex justify-between text-[10px] text-slate-400 border-t border-slate-200 dark:border-slate-700 pt-1">
             <span>Age {currentAge} (Now)</span>
             <span>Compounding Multiplier: ~{((retirementTotal / Math.max(1, totalBal))).toFixed(1)}x Initial Balance</span>
             <span>Age 58 (Retirement Target)</span>
@@ -360,27 +360,27 @@ export default function MySavingsHub() {
         </div>
 
         {/* Compounding Projection Table Preview */}
-        <div className="overflow-x-auto max-h-48 rounded-xl border border-slate-200">
+        <div className="overflow-x-auto max-h-48 rounded-xl border border-slate-200 dark:border-slate-700">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-100 text-slate-600 font-bold sticky top-0">
+            <thead className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold sticky top-0">
               <tr>
                 <th className="p-2.5">Year</th>
                 <th className="p-2.5">Age</th>
                 <th className="p-2.5">{t.employeeShare}</th>
                 <th className="p-2.5">{t.employerShare}</th>
                 <th className="p-2.5">Annual Interest</th>
-                <th className="p-2.5 text-right font-extrabold text-sovereign-navy">Total Corpus</th>
+                <th className="p-2.5 text-right font-extrabold text-sovereign-navy dark:text-white">Total Corpus</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {forecast.filter((_, idx) => idx % 2 === 0 || idx === forecast.length - 1).map((row) => (
-                <tr key={row.year} className="hover:bg-slate-50">
+                <tr key={row.year} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-800 dark:text-slate-200">
                   <td className="p-2.5 font-medium">{row.year}</td>
-                  <td className="p-2.5 text-slate-500">{row.age}</td>
+                  <td className="p-2.5 text-slate-500 dark:text-slate-400">{row.age}</td>
                   <td className="p-2.5 font-mono">₹{row.employeeShare.toLocaleString("en-IN")}</td>
                   <td className="p-2.5 font-mono">₹{row.employerShare.toLocaleString("en-IN")}</td>
-                  <td className="p-2.5 font-mono text-amber-700">₹{row.annualInterest.toLocaleString("en-IN")}</td>
-                  <td className="p-2.5 text-right font-mono font-bold text-emerald-700">
+                  <td className="p-2.5 font-mono text-amber-700 dark:text-amber-400">₹{row.annualInterest.toLocaleString("en-IN")}</td>
+                  <td className="p-2.5 text-right font-mono font-bold text-emerald-700 dark:text-emerald-400">
                     ₹{row.totalBalance.toLocaleString("en-IN")}
                   </td>
                 </tr>
@@ -421,17 +421,17 @@ export default function MySavingsHub() {
       </div>
 
       {/* PASSBOOK TRANSACTION & CLAIMS SETTLEMENT LEDGER */}
-      <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-md space-y-4">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100">
+      <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-md space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-sovereign-navy text-white flex items-center justify-center font-bold">
-              <PiggyBank className="w-4 h-4 text-saffron" />
+            <div className="w-8 h-8 rounded-lg bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 flex items-center justify-center font-bold">
+              <PiggyBank className="w-4 h-4 text-saffron dark:text-slate-950" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-sovereign-navy">
+              <h3 className="text-base font-extrabold text-sovereign-navy dark:text-white">
                 Passbook Transaction & Claims Settlement Ledger
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Live immutable audit ledger with real-time claim debits and ECR wage credits
               </p>
             </div>
@@ -439,16 +439,16 @@ export default function MySavingsHub() {
 
           <button
             onClick={() => window.print()}
-            className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors border border-slate-200"
+            className="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors border border-slate-200 dark:border-slate-700"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Download Passbook PDF</span>
           </button>
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-slate-200">
+        <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-600 font-bold">
+            <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold">
               <tr>
                 <th className="p-3">Date</th>
                 <th className="p-3">Transaction Description</th>
@@ -458,98 +458,98 @@ export default function MySavingsHub() {
                 <th className="p-3 text-right">Closing Balance</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {/* Dynamic Claim Debits (From User Submissions) */}
               {claimsHistory.map((claim) => (
-                <tr key={claim.claim_id} className="bg-rose-50/40 hover:bg-rose-50/80 transition-colors">
-                  <td className="p-3 font-mono text-slate-600">{claim.timestamp || "Today"}</td>
-                  <td className="p-3 font-medium text-slate-900">
+                <tr key={claim.claim_id} className="bg-rose-50/40 dark:bg-rose-950/20 hover:bg-rose-50/80 dark:hover:bg-rose-950/40 transition-colors">
+                  <td className="p-3 font-mono text-slate-600 dark:text-slate-400">{claim.timestamp || "Today"}</td>
+                  <td className="p-3 font-medium text-slate-900 dark:text-white">
                     <span className="font-bold">{claim.claim_type.replace(/_/g, " ")}</span>
-                    <span className="block text-[10px] text-slate-500">Claim Ref: {claim.claim_id}</span>
+                    <span className="block text-[10px] text-slate-500 dark:text-slate-400">Claim Ref: {claim.claim_id}</span>
                   </td>
                   <td className="p-3">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-200 border border-rose-300 dark:border-rose-700">
                       DEBIT (Advance)
                     </span>
                   </td>
-                  <td className="p-3 font-mono font-bold text-rose-700">
+                  <td className="p-3 font-mono font-bold text-rose-700 dark:text-rose-400">
                     - ₹{(claim.amount_sanctioned || claim.amount_requested).toLocaleString("en-IN")}
                   </td>
                   <td className="p-3">
-                    <span className="text-emerald-700 font-bold flex items-center gap-1 text-[11px]">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                    <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1 text-[11px]">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                       Disbursed to {claim.dbt_account || "Bank Account"}
                     </span>
                   </td>
-                  <td className="p-3 text-right font-mono font-bold text-slate-900">
+                  <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
                     ₹{totalBal.toLocaleString("en-IN")}
                   </td>
                 </tr>
               ))}
 
               {/* Standard Monthly ECR Credits */}
-              <tr className="hover:bg-slate-50">
-                <td className="p-3 font-mono text-slate-600">14-Jul-2026</td>
-                <td className="p-3 font-medium text-slate-900">
+              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
+                <td className="p-3 font-mono text-slate-600 dark:text-slate-400">14-Jul-2026</td>
+                <td className="p-3 font-medium text-slate-900 dark:text-white">
                   <span>Monthly Wage Contribution (ECR Challan #98234)</span>
-                  <span className="block text-[10px] text-slate-500">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
+                  <span className="block text-[10px] text-slate-500 dark:text-slate-400">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
                 </td>
                 <td className="p-3">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700">
                     CREDIT (Salary)
                   </span>
                 </td>
-                <td className="p-3 font-mono font-bold text-emerald-700">
+                <td className="p-3 font-mono font-bold text-emerald-700 dark:text-emerald-400">
                   + ₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")}
                 </td>
-                <td className="p-3 text-slate-600 text-[11px]">
+                <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
                   Deposit on 14-Jul-2026 (On-Time)
                 </td>
-                <td className="p-3 text-right font-mono font-bold text-slate-900">
+                <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
                   ₹{totalBal.toLocaleString("en-IN")}
                 </td>
               </tr>
 
-              <tr className="hover:bg-slate-50">
-                <td className="p-3 font-mono text-slate-600">12-Jun-2026</td>
-                <td className="p-3 font-medium text-slate-900">
+              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
+                <td className="p-3 font-mono text-slate-600 dark:text-slate-400">12-Jun-2026</td>
+                <td className="p-3 font-medium text-slate-900 dark:text-white">
                   <span>Monthly Wage Contribution (ECR Challan #97102)</span>
-                  <span className="block text-[10px] text-slate-500">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
+                  <span className="block text-[10px] text-slate-500 dark:text-slate-400">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
                 </td>
                 <td className="p-3">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700">
                     CREDIT (Salary)
                   </span>
                 </td>
-                <td className="p-3 font-mono font-bold text-emerald-700">
+                <td className="p-3 font-mono font-bold text-emerald-700 dark:text-emerald-400">
                   + ₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")}
                 </td>
-                <td className="p-3 text-slate-600 text-[11px]">
+                <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
                   Deposit on 12-Jun-2026 (On-Time)
                 </td>
-                <td className="p-3 text-right font-mono font-bold text-slate-900">
+                <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
                   ₹{(totalBal - ((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12)).toLocaleString("en-IN")}
                 </td>
               </tr>
 
-              <tr className="hover:bg-slate-50">
-                <td className="p-3 font-mono text-slate-600">31-Mar-2026</td>
-                <td className="p-3 font-medium text-slate-900">
+              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
+                <td className="p-3 font-mono text-slate-600 dark:text-slate-400">31-Mar-2026</td>
+                <td className="p-3 font-medium text-slate-900 dark:text-white">
                   <span>FY 2025-26 Annual Statutory Interest Credit (8.25%)</span>
-                  <span className="block text-[10px] text-slate-500">EPFO Central Board of Trustees Annual Compound Settlement</span>
+                  <span className="block text-[10px] text-slate-500 dark:text-slate-400">EPFO Central Board of Trustees Annual Compound Settlement</span>
                 </td>
                 <td className="p-3">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
                     CREDIT (Interest)
                   </span>
                 </td>
-                <td className="p-3 font-mono font-bold text-amber-700">
+                <td className="p-3 font-mono font-bold text-amber-700 dark:text-amber-400">
                   + ₹{(activeCitizen.passbook_summary?.interest_credited_current_fy || 27400).toLocaleString("en-IN")}
                 </td>
-                <td className="p-3 text-slate-600 text-[11px]">
+                <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
                   Central CBT Statutory Order #2026-EPF-825
                 </td>
-                <td className="p-3 text-right font-mono font-bold text-slate-900">
+                <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
                   ₹{(totalBal - 58000).toLocaleString("en-IN")}
                 </td>
               </tr>

@@ -149,22 +149,22 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+    <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+      <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-sovereign-navy text-white flex items-center justify-center">
-            <Camera className="w-4 h-4 text-saffron" />
+          <div className="w-8 h-8 rounded-lg bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 flex items-center justify-center">
+            <Camera className="w-4 h-4 text-saffron dark:text-slate-950" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-sovereign-navy">
+            <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
               {t.chequeUploadTitle}
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {t.chequeUploadDesc}
             </p>
           </div>
         </div>
-        <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-300 rounded-full flex items-center gap-1">
+        <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 rounded-full flex items-center gap-1">
           <Zap className="w-3 h-3" /> Sub-5ms Local
         </span>
       </div>
@@ -176,7 +176,7 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-slate-300 hover:border-sovereign-navy rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all bg-slate-50 hover:bg-slate-100 min-h-[160px]"
+          className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-sovereign-navy dark:hover:border-amber-500 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 min-h-[160px]"
         >
           <input
             type="file"
@@ -185,39 +185,39 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
             accept="image/*"
             className="hidden"
           />
-          <Upload className="w-8 h-8 text-slate-400 mb-2" />
-          <p className="text-xs font-semibold text-slate-700 text-center">
+          <Upload className="w-8 h-8 text-slate-400 dark:text-slate-500 mb-2" />
+          <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 text-center">
             Click to upload Cheque or Bank Passbook photo
           </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">PNG, JPG, or WEBP (Max 5MB)</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">PNG, JPG, or WEBP (Max 5MB)</p>
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
               handleSimulateDefaultCheque();
             }}
-            className="mt-3 text-[11px] font-bold text-sovereign-navy bg-saffron/20 border border-saffron px-3 py-1 rounded-md hover:bg-saffron hover:text-sovereign-darkest transition-all"
+            className="mt-3 text-[11px] font-bold text-sovereign-navy dark:text-slate-950 bg-saffron/20 dark:bg-amber-400 border border-saffron dark:border-amber-500 px-3 py-1 rounded-md hover:bg-saffron hover:text-sovereign-darkest transition-all"
           >
             Auto-Fill Sample Verified Cheque
           </button>
         </div>
 
         {/* Real-Time Extraction & Verification Card */}
-        <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 flex flex-col justify-between">
+        <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
           <div>
-            <div className="text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 flex items-center justify-between">
+            <div className="text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2 flex items-center justify-between">
               <span>On-Site Pre-Flight Diagnostics</span>
-              {isScanning && <RefreshCw className="w-3.5 h-3.5 animate-spin text-saffron" />}
+              {isScanning && <RefreshCw className="w-3.5 h-3.5 animate-spin text-saffron dark:text-amber-400" />}
             </div>
 
             {/* Sharpness & Contrast Metrics */}
             <div className="grid grid-cols-2 gap-2 mb-3">
-              <div className="bg-white p-2 rounded-lg border border-slate-200">
-                <div className="text-[10px] text-slate-500">Image Sharpness</div>
-                <div className="text-xs font-bold text-slate-800 flex items-center gap-1 mt-0.5">
+              <div className="bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Image Sharpness</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1 mt-0.5">
                   {sharpnessScore !== null ? (
                     <>
-                      <span className={sharpnessScore >= 60 ? "text-emerald-600" : "text-amber-600"}>
+                      <span className={sharpnessScore >= 60 ? "text-emerald-600 dark:text-emerald-400" : "text-amber-600 dark:text-amber-400"}>
                         {sharpnessScore}%
                       </span>
                       <span className="text-[10px] text-slate-400 font-normal">
@@ -230,11 +230,11 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
                 </div>
               </div>
 
-              <div className="bg-white p-2 rounded-lg border border-slate-200">
-                <div className="text-[10px] text-slate-500">Name Match Score</div>
-                <div className="text-xs font-bold text-slate-800 flex items-center gap-1 mt-0.5">
+              <div className="bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+                <div className="text-[10px] text-slate-500 dark:text-slate-400">Name Match Score</div>
+                <div className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1 mt-0.5">
                   {fuzzyScore !== null ? (
-                    <span className={fuzzyScore >= 80 ? "text-emerald-600 font-extrabold" : "text-red-600"}>
+                    <span className={fuzzyScore >= 80 ? "text-emerald-600 dark:text-emerald-400 font-extrabold" : "text-red-600 dark:text-red-400"}>
                       {fuzzyScore}% Match
                     </span>
                   ) : (
@@ -246,35 +246,34 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
 
             {/* Extracted Details Breakdown */}
             <div className="space-y-1.5 text-xs">
-              <div className="flex justify-between py-1 border-b border-slate-200/60">
-                <span className="text-slate-500">Payee Name:</span>
-                <span className="font-semibold text-slate-800">{extractedName}</span>
+              <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-slate-700/60">
+                <span className="text-slate-500 dark:text-slate-400">Payee Name:</span>
+                <span className="font-semibold text-slate-800 dark:text-slate-200">{extractedName}</span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-200/60">
-                <span className="text-slate-500">Account Number:</span>
-                <span className="font-mono font-semibold text-slate-800">
+              <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-slate-700/60">
+                <span className="text-slate-500 dark:text-slate-400">Account Number:</span>
+                <span className="font-mono font-semibold text-slate-800 dark:text-slate-200">
                   {extractedAccount.slice(0, 4)}••••{extractedAccount.slice(-4)}
                 </span>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-200/60">
-                <span className="text-slate-500">IFSC Code:</span>
-                <span className="font-mono font-semibold text-slate-800 flex items-center gap-1">
+              <div className="flex justify-between py-1 border-b border-slate-200/60 dark:border-slate-700/60">
+                <span className="text-slate-500 dark:text-slate-400">IFSC Code:</span>
+                <span className="font-mono font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1">
                   {extractedIfsc}
                   {ifscDetails?.isMerged && (
-                    <span className="text-[9px] bg-amber-100 text-amber-800 px-1 rounded">Merged</span>
+                    <span className="text-[9px] bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 px-1 rounded">Merged</span>
                   )}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Penny Drop Verification Badge */}
           {pennyDropSuccess && (
-            <div className="mt-3 p-2 bg-emerald-50 border border-emerald-300 rounded-lg flex items-center gap-2 text-xs text-emerald-800">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <div className="mt-3 p-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-lg flex items-center gap-2 text-xs text-emerald-800 dark:text-emerald-200">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <div>
                 <div className="font-bold">NPCI 1-Click Penny-Drop Verified</div>
-                <div className="text-[10px] text-emerald-600">
+                <div className="text-[10px] text-emerald-600 dark:text-emerald-400">
                   Account Name matched Aadhaar database. 100% DBT ready.
                 </div>
               </div>
