@@ -324,7 +324,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
         apiUrl
       }}
     >
-      <div className={`min-h-screen flex flex-col ${seniorMode ? "senior-mode" : ""} transition-all duration-200`}>
+      <div className={`min-h-screen flex flex-col ${seniorMode ? "senior-mode" : ""}`}>
         {children}
       </div>
     </CitizenContext.Provider>

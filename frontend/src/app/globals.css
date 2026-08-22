@@ -103,16 +103,14 @@ html {
   width: 100%;
 }
 
-/* Smooth Theme Transitions */
+/* Smooth Theme Transitions — only on leaf interactive elements, NOT on layout containers */
+/* IMPORTANT: Do NOT add div, section, or header here. transition on ancestors breaks position:fixed. */
 body,
 button,
 a,
-div,
-section,
-header,
 footer,
 nav {
-  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 
 /* Touch Action & Target Optimization for Budget Mobiles (320px+) */
