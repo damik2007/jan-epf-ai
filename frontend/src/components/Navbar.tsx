@@ -201,6 +201,8 @@ export const Navbar: React.FC = () => {
               <div className="relative group">
                 <button
                   type="button"
+                  title={`CITIZEN REDESIGN PROTOTYPE | SIMULATED UAN: ${activeCitizen.uan}`}
+                  aria-label={`CITIZEN REDESIGN PROTOTYPE | SIMULATED UAN: ${activeCitizen.uan}`}
                   className="flex items-center gap-2 bg-sovereign-light border border-sovereign-accent px-3 py-1.5 rounded-lg hover:border-saffron transition-all text-left"
                 >
                   <UserCheck className="w-4 h-4 text-emerald-400" />
