@@ -69,7 +69,7 @@ export const Navbar: React.FC = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-sovereign-navy text-white shadow-lg border-b border-sovereign-light">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-sovereign-navy text-white shadow-lg border-b border-sovereign-light">
       {/* Top Sovereign Bar */}
       <div className="bg-sovereign-darkest border-b border-sovereign-navy/50 px-4 py-1.5 text-xs flex flex-wrap justify-between items-center text-slate-300">
         <div className="flex items-center gap-2">
