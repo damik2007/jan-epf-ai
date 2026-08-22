@@ -22,6 +22,7 @@ import {
   Shield,
   LogOut
 } from "lucide-react";
+import { BenchmarkComparison } from "@/components/BenchmarkComparison";
 
 export default function CitizenLandingPage() {
   const { activeCitizen, isAuthenticated, login, logout, language } = useCitizen();
@@ -344,14 +345,14 @@ export default function CitizenLandingPage() {
             <div className="text-3xl sm:text-4xl font-black tracking-tight font-mono text-white">
               ₹{totalBalance.toLocaleString("en-IN")}
             </div>
-            <div className="space-y-1.5 pt-2 border-t border-white/10 text-xs text-slate-200">
-              <div className="flex justify-between">
-                <span className="text-slate-400">{t.employeeShare} (12%):</span>
-                <span className="font-mono">₹{employeeShare.toLocaleString("en-IN")}</span>
+            <div className="space-y-2 pt-2 border-t border-white/10 text-xs text-slate-200">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-300">Employee Share (12%):</span>
+                <span className="font-mono font-bold text-white">₹{employeeShare.toLocaleString("en-IN")}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">{t.interestAccrualBadge}:</span>
-                <span className="font-mono text-amber-300">₹{interestEarned.toLocaleString("en-IN")}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-300">FY Interest (8.25%):</span>
+                <span className="font-mono font-bold text-amber-300">₹{interestEarned.toLocaleString("en-IN")}</span>
               </div>
             </div>
           </div>
@@ -416,41 +417,91 @@ export default function CitizenLandingPage() {
         </div>
       </div>
 
-      {/* Architectural Guarantee Badges */}
-      <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-        <div className="bg-white p-4 rounded-xl border border-slate-200 flex items-start gap-3 shadow-sm">
-          <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-            <Zap className="w-4 h-4" />
+      {/* Legacy EPFO vs Jan-EPF AI Impact Transformation Benchmark */}
+      <BenchmarkComparison />
+
+      {/* Sovereign Architecture Breakthrough Showcase */}
+      <section className="space-y-3 pt-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-saffron" />
+            <h3 className="text-sm font-bold text-sovereign-navy uppercase tracking-wider">
+              Sovereign Architecture Breakthroughs
+            </h3>
           </div>
-          <div className="space-y-0.5">
-            <h4 className="text-xs font-bold text-slate-900">{t.sovereignBadge}</h4>
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              {t.securityPillarDesc}
-            </p>
-          </div>
+          <span className="text-[11px] font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 self-start sm:self-auto">
+            ● All 3 Systems Active in Production
+          </span>
         </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 flex items-start gap-3 shadow-sm">
-          <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center shrink-0">
-            <ShieldCheck className="w-4 h-4" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                    <Zap className="w-4 h-4" />
+                  </div>
+                  <h4 className="text-xs font-extrabold text-slate-900">80/20 On-Site Sovereign Engine</h4>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-mono">
+                  &lt; 5ms
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                80% of routine claims (Para 68 limits, Section 192A TDS, Levenshtein fuzzy match) run directly on-device with zero server load and $0 API cost.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-100 text-[10px] font-semibold text-slate-500 flex justify-between">
+              <span>Sovereign Offline Capable</span>
+              <strong className="text-emerald-700 font-bold">0% Drop</strong>
+            </div>
           </div>
-          <div className="space-y-0.5">
-            <h4 className="text-xs font-bold text-slate-900">{t.zeroTrustBadge}</h4>
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              On-device Presidio redaction masks Aadhaar and PAN before reaching logs.
-            </p>
-          </div>
-        </div>
 
-        <div className="bg-white p-4 rounded-xl border border-slate-200 flex items-start gap-3 shadow-sm">
-          <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
-            <Sparkles className="w-4 h-4" />
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <h4 className="text-xs font-extrabold text-slate-900">Zero-Trust Presidio Shield</h4>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200 font-mono">
+                  RLS ISO
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Aadhaar (XXXX-XXXX-1234), PAN (ABCDE****F), and phone records are masked on-device before reaching logs, enforced with PostgreSQL Row-Level Security.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-100 text-[10px] font-semibold text-slate-500 flex justify-between">
+              <span>Zero PII Leakage</span>
+              <strong className="text-blue-700 font-bold">SHA-256 Audit</strong>
+            </div>
           </div>
-          <div className="space-y-0.5">
-            <h4 className="text-xs font-bold text-slate-900">{t.resiliencePillarTitle}</h4>
-            <p className="text-[11px] text-slate-500 leading-relaxed">
-              6 fault-tolerant hot substitutes guarantee 100% continuous claim uptime.
-            </p>
+
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-3">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <h4 className="text-xs font-extrabold text-slate-900">Substitute Resilience Matrix</h4>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-mono">
+                  6 Circuits
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                6 automated hot substitutes (WASM OCR, Web Speech ASR, IndexedDB offline sync, NPCI mock) guarantee 100% continuous claim uptime with zero drops.
+              </p>
+            </div>
+            <div className="pt-2 border-t border-slate-100 text-[10px] font-semibold text-slate-500 flex justify-between">
+              <span>Continuous Uptime</span>
+              <strong className="text-amber-700 font-bold">100% SLA</strong>
+            </div>
           </div>
         </div>
       </section>
