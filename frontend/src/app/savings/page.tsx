@@ -18,12 +18,34 @@ export default function MySavingsHub() {
   const { activeCitizen, claimsHistory, renewDLC, language } = useCitizen();
   const t = getTranslation(language);
 
-  const [currentAge, setCurrentAge] = useState<number>(36);
-  const [monthlyEmp, setMonthlyEmp] = useState<number>(2600);
-  const [monthlyEmpr, setMonthlyEmpr] = useState<number>(2600);
+  // Determine default starting age and monthly contribution from active persona
+  const initialAge = activeCitizen.dob
+    ? new Date().getFullYear() - new Date(activeCitizen.dob).getFullYear()
+    : activeCitizen.uan === "100982348712" ? 48 : activeCitizen.uan === "101294817203" ? 27 : activeCitizen.uan === "100112233445" ? 66 : 34;
+
+  const initialMonthlyWage = activeCitizen.passbook_summary?.monthly_wage || 20000;
+  const initialMonthlyContrib = Math.round(initialMonthlyWage * 0.12);
+
+  const [currentAge, setCurrentAge] = useState<number>(initialAge >= 58 ? 45 : initialAge);
+  const [monthlyEmp, setMonthlyEmp] = useState<number>(initialMonthlyContrib);
+  const [monthlyEmpr, setMonthlyEmpr] = useState<number>(initialMonthlyContrib);
   const [simulatedRate, setSimulatedRate] = useState<number>(8.25);
+  const [hoveredPoint, setHoveredPoint] = useState<any | null>(null);
   const [dlcRenewed, setDlcRenewed] = useState<boolean>(false);
   const [isRenewingDLC, setIsRenewingDLC] = useState<boolean>(false);
+
+  // Sync state when activeCitizen persona switches
+  React.useEffect(() => {
+    const age = activeCitizen.dob
+      ? new Date().getFullYear() - new Date(activeCitizen.dob).getFullYear()
+      : activeCitizen.uan === "100982348712" ? 48 : activeCitizen.uan === "101294817203" ? 27 : activeCitizen.uan === "100112233445" ? 66 : 34;
+    setCurrentAge(age >= 58 ? 45 : age);
+
+    const wage = activeCitizen.passbook_summary?.monthly_wage || 20000;
+    const contrib = Math.round(wage * 0.12);
+    setMonthlyEmp(contrib);
+    setMonthlyEmpr(contrib);
+  }, [activeCitizen.uan, activeCitizen.dob, activeCitizen.passbook_summary]);
 
   const handleRenewDLC = () => {
     setIsRenewingDLC(true);
@@ -330,32 +352,148 @@ export default function MySavingsHub() {
           </div>
         </div>
 
-        {/* Visual Compounding Growth Trajectory Bars */}
-        <div className="space-y-2 bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-          <div className="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
-            <span>📈 Sovereign Compounding Wealth Trajectory (8.25% Annual Yield)</span>
-            <span className="text-amber-800 dark:text-amber-400 font-mono">₹{retirementTotal.toLocaleString("en-IN")} at Age 58</span>
+        {/* Visual Compounding Growth Trajectory - High-Fidelity Interactive Graph */}
+        <div className="space-y-3 bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div>
+              <span className="text-xs font-extrabold text-slate-800 dark:text-white flex items-center gap-1.5">
+                <span>📈 Sovereign Compounding Wealth Trajectory</span>
+                <span className="text-[10px] bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold px-2 py-0.5 rounded-full border border-amber-500/30">
+                  8.25% Annual Yield
+                </span>
+              </span>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                Hover over any year to inspect deposits vs. compounded statutory interest
+              </p>
+            </div>
+            <div className="text-right">
+              <span className="text-xs font-mono font-black text-amber-700 dark:text-amber-400 bg-amber-100/60 dark:bg-amber-950/60 px-3 py-1 rounded-xl border border-amber-300 dark:border-amber-700">
+                ₹{retirementTotal.toLocaleString("en-IN")} at Age 58
+              </span>
+            </div>
           </div>
-          <div className="h-28 flex items-end gap-1.5 pt-4 px-2">
-            {forecast.filter((_, idx) => idx % Math.max(1, Math.floor(forecast.length / 14)) === 0 || idx === forecast.length - 1).map((point, i, arr) => {
-              const maxVal = arr[arr.length - 1]?.totalBalance || 1;
-              const heightPct = Math.max(10, Math.round((point.totalBalance / maxVal) * 100));
-              return (
-                <div key={point.year} className="flex-1 flex flex-col items-center gap-1 group">
-                  <div
-                    style={{ height: `${heightPct}%` }}
-                    className="w-full bg-gradient-to-t from-sovereign-navy via-emerald-600 to-amber-400 rounded-t transition-all group-hover:brightness-110 relative"
-                    title={`Age ${point.age} (${point.year}): ₹${point.totalBalance.toLocaleString("en-IN")}`}
-                  />
-                  <span className="text-[9px] text-slate-500 dark:text-slate-400 font-mono hidden sm:inline">{point.age}y</span>
-                </div>
-              );
-            })}
+
+          {/* Active Hover Data Inspector */}
+          {hoveredPoint ? (
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-amber-400/60 shadow-lg flex flex-wrap justify-between items-center gap-2 animate-in fade-in duration-150">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
+                <span className="text-xs font-bold text-slate-900 dark:text-white">
+                  Age {hoveredPoint.age} ({hoveredPoint.year})
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-3 text-xs font-mono">
+                <span className="text-slate-600 dark:text-slate-400">
+                  Deposited: <strong className="text-slate-900 dark:text-slate-200">₹{(hoveredPoint.employeeShare + hoveredPoint.employerShare).toLocaleString("en-IN")}</strong>
+                </span>
+                <span className="text-amber-600 dark:text-amber-400">
+                  Interest Earned: <strong>₹{(hoveredPoint.totalBalance - (hoveredPoint.employeeShare + hoveredPoint.employerShare)).toLocaleString("en-IN")}</strong>
+                </span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                  Total: ₹{hoveredPoint.totalBalance.toLocaleString("en-IN")}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="px-3 py-2 bg-white/60 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 flex justify-between items-center">
+              <span>💡 At retirement, ~<strong>{Math.round(((retirementTotal - ((forecast[0]?.employeeShare || 0) + (forecast[0]?.employerShare || 0) + ((monthlyEmp + monthlyEmpr) * 12 * (58 - currentAge)))) / Math.max(1, retirementTotal)) * 100)}%</strong> of your total wealth is created solely by 8.25% compounding interest.</span>
+              <span className="text-xs font-mono text-slate-400 font-bold hidden sm:inline">Tap bar to inspect</span>
+            </div>
+          )}
+
+          {/* Realistic Multi-Bar Chart with Gridlines */}
+          <div className="relative h-56 w-full pt-4 pb-2 px-2 flex flex-col justify-end">
+            {/* Background Axis Reference Lines */}
+            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 dark:opacity-30 pb-6 pt-2">
+              <div className="border-b border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400">
+                <span>₹{retirementTotal.toLocaleString("en-IN")}</span>
+                <span>Target 100%</span>
+              </div>
+              <div className="border-b border-dashed border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400">
+                <span>₹{Math.round(retirementTotal * 0.75).toLocaleString("en-IN")}</span>
+                <span>75%</span>
+              </div>
+              <div className="border-b border-dashed border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400">
+                <span>₹{Math.round(retirementTotal * 0.5).toLocaleString("en-IN")}</span>
+                <span>50%</span>
+              </div>
+              <div className="border-b border-dashed border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400">
+                <span>₹{Math.round(retirementTotal * 0.25).toLocaleString("en-IN")}</span>
+                <span>25%</span>
+              </div>
+            </div>
+
+            {/* Bars */}
+            <div className="relative z-10 h-44 flex items-end gap-1 sm:gap-2">
+              {forecast
+                .filter((_, idx) => idx % Math.max(1, Math.floor(forecast.length / 16)) === 0 || idx === forecast.length - 1)
+                .map((point, i, arr) => {
+                  const maxVal = arr[arr.length - 1]?.totalBalance || 1;
+                  const totalHeightPct = Math.max(12, Math.min(100, Math.round((point.totalBalance / maxVal) * 100)));
+                  const depositTotal = point.employeeShare + point.employerShare;
+                  const depositPct = Math.min(100, Math.round((depositTotal / point.totalBalance) * 100));
+                  const isHovered = hoveredPoint?.year === point.year;
+
+                  return (
+                    <div
+                      key={point.year}
+                      onMouseEnter={() => setHoveredPoint(point)}
+                      onMouseLeave={() => setHoveredPoint(null)}
+                      onClick={() => setHoveredPoint(point)}
+                      className="flex-1 h-full flex flex-col justify-end items-center group cursor-pointer"
+                    >
+                      {/* Bar Column Container */}
+                      <div
+                        style={{ height: `${totalHeightPct}%` }}
+                        className={`w-full rounded-t-md overflow-hidden flex flex-col justify-end transition-all duration-200 ${
+                          isHovered
+                            ? "ring-2 ring-amber-400 shadow-lg scale-105 brightness-110 z-20"
+                            : "group-hover:brightness-105"
+                        }`}
+                      >
+                        {/* Compounded Interest Segment (Top Amber Glow) */}
+                        <div
+                          style={{ height: `${100 - depositPct}%` }}
+                          className="w-full bg-gradient-to-t from-amber-500 to-amber-400"
+                          title={`Compound Interest: ₹${(point.totalBalance - depositTotal).toLocaleString("en-IN")}`}
+                        />
+                        {/* Principal Contributions Segment (Bottom Navy/Emerald) */}
+                        <div
+                          style={{ height: `${depositPct}%` }}
+                          className="w-full bg-gradient-to-t from-sovereign-navy to-emerald-600 dark:from-slate-900 dark:to-emerald-500 border-t border-emerald-400/40"
+                          title={`Direct Contributions: ₹${depositTotal.toLocaleString("en-IN")}`}
+                        />
+                      </div>
+                      {/* Age Label */}
+                      <span
+                        className={`text-[9px] font-mono mt-1 transition-colors ${
+                          isHovered
+                            ? "font-black text-amber-500 dark:text-amber-400"
+                            : "text-slate-500 dark:text-slate-400"
+                        }`}
+                      >
+                        {point.age}y
+                      </span>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
-          <div className="flex justify-between text-[10px] text-slate-400 border-t border-slate-200 dark:border-slate-700 pt-1">
-            <span>Age {currentAge} (Now)</span>
-            <span>Compounding Multiplier: ~{((retirementTotal / Math.max(1, totalBal))).toFixed(1)}x Initial Balance</span>
-            <span>Age 58 (Retirement Target)</span>
+
+          <div className="flex flex-wrap justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-700/80 pt-2 gap-2">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded bg-emerald-600" />
+                <span>Your Deposits (12% + 3.67%)</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded bg-amber-400" />
+                <span>8.25% Sovereign Compounding Interest</span>
+              </span>
+            </div>
+            <span className="font-bold text-slate-700 dark:text-slate-300 font-mono">
+              ~{((retirementTotal / Math.max(1, totalBal))).toFixed(1)}x Wealth Expansion
+            </span>
           </div>
         </div>
 
