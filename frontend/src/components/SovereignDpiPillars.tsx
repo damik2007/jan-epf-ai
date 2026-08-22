@@ -8,7 +8,6 @@ import {
   HeartHandshake,
   Globe2,
   Lock,
-  ChevronRight,
   Sparkles,
   ArrowUpRight
 } from "lucide-react";
@@ -21,28 +20,28 @@ export const SovereignDpiPillars: React.FC = () => {
   const pillars = [
     {
       id: 1,
-      title: "Quiet Sovereign Elegance",
+      title: "Sovereign UI Architecture",
       icon: ShieldCheck,
-      badge: "Deep Institutional Trust",
+      badge: "Institutional Trust",
       color: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800",
-      headline: "Deep Obsidian Navy & Tabular Numerals",
+      headline: "Tabular Numerals & High Clarity",
       points: [
-        "Fixed-width tabular numerals (`tabular-nums`) eliminate visual jitter during real-time interest compounding.",
-        "Obsidian sovereign palette (`#060D17` / `#0B132B`) with warm amber gold highlights.",
-        "Whitespace engineered for psychological reassurance during high-stress medical claims."
+        "Fixed-width tabular numerals (font-mono tabular-nums) eliminate visual jitter during real-time interest compounding.",
+        "Deep sovereign palette (#060D17 / #0B132B) with amber gold accents and high-contrast accessibility.",
+        "Calm visual hierarchy engineered to reduce anxiety during emergency medical and claim filings."
       ]
     },
     {
       id: 2,
-      title: "Sub-50ms Tactile Physics",
+      title: "Sub-50ms On-Device Engine",
       icon: Zap,
-      badge: "<16ms Optimistic UI",
+      badge: "80/20 Client Core",
       color: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800",
       headline: "Zero Full-Screen Blocking Spinners",
       points: [
-        "100% optimistic local rendering: User actions complete in 1 frame (<16ms) on-device.",
-        "Local skeleton shimmers preserve viewport hierarchy with Zero Cumulative Layout Shift (CLS = 0).",
-        "Deterministic local rule engine computes Form 31 Para 68J limits without network roundtrips."
+        "100% optimistic local execution: Routine calculations (Para 68J, TDS, Levenshtein match) run on-device in <16ms.",
+        "Local skeleton shimmers preserve viewport layout with Zero Cumulative Layout Shift (CLS = 0).",
+        "Offline-tolerant form state in IndexedDB ensures zero progress loss during network fluctuations."
       ]
     },
     {
@@ -53,75 +52,75 @@ export const SovereignDpiPillars: React.FC = () => {
       color: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800",
       headline: "Every Rupee has a Mathematical Proof",
       action: () => setExplainModalOpen(true),
-      actionLabel: "Open Live Mathematical Derivation",
+      actionLabel: "View Mathematical Derivation",
       points: [
-        "1-Click transparent drill-down for Employee Share (12%), Employer Share (3.67%), and EPS (8.33%).",
+        "1-Click transparent breakdown for Employee Share (12%), Employer Share (3.67%), and EPS (8.33%).",
         "Explicit 8.25% annual compounding monthly running balance calculation log.",
-        "Cryptographically signed ledger state with SHA-256 non-repudiation audit hash."
+        "Cryptographically verifiable ledger state with SHA-256 audit trail tokens."
       ]
     },
     {
       id: 4,
-      title: "Zero-Anxiety Defensive UX",
+      title: "Defensive Reassurance UX",
       icon: HeartHandshake,
-      badge: "5-Second Undo Grace",
+      badge: "5-Second Grace",
       color: "text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800",
       headline: "Human Language & Reassurance Safeguards",
       points: [
-        "Live Gateway Health Pulses show instant operational status for NPCI, UIDAI, and NSDL.",
-        "Plain empathetic human language replaces cryptic database codes (`ORA-01000`).",
-        "5-Second interactive undo safety buffers on all fund withdrawals to prevent accidental clicks."
+        "Live Gateway Health Pulses show real-time operational status for NPCI, UIDAI, and NSDL.",
+        "Plain empathetic human language replaces cryptic database errors (e.g. ORA-01000).",
+        "5-Second interactive undo grace period buffer on fund withdrawals to prevent accidental submissions."
       ]
     },
     {
       id: 5,
       title: "Universal Multi-Modal Reach",
       icon: Globe2,
-      badge: "Inclusive to Last Mile",
+      badge: "Inclusive DPI",
       color: "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-800",
-      headline: "4K Desktop to Sub-50KB 2G Mobile",
+      headline: "Desktop to Sub-50KB 2G Mobile",
       points: [
-        "Elder Comfort Senior Mode: 125% scaling, 56px touch ergonomics, and WCAG AAA contrast.",
+        "Elder Comfort Senior Mode: 125% font scaling, 56px touch ergonomics, and WCAG AAA contrast.",
         "Edge-TTS Neural Voice streaming across 10 Indian vernacular languages with zero API cost.",
-        "Sub-50KB lightweight client bundles functional over rural 2G/3G cellular networks."
+        "Lightweight client bundles optimized for budget mobile devices over rural 2G/3G connections."
       ]
     },
     {
       id: 6,
-      title: "Sovereign Zero-Trust Core",
+      title: "Zero-Trust Security Core",
       icon: Lock,
-      badge: "DPDP & Presidio Shield",
+      badge: "DPDP & Presidio",
       color: "text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 border-cyan-200 dark:border-cyan-800",
-      headline: "100% PII Masking & 6-Circuit Self-Healing",
+      headline: "100% PII Masking & Self-Healing Matrix",
       points: [
-        "Client-side Presidio PII tokenization masks 100% of Aadhaar and PAN before telemetry.",
+        "Client-side Presidio PII tokenization masks 100% of Aadhaar and PAN before reaching telemetry logs.",
         "Substitute Employee Resilience Matrix: 6 hot-swappable fallback circuits guaranteeing 100% uptime.",
-        "PostgreSQL Row-Level Security (RLS) policies enforcing multi-tenant boundary isolation."
+        "PostgreSQL Row-Level Security (RLS) policies enforcing strict multi-tenant boundary isolation."
       ]
     }
   ];
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
+    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-100 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
               <Sparkles className="w-4 h-4" />
             </div>
-            <h2 className="text-xl font-black text-sovereign-navy dark:text-white">
-              The 6 Pillars of a $100 Billion Sovereign DPI
+            <h2 className="text-xl sm:text-2xl font-black text-sovereign-navy dark:text-white tracking-tight">
+              Core Architectural Engineering Pillars
             </h2>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Designed for ₹21+ Lakh Crore ($250B) in public retirement assets across 70+ Million citizens.
+          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+            Engineered for ₹21+ Lakh Crore in retirement assets across 70+ Million Indian workers with zero downtime and sub-second verification.
           </p>
         </div>
 
         <button
           onClick={() => setExplainModalOpen(true)}
-          className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all shadow-md"
+          className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all shadow-md shrink-0"
         >
           <Calculator className="w-4 h-4" />
           <span>Explain Every Rupee</span>
@@ -157,12 +156,12 @@ export const SovereignDpiPillars: React.FC = () => {
                   <h3 className="text-sm font-extrabold text-sovereign-navy dark:text-white">
                     {p.id}. {p.title}
                   </h3>
-                  <div className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">
+                  <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-0.5">
                     {p.headline}
                   </div>
                 </div>
 
-                <ul className="space-y-1.5 pt-1 text-xs text-slate-600 dark:text-slate-400">
+                <ul className="space-y-1.5 pt-1 text-xs text-slate-600 dark:text-slate-300">
                   {p.points.map((pt, pIdx) => (
                     <li key={pIdx} className="flex items-start gap-1.5">
                       <span className="text-amber-500 font-bold shrink-0 mt-0.5">•</span>

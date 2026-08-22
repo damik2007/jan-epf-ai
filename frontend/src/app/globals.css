@@ -87,47 +87,6 @@
   color: #f8fafc;
 }
 
-/* Dark Mode Card & Background Overrides */
-.dark .bg-white {
-  background-color: #0c1726 !important;
-  color: #f8fafc !important;
-  border-color: #1e293b !important;
-}
-
-.dark .bg-slate-50,
-.dark .bg-slate-100 {
-  background-color: #111e33 !important;
-  color: #f8fafc !important;
-  border-color: #1e293b !important;
-}
-
-.dark .text-slate-900,
-.dark .text-slate-950,
-.dark .text-sovereign-navy {
-  color: #f8fafc !important;
-}
-
-.dark .text-slate-700,
-.dark .text-slate-800 {
-  color: #e2e8f0 !important;
-}
-
-.dark .text-slate-600,
-.dark .text-slate-500 {
-  color: #94a3b8 !important;
-}
-
-.dark .border-slate-200,
-.dark .border-slate-300,
-.dark .border-slate-100 {
-  border-color: #1e293b !important;
-}
-
-.dark .glass-card {
-  background: rgba(12, 23, 38, 0.85) !important;
-  border-color: rgba(30, 41, 59, 0.8) !important;
-}
-
 body {
   color: var(--foreground);
   background: var(--background);

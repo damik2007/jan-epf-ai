@@ -231,37 +231,37 @@ export default function NeedMoneyHub() {
                   onClick={() => setSelectedReason(r.id as any)}
                   className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                     isSelected
-                      ? "border-sovereign-navy ring-2 ring-sovereign-navy/20 shadow-md bg-white"
-                      : "border-slate-200 bg-white hover:border-slate-300"
+                      ? "border-amber-500 ring-2 ring-amber-500/20 shadow-md bg-amber-50/20 dark:bg-slate-850"
+                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700"
                   }`}
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${r.color}`}>
-                      <Icon className="w-5 h-5 text-slate-800" />
+                      <Icon className="w-5 h-5 text-slate-800 dark:text-slate-200" />
                     </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 text-slate-700 rounded-md font-mono">
+                    <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md font-mono">
                       {r.para}
                     </span>
                   </div>
-                  <h3 className="font-bold text-sm text-sovereign-navy">{r.label}</h3>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">{r.desc}</p>
+                  <h3 className="font-bold text-sm text-sovereign-navy dark:text-white">{r.label}</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{r.desc}</p>
                 </div>
               );
             })}
           </div>
 
           {/* Amount Calculation Card */}
-          <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-sm space-y-4">
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3 border-b border-slate-100">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <h3 className="text-sm font-bold text-sovereign-navy">
+                <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                   {t.eligibilityTitle}
                 </h3>
-                <p className="text-xs text-slate-500">{getReasonNote()}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{getReasonNote()}</p>
               </div>
               <div className="text-left sm:text-right">
-                <span className="text-xs text-slate-500">{t.maxSanctionable}</span>
-                <div className="text-xl font-extrabold text-emerald-600 font-mono">
+                <span className="text-xs text-slate-500 dark:text-slate-400">{t.maxSanctionable}</span>
+                <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
                   ₹{eligibility.maxAdvanceAmount.toLocaleString("en-IN")}
                 </div>
               </div>
@@ -269,9 +269,9 @@ export default function NeedMoneyHub() {
 
             {/* Range Slider */}
             <div className="space-y-2">
-              <div className="flex justify-between text-xs font-semibold text-slate-700">
+              <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
                 <span>{t.selectAdvanceAmount}</span>
-                <span className="text-base font-extrabold text-sovereign-navy font-mono">
+                <span className="text-base font-extrabold text-sovereign-navy dark:text-white font-mono">
                   ₹{requestedAmount.toLocaleString("en-IN")}
                 </span>
               </div>
@@ -315,11 +315,11 @@ export default function NeedMoneyHub() {
           />
 
           {/* Pre-Submission Claim Health Diagnostic (Success Probability Score) */}
-          <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 rounded-2xl border-2 border-emerald-300 p-5 shadow-sm space-y-3">
-            <div className="flex justify-between items-center pb-2 border-b border-emerald-200/60">
+          <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/30 dark:via-teal-950/30 dark:to-emerald-950/30 rounded-2xl border-2 border-emerald-300 dark:border-emerald-800 p-5 shadow-sm space-y-3">
+            <div className="flex justify-between items-center pb-2 border-b border-emerald-200/60 dark:border-emerald-800/60">
               <div className="flex items-center gap-2">
-                <Activity className="w-5 h-5 text-emerald-700" />
-                <h4 className="text-sm font-extrabold text-emerald-950">Pre-Flight Claim Health Diagnostic</h4>
+                <Activity className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
+                <h4 className="text-sm font-extrabold text-emerald-950 dark:text-emerald-300">Pre-Flight Claim Health Diagnostic</h4>
               </div>
               <span className="px-2.5 py-1 bg-emerald-600 text-white font-mono font-bold text-xs rounded-full shadow-2xs">
                 99% Approval Probability
@@ -327,27 +327,27 @@ export default function NeedMoneyHub() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
-              <div className="bg-white/80 p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <div>
-                  <span className="text-[10px] text-slate-500 block">Name Match Score</span>
-                  <strong className="text-slate-800 font-bold">98% (Aadhaar Verified)</strong>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Name Match Score</span>
+                  <strong className="text-slate-800 dark:text-slate-200 font-bold">98% (Aadhaar Verified)</strong>
                 </div>
               </div>
 
-              <div className="bg-white/80 p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <div>
-                  <span className="text-[10px] text-slate-500 block">Bank KYC Status</span>
-                  <strong className="text-slate-800 font-bold">Active (IFSC Verified)</strong>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Bank KYC Status</span>
+                  <strong className="text-slate-800 dark:text-slate-200 font-bold">Active (IFSC Verified)</strong>
                 </div>
               </div>
 
-              <div className="bg-white/80 p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <div>
-                  <span className="text-[10px] text-slate-500 block">Canvas Cheque Clarity</span>
-                  <strong className="text-slate-800 font-bold">100% (Zero-Blur OCR)</strong>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Canvas Cheque Clarity</span>
+                  <strong className="text-slate-800 dark:text-slate-200 font-bold">100% (Zero-Blur OCR)</strong>
                 </div>
               </div>
             </div>
@@ -383,7 +383,7 @@ export default function NeedMoneyHub() {
           <div className="flex justify-between items-center pt-2">
             <button
               onClick={() => setCurrentStep(1)}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-sovereign-navy px-4 py-2"
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-sovereign-navy dark:hover:text-white px-4 py-2"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>{t.backToReason}</span>
@@ -409,41 +409,41 @@ export default function NeedMoneyHub() {
 
       {/* STEP 3: INSTANT SETTLEMENT SUCCESS CONFIRMATION */}
       {currentStep === 3 && submittedResult && (
-        <div className="bg-white rounded-3xl border-2 border-emerald-500 p-8 shadow-xl text-center space-y-6 animate-in zoom-in-95">
-          <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-emerald-500 p-8 shadow-xl text-center space-y-6 animate-in zoom-in-95">
+          <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-inner">
             <CheckCircle2 className="w-10 h-10" />
           </div>
 
           <div className="space-y-2">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-700 bg-emerald-100 px-3 py-1 rounded-full">
+            <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/60 px-3 py-1 rounded-full">
               {t.approved}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-sovereign-navy">
+            <h2 className="text-2xl sm:text-3xl font-black text-sovereign-navy dark:text-white">
               ₹{submittedResult.amount_sanctioned.toLocaleString("en-IN")} {t.approved}
             </h2>
-            <p className="text-xs text-slate-600 max-w-md mx-auto">
+            <p className="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">
               {t.sanctionConfirmedDesc}
             </p>
           </div>
 
           {/* Audit & DBT Details */}
-          <div className="max-w-md mx-auto bg-slate-50 rounded-2xl p-4 border border-slate-200 text-xs space-y-2 text-left">
-            <div className="flex justify-between py-1 border-b border-slate-200">
-              <span className="text-slate-500">{t.claimIdLabel}</span>
-              <span className="font-mono font-bold text-slate-900">{submittedResult.claim_id}</span>
+          <div className="max-w-md mx-auto bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 text-xs space-y-2 text-left">
+            <div className="flex justify-between py-1 border-b border-slate-200 dark:border-slate-700">
+              <span className="text-slate-500 dark:text-slate-400">{t.claimIdLabel}</span>
+              <span className="font-mono font-bold text-slate-900 dark:text-white">{submittedResult.claim_id}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-slate-200">
-              <span className="text-slate-500">{t.disbursedToLabel}</span>
-              <span className="font-semibold text-slate-900">{submittedResult.direct_benefit_transfer_account}</span>
+            <div className="flex justify-between py-1 border-b border-slate-200 dark:border-slate-700">
+              <span className="text-slate-500 dark:text-slate-400">{t.disbursedToLabel}</span>
+              <span className="font-semibold text-slate-900 dark:text-white">{submittedResult.direct_benefit_transfer_account}</span>
             </div>
-            <div className="flex justify-between py-1 border-b border-slate-200">
-              <span className="text-slate-500">Status:</span>
-              <span className="font-bold text-emerald-600 flex items-center gap-1">
+            <div className="flex justify-between py-1 border-b border-slate-200 dark:border-slate-700">
+              <span className="text-slate-500 dark:text-slate-400">Status:</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5" /> Within 24 Hours (DBT Direct)
               </span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-500">{t.auditHashLabel}</span>
+              <span className="text-slate-500 dark:text-slate-400">{t.auditHashLabel}</span>
               <span className="font-mono text-[10px] text-slate-400 truncate max-w-[180px]">
                 {submittedResult.audit_trace_token}
               </span>
@@ -453,7 +453,7 @@ export default function NeedMoneyHub() {
           <div className="flex justify-center gap-3">
             <button
               onClick={() => setCurrentStep(1)}
-              className="bg-sovereign-navy text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-sovereign-light transition-all"
+              className="bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-sovereign-light transition-all"
             >
               {t.applyAnotherClaim}
             </button>
