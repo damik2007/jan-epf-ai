@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 export default function ChangedJobsHub() {
-  const { activeCitizen, addClaim, mergeEmployment, language } = useCitizen();
+  const { activeCitizen, addClaim, mergeEmployment, language, apiUrl } = useCitizen();
   const t = getTranslation(language);
 
   const [transferSuccess, setTransferSuccess] = useState<boolean>(false);
@@ -61,7 +61,7 @@ export default function ChangedJobsHub() {
   const handle1ClickTransfer = async () => {
     setIsTransferring(true);
     try {
-      const res = await fetch("http://localhost:8000/api/v1/claims/submit", {
+      const res = await fetch(`${apiUrl}/api/v1/claims/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

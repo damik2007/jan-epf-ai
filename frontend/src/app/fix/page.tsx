@@ -18,7 +18,8 @@ export default function FixDetailsHub() {
     activeCitizen,
     updateActiveCitizenKYC,
     updateActiveCitizenName,
-    language
+    language,
+    apiUrl
   } = useCitizen();
 
   const t = getTranslation(language);
@@ -68,7 +69,7 @@ export default function FixDetailsHub() {
     setIsVerifyingPennyDrop(true);
     setPennyDropResult(null);
     try {
-      const res = await fetch("http://localhost:8000/api/v1/kyc/penny-drop", {
+      const res = await fetch(`${apiUrl}/api/v1/kyc/penny-drop`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -117,7 +118,7 @@ export default function FixDetailsHub() {
   const handleLodgeGrievanceDiagnosis = async () => {
     setIsDiagnosing(true);
     try {
-      const res = await fetch("http://localhost:8000/api/v1/grievances/diagnose", {
+      const res = await fetch(`${apiUrl}/api/v1/grievances/diagnose`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

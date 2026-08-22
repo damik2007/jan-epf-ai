@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 export default function NeedMoneyHub() {
-  const { activeCitizen, addClaim, language } = useCitizen();
+  const { activeCitizen, addClaim, language, apiUrl } = useCitizen();
   const t = getTranslation(language);
 
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -94,7 +94,7 @@ export default function NeedMoneyHub() {
     };
 
     try {
-      const res = await fetch("http://localhost:8000/api/v1/claims/submit", {
+      const res = await fetch(`${apiUrl}/api/v1/claims/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(claimData),

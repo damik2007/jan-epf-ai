@@ -35,11 +35,11 @@ export default function MySavingsHub() {
   };
 
   const summary = activeCitizen.passbook_summary || {
-    total_balance: 342500,
-    employee_share: 182000,
-    employer_share: 115500,
-    pension_fund_share: 45000,
-    interest_credited_current_fy: 27400
+    total_balance: 0,
+    employee_share: 0,
+    employer_share: 0,
+    pension_fund_share: 0,
+    interest_credited_current_fy: 0
   };
 
   const totalBal = summary.total_balance || 0;
