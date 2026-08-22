@@ -98,6 +98,9 @@ interface CitizenContextType {
   setLanguage: (lang: string) => void;
   seniorMode: boolean;
   setSeniorMode: (val: boolean | ((prev: boolean) => boolean)) => void;
+  theme: "light" | "dark";
+  toggleTheme: () => void;
+  setTheme: (theme: "light" | "dark") => void;
   claimsHistory: SubmittedClaim[];
   addClaim: (claim: SubmittedClaim) => void;
   mergeEmployment: (memberId: string) => void;
@@ -115,12 +118,22 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [language, setLanguage] = useState<string>("en-IN");
   const [seniorMode, setSeniorMode] = useState<boolean>(false);
+  const [theme, setThemeState] = useState<"light" | "dark">("light");
   const [claimsHistory, setClaimsHistory] = useState<SubmittedClaim[]>([]);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-  // Check saved session on mount
+  // Check saved theme & session on mount
   useEffect(() => {
     try {
+      const savedTheme = localStorage.getItem("jan_epf_theme") as "light" | "dark" | null;
+      if (savedTheme === "dark") {
+        setThemeState("dark");
+        document.documentElement.classList.add("dark");
+      } else {
+        setThemeState("light");
+        document.documentElement.classList.remove("dark");
+      }
+
       const savedAuth = sessionStorage.getItem("jan_epf_auth");
       const savedUan = sessionStorage.getItem("jan_epf_uan");
       if (savedAuth === "true" && savedUan) {
@@ -134,6 +147,22 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // Storage unavailable
     }
   }, [citizens]);
+
+  const setTheme = (newTheme: "light" | "dark") => {
+    setThemeState(newTheme);
+    try {
+      localStorage.setItem("jan_epf_theme", newTheme);
+      if (newTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    } catch {}
+  };
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
 
   // Check if activeCitizen is Gurmeet Singh (Senior) and suggest Senior Mode
   useEffect(() => {
@@ -283,6 +312,9 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setLanguage,
         seniorMode,
         setSeniorMode,
+        theme,
+        toggleTheme,
+        setTheme,
         claimsHistory,
         addClaim,
         mergeEmployment,

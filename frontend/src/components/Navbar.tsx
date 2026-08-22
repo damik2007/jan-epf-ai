@@ -14,7 +14,9 @@ import {
   Eye,
   ShieldCheck,
   ChevronDown,
-  Zap
+  Zap,
+  Sun,
+  Moon
 } from "lucide-react";
 
 import { getTranslation } from "@/lib/translations";
@@ -32,7 +34,9 @@ export const Navbar: React.FC = () => {
     language,
     setLanguage,
     seniorMode,
-    setSeniorMode
+    setSeniorMode,
+    theme,
+    toggleTheme
   } = useCitizen();
 
   const t = getTranslation(language);
@@ -77,7 +81,26 @@ export const Navbar: React.FC = () => {
           <span className="hidden sm:inline text-slate-300">Build What Moves India Hackathon (Varun Mayya × OpenAI)</span>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
+          {/* Light / Dark Mode Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded text-xs font-bold transition-all bg-sovereign-light hover:bg-sovereign-accent text-white"
+            title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
+          >
+            {theme === "dark" ? (
+              <>
+                <Sun className="w-3.5 h-3.5 text-amber-400" />
+                <span>Light</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-3.5 h-3.5 text-blue-300" />
+                <span>Dark</span>
+              </>
+            )}
+          </button>
+
           {/* Senior Mode Toggle Button */}
           <button
             onClick={() => setSeniorMode((prev) => !prev)}

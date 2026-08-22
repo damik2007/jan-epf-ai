@@ -69,6 +69,65 @@
   color: #ffffff !important;
 }
 
+/* ==============================================================================
+   ULTRA-PREMIUM OBSIDIAN DARK MODE
+   ============================================================================== */
+.dark {
+  --background: #060d17;
+  --foreground: #f8fafc;
+  --card: #0c1726;
+  --card-foreground: #f8fafc;
+  --border: #1e293b;
+  background-color: #060d17;
+  color: #f8fafc;
+}
+
+.dark body {
+  background-color: #060d17;
+  color: #f8fafc;
+}
+
+/* Dark Mode Card & Background Overrides */
+.dark .bg-white {
+  background-color: #0c1726 !important;
+  color: #f8fafc !important;
+  border-color: #1e293b !important;
+}
+
+.dark .bg-slate-50,
+.dark .bg-slate-100 {
+  background-color: #111e33 !important;
+  color: #f8fafc !important;
+  border-color: #1e293b !important;
+}
+
+.dark .text-slate-900,
+.dark .text-slate-950,
+.dark .text-sovereign-navy {
+  color: #f8fafc !important;
+}
+
+.dark .text-slate-700,
+.dark .text-slate-800 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-600,
+.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .border-slate-200,
+.dark .border-slate-300,
+.dark .border-slate-100 {
+  border-color: #1e293b !important;
+}
+
+.dark .glass-card {
+  background: rgba(12, 23, 38, 0.85) !important;
+  border-color: rgba(30, 41, 59, 0.8) !important;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -83,6 +142,18 @@ body {
 html {
   overflow-x: hidden;
   width: 100%;
+}
+
+/* Smooth Theme Transitions */
+body,
+button,
+a,
+div,
+section,
+header,
+footer,
+nav {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
 }
 
 /* Touch Action & Target Optimization for Budget Mobiles (320px+) */
@@ -115,6 +186,16 @@ select {
   background: #94a3b8;
 }
 
+.dark ::-webkit-scrollbar-track {
+  background: #060d17;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #1e293b;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
 /* Smooth Interactive Elevations & Transitions */
 @keyframes floatSubtle {
   0%, 100% {
@@ -131,8 +212,8 @@ select {
 
 .glass-card {
   background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .smooth-tap {
@@ -140,6 +221,17 @@ select {
 }
 .smooth-tap:active {
   transform: scale(0.98);
+}
+
+.card-hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.12);
+}
+.dark .card-hover-lift:hover {
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
 /* Samriddhi golden leaf pulse animation for interest accrual */
