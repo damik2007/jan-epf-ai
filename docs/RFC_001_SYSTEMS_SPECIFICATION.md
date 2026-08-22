@@ -1296,7 +1296,84 @@ A $100 Billion platform avoids flashy 3D gimmicks or visual noise:
 
 ---
 
-## 19. Appendix: Architectural Changelog & Governance
+---
+
+## 19. Login Gateway & Evaluator Fast-Path Architecture
+
+### 19.1 Dual-Mode Authentication Overview
+The Jan-EPF AI Login Gateway decouples evaluation friction from sovereign production security:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                          LOGIN GATEWAY DUAL-MODE FUNCTIONAL ARCHITECTURE                         │
+├──────────────────────────────────────────────────┬───────────────────────────────────────────────┤
+│ MODE A: HACKATHON EVALUATOR FAST-PATH            │ MODE B: SOVEREIGN CITIZEN PRODUCTION AUTH     │
+├──────────────────────────────────────────────────┼───────────────────────────────────────────────┤
+│ • 1-Click Persona Ingestion (Zero SMS OTP delay) │ • WebAuthn / FIDO2 Passkeys (TouchID/FaceID)  │
+│ • Client-side JWT session token generation       │ • Large 6-digit Aadhaar OTP with 10-min window│
+│ • Instant State Hydration (Balance, KYC, Tenure) │ • Auto-detection of Senior Mode (Age ≥ 60)    │
+│ • Optimistic sub-30ms client-side transition     │ • Zero distorted squiggly captchas            │
+└──────────────────────────────────────────────────┴───────────────────────────────────────────────┘
+```
+
+### 19.2 The Under-the-Hood Mechanics: 1-Click Persona Ingestion
+When an evaluator clicks a persona (*e.g., Ramesh Kumar*), the platform executes a 4-step state hydration process in $<30\text{ms}$:
+
+```
+1. EVALUATOR CLICKS RAMESH
+   │
+   ▼
+2. CLIENT-SIDE JWT SIGNING
+   • Payload: { uan: "100982348712", name: "Ramesh Kumar", role: "CITIZEN", exp: 1771829384 }
+   • Signs mock JWT using HMAC-SHA256 and stores in sessionStorage
+   │
+   ▼
+3. LOCAL STATE HYDRATION (IndexedDB & React Context)
+   • Injects Ramesh's account profile (Corpus: ₹3,42,500, Employer: Precision Auto Components)
+   • Loads bank KYC status: State Bank of India (Verified Active)
+   • Pre-loads active claim eligibility (Para 68J Medical Advance eligible: ₹1,09,200)
+   │
+   ▼
+4. OPTIMISTIC ROUTING
+   • Next.js App Router performs smooth client-side transition to /dashboard
+   • Zero page reload jitter; response time < 30ms (P99)
+```
+
+### 19.3 How Jan-EPF AI Solves the 4 Flaws of the Legacy EPFO Login
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                            LEGACY LOGIN FLAWS VS. JAN-EPF AI ENGINE                              │
+├────────────────────────────┬───────────────────────────────────────┬─────────────────────────────┤
+│ Legacy EPFO Login Flaw     │ What Goes Wrong on Legacy Portal      │ How Jan-EPF AI Fixes It     │
+├────────────────────────────┼───────────────────────────────────────┼─────────────────────────────┤
+│ 1. Captcha Desync Loop     │ Squiggly distorted letters fail on    │ Zero Captchas: Uses         │
+│                            │ mobile screens; refresh causes        │ invisible Cloudflare        │
+│                            │ infinite session invalidation loops.  │ Turnstile & WebAuthn.       │
+├────────────────────────────┼───────────────────────────────────────┼─────────────────────────────┤
+│ 2. 5-Attempt Account Lock  │ Typing wrong password 5 times locks   │ Instant Self-Unlock:        │
+│                            │ UAN for 24h, requiring a physical     │ 1-tap Aadhaar biometric     │
+│                            │ branch visit to reset.                │ self-recovery with no lock. │
+├────────────────────────────┼───────────────────────────────────────┼─────────────────────────────┤
+│ 3. 3-Minute Session Drop   │ Sessions expire mid-form, losing all  │ Stateless JWT Tokens:       │
+│                            │ filled data and forcing re-login.     │ Auto-refreshing tokens with │
+│                            │                                       │ IndexedDB draft auto-save.  │
+├────────────────────────────┼───────────────────────────────────────┼─────────────────────────────┤
+│ 4. 30-Second OTP Timeout   │ Telecom SMS delays mean OTP arrives   │ Resilient 10-Min OTP:       │
+│                            │ after the 30s screen timer expires.   │ 10-minute expiry + WhatsApp │
+│                            │                                       │ backup delivery option.     │
+└────────────────────────────┴───────────────────────────────────────┴─────────────────────────────┘
+```
+
+### 19.4 Senior Pensioner Authentication Mechanics
+When an elderly citizen logs in, the platform detects age $\ge 60$ and hydrates:
+- **Biometric Passkey**: Device TouchID / FaceID for zero password memory burden.
+- **Large 60px OTP Boxes**: Auto-advancing digits with 10-minute validity.
+- **Instant Senior Mode Hydration**: Automatically toggles 125% scaling, high-contrast palette, and spoken native voice greeting.
+
+---
+
+## 20. Appendix: Architectural Changelog & Governance
 
 | Version | Date | Author | Description |
 |---|---|---|---|
@@ -1304,6 +1381,7 @@ A $100 Billion platform avoids flashy 3D gimmicks or visual noise:
 | `1.1.0` | 2026-08-22 | Damik Reddy | Added Chapter 15: Senior Citizen Accessibility Architecture & Pensioner Mode Specification (WCAG AAA, Voice DLC, 6 Pillars). |
 | `1.2.0` | 2026-08-22 | Damik Reddy | Added Chapter 16: Comprehensive 8-Segment Target Audience Problem & Feature Expectation Specification with Before-vs-After Scorecard. |
 | `1.3.0` | 2026-08-22 | Damik Reddy | Added Chapter 18: What a $100 Billion Tier Digital Public Infrastructure (DPI) Looks & Feels Like (6 Pillars of Sovereign Architecture). |
+| `1.4.0` | 2026-08-22 | Damik Reddy | Added Chapter 19: Login Gateway & Evaluator Fast-Path Architecture (Dual-Mode FSM, Zero-Captcha Turnstile, 10-Min OTP). |
 
 ```
 ====================================================================================================
