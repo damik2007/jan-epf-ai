@@ -22,11 +22,11 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql://epf_user:epf_secure_password@localhost:5432/epf_master_db"
     REDIS_URL: str = "redis://localhost:6379/0"
 
-    # Optional Cloud & Sovereign LLM Accelerator
+    # Sovereign Azure-Hosted Open-Source LLM Container (jan-epf-llm)
     OPENAI_API_KEY: Optional[str] = None
-    LLM_API_KEY: Optional[str] = None
-    LLM_MODEL: str = "gpt-4o-mini"
-    LLM_API_BASE_URL: str = "https://api.openai.com/v1"
+    LLM_API_KEY: str = "sec_epf_internal_98a7b6c5d4e3f2a1"
+    LLM_MODEL: str = "llama3.2:3b"
+    LLM_API_BASE_URL: str = "http://jan-epf-llm.internal.whitesea-6aaf591b.centralindia.azurecontainerapps.io:11434/v1"
 
     # Integration & Deployment Tokens
     GITHUB_TOKEN: Optional[str] = None
