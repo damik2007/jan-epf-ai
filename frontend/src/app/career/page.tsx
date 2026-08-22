@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 export default function ChangedJobsHub() {
-  const { activeCitizen, addClaim, language } = useCitizen();
+  const { activeCitizen, addClaim, mergeEmployment, language } = useCitizen();
   const t = getTranslation(language);
 
   const [transferSuccess, setTransferSuccess] = useState<boolean>(false);
@@ -91,6 +91,9 @@ export default function ChangedJobsHub() {
     } catch (e) {
       console.warn("Transferring locally in sovereign mode");
     } finally {
+      if (previousJob?.member_id) {
+        mergeEmployment(previousJob.member_id);
+      }
       setIsTransferring(false);
       setTransferSuccess(true);
     }

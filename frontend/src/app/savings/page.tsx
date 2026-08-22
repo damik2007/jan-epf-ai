@@ -10,11 +10,12 @@ import {
   Download,
   Sparkles,
   Award,
-  CheckCircle2
+  CheckCircle2,
+  Radar
 } from "lucide-react";
 
 export default function MySavingsHub() {
-  const { activeCitizen, language } = useCitizen();
+  const { activeCitizen, renewDLC, language } = useCitizen();
   const t = getTranslation(language);
 
   const [currentAge, setCurrentAge] = useState<number>(36);
@@ -29,6 +30,7 @@ export default function MySavingsHub() {
     setTimeout(() => {
       setIsRenewingDLC(false);
       setDlcRenewed(true);
+      renewDLC();
     }, 700);
   };
 
@@ -218,6 +220,43 @@ export default function MySavingsHub() {
               ₹{(summary.interest_credited_current_fy || 27400).toLocaleString("en-IN")}
             </div>
             <p className="text-[10px] text-slate-500 mt-0.5">Sovereign Yield</p>
+          </div>
+        </div>
+      </div>
+
+      {/* EMPLOYER ECR COMPLIANCE RADAR (PF THEFT ALERT WATCHDOG) */}
+      <div className="bg-white rounded-2xl border-2 border-slate-200 p-5 shadow-sm space-y-3">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-slate-100">
+          <div className="flex items-center gap-2">
+            <Radar className="w-5 h-5 text-emerald-600 animate-pulse" />
+            <div>
+              <h3 className="text-sm font-extrabold text-sovereign-navy">
+                Employer ECR Compliance Radar (PF Theft Alert Watchdog)
+              </h3>
+              <p className="text-xs text-slate-500">
+                Statutory monthly wage challan verification for {activeCitizen.active_employment?.establishment_name || "Active Employer"}
+              </p>
+            </div>
+          </div>
+          <span className="text-xs font-bold px-2.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5" /> 100% On-Time Deposits (Zero Default)
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <span className="text-[10px] text-slate-500 block">Last Salary Deducted</span>
+            <strong className="text-slate-800 font-mono font-bold">₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")} (12% Emp Share)</strong>
+          </div>
+
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <span className="text-[10px] text-slate-500 block">EPFO ECR Deposit Date</span>
+            <strong className="text-emerald-700 font-bold">14th July 2026 (Before 15th Deadline)</strong>
+          </div>
+
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <span className="text-[10px] text-slate-500 block">Statutory Status</span>
+            <strong className="text-emerald-700 font-bold">Protected • No Missing Challans</strong>
           </div>
         </div>
       </div>

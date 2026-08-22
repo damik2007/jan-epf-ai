@@ -99,6 +99,8 @@ interface CitizenContextType {
   setSeniorMode: (val: boolean | ((prev: boolean) => boolean)) => void;
   claimsHistory: SubmittedClaim[];
   addClaim: (claim: SubmittedClaim) => void;
+  mergeEmployment: (memberId: string) => void;
+  renewDLC: () => void;
   updateActiveCitizenKYC: (bankName: string, accountMasked: string, ifsc: string) => void;
   updateActiveCitizenName: (newName: string) => void;
   apiUrl: string;
@@ -188,6 +190,62 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const addClaim = (claim: SubmittedClaim) => {
     setClaimsHistory((prev) => [claim, ...prev]);
+    // Deduct advance amount from live active citizen passbook balance for full realism
+    setActiveCitizen((prev) => {
+      const deduction = claim.amount_sanctioned || claim.amount_requested || 0;
+      const newTotal = Math.max(0, (prev.passbook_summary?.total_balance || 0) - deduction);
+      const newEmpShare = Math.max(0, (prev.passbook_summary?.employee_share || 0) - deduction);
+      const updated = {
+        ...prev,
+        passbook_summary: {
+          ...prev.passbook_summary,
+          total_balance: newTotal,
+          employee_share: newEmpShare
+        }
+      };
+      setCitizens((all) => all.map((c) => (c.uan === updated.uan ? updated : c)));
+      return updated;
+    });
+  };
+
+  const mergeEmployment = (memberId: string) => {
+    setActiveCitizen((prev) => {
+      const targetEmp = prev.employment_history?.find((e) => e.member_id === memberId);
+      const transferAmount = targetEmp?.balance || 0;
+      const updatedHistory = (prev.employment_history || []).map((e) =>
+        e.member_id === memberId ? { ...e, transfer_status: "TRANSFERRED_AND_MERGED" } : e
+      );
+      const newTotal = (prev.passbook_summary?.total_balance || 0) + transferAmount;
+      const newEmpShare = (prev.passbook_summary?.employee_share || 0) + transferAmount;
+
+      const updated = {
+        ...prev,
+        employment_history: updatedHistory,
+        passbook_summary: {
+          ...prev.passbook_summary,
+          total_balance: newTotal,
+          employee_share: newEmpShare
+        }
+      };
+      setCitizens((all) => all.map((c) => (c.uan === updated.uan ? updated : c)));
+      return updated;
+    });
+  };
+
+  const renewDLC = () => {
+    setActiveCitizen((prev) => {
+      if (!prev.pension_details) return prev;
+      const updated = {
+        ...prev,
+        pension_details: {
+          ...prev.pension_details,
+          life_certificate_status: "VERIFIED_UNTIL_NOV_2027",
+          last_disbursement_date: "2026-08-01 (Current FY Active)"
+        }
+      };
+      setCitizens((all) => all.map((c) => (c.uan === updated.uan ? updated : c)));
+      return updated;
+    });
   };
 
   const updateActiveCitizenKYC = (bankName: string, accountMasked: string, ifsc: string) => {
@@ -231,6 +289,8 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setSeniorMode,
         claimsHistory,
         addClaim,
+        mergeEmployment,
+        renewDLC,
         updateActiveCitizenKYC,
         updateActiveCitizenName,
         apiUrl

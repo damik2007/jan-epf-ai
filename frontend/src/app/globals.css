@@ -14,54 +14,57 @@
   --emerald: #10b981;
 }
 
+/* ELDER COMFORT MODE (Senior Citizen Friendly - Soothing, High-Legibility, Zero-Glare) */
 .senior-mode {
-  font-size: 130% !important;
-  --background: #000000 !important;
-  --foreground: #ffffff !important;
-  --card: #0a0a0a !important;
-  --card-foreground: #ffffff !important;
-  --border: #facc15 !important;
-  background-color: #000000 !important;
-  color: #ffffff !important;
+  font-size: 122% !important;
+  --background: #faf8f5 !important;
+  --foreground: #0c2038 !important;
+  --card: #ffffff !important;
+  --card-foreground: #0c2038 !important;
+  --border: #d4b483 !important;
+  background-color: #faf8f5 !important;
+  color: #0c2038 !important;
 }
 
 .senior-mode * {
-  line-height: 1.65 !important;
-  border-color: #facc15 !important;
+  line-height: 1.72 !important;
 }
 
 .senior-mode .bg-white,
 .senior-mode .bg-slate-50,
 .senior-mode .bg-slate-100 {
-  background-color: #0a0a0a !important;
-  color: #ffffff !important;
-  border-color: #facc15 !important;
+  background-color: #ffffff !important;
+  color: #0c2038 !important;
+  border-color: #e2d9cc !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
 }
 
 .senior-mode .text-slate-500,
 .senior-mode .text-slate-600,
-.senior-mode .text-slate-700,
+.senior-mode .text-slate-700 {
+  color: #334e68 !important;
+  font-weight: 500 !important;
+}
+
 .senior-mode .text-slate-800,
 .senior-mode .text-slate-900,
 .senior-mode .text-sovereign-navy {
-  color: #ffffff !important;
+  color: #0c2038 !important;
+  font-weight: 800 !important;
 }
 
 .senior-mode button,
 .senior-mode a,
 .senior-mode input {
   min-height: 52px !important;
-  font-weight: 800 !important;
-  border-width: 2px !important;
-  border-color: #facc15 !important;
-  color: #facc15 !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  border-radius: 1rem !important;
 }
 
-.senior-mode .bg-sovereign-navy,
-.senior-mode .bg-emerald-600 {
-  background-color: #facc15 !important;
-  color: #000000 !important;
-  font-weight: 900 !important;
+.senior-mode .bg-sovereign-navy {
+  background-color: #0c2038 !important;
+  color: #ffffff !important;
 }
 
 body {

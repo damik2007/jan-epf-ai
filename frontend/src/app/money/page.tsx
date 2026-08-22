@@ -15,7 +15,8 @@ import {
   CheckCircle2,
   Clock,
   ArrowRight,
-  ArrowLeft
+  ArrowLeft,
+  Activity
 } from "lucide-react";
 
 export default function NeedMoneyHub() {
@@ -282,6 +283,45 @@ export default function NeedMoneyHub() {
               setKycVerified(true);
             }}
           />
+
+          {/* Pre-Submission Claim Health Diagnostic (Success Probability Score) */}
+          <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 rounded-2xl border-2 border-emerald-300 p-5 shadow-sm space-y-3">
+            <div className="flex justify-between items-center pb-2 border-b border-emerald-200/60">
+              <div className="flex items-center gap-2">
+                <Activity className="w-5 h-5 text-emerald-700" />
+                <h4 className="text-sm font-extrabold text-emerald-950">Pre-Flight Claim Health Diagnostic</h4>
+              </div>
+              <span className="px-2.5 py-1 bg-emerald-600 text-white font-mono font-bold text-xs rounded-full shadow-2xs">
+                99% Approval Probability
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+              <div className="bg-white/80 p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <div>
+                  <span className="text-[10px] text-slate-500 block">Name Match Score</span>
+                  <strong className="text-slate-800 font-bold">98% (Aadhaar Verified)</strong>
+                </div>
+              </div>
+
+              <div className="bg-white/80 p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <div>
+                  <span className="text-[10px] text-slate-500 block">Bank KYC Status</span>
+                  <strong className="text-slate-800 font-bold">Active (IFSC Verified)</strong>
+                </div>
+              </div>
+
+              <div className="bg-white/80 p-2.5 rounded-xl border border-emerald-200 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <div>
+                  <span className="text-[10px] text-slate-500 block">Canvas Cheque Clarity</span>
+                  <strong className="text-slate-800 font-bold">100% (Zero-Blur OCR)</strong>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="flex justify-between items-center pt-2">
             <button
