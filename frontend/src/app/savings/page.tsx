@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export default function MySavingsHub() {
-  const { activeCitizen, renewDLC, language } = useCitizen();
+  const { activeCitizen, claimsHistory, renewDLC, language } = useCitizen();
   const t = getTranslation(language);
 
   const [currentAge, setCurrentAge] = useState<number>(36);
@@ -418,6 +418,144 @@ export default function MySavingsHub() {
         >
           {t.verified}
         </button>
+      </div>
+
+      {/* PASSBOOK TRANSACTION & CLAIMS SETTLEMENT LEDGER */}
+      <div className="bg-white rounded-3xl border-2 border-slate-200 p-6 shadow-md space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-sovereign-navy text-white flex items-center justify-center font-bold">
+              <PiggyBank className="w-4 h-4 text-saffron" />
+            </div>
+            <div>
+              <h3 className="text-base font-extrabold text-sovereign-navy">
+                Passbook Transaction & Claims Settlement Ledger
+              </h3>
+              <p className="text-xs text-slate-500">
+                Live immutable audit ledger with real-time claim debits and ECR wage credits
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => window.print()}
+            className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors border border-slate-200"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>Download Passbook PDF</span>
+          </button>
+        </div>
+
+        <div className="overflow-x-auto rounded-2xl border border-slate-200">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-50 text-slate-600 font-bold">
+              <tr>
+                <th className="p-3">Date</th>
+                <th className="p-3">Transaction Description</th>
+                <th className="p-3">Type</th>
+                <th className="p-3">Amount</th>
+                <th className="p-3">Status & DBT Reference</th>
+                <th className="p-3 text-right">Closing Balance</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {/* Dynamic Claim Debits (From User Submissions) */}
+              {claimsHistory.map((claim) => (
+                <tr key={claim.claim_id} className="bg-rose-50/40 hover:bg-rose-50/80 transition-colors">
+                  <td className="p-3 font-mono text-slate-600">{claim.timestamp || "Today"}</td>
+                  <td className="p-3 font-medium text-slate-900">
+                    <span className="font-bold">{claim.claim_type.replace(/_/g, " ")}</span>
+                    <span className="block text-[10px] text-slate-500">Claim Ref: {claim.claim_id}</span>
+                  </td>
+                  <td className="p-3">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">
+                      DEBIT (Advance)
+                    </span>
+                  </td>
+                  <td className="p-3 font-mono font-bold text-rose-700">
+                    - ₹{(claim.amount_sanctioned || claim.amount_requested).toLocaleString("en-IN")}
+                  </td>
+                  <td className="p-3">
+                    <span className="text-emerald-700 font-bold flex items-center gap-1 text-[11px]">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                      Disbursed to {claim.dbt_account || "Bank Account"}
+                    </span>
+                  </td>
+                  <td className="p-3 text-right font-mono font-bold text-slate-900">
+                    ₹{totalBal.toLocaleString("en-IN")}
+                  </td>
+                </tr>
+              ))}
+
+              {/* Standard Monthly ECR Credits */}
+              <tr className="hover:bg-slate-50">
+                <td className="p-3 font-mono text-slate-600">14-Jul-2026</td>
+                <td className="p-3 font-medium text-slate-900">
+                  <span>Monthly Wage Contribution (ECR Challan #98234)</span>
+                  <span className="block text-[10px] text-slate-500">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
+                </td>
+                <td className="p-3">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    CREDIT (Salary)
+                  </span>
+                </td>
+                <td className="p-3 font-mono font-bold text-emerald-700">
+                  + ₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")}
+                </td>
+                <td className="p-3 text-slate-600 text-[11px]">
+                  Deposit on 14-Jul-2026 (On-Time)
+                </td>
+                <td className="p-3 text-right font-mono font-bold text-slate-900">
+                  ₹{totalBal.toLocaleString("en-IN")}
+                </td>
+              </tr>
+
+              <tr className="hover:bg-slate-50">
+                <td className="p-3 font-mono text-slate-600">12-Jun-2026</td>
+                <td className="p-3 font-medium text-slate-900">
+                  <span>Monthly Wage Contribution (ECR Challan #97102)</span>
+                  <span className="block text-[10px] text-slate-500">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
+                </td>
+                <td className="p-3">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    CREDIT (Salary)
+                  </span>
+                </td>
+                <td className="p-3 font-mono font-bold text-emerald-700">
+                  + ₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")}
+                </td>
+                <td className="p-3 text-slate-600 text-[11px]">
+                  Deposit on 12-Jun-2026 (On-Time)
+                </td>
+                <td className="p-3 text-right font-mono font-bold text-slate-900">
+                  ₹{(totalBal - ((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12)).toLocaleString("en-IN")}
+                </td>
+              </tr>
+
+              <tr className="hover:bg-slate-50">
+                <td className="p-3 font-mono text-slate-600">31-Mar-2026</td>
+                <td className="p-3 font-medium text-slate-900">
+                  <span>FY 2025-26 Annual Statutory Interest Credit (8.25%)</span>
+                  <span className="block text-[10px] text-slate-500">EPFO Central Board of Trustees Annual Compound Settlement</span>
+                </td>
+                <td className="p-3">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                    CREDIT (Interest)
+                  </span>
+                </td>
+                <td className="p-3 font-mono font-bold text-amber-700">
+                  + ₹{(activeCitizen.passbook_summary?.interest_credited_current_fy || 27400).toLocaleString("en-IN")}
+                </td>
+                <td className="p-3 text-slate-600 text-[11px]">
+                  Central CBT Statutory Order #2026-EPF-825
+                </td>
+                <td className="p-3 text-right font-mono font-bold text-slate-900">
+                  ₹{(totalBal - 58000).toLocaleString("en-IN")}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
