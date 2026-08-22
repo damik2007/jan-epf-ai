@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import mockData from "../../../data/MOCK_CITIZEN_ACCOUNTS.json";
+import mockData from "@/data/MOCK_CITIZEN_ACCOUNTS.json";
 
 export interface Citizen {
   uan: string;
