@@ -22,8 +22,11 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql://epf_user:epf_secure_password@localhost:5432/epf_master_db"
     REDIS_URL: str = "redis://localhost:6379/0"
 
-    # Optional Cloud Accelerator (Empty / None for 100% In-Browser Sovereign Local Mode)
+    # Optional Cloud & Sovereign LLM Accelerator
     OPENAI_API_KEY: Optional[str] = None
+    LLM_API_KEY: Optional[str] = None
+    LLM_MODEL: str = "gpt-4o-mini"
+    LLM_API_BASE_URL: str = "https://api.openai.com/v1"
 
     # Integration & Deployment Tokens
     GITHUB_TOKEN: Optional[str] = None

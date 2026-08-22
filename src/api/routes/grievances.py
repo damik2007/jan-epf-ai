@@ -1,16 +1,17 @@
-"""
-Jan-EPF AI: AI Grievance Copilot (EPFiGMS Modernization) Route (Agent 2).
-"""
+import json
 import uuid
 from datetime import datetime
 from typing import List
+import httpx
 from fastapi import APIRouter, HTTPException, status
+from src.core.config import settings
 from src.core.data_store import mock_store
 from src.core.engine import triage_grievance_root_cause
 from src.core.schemas import (
     GrievanceDiagnosisRequest,
     GrievanceDiagnosisResponse
 )
+from src.core.security import AntiHallucinationGuard
 
 router = APIRouter(prefix="/grievances", tags=["Grievances & AI Copilot"])
 
@@ -24,6 +25,45 @@ async def diagnose_grievance(req: GrievanceDiagnosisRequest):
             detail=f"Citizen with UAN {req.uan} not found."
         )
 
+    # 1. Check if LLM API Key is configured for deep generative triage
+    api_key = settings.LLM_API_KEY or settings.OPENAI_API_KEY
+    if api_key:
+        try:
+            prompt = (
+                f"You are Jan-EPF AI Grievance Copilot. Analyze the citizen grievance for UAN {req.uan}.\n"
+                f"Category: {req.complaint_category}\n"
+                f"Description: {req.complaint_description}\n"
+                f"Return JSON strictly conforming to: root_cause_identified (str), error_code_classification (str), "
+                f"automated_fix_available (bool), recommended_action (str), predicted_resolution_days (int)."
+            )
+            async with httpx.AsyncClient(timeout=6.0) as client:
+                llm_resp = await client.post(
+                    f"{settings.LLM_API_BASE_URL}/chat/completions",
+                    headers={
+                        "Authorization": f"Bearer {api_key}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "model": settings.LLM_MODEL,
+                        "messages": [
+                            {"role": "system", "content": "You are an expert EPFO compliance and claims arbitrator."},
+                            {"role": "user", "content": prompt}
+                        ],
+                        "response_format": {"type": "json_object"},
+                        "temperature": 0.1
+                    }
+                )
+                if llm_resp.status_code == 200:
+                    data = llm_resp.json()
+                    content = data["choices"][0]["message"]["content"]
+                    parsed = json.loads(content)
+                    parsed["uan"] = req.uan
+                    return AntiHallucinationGuard.validate_or_correct(GrievanceDiagnosisResponse, parsed)
+        except Exception:
+            # Fall back safely to deterministic sovereign engine
+            pass
+
+    # 2. Deterministic Sovereign Engine Fallback (Sub-5ms, $0 cost)
     diagnosis = triage_grievance_root_cause(
         uan=req.uan,
         complaint_category=req.complaint_category,
