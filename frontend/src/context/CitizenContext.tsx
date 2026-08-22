@@ -89,6 +89,9 @@ interface SubmittedClaim {
 interface CitizenContextType {
   citizens: Citizen[];
   activeCitizen: Citizen;
+  isAuthenticated: boolean;
+  login: (uan: string) => void;
+  logout: () => void;
   switchCitizen: (uan: string) => void;
   language: string;
   setLanguage: (lang: string) => void;
@@ -106,10 +109,28 @@ const CitizenContext = createContext<CitizenContextType | undefined>(undefined);
 export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [citizens, setCitizens] = useState<Citizen[]>(mockData.citizens as Citizen[]);
   const [activeCitizen, setActiveCitizen] = useState<Citizen>(mockData.citizens[0] as Citizen);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [language, setLanguage] = useState<string>("en-IN");
   const [seniorMode, setSeniorMode] = useState<boolean>(false);
   const [claimsHistory, setClaimsHistory] = useState<SubmittedClaim[]>([]);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+  // Check saved session on mount
+  useEffect(() => {
+    try {
+      const savedAuth = sessionStorage.getItem("jan_epf_auth");
+      const savedUan = sessionStorage.getItem("jan_epf_uan");
+      if (savedAuth === "true" && savedUan) {
+        const found = citizens.find((c) => c.uan === savedUan);
+        if (found) {
+          setActiveCitizen(found);
+          setIsAuthenticated(true);
+        }
+      }
+    } catch {
+      // Storage unavailable
+    }
+  }, [citizens]);
 
   // Check if activeCitizen is Gurmeet Singh (Senior) and suggest Senior Mode
   useEffect(() => {
@@ -118,10 +139,35 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [activeCitizen.uan]);
 
+  const login = (uan: string) => {
+    const found = citizens.find((c) => c.uan === uan);
+    if (found) {
+      setActiveCitizen(found);
+      setIsAuthenticated(true);
+      try {
+        sessionStorage.setItem("jan_epf_auth", "true");
+        sessionStorage.setItem("jan_epf_uan", uan);
+      } catch {}
+    }
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    try {
+      sessionStorage.removeItem("jan_epf_auth");
+      sessionStorage.removeItem("jan_epf_uan");
+    } catch {}
+  };
+
   const switchCitizen = (uan: string) => {
     const found = citizens.find((c) => c.uan === uan);
     if (found) {
       setActiveCitizen(found);
+      setIsAuthenticated(true);
+      try {
+        sessionStorage.setItem("jan_epf_auth", "true");
+        sessionStorage.setItem("jan_epf_uan", uan);
+      } catch {}
     }
   };
 
@@ -160,6 +206,9 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       value={{
         citizens,
         activeCitizen,
+        isAuthenticated,
+        login,
+        logout,
         switchCitizen,
         language,
         setLanguage,
