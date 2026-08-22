@@ -16,6 +16,8 @@ import {
   ChevronDown
 } from "lucide-react";
 
+import { getTranslation } from "@/lib/translations";
+
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
   const {
@@ -28,51 +30,34 @@ export const Navbar: React.FC = () => {
     setSeniorMode
   } = useCitizen();
 
+  const t = getTranslation(language);
+
   const navItems = [
     {
-      label: "I Need Money",
-      labelHi: "पैसे चाहिए",
-      labelTe: "డబ్బులు కావాలి",
-      labelTa: "பணம் தேவை",
+      label: t.navMoney,
       href: "/money",
       icon: Wallet,
       badge: "Para 68"
     },
     {
-      label: "I Changed Jobs",
-      labelHi: "नौकरी बदली",
-      labelTe: "ఉద్యోగం మారాను",
-      labelTa: "வேலை மாற்றம்",
+      label: t.navCareer,
       href: "/career",
       icon: Briefcase,
       badge: "Form 13"
     },
     {
-      label: "My Savings",
-      labelHi: "मेरी बचत",
-      labelTe: "నా పొదుపు",
-      labelTa: "என் சேமிப்பு",
+      label: t.navSavings,
       href: "/savings",
       icon: PiggyBank,
       badge: "8.25%"
     },
     {
-      label: "Fix My Details",
-      labelHi: "विवरण ठीक करें",
-      labelTe: "వివరాలు సరిదిద్దండి",
-      labelTa: "திருத்தம்",
+      label: t.navFix,
       href: "/fix",
       icon: Wrench,
       badge: "Penny Drop"
     }
   ];
-
-  const getLocalizedLabel = (item: typeof navItems[0]) => {
-    if (language === "hi-IN") return item.labelHi;
-    if (language === "te-IN") return item.labelTe;
-    if (language === "ta-IN") return item.labelTa;
-    return item.label;
-  };
 
   return (
     <header className="sticky top-0 z-50 bg-sovereign-navy text-white shadow-lg border-b border-sovereign-light">
@@ -81,10 +66,10 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="inline-block w-2.5 h-2.5 rounded-full bg-saffron animate-pulse" />
           <span className="font-semibold text-saffron tracking-wide">
-            GOVERNMENT OF INDIA • DIGITAL PUBLIC INFRASTRUCTURE
+            {t.govBanner}
           </span>
           <span className="hidden sm:inline text-slate-400">|</span>
-          <span className="hidden sm:inline text-slate-300">EPFO Modernization Prototype (70 Million Citizens)</span>
+          <span className="hidden sm:inline text-slate-300">{t.prototypeNotice}</span>
         </div>
 
         <div className="flex items-center gap-4">
@@ -99,7 +84,7 @@ export const Navbar: React.FC = () => {
             title="Toggle High-Contrast Senior Citizen Accessibility Mode"
           >
             <Eye className="w-3.5 h-3.5" />
-            <span>Senior Mode: {seniorMode ? "ON" : "OFF"}</span>
+            <span>{seniorMode ? t.seniorModeOn : t.seniorModeOff}</span>
           </button>
 
           {/* Language Selector */}
@@ -108,11 +93,11 @@ export const Navbar: React.FC = () => {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="bg-transparent text-white text-xs border-none focus:outline-none cursor-pointer"
+              className="bg-transparent text-white text-xs border-none focus:outline-none cursor-pointer font-bold"
             >
               <option value="en-IN" className="bg-slate-900 text-white">English</option>
-              <option value="hi-IN" className="bg-slate-900 text-white">हिंदी (Hindi)</option>
               <option value="te-IN" className="bg-slate-900 text-white">తెలుగు (Telugu)</option>
+              <option value="hi-IN" className="bg-slate-900 text-white">हिंदी (Hindi)</option>
               <option value="ta-IN" className="bg-slate-900 text-white">தமிழ் (Tamil)</option>
             </select>
           </div>
@@ -157,7 +142,7 @@ export const Navbar: React.FC = () => {
                   }`}
                 >
                   <Icon className="w-4 h-4" />
-                  <span>{getLocalizedLabel(item)}</span>
+                  <span>{item.label}</span>
                 </Link>
               );
             })}
@@ -227,7 +212,7 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
-              <span>{getLocalizedLabel(item)}</span>
+              <span>{item.label}</span>
             </Link>
           );
         })}

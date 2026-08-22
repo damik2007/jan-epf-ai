@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useCitizen } from "@/context/CitizenContext";
+import { getTranslation } from "@/lib/translations";
 import {
   Wallet,
   Briefcase,
@@ -11,15 +12,13 @@ import {
   ArrowRight,
   ShieldCheck,
   Zap,
-  TrendingUp,
-  Clock,
   Sparkles,
-  CheckCircle2,
-  AlertCircle
+  CheckCircle2
 } from "lucide-react";
 
 export default function CitizenLandingPage() {
-  const { activeCitizen, seniorMode, language } = useCitizen();
+  const { activeCitizen, language } = useCitizen();
+  const t = getTranslation(language);
 
   const totalBalance = activeCitizen.passbook_summary?.total_balance || 0;
   const employeeShare = activeCitizen.passbook_summary?.employee_share || 0;
@@ -27,71 +26,51 @@ export default function CitizenLandingPage() {
 
   const topicHubs = [
     {
-      title: "I Need Money",
-      titleHi: "मुझे पैसे चाहिए",
-      titleTe: "నాకు డబ్బులు కావాలి",
-      titleTa: "எனக்கு பணம் தேவை",
-      desc: "Emergency Medical (Para 68J), Housing (68B), or Marriage/Education advance with sub-2s auto-sanction.",
+      title: t.navMoney,
+      desc: t.homeMoneyDesc,
       href: "/money",
       icon: Wallet,
-      tag: "Instant 24hr DBT",
+      tag: "Para 68",
       tagColor: "bg-emerald-100 text-emerald-800 border-emerald-300",
       accent: "from-emerald-600 to-teal-700",
-      stat: "Sub-2s Direct Approval"
+      stat: "Instant DBT"
     },
     {
-      title: "I Changed Jobs",
-      titleHi: "मैंने नौकरी बदल ली",
-      titleTe: "నేను ఉద్యోగం మారాను",
-      titleTa: "நான் வேலை மாறினேன்",
-      desc: "1-Click multi-establishment PF transfer (Form 13). Auto-deduces missing Date of Exit from last ECR timestamp.",
+      title: t.navCareer,
+      desc: t.homeCareerDesc,
       href: "/career",
       icon: Briefcase,
-      tag: "Auto-Exit Deducer",
+      tag: "Form 13",
       tagColor: "bg-blue-100 text-blue-800 border-blue-300",
       accent: "from-blue-600 to-indigo-800",
-      stat: "Unified Single Ledger"
+      stat: "Auto-Exit Deducer"
     },
     {
-      title: "My Savings & Pension",
-      titleHi: "मेरी बचत और पेंशन",
-      titleTe: "నా పొదుపు మరియు పెన్షన్",
-      titleTa: "என் சேமிப்பு மற்றும் ஓய்வூதியம்",
-      desc: "Interactive visual triple-split passbook with 8.25% sovereign compounding retirement forecaster and ₹7L EDLI.",
+      title: t.navSavings,
+      desc: t.homeSavingsDesc,
       href: "/savings",
       icon: PiggyBank,
-      tag: "8.25% Sovereign Rate",
+      tag: "8.25%",
       tagColor: "bg-amber-100 text-amber-900 border-amber-300",
       accent: "from-amber-500 to-yellow-600",
-      stat: "₹7 Lakh EDLI Covered"
+      stat: "₹7 Lakh EDLI"
     },
     {
-      title: "Fix My Details",
-      titleHi: "मेरे विवरण ठीक करें",
-      titleTe: "నా వివరాలు సరిదిద్దండి",
-      titleTa: "என் விவரங்களை திருத்துங்கள்",
-      desc: "Instant Aadhaar fuzzy name check (≥85%), 1-Click Penny-Drop bank verification, and 3-way digital Joint Declaration.",
+      title: t.navFix,
+      desc: t.homeFixDesc,
       href: "/fix",
       icon: Wrench,
-      tag: "Zero-Paper 3-Way",
+      tag: "Penny Drop",
       tagColor: "bg-purple-100 text-purple-800 border-purple-300",
       accent: "from-purple-600 to-indigo-700",
-      stat: "Instant Penny Drop"
+      stat: "3-Way Digital"
     }
   ];
-
-  const getLocalizedTitle = (hub: typeof topicHubs[0]) => {
-    if (language === "hi-IN") return hub.titleHi;
-    if (language === "te-IN") return hub.titleTe;
-    if (language === "ta-IN") return hub.titleTa;
-    return hub.title;
-  };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Citizen Welcome Banner & Balance Overview */}
       <section className="bg-gradient-to-br from-sovereign-darkest via-sovereign-navy to-sovereign-light text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-sovereign-accent relative overflow-hidden">
-        {/* Subtle Decorative Elements */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-samriddhi-gold/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -99,27 +78,27 @@ export default function CitizenLandingPage() {
           <div className="space-y-2 max-w-2xl">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-saffron text-sovereign-darkest">
-                Citizen Portal • Namaste
+                {t.govBanner}
               </span>
               <span className="text-xs text-slate-300">
-                UAN: <strong className="font-mono text-white">{activeCitizen.uan}</strong>
+                {t.uanLabel}: <strong className="font-mono text-white">{activeCitizen.uan}</strong>
               </span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-              Welcome, {activeCitizen.full_name}
+              {activeCitizen.full_name}
             </h1>
             <p className="text-sm text-slate-300 leading-relaxed">
               {activeCitizen.active_employment
-                ? `Active at ${activeCitizen.active_employment.establishment_name} (${activeCitizen.active_employment.total_service_years} years service)`
+                ? `${t.activeEstablishmentLabel}: ${activeCitizen.active_employment.establishment_name} (${activeCitizen.active_employment.total_service_years} years)`
                 : activeCitizen.pension_details
-                ? `Senior Pensioner • PPO: ${activeCitizen.pension_details.ppo_number} • Scheme: ${activeCitizen.pension_details.scheme}`
-                : "Self-Employed / Gig Platform Contributor"}
+                ? `Senior Pensioner • PPO: ${activeCitizen.pension_details.ppo_number} • ${activeCitizen.pension_details.scheme}`
+                : "Gig Platform / Unorganized Contributor"}
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <div className="flex items-center gap-1.5 text-xs bg-white/10 px-3 py-1 rounded-lg backdrop-blur-sm border border-white/10 text-emerald-300">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Bank KYC: {activeCitizen.bank_kyc.bank_name} (Verified)</span>
+                <span>{t.verifiedKYCLabel}: {activeCitizen.bank_kyc.bank_name} ({t.verified})</span>
               </div>
               <div className="flex items-center gap-1.5 text-xs bg-white/10 px-3 py-1 rounded-lg backdrop-blur-sm border border-white/10 text-amber-300">
                 <Zap className="w-3.5 h-3.5" />
@@ -131,18 +110,18 @@ export default function CitizenLandingPage() {
           {/* Quick Balance Card */}
           <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl w-full lg:w-80 shadow-2xl space-y-3">
             <div className="flex justify-between items-center text-xs text-slate-300">
-              <span>Total Accumulated PF</span>
-              <span className="text-emerald-400 font-bold">● Active</span>
+              <span>{t.totalBalanceLabel}</span>
+              <span className="text-emerald-400 font-bold">● {t.verified}</span>
             </div>
             <div className="text-3xl font-black font-mono text-white tracking-tight">
               ₹{totalBalance.toLocaleString("en-IN")}
             </div>
             <div className="text-xs text-slate-300 flex justify-between border-t border-white/10 pt-2">
-              <span>Employee Share:</span>
+              <span>{t.employeeShare}:</span>
               <span className="font-semibold text-white">₹{employeeShare.toLocaleString("en-IN")}</span>
             </div>
             <div className="text-xs text-slate-300 flex justify-between">
-              <span>FY Interest Credited:</span>
+              <span>FY Interest:</span>
               <span className="font-semibold text-samriddhi-bright">₹{interestEarned.toLocaleString("en-IN")}</span>
             </div>
           </div>
@@ -154,14 +133,14 @@ export default function CitizenLandingPage() {
         <div className="flex justify-between items-end">
           <div>
             <h2 className="text-xl sm:text-2xl font-extrabold text-sovereign-navy">
-              What would you like to do today?
+              {t.quickActionsTitle}
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-              Select your life event below. Zero confusing bureaucratic forms (No Form 31/19/10C).
+              {t.homeSubtitle}
             </p>
           </div>
           <span className="hidden sm:inline-block text-xs font-semibold text-saffron-dark bg-saffron/10 px-3 py-1 rounded-full border border-saffron/30">
-            Topic-Centric Intent Standard
+            {t.sovereignBadge}
           </span>
         </div>
 
@@ -186,7 +165,7 @@ export default function CitizenLandingPage() {
 
                   <div>
                     <h3 className="text-lg font-bold text-sovereign-navy group-hover:text-saffron-dark transition-colors">
-                      {getLocalizedTitle(hub)}
+                      {hub.title}
                     </h3>
                     <p className="text-xs text-slate-600 mt-1 leading-relaxed">
                       {hub.desc}
@@ -212,9 +191,9 @@ export default function CitizenLandingPage() {
               <Zap className="w-4 h-4" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-slate-900">80/20 On-Site Engine</h4>
+              <h4 className="text-xs font-bold text-slate-900">{t.sovereignBadge}</h4>
               <p className="text-[11px] text-slate-600 mt-0.5">
-                Math, fuzzy name matching, and canvas sharpness run in &lt;5ms on your browser at $0 API cost.
+                {t.homeSubtitle}
               </p>
             </div>
           </div>
@@ -224,9 +203,9 @@ export default function CitizenLandingPage() {
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-slate-900">Zero-Trust & RLS Shield</h4>
+              <h4 className="text-xs font-bold text-slate-900">{t.securityPillarTitle}</h4>
               <p className="text-[11px] text-slate-600 mt-0.5">
-                Aadhaar and PAN masked on-device. Multi-tenant PostgreSQL Row-Level Security isolation.
+                {t.securityPillarDesc}
               </p>
             </div>
           </div>
@@ -236,9 +215,9 @@ export default function CitizenLandingPage() {
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-slate-900">Substitute Resilience</h4>
+              <h4 className="text-xs font-bold text-slate-900">{t.resiliencePillarTitle}</h4>
               <p className="text-[11px] text-slate-600 mt-0.5">
-                Hot fallbacks for voice, OCR, and databases guarantee zero downtime or transaction drops.
+                {t.resiliencePillarDesc}
               </p>
             </div>
           </div>

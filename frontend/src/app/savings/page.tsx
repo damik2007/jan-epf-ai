@@ -3,22 +3,19 @@
 import React, { useState } from "react";
 import { useCitizen } from "@/context/CitizenContext";
 import { calculatePassbookCompounding } from "@/lib/deterministicEngine";
+import { getTranslation } from "@/lib/translations";
 import {
   PiggyBank,
-  TrendingUp,
   Shield,
-  HeartHandshake,
   Download,
-  Calendar,
   Sparkles,
   Award,
-  CheckCircle2,
-  Clock,
-  Zap
+  CheckCircle2
 } from "lucide-react";
 
 export default function MySavingsHub() {
-  const { activeCitizen } = useCitizen();
+  const { activeCitizen, language } = useCitizen();
+  const t = getTranslation(language);
 
   const [currentAge, setCurrentAge] = useState<number>(36);
   const [monthlyEmp, setMonthlyEmp] = useState<number>(2600);
@@ -60,11 +57,11 @@ export default function MySavingsHub() {
               <PiggyBank className="w-5 h-5" />
             </div>
             <h1 className="text-2xl font-black text-sovereign-navy">
-              My Savings & Pension Forecaster
+              {t.savingsTitle}
             </h1>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Visual Triple-Split Passbook • 8.25% Sovereign Compounding Wealth Curve • ₹7L EDLI Insurance
+            {t.savingsSubtitle}
           </p>
         </div>
 
@@ -73,7 +70,7 @@ export default function MySavingsHub() {
           className="flex items-center gap-1.5 text-xs font-bold bg-white border border-slate-300 hover:border-sovereign-navy text-slate-700 px-3.5 py-2 rounded-xl shadow-sm transition-all"
         >
           <Download className="w-4 h-4 text-slate-500" />
-          <span>Download Statement</span>
+          <span>Statement PDF</span>
         </button>
       </div>
 
@@ -85,33 +82,33 @@ export default function MySavingsHub() {
               <Award className="w-6 h-6 text-amber-600" />
               <div>
                 <h3 className="text-base font-extrabold text-amber-950">
-                  EPS-95 Senior Citizen Monthly Pension Card
+                  {t.pensionTitle}
                 </h3>
                 <p className="text-xs text-amber-800">PPO Number: {activeCitizen.pension_details.ppo_number}</p>
               </div>
             </div>
             <span className="text-xs font-bold px-2.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Life Certificate Active
+              <CheckCircle2 className="w-3.5 h-3.5" /> {t.activeDLCBadge}
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
             <div className="bg-white/80 p-3 rounded-xl border border-amber-200">
-              <div className="text-[10px] text-slate-500">Monthly Pension</div>
+              <div className="text-[10px] text-slate-500">{t.monthlyPensionLabel}</div>
               <div className="text-xl font-extrabold text-amber-950 font-mono">
                 ₹{activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")}/mo
               </div>
             </div>
             <div className="bg-white/80 p-3 rounded-xl border border-amber-200">
-              <div className="text-[10px] text-slate-500">Last Disbursed Date</div>
+              <div className="text-[10px] text-slate-500">Disbursement</div>
               <div className="text-sm font-bold text-slate-800">
                 {activeCitizen.pension_details.last_disbursement_date}
               </div>
             </div>
             <div className="bg-white/80 p-3 rounded-xl border border-amber-200">
-              <div className="text-[10px] text-slate-500">Next DLC Renewal Window</div>
+              <div className="text-[10px] text-slate-500">{t.lifeCertificateStatus}</div>
               <div className="text-sm font-bold text-emerald-700">
-                November 2026
+                {t.verified}
               </div>
             </div>
           </div>
@@ -123,14 +120,14 @@ export default function MySavingsHub() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100">
           <div>
             <h3 className="text-sm font-bold text-sovereign-navy">
-              Interactive Triple-Split Passbook Architecture
+              {t.tripleSplitTitle}
             </h3>
             <p className="text-xs text-slate-500">
-              Statutory 12% Employee + 3.67% Employer PF + 8.33% EPS Pension Fund
+              {t.tripleSplitDesc}
             </p>
           </div>
           <div className="text-right">
-            <span className="text-xs text-slate-500">Total Accumulation</span>
+            <span className="text-xs text-slate-500">{t.totalBalanceLabel}</span>
             <div className="text-2xl font-black text-sovereign-navy font-mono">
               ₹{totalBal.toLocaleString("en-IN")}
             </div>
@@ -143,28 +140,28 @@ export default function MySavingsHub() {
             <div
               style={{ width: `${totalBal > 0 ? (empShare / totalBal) * 100 : 50}%` }}
               className="bg-emerald-500 h-full hover:opacity-90 transition-all"
-              title="Employee Share (12%)"
+              title={t.employeeShare}
             />
             <div
               style={{ width: `${totalBal > 0 ? (emprShare / totalBal) * 100 : 35}%` }}
               className="bg-blue-500 h-full hover:opacity-90 transition-all"
-              title="Employer Share (3.67%)"
+              title={t.employerShare}
             />
             <div
               style={{ width: `${totalBal > 0 ? (epsShare / totalBal) * 100 : 15}%` }}
               className="bg-amber-500 h-full hover:opacity-90 transition-all"
-              title="Pension Fund (8.33%)"
+              title={t.pensionFundShare}
             />
           </div>
           <div className="flex justify-between text-[11px] font-semibold text-slate-500">
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" /> Employee (12%): ₹{empShare.toLocaleString("en-IN")}
+              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" /> {t.employeeShare}: ₹{empShare.toLocaleString("en-IN")}
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" /> Employer (3.67%): ₹{emprShare.toLocaleString("en-IN")}
+              <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" /> {t.employerShare}: ₹{emprShare.toLocaleString("en-IN")}
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" /> EPS Pension: ₹{epsShare.toLocaleString("en-IN")}
+              <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" /> {t.pensionFundShare}: ₹{epsShare.toLocaleString("en-IN")}
             </span>
           </div>
         </div>
@@ -172,27 +169,27 @@ export default function MySavingsHub() {
         {/* Breakdown Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
           <div className="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/40">
-            <span className="text-[10px] font-bold text-emerald-800 uppercase">Employee Share (12%)</span>
+            <span className="text-[10px] font-bold text-emerald-800 uppercase">{t.employeeShare}</span>
             <div className="text-lg font-extrabold text-emerald-950 font-mono mt-1">
               ₹{empShare.toLocaleString("en-IN")}
             </div>
-            <p className="text-[10px] text-slate-500 mt-0.5">100% Tax-Free Withdrawable</p>
+            <p className="text-[10px] text-slate-500 mt-0.5">Tax-Free Withdrawable</p>
           </div>
 
           <div className="p-3.5 rounded-xl border border-blue-200 bg-blue-50/40">
-            <span className="text-[10px] font-bold text-blue-800 uppercase">Employer Share (3.67%)</span>
+            <span className="text-[10px] font-bold text-blue-800 uppercase">{t.employerShare}</span>
             <div className="text-lg font-extrabold text-blue-950 font-mono mt-1">
               ₹{emprShare.toLocaleString("en-IN")}
             </div>
-            <p className="text-[10px] text-slate-500 mt-0.5">Compounding at 8.25% Sovereign Rate</p>
+            <p className="text-[10px] text-slate-500 mt-0.5">{t.interestAccrualBadge}</p>
           </div>
 
           <div className="p-3.5 rounded-xl border border-amber-200 bg-amber-50/40">
-            <span className="text-[10px] font-bold text-amber-800 uppercase">FY Interest Credited</span>
+            <span className="text-[10px] font-bold text-amber-800 uppercase">{t.interestAccrualBadge}</span>
             <div className="text-lg font-extrabold text-amber-950 font-mono mt-1">
               ₹{(summary.interest_credited_current_fy || 27400).toLocaleString("en-IN")}
             </div>
-            <p className="text-[10px] text-slate-500 mt-0.5">Guaranteed Government Yield</p>
+            <p className="text-[10px] text-slate-500 mt-0.5">Sovereign Yield</p>
           </div>
         </div>
       </div>
@@ -204,17 +201,17 @@ export default function MySavingsHub() {
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-saffron" />
               <h3 className="text-sm font-bold text-sovereign-navy">
-                8.25% Sovereign Compounding Wealth Forecaster (Age 58)
+                {t.forecasterTitle}
               </h3>
             </div>
             <p className="text-xs text-slate-500">
-              Tax-free compounding growth simulator backed by Ministry of Labour & Employment.
+              {t.forecasterDesc}
             </p>
           </div>
 
           {/* Samriddhi Pulse Tag */}
           <div className="bg-amber-50 border border-amber-300 px-3 py-1 rounded-xl text-right">
-            <span className="text-[10px] text-amber-800 font-bold block">Projected Corpus at Age 58</span>
+            <span className="text-[10px] text-amber-800 font-bold block">{t.estimatedRetirementCorpus}</span>
             <span className="text-xl font-black text-amber-900 font-mono">
               ₹{retirementTotal.toLocaleString("en-IN")}
             </span>
@@ -225,7 +222,7 @@ export default function MySavingsHub() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
           <div>
             <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-              <span>Your Current Age:</span>
+              <span>{t.currentAgeLabel}</span>
               <span className="font-bold text-sovereign-navy">{currentAge} Years</span>
             </div>
             <input
@@ -238,13 +235,13 @@ export default function MySavingsHub() {
             />
             <div className="flex justify-between text-[10px] text-slate-400 mt-1">
               <span>20 yrs</span>
-              <span>Retirement Target: 58 yrs ({58 - currentAge} years compounding)</span>
+              <span>{t.retirementAgeLabel}: 58 yrs ({58 - currentAge} yrs compounding)</span>
             </div>
           </div>
 
           <div>
             <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
-              <span>Monthly PF Contribution:</span>
+              <span>Monthly Contribution:</span>
               <span className="font-bold text-sovereign-navy">₹{(monthlyEmp + monthlyEmpr).toLocaleString("en-IN")}</span>
             </div>
             <input
@@ -273,10 +270,10 @@ export default function MySavingsHub() {
               <tr>
                 <th className="p-2.5">Year</th>
                 <th className="p-2.5">Age</th>
-                <th className="p-2.5">Employee Share</th>
-                <th className="p-2.5">Employer Share</th>
+                <th className="p-2.5">{t.employeeShare}</th>
+                <th className="p-2.5">{t.employerShare}</th>
                 <th className="p-2.5">Annual Interest</th>
-                <th className="p-2.5 text-right font-extrabold text-sovereign-navy">Total PF Wealth</th>
+                <th className="p-2.5 text-right font-extrabold text-sovereign-navy">Total Corpus</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -306,15 +303,15 @@ export default function MySavingsHub() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xs uppercase font-bold text-saffron tracking-wider">
-                Employees' Deposit-Linked Insurance (EDLI)
+                {t.edliTitle}
               </span>
               <span className="text-[10px] bg-emerald-500/30 text-emerald-300 px-2 py-0.2 rounded border border-emerald-400/40">
-                100% Free Statutory
+                100% Free
               </span>
             </div>
-            <h4 className="text-lg font-bold mt-0.5">₹7,00,000 Term Life Cover Active</h4>
+            <h4 className="text-lg font-bold mt-0.5">{t.edliMaxCover}</h4>
             <p className="text-xs text-slate-300">
-              Guaranteed financial protection for your registered family nominees with zero premium deduction.
+              {t.edliDesc}
             </p>
           </div>
         </div>
@@ -323,7 +320,7 @@ export default function MySavingsHub() {
           onClick={() => alert("Nominee is registered. EDLI coverage certificate verified.")}
           className="bg-white text-sovereign-darkest hover:bg-slate-100 px-4 py-2 rounded-xl font-bold text-xs shadow transition-all whitespace-nowrap"
         >
-          View Insurance Certificate
+          {t.verified}
         </button>
       </div>
     </div>

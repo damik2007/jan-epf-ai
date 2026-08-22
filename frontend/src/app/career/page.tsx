@@ -3,21 +3,18 @@
 import React, { useState } from "react";
 import { useCitizen } from "@/context/CitizenContext";
 import { deduceMissingDateOfExit, calculateTdsDeduction } from "@/lib/deterministicEngine";
+import { getTranslation } from "@/lib/translations";
 import {
   Briefcase,
   ArrowRightLeft,
   CalendarCheck,
-  ShieldCheck,
   CheckCircle2,
-  Building2,
-  AlertTriangle,
-  FileCheck2,
-  Sparkles,
-  ArrowRight
+  FileCheck2
 } from "lucide-react";
 
 export default function ChangedJobsHub() {
-  const { activeCitizen, addClaim } = useCitizen();
+  const { activeCitizen, addClaim, language } = useCitizen();
+  const t = getTranslation(language);
 
   const [transferSuccess, setTransferSuccess] = useState<boolean>(false);
   const [isTransferring, setIsTransferring] = useState<boolean>(false);
@@ -108,11 +105,11 @@ export default function ChangedJobsHub() {
               <Briefcase className="w-5 h-5" />
             </div>
             <h1 className="text-2xl font-black text-sovereign-navy">
-              I Changed Jobs (Consolidate & Transfer)
+              {t.careerTitle}
             </h1>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Form 13 PF Balance Merge • Automated Date-of-Exit (DOE) Deducer • Form 19 Final Settlement
+            {t.careerSubtitle}
           </p>
         </div>
 
@@ -126,7 +123,7 @@ export default function ChangedJobsHub() {
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            🔄 Transfer PF (Form 13)
+            🔄 {t.mergeTransferButton}
           </button>
           <button
             onClick={() => setActiveTab("SETTLEMENT")}
@@ -136,7 +133,7 @@ export default function ChangedJobsHub() {
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            📋 Final Settlement (Form 19)
+            📋 {t.finalSettlementTitle}
           </button>
         </div>
       </div>
@@ -148,10 +145,10 @@ export default function ChangedJobsHub() {
           <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-sm space-y-4">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100">
               <h3 className="text-sm font-bold text-sovereign-navy">
-                Multi-Establishment Member ID Timeline
+                {t.jobTimelineTitle}
               </h3>
               <span className="text-[10px] font-bold px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full">
-                2 Establishments Detected
+                2 Establishments
               </span>
             </div>
 
@@ -160,7 +157,7 @@ export default function ChangedJobsHub() {
               <div className="p-4 rounded-xl border-2 border-amber-200 bg-amber-50/50 space-y-2 relative">
                 <div className="flex justify-between items-start">
                   <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-200 text-amber-900 rounded">
-                    Previous Account (Unmerged)
+                    {t.previousCompany} ({t.pendingTransferBadge})
                   </span>
                   <span className="font-mono text-xs font-bold text-amber-900">
                     ₹{(previousJob.balance || 185000).toLocaleString("en-IN")}
@@ -177,10 +174,10 @@ export default function ChangedJobsHub() {
                 <div className="pt-2 border-t border-amber-200/60 flex items-center gap-1.5 text-xs text-amber-800">
                   <CalendarCheck className="w-4 h-4 text-amber-600 shrink-0" />
                   <div>
-                    <span className="font-semibold">Auto-Deduced Exit Date: </span>
+                    <span className="font-semibold">{t.autoExitDateBadge}: </span>
                     <strong className="text-slate-900">{deducedExitDate}</strong>
                     <span className="text-[10px] text-amber-700 block">
-                      (Deducted from last ECR wage month: {previousJob.last_ecr_wage_month || "2023-08"})
+                      ({t.autoExitDateDesc})
                     </span>
                   </div>
                 </div>
@@ -190,7 +187,7 @@ export default function ChangedJobsHub() {
               <div className="p-4 rounded-xl border-2 border-emerald-200 bg-emerald-50/50 space-y-2">
                 <div className="flex justify-between items-start">
                   <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-emerald-200 text-emerald-900 rounded">
-                    Current Active Account
+                    {t.currentCompany}
                   </span>
                   <span className="font-mono text-xs font-bold text-emerald-900">
                     ₹{(currentJob.balance || 290000).toLocaleString("en-IN")}
@@ -204,7 +201,7 @@ export default function ChangedJobsHub() {
                 </div>
                 <div className="pt-2 border-t border-emerald-200/60 flex items-center gap-1.5 text-xs text-emerald-800">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span className="font-semibold">Active ECR Contributions Credited</span>
+                  <span className="font-semibold">{t.verified}</span>
                 </div>
               </div>
             </div>
@@ -213,7 +210,7 @@ export default function ChangedJobsHub() {
             {!transferSuccess ? (
               <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
                 <div className="text-xs text-slate-600">
-                  Transferring merges <strong className="text-slate-900">₹{(previousJob.balance || 185000).toLocaleString("en-IN")}</strong> into your current active ledger automatically with zero paper Form 13.
+                  {t.jobTimelineDesc} (₹{(previousJob.balance || 185000).toLocaleString("en-IN")})
                 </div>
                 <button
                   onClick={handle1ClickTransfer}
@@ -221,7 +218,7 @@ export default function ChangedJobsHub() {
                   className="w-full sm:w-auto flex items-center justify-center gap-2 bg-sovereign-navy hover:bg-sovereign-light text-white px-6 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all whitespace-nowrap"
                 >
                   <ArrowRightLeft className="w-4 h-4 text-saffron" />
-                  <span>{isTransferring ? "Consolidating Single Ledger..." : "1-Click Transfer PF Balance"}</span>
+                  <span>{isTransferring ? t.mergingTransfer : t.mergeTransferButton}</span>
                 </button>
               </div>
             ) : (
@@ -229,10 +226,10 @@ export default function ChangedJobsHub() {
                 <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0" />
                 <div>
                   <h4 className="font-extrabold text-sm text-emerald-900">
-                    PF Transfer Initiated & Merged Successfully!
+                    {t.transferSuccessTitle}
                   </h4>
                   <p className="text-emerald-700 mt-0.5">
-                    Your previous accumulation is consolidated into {currentJob.establishment_name}. Both service periods are linked for pension benefits.
+                    {t.transferSuccessDesc}
                   </p>
                 </div>
               </div>
@@ -247,10 +244,10 @@ export default function ChangedJobsHub() {
           <div className="flex justify-between items-center pb-3 border-b border-slate-100">
             <div>
               <h3 className="text-sm font-bold text-sovereign-navy">
-                Full & Final PF Settlement (Form 19 & 10C)
+                {t.finalSettlementTitle}
               </h3>
               <p className="text-xs text-slate-500">
-                For members who have ceased formal employment for &ge; 2 months.
+                {t.finalSettlementDesc}
               </p>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-200 rounded-full">
@@ -261,14 +258,14 @@ export default function ChangedJobsHub() {
           {/* Section 192A Tax Protection Card */}
           <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-bold text-slate-700">Settlement Amount:</span>
+              <span className="font-bold text-slate-700">{t.finalSettlementTitle}:</span>
               <span className="font-mono font-extrabold text-slate-900">
                 ₹{(activeCitizen.passbook_summary?.total_balance || 150000).toLocaleString("en-IN")}
               </span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-600">Total Continuous Service:</span>
+              <span className="text-slate-600">{t.serviceDuration}</span>
               <span className="font-semibold text-slate-800">
                 {activeCitizen.active_employment?.total_service_years || 3.0} Years
               </span>
@@ -285,10 +282,10 @@ export default function ChangedJobsHub() {
               />
               <label htmlFor="form15g" className="text-xs cursor-pointer">
                 <strong className="text-slate-900 block font-semibold">
-                  Auto-Submit Form 15G Self-Declaration (Eliminate 20% TDS)
+                  {t.zeroTdsShieldTitle}
                 </strong>
                 <span className="text-slate-500 text-[11px]">
-                  I declare that my estimated total taxable income for the current financial year is below the basic exemption threshold.
+                  {t.zeroTdsShieldDesc}
                 </span>
               </label>
             </div>
@@ -298,11 +295,11 @@ export default function ChangedJobsHub() {
               tdsCalc.tdsAmount === 0 ? "bg-emerald-50 border-emerald-300 text-emerald-900" : "bg-amber-50 border-amber-300 text-amber-900"
             }`}>
               <div>
-                <span className="font-bold block">TDS Deduction: ₹{tdsCalc.tdsAmount} ({tdsCalc.tdsRatePercent}%)</span>
+                <span className="font-bold block">TDS: ₹{tdsCalc.tdsAmount} ({tdsCalc.tdsRatePercent}%)</span>
                 <span className="text-[10px]">{tdsCalc.reason}</span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] text-slate-500 block">Net Sanctioned</span>
+                <span className="text-[10px] text-slate-500 block">{t.amountSanctionedLabel}</span>
                 <span className="font-mono font-extrabold text-base text-slate-900">
                   ₹{tdsCalc.netDisbursement.toLocaleString("en-IN")}
                 </span>
@@ -316,7 +313,7 @@ export default function ChangedJobsHub() {
               className="flex items-center gap-2 bg-sovereign-navy hover:bg-sovereign-light text-white px-7 py-3 rounded-xl font-bold text-sm shadow-md transition-all"
             >
               <FileCheck2 className="w-4 h-4 text-saffron" />
-              <span>Submit Form 19 & 10C Settlement</span>
+              <span>{t.claimSettlementButton}</span>
             </button>
           </div>
 
@@ -324,9 +321,9 @@ export default function ChangedJobsHub() {
             <div className="p-4 bg-emerald-50 border-2 border-emerald-400 rounded-xl flex items-center gap-3 text-xs text-emerald-900">
               <CheckCircle2 className="w-6 h-6 text-emerald-600 shrink-0" />
               <div>
-                <h4 className="font-extrabold text-sm">Settlement Claim Filed with Zero TDS!</h4>
+                <h4 className="font-extrabold text-sm">{t.sanctionConfirmedTitle}</h4>
                 <p className="text-emerald-700 mt-0.5">
-                  ₹{tdsCalc.netDisbursement.toLocaleString("en-IN")} will be credited to {activeCitizen.bank_kyc.bank_name} within 24 hours.
+                  ₹{tdsCalc.netDisbursement.toLocaleString("en-IN")} {t.disbursedToLabel} {activeCitizen.bank_kyc.bank_name}.
                 </p>
               </div>
             </div>

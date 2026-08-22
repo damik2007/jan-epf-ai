@@ -3,27 +3,25 @@
 import React, { useState } from "react";
 import { useCitizen } from "@/context/CitizenContext";
 import { calculateFuzzyNameMatch, lookupIfsc } from "@/lib/deterministicEngine";
+import { getTranslation } from "@/lib/translations";
 import {
   Wrench,
-  UserCheck,
-  Building2,
   FileSignature,
-  Users,
   AlertCircle,
   CheckCircle2,
   Zap,
-  ShieldCheck,
-  Sparkles,
-  ArrowRight,
-  HelpCircle
+  Sparkles
 } from "lucide-react";
 
 export default function FixDetailsHub() {
   const {
     activeCitizen,
     updateActiveCitizenKYC,
-    updateActiveCitizenName
+    updateActiveCitizenName,
+    language
   } = useCitizen();
+
+  const t = getTranslation(language);
 
   const [activeSection, setActiveSection] = useState<
     "NAME_VALIDATE" | "PENNY_DROP" | "JOINT_DECLARATION" | "NOMINATION" | "GRIEVANCE"
@@ -154,11 +152,11 @@ export default function FixDetailsHub() {
               <Wrench className="w-5 h-5" />
             </div>
             <h1 className="text-2xl font-black text-sovereign-navy">
-              Fix My Details & KYC Hub
+              {t.fixTitle}
             </h1>
           </div>
           <p className="text-xs text-slate-500 mt-1">
-            Aadhaar Name Pre-Validator • 1-Click Penny Drop • Digital 3-Way Joint Declaration • EPFiGMS Copilot
+            {t.fixSubtitle}
           </p>
         </div>
       </div>
@@ -166,11 +164,11 @@ export default function FixDetailsHub() {
       {/* Navigation Sub-Tabs */}
       <div className="flex flex-wrap gap-2 bg-slate-200 p-1.5 rounded-2xl text-xs font-bold">
         {[
-          { id: "NAME_VALIDATE", label: "🔍 Name / DOB Check" },
-          { id: "PENNY_DROP", label: "⚡ 1-Click Penny Drop" },
-          { id: "JOINT_DECLARATION", label: "✍️ Digital Joint Declaration" },
-          { id: "NOMINATION", label: "👨‍👩‍👧 e-Nomination" },
-          { id: "GRIEVANCE", label: "🤖 AI Grievance Copilot" }
+          { id: "NAME_VALIDATE", label: `🔍 ${t.fuzzyCheckTitle}` },
+          { id: "PENNY_DROP", label: `⚡ ${t.pennyDropTitle}` },
+          { id: "JOINT_DECLARATION", label: `✍️ ${t.jointDecTitle}` },
+          { id: "NOMINATION", label: `👨‍👩‍👧 ${t.nominationTitle}` },
+          { id: "GRIEVANCE", label: `🤖 ${t.grievanceTitle}` }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -192,10 +190,10 @@ export default function FixDetailsHub() {
           <div className="flex justify-between items-center pb-3 border-b border-slate-100">
             <div>
               <h3 className="text-sm font-bold text-sovereign-navy">
-                Client-Side Aadhaar vs. EPFO Name Fuzzy Matcher
+                {t.fuzzyCheckTitle}
               </h3>
               <p className="text-xs text-slate-500">
-                80/20 Deterministic Levenshtein String Comparison (≥85% Threshold)
+                {t.fuzzyCheckDesc}
               </p>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-300 rounded-full flex items-center gap-1">
@@ -205,14 +203,14 @@ export default function FixDetailsHub() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-              <div className="text-xs text-slate-500 mb-1">EPFO Database Member Name:</div>
+              <div className="text-xs text-slate-500 mb-1">{t.epfoNameLabel}</div>
               <div className="text-base font-extrabold text-slate-900">{activeCitizen.full_name}</div>
               <div className="text-[11px] text-slate-500 mt-1">Father: {activeCitizen.father_name}</div>
             </div>
 
             <div className="space-y-2">
               <label className="text-xs font-semibold text-slate-700">
-                Name Printed on Aadhaar Card:
+                {t.aadhaarNameLabel}
               </label>
               <input
                 type="text"
@@ -225,7 +223,7 @@ export default function FixDetailsHub() {
                 onClick={handleRunFuzzyCheck}
                 className="w-full bg-sovereign-navy hover:bg-sovereign-light text-white py-2 rounded-lg font-bold text-xs shadow transition-all"
               >
-                Run Instant Fuzzy Match Check
+                {t.fuzzyCheckTitle}
               </button>
             </div>
           </div>
@@ -237,14 +235,14 @@ export default function FixDetailsHub() {
               <div className="flex items-center justify-between">
                 <span className="font-extrabold text-sm flex items-center gap-1.5">
                   {nameMatchScore >= 85 ? <CheckCircle2 className="w-4 h-4 text-emerald-600" /> : <AlertCircle className="w-4 h-4 text-amber-600" />}
-                  Fuzzy Match Score: {nameMatchScore}%
+                  {t.matchScoreLabel} {nameMatchScore}%
                 </span>
-                <span className="font-bold">{nameMatchScore >= 85 ? "PERFECT MATCH" : "CORRECTION RECOMMENDED"}</span>
+                <span className="font-bold">{nameMatchScore >= 85 ? t.verified : t.pending}</span>
               </div>
               <p className="text-[11px]">
                 {nameMatchScore >= 85
-                  ? "Your Aadhaar and EPFO records match with high confidence. You are 100% eligible for instant automated claims."
-                  : "Minor discrepancy detected. Use the 'Digital Joint Declaration' tab to fix spelling with zero physical paperwork."}
+                  ? t.fuzzyMatchSuccess
+                  : t.fuzzyMatchWarning}
               </p>
             </div>
           )}
@@ -257,20 +255,20 @@ export default function FixDetailsHub() {
           <div className="flex justify-between items-center pb-3 border-b border-slate-100">
             <div>
               <h3 className="text-sm font-bold text-sovereign-navy">
-                1-Click Bank Penny-Drop Verification (NPCI API)
+                {t.pennyDropTitle}
               </h3>
               <p className="text-xs text-slate-500">
-                Directly validates bank account with ₹1.00 credit to bypass manual Field Office queues.
+                {t.pennyDropDesc}
               </p>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-300 rounded-full">
-              NPCI Direct Gateway
+              NPCI Direct
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-700">Account Number</label>
+              <label className="text-xs font-semibold text-slate-700">{t.accountNumber}</label>
               <input
                 type="text"
                 value={bankAcc}
@@ -279,7 +277,7 @@ export default function FixDetailsHub() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">IFSC Code</label>
+              <label className="text-xs font-semibold text-slate-700">{t.ifscCode}</label>
               <input
                 type="text"
                 value={bankIfsc}
@@ -288,7 +286,7 @@ export default function FixDetailsHub() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">Holder Name (Bank Record)</label>
+              <label className="text-xs font-semibold text-slate-700">{t.accountHolder}</label>
               <input
                 type="text"
                 value={holderName}
@@ -304,7 +302,7 @@ export default function FixDetailsHub() {
             className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2"
           >
             <Zap className="w-4 h-4 text-saffron" />
-            <span>{isVerifyingPennyDrop ? "Validating with NPCI..." : "Trigger 1-Click Penny Drop"}</span>
+            <span>{isVerifyingPennyDrop ? t.verifyingPennyDrop : t.verifyPennyDropButton}</span>
           </button>
 
           {pennyDropResult && (
@@ -314,16 +312,16 @@ export default function FixDetailsHub() {
               <div className="flex justify-between items-center">
                 <span className="font-extrabold text-sm flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  Penny-Drop Verification: {pennyDropResult.success ? "SUCCESS" : "FAILED"}
+                  {t.pennyDropSuccess}
                 </span>
                 <span className="font-mono text-[10px] text-slate-500">{pennyDropResult.npcI_reference_id}</span>
               </div>
               <div className="grid grid-cols-2 gap-2 pt-1">
-                <div>Registered Name: <strong>{pennyDropResult.registered_account_name}</strong></div>
+                <div>Name: <strong>{pennyDropResult.registered_account_name}</strong></div>
                 <div>Fuzzy Match: <strong>{pennyDropResult.fuzzy_match_score}%</strong></div>
               </div>
               <div className="text-[11px] text-emerald-700 font-semibold pt-1">
-                ✓ Bank KYC updated to VERIFIED_ACTIVE. Your claims will be settled directly to this account.
+                ✓ {t.verifiedKYCLabel}: {t.verified}
               </div>
             </div>
           )}
@@ -336,10 +334,10 @@ export default function FixDetailsHub() {
           <div className="flex justify-between items-center pb-3 border-b border-slate-100">
             <div>
               <h3 className="text-sm font-bold text-sovereign-navy">
-                Zero-Paper Digital Joint Declaration (3-Way Cryptographic Handshake)
+                {t.jointDecTitle}
               </h3>
               <p className="text-xs text-slate-500">
-                Eliminates physical 4-page paper forms and employer seals with digital multi-party Aadhaar signing.
+                {t.jointDecDesc}
               </p>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 bg-purple-50 text-purple-700 border border-purple-300 rounded-full">
@@ -349,7 +347,7 @@ export default function FixDetailsHub() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold text-slate-700">Correct Full Name:</label>
+              <label className="text-xs font-semibold text-slate-700">{t.correctAadhaarName}</label>
               <input
                 type="text"
                 value={correctedName}
@@ -358,7 +356,7 @@ export default function FixDetailsHub() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">Supporting Document Type:</label>
+              <label className="text-xs font-semibold text-slate-700">Document:</label>
               <select
                 value={supportingDoc}
                 onChange={(e) => setSupportingDoc(e.target.value)}
@@ -373,16 +371,16 @@ export default function FixDetailsHub() {
           </div>
 
           <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs space-y-2">
-            <div className="font-bold text-slate-800">3-Way Automated Handshake Flow:</div>
+            <div className="font-bold text-slate-800">{t.jointDecConsent}</div>
             <div className="grid grid-cols-3 gap-2 text-center text-[11px]">
               <div className="bg-white p-2 rounded-lg border border-emerald-300 text-emerald-800 font-semibold">
-                1. Citizen Aadhaar e-Sign ✓
+                1. Citizen e-Sign ✓
               </div>
               <div className="bg-white p-2 rounded-lg border border-blue-300 text-blue-800 font-semibold">
-                2. Employer HR Auto-Consent ✓
+                2. Employer Consent ✓
               </div>
               <div className="bg-white p-2 rounded-lg border border-purple-300 text-purple-800 font-semibold">
-                3. EPFO Field Office Approval ✓
+                3. EPFO Approval ✓
               </div>
             </div>
           </div>
@@ -391,17 +389,17 @@ export default function FixDetailsHub() {
             onClick={handleApplyJointDeclaration}
             className="w-full bg-sovereign-navy hover:bg-sovereign-light text-white py-3 rounded-xl font-bold text-xs shadow transition-all"
           >
-            Aadhaar e-Sign & Submit 3-Way Digital Joint Declaration
+            {t.submitJointDecButton}
           </button>
 
           {jdSuccess && (
             <div className="p-4 bg-emerald-50 border-2 border-emerald-400 rounded-xl text-xs text-emerald-950 space-y-1">
               <div className="font-extrabold flex items-center gap-1.5 text-sm">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                Joint Declaration Signed & Applied!
+                {t.jointDecSuccessTitle}
               </div>
               <p className="text-[11px]">
-                Name updated to <strong className="text-slate-900">{correctedName}</strong> across national database. Cryptographic audit hash generated.
+                {t.jointDecSuccessDesc}
               </p>
             </div>
           )}
@@ -414,20 +412,20 @@ export default function FixDetailsHub() {
           <div className="flex justify-between items-center pb-3 border-b border-slate-100">
             <div>
               <h3 className="text-sm font-bold text-sovereign-navy">
-                Digital e-Nomination with Aadhaar e-Sign
+                {t.nominationTitle}
               </h3>
               <p className="text-xs text-slate-500">
-                Guarantees immediate ₹7 Lakh EDLI insurance & pension disbursement to family without court affidavits.
+                {t.nominationDesc}
               </p>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-300 rounded-full">
-              100% EDLI Protected
+              ₹7L EDLI
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-700">Nominee Name</label>
+              <label className="text-xs font-semibold text-slate-700">{t.nomineeName}</label>
               <input
                 type="text"
                 value={nomineeName}
@@ -436,7 +434,7 @@ export default function FixDetailsHub() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">Relationship</label>
+              <label className="text-xs font-semibold text-slate-700">{t.relationship}</label>
               <input
                 type="text"
                 value={nomineeRelation}
@@ -445,7 +443,7 @@ export default function FixDetailsHub() {
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-700">Share Percentage</label>
+              <label className="text-xs font-semibold text-slate-700">{t.sharePercent}</label>
               <input
                 type="text"
                 value="100%"
@@ -460,17 +458,17 @@ export default function FixDetailsHub() {
             className="w-full bg-sovereign-navy hover:bg-sovereign-light text-white py-3 rounded-xl font-bold text-xs shadow transition-all flex items-center justify-center gap-2"
           >
             <FileSignature className="w-4 h-4 text-saffron" />
-            <span>e-Sign & Seed Family Nominee</span>
+            <span>{t.fileNominationButton}</span>
           </button>
 
           {nominationSuccess && (
             <div className="p-4 bg-emerald-50 border-2 border-emerald-400 rounded-xl text-xs text-emerald-950 space-y-1">
               <div className="font-extrabold flex items-center gap-1.5 text-sm">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                e-Nomination Successfully Filed!
+                {t.approved}
               </div>
               <p className="text-[11px]">
-                {nomineeName} ({nomineeRelation}) is seeded as 100% beneficiary for PF and ₹7,00,000 EDLI term life insurance.
+                {nomineeName} ({nomineeRelation}) - {t.edliTitle}
               </p>
             </div>
           )}
@@ -483,20 +481,20 @@ export default function FixDetailsHub() {
           <div className="flex justify-between items-center pb-3 border-b border-slate-100">
             <div>
               <h3 className="text-sm font-bold text-sovereign-navy">
-                EPFiGMS AI Grievance Copilot & Root-Cause Engine
+                {t.grievanceTitle}
               </h3>
               <p className="text-xs text-slate-500">
-                Diagnoses why claims get stuck and triggers 1-click remediation instead of generic rejection notices.
+                {t.grievanceDesc}
               </p>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-300 rounded-full">
-              48hr SLA Tracking
+              48hr SLA
             </span>
           </div>
 
           <div className="space-y-2">
             <label className="text-xs font-semibold text-slate-700">
-              Describe your issue or stuck claim:
+              {t.selectGrievanceType}
             </label>
             <textarea
               rows={3}
@@ -510,7 +508,7 @@ export default function FixDetailsHub() {
               className="w-full bg-sovereign-navy hover:bg-sovereign-light text-white py-2.5 rounded-xl font-bold text-xs shadow transition-all flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4 h-4 text-saffron" />
-              <span>{isDiagnosing ? "AI Diagnosing Stuck Records..." : "AI Diagnose & Auto-Remediate"}</span>
+              <span>{isDiagnosing ? t.diagnosingGrievance : t.diagnoseGrievanceButton}</span>
             </button>
           </div>
 
@@ -519,7 +517,7 @@ export default function FixDetailsHub() {
               <div className="flex justify-between items-center">
                 <span className="font-extrabold text-amber-900 flex items-center gap-1.5 text-sm">
                   <AlertCircle className="w-4 h-4 text-amber-600" />
-                  AI Root Cause Diagnostic:
+                  {t.diagnosisResultTitle}:
                 </span>
                 <span className="font-mono text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded font-bold">
                   {copilotDiagnosis.error_code_classification}
@@ -532,14 +530,14 @@ export default function FixDetailsHub() {
 
               <div className="pt-2 border-t border-slate-200 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
                 <div>
-                  <span className="text-slate-500 block text-[10px]">Automated Fix Action:</span>
+                  <span className="text-slate-500 block text-[10px]">{t.remedyAvailable}</span>
                   <span className="font-bold text-emerald-700">{copilotDiagnosis.recommended_action}</span>
                 </div>
                 <button
                   onClick={() => alert("Automated fix executed! Reconciled with national ledger.")}
                   className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold text-xs shadow hover:bg-emerald-700 transition-all whitespace-nowrap"
                 >
-                  Execute 1-Click Fix
+                  {t.applyAutoFixButton}
                 </button>
               </div>
             </div>

@@ -7,6 +7,7 @@ import {
   lookupIfsc,
   analyzeCanvasSharpnessAndContrast
 } from "@/lib/deterministicEngine";
+import { getTranslation } from "@/lib/translations";
 import {
   Upload,
   Camera,
@@ -31,7 +32,8 @@ interface ChequeOCRScannerProps {
 export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
   onVerificationComplete
 }) => {
-  const { activeCitizen, updateActiveCitizenKYC } = useCitizen();
+  const { activeCitizen, updateActiveCitizenKYC, language } = useCitizen();
+  const t = getTranslation(language);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const [sharpnessScore, setSharpnessScore] = useState<number | null>(null);
@@ -155,15 +157,15 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
           </div>
           <div>
             <h3 className="text-sm font-bold text-sovereign-navy">
-              Smart Cheque & Passbook Pre-Validator
+              {t.chequeUploadTitle}
             </h3>
             <p className="text-xs text-slate-500">
-              80/20 On-Site Pre-Flight Check • Zero Rejection Guarantee
+              {t.chequeUploadDesc}
             </p>
           </div>
         </div>
         <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-300 rounded-full flex items-center gap-1">
-          <Zap className="w-3 h-3" /> Sub-5ms Local OCR
+          <Zap className="w-3 h-3" /> Sub-5ms Local
         </span>
       </div>
 
