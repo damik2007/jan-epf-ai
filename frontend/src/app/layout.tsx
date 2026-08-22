@@ -1,0 +1,50 @@
+import type { Metadata } from "next";
+import "./globals.css";
+import { CitizenProvider } from "@/context/CitizenContext";
+import { Navbar } from "@/components/Navbar";
+import { VoiceAssistant } from "@/components/VoiceAssistant";
+
+export const metadata: Metadata = {
+  title: "Jan-EPF AI • Rebuilding India's Provident Fund (EPFO)",
+  description:
+    "Topic-Centric, Sovereign Digital Public Infrastructure for 70 Million Indian Citizens. Rebuilt for Build What Moves India.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased selection:bg-saffron selection:text-sovereign-darkest">
+        <CitizenProvider>
+          <Navbar />
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            {children}
+          </main>
+          <VoiceAssistant />
+          <footer className="bg-sovereign-darkest text-slate-400 text-xs border-t border-sovereign-navy py-6 mt-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div>
+                <p className="font-bold text-white">
+                  Jan-EPF AI • Digital Public Infrastructure Prototype
+                </p>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  Built for <span className="text-saffron font-medium">Build What Moves India</span> (Varun Mayya × OpenAI Hackathon 2026)
+                </p>
+              </div>
+              <div className="flex items-center gap-4 text-[11px]">
+                <span>Author & Principal Architect: <strong className="text-slate-200">Damik Reddy</strong></span>
+                <span>•</span>
+                <span className="text-emerald-400 font-semibold">Zero-Trust RLS Protected</span>
+                <span>•</span>
+                <span className="text-samriddhi-bright font-semibold">80/20 On-Site Sovereign Core</span>
+              </div>
+            </div>
+          </footer>
+        </CitizenProvider>
+      </body>
+    </html>
+  );
+}

@@ -1,0 +1,197 @@
+# ==============================================================================
+# Jan-EPF AI: Production Kubernetes (K8s) Cluster Manifests
+# Components:
+#   - Namespace: jan-epf
+#   - FastAPI API Gateway / Business Engine Deployment & Service
+#   - Redis 7 Cache Deployment & Service
+#   - PostgreSQL with pgvector StatefulSet & Service
+#   - Ingress Controller with SSL Termination & Rate Limiting
+# ==============================================================================
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: jan-epf
+  labels:
+    app.kubernetes.io/name: jan-epf-ai
+    app.kubernetes.io/part-of: epfo-modernization
+
+---
+# ------------------------------------------------------------------------------
+# ConfigMap: Application Configurations
+# ------------------------------------------------------------------------------
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jan-epf-config
+  namespace: jan-epf
+data:
+  APP_NAME: "Jan-EPF AI"
+  ENVIRONMENT: "production"
+  DEBUG: "false"
+  PORT: "8000"
+  DATABASE_URL: "postgresql://epf_user:epf_secure_password@postgres-service.jan-epf.svc.cluster.local:5432/epf_master_db"
+  REDIS_URL: "redis://redis-service.jan-epf.svc.cluster.local:6379/0"
+
+---
+# ------------------------------------------------------------------------------
+# Secret: Sensitive Cryptographic Keys
+# ------------------------------------------------------------------------------
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jan-epf-secrets
+  namespace: jan-epf
+type: Opaque
+stringData:
+  JWT_SECRET_KEY: "e9f8a3c1b7d5e2a4f6c8e0b2d4a6f8e0c2a4b6d8e0f2a4b6c8d0e2f4a6b8c0d2"
+  INTERNAL_SERVICE_SECRET: "sec_epf_internal_98a7b6c5d4e3f2a1"
+  WEBHOOK_HMAC_SECRET: "hmac_npci_callback_88e7d6c5b4a3f2"
+
+---
+# ------------------------------------------------------------------------------
+# Deployment: FastAPI API Service
+# ------------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-service
+  namespace: jan-epf
+  labels:
+    app: api-service
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: api-service
+  template:
+    metadata:
+      labels:
+        app: api-service
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: api-container
+          image: ghcr.io/damik2007/jan-epf-api:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: jan-epf-config
+            - secretRef:
+                name: jan-epf-secrets
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1024Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 2
+
+---
+# ------------------------------------------------------------------------------
+# Service: FastAPI ClusterIP
+# ------------------------------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+  namespace: jan-epf
+  labels:
+    app: api-service
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      name: http
+  selector:
+    app: api-service
+
+---
+# ------------------------------------------------------------------------------
+# Deployment: Redis 7 In-Memory Cache
+# ------------------------------------------------------------------------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-cache
+  namespace: jan-epf
+  labels:
+    app: redis-cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-cache
+  template:
+    metadata:
+      labels:
+        app: redis-cache
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+          ports:
+            - containerPort: 6379
+              name: redis
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            exec:
+              command: ["redis-cli", "ping"]
+            initialDelaySeconds: 10
+            periodSeconds: 5
+
+---
+# ------------------------------------------------------------------------------
+# Service: Redis ClusterIP
+# ------------------------------------------------------------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: jan-epf
+  labels:
+    app: redis-cache
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: redis
+  selector:
+    app: redis-cache

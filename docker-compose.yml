@@ -1,0 +1,136 @@
+# ==============================================================================
+# Jan-EPF AI: Production Docker Compose Orchestration
+# Services:
+#   1. api-service: FastAPI Sovereign Business Engine & Gateways
+#   2. postgres: PostgreSQL 16 with pgvector extension & RLS
+#   3. redis: Redis 7 In-Memory Cache & Distributed Task Queue
+# ==============================================================================
+
+version: '3.8'
+
+services:
+  # ----------------------------------------------------------------------------
+  # 1. FastAPI API Microservice
+  # ----------------------------------------------------------------------------
+  api-service:
+    container_name: jan-epf-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: jan-epf-api:latest
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=Jan-EPF AI
+      - ENVIRONMENT=production
+      - DEBUG=false
+      - DATABASE_URL=postgresql://epf_user:epf_secure_password@postgres:5432/epf_master_db
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-e9f8a3c1b7d5e2a4f6c8e0b2d4a6f8e0c2a4b6d8e0f2a4b6c8d0e2f4a6b8c0d2}
+      - JWT_ALGORITHM=HS256
+      - INTERNAL_SERVICE_SECRET=${INTERNAL_SERVICE_SECRET:-sec_epf_internal_98a7b6c5d4e3f2a1}
+      - WEBHOOK_HMAC_SECRET=${WEBHOOK_HMAC_SECRET:-hmac_npci_callback_88e7d6c5b4a3f2}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 2048M
+        reservations:
+          cpus: '0.50'
+          memory: 512M
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - jan-epf-net
+
+  # ----------------------------------------------------------------------------
+  # 2. PostgreSQL with pgvector & Row-Level Security
+  # ----------------------------------------------------------------------------
+  postgres:
+    container_name: jan-epf-postgres
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=epf_master_db
+      - POSTGRES_USER=epf_user
+      - POSTGRES_PASSWORD=epf_secure_password
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-db:/docker-entrypoint-initdb.d:ro
+    deploy:
+      resources:
+        limits:
+          cpus: '1.50'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U epf_user -d epf_master_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - jan-epf-net
+
+  # ----------------------------------------------------------------------------
+  # 3. Redis 7 High-Speed In-Memory Cache & State Store
+  # ----------------------------------------------------------------------------
+  redis:
+    container_name: jan-epf-redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - redis_data:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - jan-epf-net
+
+# ------------------------------------------------------------------------------
+# Persistent Storage Volumes
+# ------------------------------------------------------------------------------
+volumes:
+  postgres_data:
+    name: jan_epf_postgres_data
+  redis_data:
+    name: jan_epf_redis_data
+
+# ------------------------------------------------------------------------------
+# Isolated Bridge Network
+# ------------------------------------------------------------------------------
+networks:
+  jan-epf-net:
+    name: jan_epf_network
+    driver: bridge
