@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { BenchmarkComparison } from "@/components/BenchmarkComparison";
 import { CitizenFeatureMatrix } from "@/components/CitizenFeatureMatrix";
+import { AudienceSegmentReport } from "@/components/AudienceSegmentReport";
 
 export default function CitizenLandingPage() {
   const { activeCitizen, isAuthenticated, login, logout, language } = useCitizen();
@@ -360,6 +361,9 @@ export default function CitizenLandingPage() {
 
       {/* The 8 High-Demand Real-World Features Matrix */}
       <CitizenFeatureMatrix />
+
+      {/* Target Audience Problem & Feature Expectation Report */}
+      <AudienceSegmentReport />
 
       {/* Legacy EPFO vs Jan-EPF AI Impact Transformation Benchmark */}
       <BenchmarkComparison />
