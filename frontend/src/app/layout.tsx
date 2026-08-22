@@ -3,6 +3,7 @@ import "./globals.css";
 import { CitizenProvider } from "@/context/CitizenContext";
 import { Navbar } from "@/components/Navbar";
 import { VoiceAssistant } from "@/components/VoiceAssistant";
+import { EvaluatorGate } from "@/components/EvaluatorGate";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -26,13 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased selection:bg-saffron selection:text-sovereign-darkest">
-        <CitizenProvider>
-          <Navbar />
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            {children}
-          </main>
-          <VoiceAssistant />
-          <footer className="bg-sovereign-darkest text-slate-400 text-xs border-t border-sovereign-navy py-6 mt-12">
+        <EvaluatorGate>
+          <CitizenProvider>
+            <Navbar />
+            <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+              {children}
+            </main>
+            <VoiceAssistant />
+            <footer className="bg-sovereign-darkest text-slate-400 text-xs border-t border-sovereign-navy py-6 mt-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div>
@@ -65,7 +67,8 @@ export default function RootLayout({
             </div>
           </footer>
         </CitizenProvider>
-      </body>
-    </html>
-  );
+      </EvaluatorGate>
+    </body>
+  </html>
+);
 }
