@@ -18,7 +18,8 @@ import {
   Languages,
   ExternalLink,
   Bot,
-  User
+  User,
+  Activity
 } from "lucide-react";
 import { getTranslation } from "@/lib/translations";
 import { generateCopilotResponse, CopilotReply } from "@/lib/voiceCopilotBrain";
@@ -41,16 +42,18 @@ export const VoiceAssistant: React.FC = () => {
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isListening, setIsListening] = useState<boolean>(false);
+  const [micVolume, setMicVolume] = useState<number>(0);
   const [transcript, setTranscript] = useState<string>("");
   const [typedInput, setTypedInput] = useState<string>("");
   const [activeSpeechLang, setActiveSpeechLang] = useState<string>(language || "en-IN");
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
 
   const initialGreeting = language.startsWith("hi")
-    ? `नमस्ते ${activeCitizen.full_name.split(" ")[0]} जी! मैं आपका जन-ईपीएफ वॉयस साथी हूँ। अपने पीएफ बैलेंस, पैसे निकालने, या आधार सुधार के बारे में पूछें।`
+    ? `नमस्ते ${activeCitizen.full_name.split(" ")[0]} जी! मैं आपका जन-ईपीएफ एआई साथी हूँ। आप मुझसे पीएफ बैलेंस, अग्रिम या सुधार के बारे में पूछ सकते हैं।`
     : language.startsWith("te")
-    ? `నమస్కారం ${activeCitizen.full_name.split(" ")[0]} గారు! నేను మీ జన-ఈపీఎఫ్ సహాయకుడిని. అడ్వాన్స్ లేదా వివరాల గురించి మాట్లాడండి.`
-    : `Hello ${activeCitizen.full_name.split(" ")[0]}! I am your Jan-EPF AI Assistant. How can I help you with your EPF account today?`;
+    ? `నమస్కారం ${activeCitizen.full_name.split(" ")[0]} గారు! నేను మీ జన-ఈపీఎఫ్ సహాయకుడిని. అడ్వాన్స్ డబ్బులు లేదా వివరాల కోసం మాట్లాడండి.`
+    : `Hello ${activeCitizen.full_name.split(" ")[0]}! I am your Jan-EPF AI Companion. How can I help you with your EPF account today?`;
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -64,6 +67,24 @@ export const VoiceAssistant: React.FC = () => {
 
   const recognitionRef = useRef<any>(null);
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+
+  // Load Neural Voices & Listen to onvoiceschanged
+  useEffect(() => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      const loadVoices = () => {
+        const voices = window.speechSynthesis.getVoices();
+        if (voices && voices.length > 0) {
+          setAvailableVoices(voices);
+        }
+      };
+
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+  }, []);
 
   // Auto-scroll chat to latest message
   useEffect(() => {
@@ -104,11 +125,11 @@ export const VoiceAssistant: React.FC = () => {
 
           recognition.onerror = (err: any) => {
             console.warn("Speech recognition event error / permission:", err);
-            setIsListening(false);
+            stopListening();
           };
 
           recognition.onend = () => {
-            setIsListening(false);
+            stopListening();
           };
 
           recognitionRef.current = recognition;
@@ -119,8 +140,19 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, [activeSpeechLang]);
 
-  // Sweet, Melodic, Warm Multilingual Text-To-Speech Synthesis
-  const speak = (text: string, targetLang?: string) => {
+  // Clean text for natural, warm, human-like speech (removes symbols/emojis/markdown)
+  const sanitizeForSpeech = (rawText: string): string => {
+    return rawText
+      .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, "")
+      .replace(/[*_#`~[\]()<>]/g, "")
+      .replace(/₹/g, "Rupees ")
+      .replace(/•/g, ", ")
+      .replace(/\n+/g, ". ")
+      .trim();
+  };
+
+  // Ultra-Natural Human Neural Speech Synthesis Engine
+  const speak = (rawText: string, targetLang?: string) => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) {
       return;
     }
@@ -128,22 +160,25 @@ export const VoiceAssistant: React.FC = () => {
     try {
       window.speechSynthesis.cancel();
 
+      const text = sanitizeForSpeech(rawText);
       const utterance = new SpeechSynthesisUtterance(text);
       const voiceLang = targetLang || activeSpeechLang || "en-IN";
       utterance.lang = voiceLang;
-      // Sweet, gentle, calm and soothing cadence
-      utterance.rate = 0.88;
-      utterance.pitch = 1.08;
+      utterance.rate = 0.94;
+      utterance.pitch = 1.02;
 
-      const voices = window.speechSynthesis.getVoices();
+      const voices = availableVoices.length > 0 ? availableVoices : window.speechSynthesis.getVoices();
       if (voices && voices.length > 0) {
         const langPrefix = voiceLang.slice(0, 2);
-        
-        // Priority list of sweet, gentle, natural female and native voices
-        const sweetNames = [
+
+        const preferredVoices = [
           "Google हिन्दी",
           "Google తెలుగు",
           "Google தமிழ்",
+          "Microsoft Swara Online (Natural)",
+          "Microsoft Neerja Online (Natural)",
+          "Microsoft Mohan Online (Natural)",
+          "Microsoft Pallavi Online (Natural)",
           "Google UK English Female",
           "Google US English Female",
           "Samantha",
@@ -156,30 +191,26 @@ export const VoiceAssistant: React.FC = () => {
           "Swara",
           "Heera",
           "Sangeeta",
-          "Kavya",
-          "Zira",
           "Siri"
         ];
 
-        // 1. First priority: designated sweet native voice matching language
         let matched = voices.find(
           (v) =>
             v.lang.startsWith(langPrefix) &&
-            sweetNames.some((name) => v.name.toLowerCase().includes(name.toLowerCase()))
+            preferredVoices.some((name) => v.name.toLowerCase().includes(name.toLowerCase()))
         );
 
-        // 2. Second priority: any female / natural voice in that language
         if (!matched) {
           matched = voices.find(
             (v) =>
               v.lang.startsWith(langPrefix) &&
-              (v.name.toLowerCase().includes("female") ||
-                v.name.toLowerCase().includes("natural") ||
-                v.name.toLowerCase().includes("neural"))
+              (v.name.toLowerCase().includes("natural") ||
+                v.name.toLowerCase().includes("neural") ||
+                v.name.toLowerCase().includes("female") ||
+                v.name.toLowerCase().includes("online"))
           );
         }
 
-        // 3. Third priority: any voice in that language
         if (!matched) {
           matched = voices.find((v) => v.lang.startsWith(langPrefix));
         }
@@ -207,9 +238,45 @@ export const VoiceAssistant: React.FC = () => {
     }
   };
 
-  const startListening = () => {
+  // Start real-time Web Audio API frequency visualizer + Speech Recognition
+  const startListening = async () => {
     setIsOpen(true);
     setTranscript("");
+
+    try {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaStreamRef.current = stream;
+
+        const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+        const audioCtx = new AudioCtx();
+        audioContextRef.current = audioCtx;
+
+        const source = audioCtx.createMediaStreamSource(stream);
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 64;
+        source.connect(analyser);
+
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        const checkVolume = () => {
+          if (!analyser) return;
+          analyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < dataArray.length; i++) {
+            sum += dataArray[i];
+          }
+          const avg = sum / dataArray.length;
+          setMicVolume(Math.min(100, Math.round((avg / 128) * 100)));
+          animationFrameRef.current = requestAnimationFrame(checkVolume);
+        };
+
+        checkVolume();
+      }
+    } catch (err) {
+      console.warn("Web Audio mic stream permission denied:", err);
+    }
+
     if (recognitionRef.current) {
       try {
         recognitionRef.current.lang = activeSpeechLang;
@@ -217,7 +284,7 @@ export const VoiceAssistant: React.FC = () => {
         setIsListening(true);
       } catch (e) {
         console.warn("Recognition already active or retrying:", e);
-        setIsListening(false);
+        setIsListening(true);
       }
     } else {
       const fallbackMsg = language.startsWith("hi")
@@ -234,12 +301,32 @@ export const VoiceAssistant: React.FC = () => {
     }
   };
 
+  // Cleanly stop listening and release microphone streams
   const stopListening = () => {
+    setIsListening(false);
+    setMicVolume(0);
+
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current = null;
+    }
+
+    if (audioContextRef.current) {
+      try {
+        audioContextRef.current.close();
+      } catch {}
+      audioContextRef.current = null;
+    }
+
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
       } catch {}
-      setIsListening(false);
     }
   };
 
@@ -247,12 +334,11 @@ export const VoiceAssistant: React.FC = () => {
   const handleProcessUserMessage = (userText: string, forcedLang?: string) => {
     if (!userText.trim()) return;
 
-    setIsListening(false);
+    stopListening();
     setTranscript("");
 
     const now = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    // 1. Add user message
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
       sender: "user",
@@ -260,7 +346,6 @@ export const VoiceAssistant: React.FC = () => {
       time: now
     };
 
-    // 2. Generate intelligent response using citizen context
     const citizenContext = {
       name: activeCitizen.full_name,
       uan: activeCitizen.uan,
@@ -321,20 +406,18 @@ export const VoiceAssistant: React.FC = () => {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 max-w-md w-full sm:w-[420px] px-3">
-      {/* Expanded Modern Glassmorphism Voice & Chat Drawer */}
       {isOpen && (
         <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-sovereign-navy p-4 mb-3 transition-all animate-in slide-in-from-bottom-5 space-y-3 flex flex-col max-h-[560px]">
-          {/* Top Header */}
           <div className="flex justify-between items-center pb-2.5 border-b border-slate-100 shrink-0">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-saffron flex items-center justify-center text-sovereign-darkest shadow-sm">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h4 className="text-xs font-black text-sovereign-navy">Jan-EPF AI Voice Companion</h4>
+                <h4 className="text-xs font-black text-sovereign-navy">Jan-EPF Neural Voice AI</h4>
                 <div className="flex items-center gap-1 text-[10px] text-emerald-700 font-extrabold">
-                  <Languages className="w-3 h-3" />
-                  <span>Multilingual Native AI Active</span>
+                  <Activity className="w-3 h-3" />
+                  <span>Human Natural Cadence Active</span>
                 </div>
               </div>
             </div>
@@ -352,6 +435,7 @@ export const VoiceAssistant: React.FC = () => {
               <button
                 onClick={() => {
                   stopSpeaking();
+                  stopListening();
                   setIsOpen(false);
                 }}
                 className="text-slate-400 hover:text-slate-700 p-1.5 rounded-full hover:bg-slate-100 transition-colors"
@@ -361,7 +445,6 @@ export const VoiceAssistant: React.FC = () => {
             </div>
           </div>
 
-          {/* Conversational Chat Thread (Scrollable) */}
           <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 py-1 text-xs max-h-[260px] scroll-touch">
             {messages.map((m) => {
               const isUser = m.sender === "user";
@@ -389,7 +472,6 @@ export const VoiceAssistant: React.FC = () => {
                   >
                     <p className="whitespace-pre-line leading-relaxed text-xs">{m.text}</p>
 
-                    {/* Copilot Action Controls */}
                     {!isUser && (
                       <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-200/60">
                         {m.spokenText && (
@@ -399,7 +481,7 @@ export const VoiceAssistant: React.FC = () => {
                             className="inline-flex items-center gap-1 text-[10px] font-extrabold text-sovereign-navy hover:text-saffron bg-white px-2 py-0.5 rounded-md border border-slate-300 transition-all shadow-2xs"
                           >
                             <RotateCcw className="w-3 h-3" />
-                            <span>Replay Voice (🔊)</span>
+                            <span>Replay</span>
                           </button>
                         )}
 
@@ -408,12 +490,13 @@ export const VoiceAssistant: React.FC = () => {
                             type="button"
                             onClick={() => {
                               stopSpeaking();
+                              stopListening();
                               setIsOpen(false);
                               router.push(m.targetRoute!);
                             }}
                             className="inline-flex items-center gap-1 text-[10px] font-extrabold text-white bg-emerald-700 hover:bg-emerald-800 px-2 py-0.5 rounded-md transition-all shadow-2xs"
                           >
-                            <span>Open Portal</span>
+                            <span>Open</span>
                             <ExternalLink className="w-3 h-3" />
                           </button>
                         )}
@@ -426,21 +509,55 @@ export const VoiceAssistant: React.FC = () => {
             <div ref={chatEndRef} />
           </div>
 
-          {/* Waveform Animation when listening */}
           {isListening && (
-            <div className="flex items-center justify-center gap-1.5 py-2 bg-emerald-50 rounded-xl border border-emerald-200 shrink-0">
-              <span className="w-1.5 h-5 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="w-1.5 h-7 bg-emerald-600 rounded-full animate-bounce" />
-              <span className="w-1.5 h-4 bg-emerald-400 rounded-full animate-pulse" />
-              <span className="w-1.5 h-8 bg-saffron rounded-full animate-bounce" />
-              <span className="w-1.5 h-5 bg-emerald-500 rounded-full animate-pulse" />
-              <span className="text-xs font-bold text-emerald-800 ml-2">
-                Listening in {activeSpeechLang.split("-")[0].toUpperCase()}... Speak now
+            <div className="flex items-center justify-between px-3 py-2 bg-emerald-50 rounded-xl border border-emerald-200 shrink-0">
+              <div className="flex items-center gap-1">
+                <span
+                  style={{ height: `${Math.max(8, micVolume * 0.35)}px` }}
+                  className="w-1 bg-emerald-500 rounded-full transition-all duration-75"
+                />
+                <span
+                  style={{ height: `${Math.max(12, micVolume * 0.55)}px` }}
+                  className="w-1 bg-emerald-600 rounded-full transition-all duration-75"
+                />
+                <span
+                  style={{ height: `${Math.max(6, micVolume * 0.25)}px` }}
+                  className="w-1 bg-emerald-400 rounded-full transition-all duration-75"
+                />
+                <span
+                  style={{ height: `${Math.max(14, micVolume * 0.65)}px` }}
+                  className="w-1 bg-saffron rounded-full transition-all duration-75"
+                />
+                <span
+                  style={{ height: `${Math.max(10, micVolume * 0.45)}px` }}
+                  className="w-1 bg-emerald-500 rounded-full transition-all duration-75"
+                />
+                <span
+                  style={{ height: `${Math.max(7, micVolume * 0.3)}px` }}
+                  className="w-1 bg-emerald-600 rounded-full transition-all duration-75"
+                />
+              </div>
+
+              <span className="text-[11px] font-bold text-emerald-800">
+                {transcript ? `"${transcript}"` : `Listening in ${activeSpeechLang.split("-")[0].toUpperCase()}...`}
               </span>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (transcript) {
+                    handleProcessUserMessage(transcript);
+                  } else {
+                    stopListening();
+                  }
+                }}
+                className="px-2 py-0.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-md text-[10px] font-bold"
+              >
+                Done
+              </button>
             </div>
           )}
 
-          {/* Type / Text Input Box */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -455,23 +572,22 @@ export const VoiceAssistant: React.FC = () => {
               type="text"
               value={typedInput}
               onChange={(e) => setTypedInput(e.target.value)}
-              placeholder="Or type a question in any language..."
-              className="w-full text-xs font-medium px-2 py-1 bg-transparent focus:outline-none text-slate-800 placeholder:text-slate-400"
+              placeholder="Ask anything: 'How to withdraw?', 'Balance?', 'Hi'..."
+              className="w-full text-xs font-medium px-2.5 py-1.5 bg-transparent focus:outline-none text-slate-800 placeholder:text-slate-400"
             />
             <button
               type="submit"
               disabled={!typedInput.trim()}
-              className="p-1.5 rounded-lg bg-sovereign-navy text-white hover:bg-sovereign-light disabled:opacity-40 transition-all shrink-0"
-              title="Send text query"
+              className="p-2 rounded-xl bg-sovereign-navy text-white hover:bg-sovereign-light disabled:opacity-40 transition-all shrink-0 shadow-sm"
+              title="Send message"
             >
               <Send className="w-3.5 h-3.5" />
             </button>
           </form>
 
-          {/* Quick Action Suggested Prompts */}
-          <div className="space-y-1.5">
+          <div className="space-y-1 shrink-0">
             <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              1-Tap Instant Voice Actions
+              Instant 1-Tap Queries
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
               {quickTiles.map((tile, idx) => (
@@ -480,7 +596,7 @@ export const VoiceAssistant: React.FC = () => {
                   onClick={() => {
                     handleProcessUserMessage(tile.query, tile.lang);
                   }}
-                  className="text-left text-[11px] font-semibold bg-slate-50 hover:bg-sovereign-navy hover:text-white px-2.5 py-1.5 rounded-xl border border-slate-200 transition-all flex items-center justify-between group"
+                  className="text-left text-[11px] font-semibold bg-slate-50 hover:bg-sovereign-navy hover:text-white px-2.5 py-1.5 rounded-xl border border-slate-200 transition-all flex items-center justify-between group truncate"
                 >
                   <span className="truncate max-w-[170px]">{tile.label}</span>
                   <CornerDownLeft className="w-3 h-3 text-slate-400 group-hover:text-white shrink-0 ml-1" />
@@ -491,7 +607,6 @@ export const VoiceAssistant: React.FC = () => {
         </div>
       )}
 
-      {/* Floating Action Trigger Button */}
       <div className="flex items-center justify-end">
         <button
           onClick={() => {
@@ -522,5 +637,3 @@ export const VoiceAssistant: React.FC = () => {
     </div>
   );
 };
-
-
