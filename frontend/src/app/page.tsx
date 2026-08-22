@@ -60,7 +60,7 @@ export default function CitizenLandingPage() {
       name: "Gurmeet Singh (Age 66)",
       role: "Senior Pensioner",
       org: "Retired (EPS-95 Pensioner)",
-      balance: "₹4,250 / mo",
+      balance: "₹4,250 / mo (Pension)",
       badge: "Senior Pensioner",
       badgeColor: "bg-amber-100 text-amber-800 border-amber-300",
       testScenario: "Tests: High-contrast Senior Citizen Mode (130% scaling, black/yellow palette) and EPS-95 monthly pension ledgers.",
