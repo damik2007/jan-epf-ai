@@ -25,6 +25,8 @@ import { BenchmarkComparison } from "@/components/BenchmarkComparison";
 import { CitizenFeatureMatrix } from "@/components/CitizenFeatureMatrix";
 import { AudienceSegmentReport } from "@/components/AudienceSegmentReport";
 import { SreTelemetryPanel } from "@/components/SreTelemetryPanel";
+import { SovereignDpiPillars } from "@/components/SovereignDpiPillars";
+import { GatewayHealthPulse } from "@/components/GatewayHealthPulse";
 
 export default function CitizenLandingPage() {
   const { activeCitizen, isAuthenticated, login, logout, language } = useCitizen();
@@ -233,6 +235,9 @@ export default function CitizenLandingPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
+      {/* Live Sovereign Gateway Pulse */}
+      <GatewayHealthPulse />
+
       {/* Citizen Welcome Banner & Balance Overview */}
       <section className="bg-gradient-to-br from-sovereign-darkest via-sovereign-navy to-sovereign-light text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-sovereign-accent relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
@@ -371,6 +376,9 @@ export default function CitizenLandingPage() {
 
       {/* Legacy EPFO vs Jan-EPF AI Impact Transformation Benchmark */}
       <BenchmarkComparison />
+
+      {/* The 6 Pillars of a $100 Billion Sovereign DPI */}
+      <SovereignDpiPillars />
 
       {/* Sovereign Architecture Breakthrough Showcase */}
       <section className="space-y-3 pt-2">

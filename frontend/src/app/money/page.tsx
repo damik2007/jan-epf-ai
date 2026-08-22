@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useCitizen } from "@/context/CitizenContext";
 import { ChequeOCRScanner } from "@/components/ChequeOCRScanner";
@@ -16,7 +16,9 @@ import {
   Clock,
   ArrowRight,
   ArrowLeft,
-  Activity
+  Activity,
+  RotateCcw,
+  AlertTriangle
 } from "lucide-react";
 
 export default function NeedMoneyHub() {
@@ -29,6 +31,9 @@ export default function NeedMoneyHub() {
   const [kycVerified, setKycVerified] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submittedResult, setSubmittedResult] = useState<any>(null);
+  const [undoSecondsLeft, setUndoSecondsLeft] = useState<number | null>(null);
+
+  const timerIntervalRef = useRef<any>(null);
 
   const empShare = activeCitizen.passbook_summary?.employee_share || 0;
   const emprShare = activeCitizen.passbook_summary?.employer_share || 0;
@@ -143,7 +148,32 @@ export default function NeedMoneyHub() {
       setCurrentStep(3);
     } finally {
       setIsSubmitting(false);
+      setUndoSecondsLeft(null);
     }
+  };
+
+  const startUndoBuffer = () => {
+    setUndoSecondsLeft(5);
+    let count = 5;
+    if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    timerIntervalRef.current = setInterval(() => {
+      count -= 1;
+      setUndoSecondsLeft(count);
+      if (count <= 0) {
+        clearInterval(timerIntervalRef.current);
+        timerIntervalRef.current = null;
+        handleFinalSubmit();
+      }
+    }, 1000);
+  };
+
+  const cancelUndoBuffer = () => {
+    if (timerIntervalRef.current) {
+      clearInterval(timerIntervalRef.current);
+      timerIntervalRef.current = null;
+    }
+    setUndoSecondsLeft(null);
+    setIsSubmitting(false);
   };
 
   return (
@@ -323,6 +353,33 @@ export default function NeedMoneyHub() {
             </div>
           </div>
 
+          {/* 5-SECOND DEFENSIVE UNDO BUFFER */}
+          {undoSecondsLeft !== null && (
+            <div className="p-4 rounded-2xl bg-amber-500/10 border-2 border-amber-500 flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-amber-500 text-black font-black flex items-center justify-center font-mono text-sm shrink-0 animate-pulse">
+                  {undoSecondsLeft}s
+                </div>
+                <div>
+                  <div className="font-bold text-xs text-amber-950 dark:text-amber-300">
+                    5-Second Undo Grace Period Active
+                  </div>
+                  <div className="text-[11px] text-slate-600 dark:text-slate-400">
+                    Direct Benefit Transfer will commit to your verified bank account in {undoSecondsLeft}s.
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={cancelUndoBuffer}
+                className="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition-all shadow-sm shrink-0 flex items-center gap-1.5"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Cancel / Undo Transfer</span>
+              </button>
+            </div>
+          )}
+
           <div className="flex justify-between items-center pt-2">
             <button
               onClick={() => setCurrentStep(1)}
@@ -333,12 +390,18 @@ export default function NeedMoneyHub() {
             </button>
 
             <button
-              onClick={handleFinalSubmit}
-              disabled={isSubmitting || !kycVerified}
+              onClick={startUndoBuffer}
+              disabled={isSubmitting || undoSecondsLeft !== null || !kycVerified}
               className="flex items-center gap-2 bg-emerald-600 text-white px-7 py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-emerald-700 transition-all disabled:opacity-50"
             >
               <ShieldCheck className="w-5 h-5" />
-              <span>{isSubmitting ? t.submittingClaim : t.instantSubmitButton}</span>
+              <span>
+                {undoSecondsLeft !== null
+                  ? `Committing in ${undoSecondsLeft}s...`
+                  : isSubmitting
+                  ? t.submittingClaim
+                  : t.instantSubmitButton}
+              </span>
             </button>
           </div>
         </div>
