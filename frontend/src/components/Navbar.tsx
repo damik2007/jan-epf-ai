@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 import { getTranslation } from "@/lib/translations";
+import { EvaluatorTourModal } from "@/components/EvaluatorTourModal";
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
@@ -160,8 +161,10 @@ export const Navbar: React.FC = () => {
             })}
           </nav>
 
-          {/* Persona Switcher & Active Citizen Badge */}
+          {/* Persona Switcher & Active Citizen Badge & Evaluator Tour */}
           <div className="flex items-center gap-2">
+            <EvaluatorTourModal />
+
             {!isAuthenticated ? (
               <button
                 onClick={() => login("100982348712")}

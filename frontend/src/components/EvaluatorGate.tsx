@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Shield, Lock, KeyRound, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
 
-const VALID_PASSCODES = ["hackathon2026", "epf2026", "varun2026", "damik2026", "epfo3.0"];
+const VALID_PASSCODES = ["damik2007", "damik2026", "hackathon2026", "epf2026", "varun2026", "epfo3.0"];
 
 export function EvaluatorGate({ children }: { children: React.ReactNode }) {
   const [isUnlocked, setIsUnlocked] = useState<boolean | null>(null);
@@ -110,7 +110,7 @@ export function EvaluatorGate({ children }: { children: React.ReactNode }) {
               type="password"
               value={passcodeInput}
               onChange={(e) => setPasscodeInput(e.target.value)}
-              placeholder="e.g. hackathon2026"
+              placeholder="Enter security passcode..."
               autoFocus
               className="w-full px-4 py-3 bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-400/20 font-mono tracking-widest"
             />
@@ -140,7 +140,7 @@ export function EvaluatorGate({ children }: { children: React.ReactNode }) {
 
           <div className="pt-3 border-t border-slate-800 text-center">
             <p className="text-[11px] text-slate-500">
-              💡 Tip for Evaluators: Passcode is included in the project submission notes (<code className="text-amber-400/80 font-mono">hackathon2026</code>).
+              🔒 Evaluator Access: Please enter the authorized passcode provided in your hackathon submission notes.
             </p>
           </div>
         </form>
