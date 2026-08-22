@@ -138,3 +138,64 @@ async def parse_voice_intent(req: VoiceCommandRequest):
         prefilled_form_data={},
         confidence_score=0.90
     )
+
+
+# ------------------------------------------------------------------------------
+# Neural Voice Synthesis Engine (Edge-TTS Direct Streaming)
+# Zero-Cost, Open-Source, Soft Human Indian Regional Voices
+# ------------------------------------------------------------------------------
+DEFAULT_VOICES = {
+    "hi-IN": "hi-IN-SwaraNeural",       # Soft, comforting female
+    "hi-IN-male": "hi-IN-MadhurNeural",  # Calm, respectful male
+    "te-IN": "te-IN-ShrutiNeural",      # Natural female
+    "te-IN-male": "te-IN-MohanNeural",   # Clear male
+    "ta-IN": "ta-IN-PallaviNeural",     # Soft female
+    "ta-IN-male": "ta-IN-ValluvarNeural",# Male
+    "kn-IN": "kn-IN-SapnaNeural",       # Kannada female
+    "kn-IN-male": "kn-IN-GaganNeural",  # Kannada male
+    "ml-IN": "ml-IN-SobhanaNeural",     # Malayalam female
+    "ml-IN-male": "ml-IN-MidhunNeural", # Malayalam male
+    "mr-IN": "mr-IN-AarohiNeural",      # Marathi female
+    "mr-IN-male": "mr-IN-ManoharNeural",# Marathi male
+    "bn-IN": "bn-IN-TanishaaNeural",    # Bengali female
+    "bn-IN-male": "bn-IN-BashkarNeural",# Bengali male
+    "gu-IN": "gu-IN-DhwaniNeural",      # Gujarati female
+    "gu-IN-male": "gu-IN-NiranjanNeural",# Gujarati male
+    "pa-IN": "pa-IN-GurpreetNeural",    # Punjabi female
+    "pa-IN-male": "pa-IN-HarmohanNeural",# Punjabi male
+    "en-IN": "en-IN-NeerjaNeural",      # Indian English female
+    "en-IN-male": "en-IN-PrabhatNeural", # Indian English male
+}
+
+
+async def generate_edge_tts_stream(text: str, voice_name: str):
+    import edge_tts
+    communicate = edge_tts.Communicate(text, voice_name)
+    async for chunk in communicate.stream():
+        if chunk["type"] == "audio":
+            yield chunk["data"]
+
+
+@router.get("/tts")
+async def stream_text_to_speech(
+    text: str,
+    lang: str = "en-IN",
+    voice: str = None
+):
+    from fastapi.responses import StreamingResponse
+    selected_voice = voice or DEFAULT_VOICES.get(lang, "en-IN-NeerjaNeural")
+
+    # Clean text of markdown/symbols
+    clean_text = text.replace("*", "").replace("#", "").replace("`", "").replace("₹", "Rupees ").strip()
+    if not clean_text:
+        clean_text = "Namaste"
+
+    return StreamingResponse(
+        generate_edge_tts_stream(clean_text, selected_voice),
+        media_type="audio/mpeg",
+        headers={
+            "Cache-Control": "public, max-age=86400",
+            "Content-Disposition": f"inline; filename=tts_{lang}.mp3"
+        }
+    )
+

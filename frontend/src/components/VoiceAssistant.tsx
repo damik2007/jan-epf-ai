@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { getTranslation } from "@/lib/translations";
 import { generateCopilotResponse, CopilotReply } from "@/lib/voiceCopilotBrain";
+import { playNeuralSpeech, stopNeuralSpeech, INDIAN_NEURAL_VOICES } from "@/lib/edgeTtsPlayer";
 
 interface ChatMessage {
   id: string;
@@ -185,91 +186,25 @@ export const VoiceAssistant: React.FC = () => {
       .trim();
   };
 
-  // Ultra-Natural Human Neural Speech Synthesis Engine
+  // Ultra-Natural Human Neural Speech Synthesis Engine (Powered by Edge-TTS)
   const speak = (rawText: string, targetLang?: string) => {
-    if (typeof window === "undefined" || !("speechSynthesis" in window)) {
-      return;
-    }
+    const voiceLang = targetLang || activeSpeechLang || "en-IN";
+    setIsSpeaking(true);
 
-    try {
-      window.speechSynthesis.cancel();
-
-      const text = sanitizeForSpeech(rawText);
-      const utterance = new SpeechSynthesisUtterance(text);
-      const voiceLang = targetLang || activeSpeechLang || "en-IN";
-      utterance.lang = voiceLang;
-      utterance.rate = 0.94;
-      utterance.pitch = 1.02;
-
-      const voices = availableVoices.length > 0 ? availableVoices : window.speechSynthesis.getVoices();
-      if (voices && voices.length > 0) {
-        const langPrefix = voiceLang.slice(0, 2);
-
-        const preferredVoices = [
-          "Google हिन्दी",
-          "Google తెలుగు",
-          "Google தமிழ்",
-          "Microsoft Swara Online (Natural)",
-          "Microsoft Neerja Online (Natural)",
-          "Microsoft Mohan Online (Natural)",
-          "Microsoft Pallavi Online (Natural)",
-          "Google UK English Female",
-          "Google US English Female",
-          "Samantha",
-          "Karen",
-          "Moira",
-          "Tessa",
-          "Lekha",
-          "Veena",
-          "Neerja",
-          "Swara",
-          "Heera",
-          "Sangeeta",
-          "Siri"
-        ];
-
-        let matched = voices.find(
-          (v) =>
-            v.lang.startsWith(langPrefix) &&
-            preferredVoices.some((name) => v.name.toLowerCase().includes(name.toLowerCase()))
-        );
-
-        if (!matched) {
-          matched = voices.find(
-            (v) =>
-              v.lang.startsWith(langPrefix) &&
-              (v.name.toLowerCase().includes("natural") ||
-                v.name.toLowerCase().includes("neural") ||
-                v.name.toLowerCase().includes("female") ||
-                v.name.toLowerCase().includes("online"))
-          );
-        }
-
-        if (!matched) {
-          matched = voices.find((v) => v.lang.startsWith(langPrefix));
-        }
-
-        if (matched) {
-          utterance.voice = matched;
-        }
-      }
-
-      utterance.onstart = () => setIsSpeaking(true);
-      utterance.onend = () => setIsSpeaking(false);
-      utterance.onerror = () => setIsSpeaking(false);
-
-      window.speechSynthesis.speak(utterance);
-    } catch (e) {
-      console.warn("Speech synthesis error:", e);
+    playNeuralSpeech(
+      rawText,
+      voiceLang,
+      undefined,
+      () => setIsSpeaking(true),
+      () => setIsSpeaking(false)
+    ).catch(() => {
       setIsSpeaking(false);
-    }
+    });
   };
 
   const stopSpeaking = () => {
-    if (typeof window !== "undefined" && "speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-    }
+    stopNeuralSpeech();
+    setIsSpeaking(false);
   };
 
   // Start real-time Web Audio API frequency visualizer + Speech Recognition

@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import mockData from "@/data/MOCK_CITIZEN_ACCOUNTS.json";
+import { playNeuralSpeech } from "@/lib/edgeTtsPlayer";
 
 export interface Citizen {
   uan: string;
@@ -141,20 +142,15 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [activeCitizen.uan]);
 
-  // Gentle audio cue when Senior Mode is activated
+  // Gentle audio cue when Senior Mode is activated (Powered by Edge-TTS)
   useEffect(() => {
-    if (typeof window !== "undefined" && seniorMode && "speechSynthesis" in window) {
-      try {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(
-          "Senior Citizen Mode activated. High-contrast typography and digital pension assistance enabled."
-        );
-        utterance.rate = 0.92;
-        utterance.pitch = 1.05;
-        window.speechSynthesis.speak(utterance);
-      } catch {}
+    if (typeof window !== "undefined" && seniorMode) {
+      playNeuralSpeech(
+        "Senior Citizen Mode activated. High-contrast typography and digital pension assistance enabled.",
+        language || "en-IN"
+      ).catch(() => {});
     }
-  }, [seniorMode]);
+  }, [seniorMode, language]);
 
   const login = (uan: string) => {
     const found = citizens.find((c) => c.uan === uan);
