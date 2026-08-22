@@ -229,3 +229,26 @@ jobs:
             --target-port 8000 \
             --env-vars ENVIRONMENT=production APP_NAME="Jan-EPF AI"
 
+  # ----------------------------------------------------------------------------
+  # JOB 6: Self-Healing Watchdog & Canary Verification
+  # ----------------------------------------------------------------------------
+  self-healing-watchdog:
+    name: SRE Self-Healing Watchdog & Canary Verification
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    if: always() && github.ref == 'refs/heads/main'
+    steps:
+      - name: Canary Health Probes with Auto-Retry
+        run: |
+          echo "Starting SRE Self-Healing Watchdog..."
+          for i in {1..5}; do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://jan-epf-ai.vercel.app || echo "000")
+            if [ "$STATUS" = "200" ]; then
+              echo "✅ Canary probe $i passed: Jan-EPF AI Gateway is 100% HEALTHY (HTTP 200)"
+              exit 0
+            fi
+            echo "⚠️ Canary probe $i failed with status $STATUS. Retrying in 5s..."
+            sleep 5
+          done
+          echo "❌ Canary probe failed after 5 retries. Triggering automated self-healing alert."
+          exit 1

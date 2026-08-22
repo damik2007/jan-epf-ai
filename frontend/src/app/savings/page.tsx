@@ -21,6 +21,16 @@ export default function MySavingsHub() {
   const [monthlyEmp, setMonthlyEmp] = useState<number>(2600);
   const [monthlyEmpr, setMonthlyEmpr] = useState<number>(2600);
   const [simulatedRate, setSimulatedRate] = useState<number>(8.25);
+  const [dlcRenewed, setDlcRenewed] = useState<boolean>(false);
+  const [isRenewingDLC, setIsRenewingDLC] = useState<boolean>(false);
+
+  const handleRenewDLC = () => {
+    setIsRenewingDLC(true);
+    setTimeout(() => {
+      setIsRenewingDLC(false);
+      setDlcRenewed(true);
+    }, 700);
+  };
 
   const summary = activeCitizen.passbook_summary || {
     total_balance: 342500,
@@ -77,7 +87,7 @@ export default function MySavingsHub() {
       {/* SENIOR CITIZEN EPS-95 SPECIAL CARD (IF SENIOR) */}
       {activeCitizen.pension_details && (
         <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border-2 border-amber-300 p-5 shadow-sm space-y-3">
-          <div className="flex justify-between items-start">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <div className="flex items-center gap-2">
               <Award className="w-6 h-6 text-amber-600" />
               <div>
@@ -87,9 +97,11 @@ export default function MySavingsHub() {
                 <p className="text-xs text-amber-800">PPO Number: {activeCitizen.pension_details.ppo_number}</p>
               </div>
             </div>
-            <span className="text-xs font-bold px-2.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" /> {t.activeDLCBadge}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold px-2.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-full flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5" /> {dlcRenewed ? "DLC Active (Valid FY 26-27)" : t.activeDLCBadge}
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
@@ -108,9 +120,25 @@ export default function MySavingsHub() {
             <div className="bg-white/80 p-3 rounded-xl border border-amber-200">
               <div className="text-[10px] text-slate-500">{t.lifeCertificateStatus}</div>
               <div className="text-sm font-bold text-emerald-700">
-                {t.verified}
+                {dlcRenewed ? "Auto-Verified (Face RD)" : t.verified}
               </div>
             </div>
+          </div>
+
+          {/* Interactive Jeevan Pramaan Renewal Action */}
+          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 border-t border-amber-200/60">
+            <p className="text-xs text-amber-900 font-medium">
+              💡 Jeevan Pramaan Facial Biometric Authentication is ready.
+            </p>
+            <button
+              type="button"
+              onClick={handleRenewDLC}
+              disabled={isRenewingDLC}
+              className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{isRenewingDLC ? "Authenticating Face RD..." : (dlcRenewed ? "DLC Renewed Successfully" : "1-Click Jeevan Pramaan Face DLC")}</span>
+            </button>
           </div>
         </div>
       )}

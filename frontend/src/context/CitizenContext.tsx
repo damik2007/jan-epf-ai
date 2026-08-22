@@ -139,6 +139,21 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [activeCitizen.uan]);
 
+  // Gentle audio cue when Senior Mode is activated
+  useEffect(() => {
+    if (typeof window !== "undefined" && seniorMode && "speechSynthesis" in window) {
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(
+          "Senior Citizen Mode activated. High-contrast typography and digital pension assistance enabled."
+        );
+        utterance.rate = 0.92;
+        utterance.pitch = 1.05;
+        window.speechSynthesis.speak(utterance);
+      } catch {}
+    }
+  }, [seniorMode]);
+
   const login = (uan: string) => {
     const found = citizens.find((c) => c.uan === uan);
     if (found) {

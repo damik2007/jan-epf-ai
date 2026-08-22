@@ -96,8 +96,7 @@ export default function CitizenLandingPage() {
             Select a Mock Citizen Persona to Begin
           </h1>
           <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Per Varun Mayya's hackathon guidelines, testing does not require real citizen Aadhaar or SMS OTPs.
-            Click any persona below to immediately log in and test all 8 end-to-end workflows.
+            Instant 1-Click Evaluator & Citizen Gateway. Select any persona scenario below to immediately test the rebuilt life-event hubs with zero SMS OTP friction.
           </p>
         </div>
 
@@ -168,13 +167,13 @@ export default function CitizenLandingPage() {
         </div>
 
         {/* Evaluator Security & Zero-Trust Notice */}
-        <div className="p-4 bg-white rounded-2xl border border-slate-200 shadow-xs text-center max-w-xl mx-auto space-y-1">
-          <p className="text-xs font-bold text-slate-700 flex items-center justify-center gap-1.5">
+        <div className="p-3.5 bg-white rounded-2xl border border-slate-200 shadow-xs text-center max-w-xl mx-auto space-y-1">
+          <p className="text-xs font-extrabold text-slate-800 flex items-center justify-center gap-1.5">
             <Shield className="w-4 h-4 text-emerald-600" />
-            <span>Zero-Trust Sandbox • 100% Deterministic & Safe</span>
+            <span>Sovereign Sandbox Protocol • 100% Deterministic & Safe</span>
           </p>
           <p className="text-[11px] text-slate-500">
-            Per Varun Mayya's evaluation rules, no real Aadhaar or SMS OTP is needed. Simply click any persona card above to test all 8 end-to-end statutory workflows.
+            Engineered with Zero-Trust local execution. Select any persona above to instantly test all 8 end-to-end statutory workflows.
           </p>
         </div>
       </div>
