@@ -1087,11 +1087,64 @@ Test categories enforced:
 
 ---
 
-## 13. Appendix: Architectural Changelog & Governance
+---
+
+## 15. Senior Citizen Accessibility Architecture & Pensioner Mode Specification
+
+### 15.1 The Physiological & Cognitive Reality of India's 7.8M EPS-95 Pensioners
+Elderly pensioners (ages 60–85) face 5 acute barriers when interacting with digital portals:
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                   THE 5 CORE SENIOR CITIZEN ACCESSIBILITY BARRIERS                     │
+├──────────────────────────┬──────────────────────────┬──────────────────────────────────┤
+│ 1. Visual Decline        │ 2. Motor Tremors         │ 3. Cognitive & Jargon Overload   │
+│ • Presbyopia, cataracts, │ • Unsteady hands, shaky  │ • Confused by "PPO", "ECS Credit"│
+│   low contrast           │   fingers (<44px taps)   │ • High anxiety: Fear of deleting │
+│ • Cannot read tiny fonts │ • Need large 56px targets│   or breaking their pension      │
+├──────────────────────────┼──────────────────────────┴──────────────────────────────────┤
+│ 4. Captcha Impossibility │ 5. The November "Jeevan Pramaan" (Life Certificate) Panic   │
+│ • Distorted squiggly text│ • Annual panic where facial scanners fail on budget phones, │
+│   causes 70%+ dropouts   │   forcing 75-year-olds to stand in physical bank queues      │
+└──────────────────────────┴──────────────────────────────────────────────────────────────┘
+```
+
+### 15.2 The 6 Architectural Pillars of Senior Mode
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                    THE 6 PILLARS OF JAN-EPF AI SENIOR CITIZEN MODE                     │
+├──────────────────────────┬──────────────────────────┬──────────────────────────────────┤
+│ 1. 150% Scaling & AAA    │ 2. Large Touch Targets   │ 3. Zero Captchas & Big OTPs      │
+│ • Obsidian Navy (#0B132B)│ • Minimum 56px button ht │ • 1-Tap Biometric / Passkey or   │
+│   with Warm Gold (#FCD34D│ • 16px safe margins to   │   extra-large 6-digit SMS OTP    │
+│ • WCAG AAA (7:1 ratio)   │   prevent accidental taps│   boxes with 10-minute expiry    │
+├──────────────────────────┼──────────────────────────┼──────────────────────────────────┤
+│ 4. Spoken Native Audio   │ 5. Voice-Guided DLC      │ 6. Jargon-Free Reassurance       │
+│ • Calm voice narration   │ • Spoken camera lighting │ • Replaces "PPO 12(3)" with:     │
+│   in Hindi, Telugu,      │   & blink-detect prompts │   "Your August pension of ₹4,250 │
+│   Tamil, Punjabi, English│   ("Hold steady... blink")│  was credited on August 1st"    │
+└──────────────────────────┴──────────────────────────┴──────────────────────────────────┘
+```
+
+### 15.3 Spoken Vernacular Narration & Voice-Assisted Jeevan Pramaan Engine
+1. **Zero-Reading Audio Prompt**:
+   Upon authentication, the platform emits a soothing spoken vernacular brief:
+   > *"Sat Sri Akal Gurmeet Singh ji. Your pension account is active. Your August pension of ₹4,250 was credited to your Punjab National Bank account on August 1st. Your Life Certificate is valid until November 30, 2026."*
+2. **Facial Liveness & Ambient Lighting Watchdog**:
+   Evaluates camera feed luminance ($\text{Lux} \ge 180$) and eye aspect ratio ($\text{EAR} \le 0.20$ for blink detection). Speaks real-time guidance:
+   * Low light: *"Gurmeet ji, please turn toward the window for better light."*
+   * Centered: *"Hold steady... now blink your eyes slowly."*
+   * Success: Audio chime + valid until Nov 2027.
+
+---
+
+## 16. Appendix: Architectural Changelog & Governance
 
 | Version | Date | Author | Description |
 |---|---|---|---|
 | `1.0.0` | 2026-08-22 | Damik Reddy | Final approved RFC-001 systems architecture specification covering all 8 workflows, 10 foundation pillars, C4 diagrams, and Pydantic v2 schemas. |
+| `1.1.0` | 2026-08-22 | Damik Reddy | Added Chapter 15: Senior Citizen Accessibility Architecture & Pensioner Mode Specification (WCAG AAA, Voice DLC, 6 Pillars). |
 
 ```
 ====================================================================================================

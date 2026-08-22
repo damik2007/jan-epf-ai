@@ -14,56 +14,58 @@
   --emerald: #10b981;
 }
 
-/* ELDER COMFORT MODE (Senior Citizen Friendly - Soothing, High-Legibility, Zero-Glare) */
+/* ELDER COMFORT MODE (Senior Citizen Friendly - WCAG AAA 7:1 Contrast, Obsidian Navy & Warm Gold) */
 .senior-mode {
-  font-size: 122% !important;
+  font-size: 125% !important;
   --background: #faf8f5 !important;
-  --foreground: #0c2038 !important;
+  --foreground: #0b132b !important;
   --card: #ffffff !important;
-  --card-foreground: #0c2038 !important;
-  --border: #d4b483 !important;
+  --card-foreground: #0b132b !important;
+  --border: #f59e0b !important;
   background-color: #faf8f5 !important;
-  color: #0c2038 !important;
+  color: #0b132b !important;
 }
 
 .senior-mode * {
-  line-height: 1.72 !important;
+  line-height: 1.75 !important;
 }
 
 .senior-mode .bg-white,
 .senior-mode .bg-slate-50,
 .senior-mode .bg-slate-100 {
   background-color: #ffffff !important;
-  color: #0c2038 !important;
+  color: #0b132b !important;
   border-color: #e2d9cc !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+  box-shadow: 0 4px 20px rgba(11, 19, 43, 0.05) !important;
 }
 
 .senior-mode .text-slate-500,
 .senior-mode .text-slate-600,
 .senior-mode .text-slate-700 {
-  color: #334e68 !important;
-  font-weight: 500 !important;
+  color: #1c2d42 !important;
+  font-weight: 600 !important;
 }
 
 .senior-mode .text-slate-800,
 .senior-mode .text-slate-900,
 .senior-mode .text-sovereign-navy {
-  color: #0c2038 !important;
-  font-weight: 800 !important;
+  color: #0b132b !important;
+  font-weight: 900 !important;
 }
 
 .senior-mode button,
 .senior-mode a,
 .senior-mode input {
-  min-height: 52px !important;
+  min-height: 56px !important;
   font-size: 1.05rem !important;
-  font-weight: 700 !important;
-  border-radius: 1rem !important;
+  font-weight: 800 !important;
+  border-radius: 1.25rem !important;
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
 }
 
 .senior-mode .bg-sovereign-navy {
-  background-color: #0c2038 !important;
+  background-color: #0b132b !important;
   color: #ffffff !important;
 }
 
