@@ -96,7 +96,8 @@ export default function NeedMoneyHub() {
       const res = await fetch("http://localhost:8000/api/v1/claims/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(claimData)
+        body: JSON.stringify(claimData),
+        signal: AbortSignal.timeout(600)
       });
       if (res.ok) {
         const data = await res.json();

@@ -71,7 +71,8 @@ export default function ChangedJobsHub() {
           reason_code: "FORM_13_MERGE",
           source_member_id: previousJob.member_id,
           target_member_id: currentJob.member_id
-        })
+        }),
+        signal: AbortSignal.timeout(600)
       });
       if (res.ok) {
         const data = await res.json();

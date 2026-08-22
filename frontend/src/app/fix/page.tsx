@@ -76,7 +76,8 @@ export default function FixDetailsHub() {
           account_number: bankAcc,
           ifsc_code: bankIfsc,
           account_holder_name: holderName
-        })
+        }),
+        signal: AbortSignal.timeout(600)
       });
       if (res.ok) {
         const data = await res.json();
@@ -123,7 +124,8 @@ export default function FixDetailsHub() {
           uan: activeCitizen.uan,
           complaint_category: "TRANSFER_OR_EXIT",
           complaint_description: complaintText
-        })
+        }),
+        signal: AbortSignal.timeout(600)
       });
       if (res.ok) {
         const data = await res.json();

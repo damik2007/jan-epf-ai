@@ -69,7 +69,7 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, [language]);
 
-  // Robust Text-To-Speech function
+  // Soft & Warm Text-To-Speech Synthesis Engine
   const speak = (text: string) => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) {
       return;
@@ -80,16 +80,49 @@ export const VoiceAssistant: React.FC = () => {
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = language || "en-IN";
-      utterance.rate = 1.0;
-      utterance.pitch = 1.0;
+      // Gentle, calm, and soothing pacing
+      utterance.rate = 0.92;
+      utterance.pitch = 1.05;
 
-      // Select matching voice if available
+      // Soft, high-quality voice prioritization
       const voices = window.speechSynthesis.getVoices();
       if (voices && voices.length > 0) {
-        const langPrefix = (language || "en").slice(0, 2);
-        const matchedVoice = voices.find((v) => v.lang.startsWith(langPrefix));
-        if (matchedVoice) {
-          utterance.voice = matchedVoice;
+        const softNames = [
+          "Google हिन्दी",
+          "Google UK English Female",
+          "Google US English Female",
+          "Samantha",
+          "Karen",
+          "Moira",
+          "Tessa",
+          "Lekha",
+          "Veena",
+          "Neerja",
+          "Swara",
+          "Heera",
+          "Zira",
+          "Siri"
+        ];
+        // 1. Try finding a designated warm/soft female or natural voice
+        let matched = voices.find((v) =>
+          softNames.some((name) => v.name.toLowerCase().includes(name.toLowerCase()))
+        );
+
+        // 2. If not found, match by language prefix with natural / female preference
+        if (!matched) {
+          const langPrefix = (language || "en").slice(0, 2);
+          matched =
+            voices.find(
+              (v) =>
+                v.lang.startsWith(langPrefix) &&
+                (v.name.toLowerCase().includes("female") ||
+                  v.name.toLowerCase().includes("natural") ||
+                  v.name.toLowerCase().includes("neural"))
+            ) || voices.find((v) => v.lang.startsWith(langPrefix));
+        }
+
+        if (matched) {
+          utterance.voice = matched;
         }
       }
 
