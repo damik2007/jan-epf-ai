@@ -15,22 +15,53 @@
 }
 
 .senior-mode {
-  font-size: 118% !important;
-  --background: #ffffff !important;
-  --foreground: #000000 !important;
-  --border: #000000 !important;
+  font-size: 130% !important;
+  --background: #000000 !important;
+  --foreground: #ffffff !important;
+  --card: #0a0a0a !important;
+  --card-foreground: #ffffff !important;
+  --border: #facc15 !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
 }
 
 .senior-mode * {
-  line-height: 1.6 !important;
+  line-height: 1.65 !important;
+  border-color: #facc15 !important;
+}
+
+.senior-mode .bg-white,
+.senior-mode .bg-slate-50,
+.senior-mode .bg-slate-100 {
+  background-color: #0a0a0a !important;
+  color: #ffffff !important;
+  border-color: #facc15 !important;
+}
+
+.senior-mode .text-slate-500,
+.senior-mode .text-slate-600,
+.senior-mode .text-slate-700,
+.senior-mode .text-slate-800,
+.senior-mode .text-slate-900,
+.senior-mode .text-sovereign-navy {
+  color: #ffffff !important;
 }
 
 .senior-mode button,
 .senior-mode a,
 .senior-mode input {
-  min-height: 54px !important;
-  font-weight: 700 !important;
+  min-height: 52px !important;
+  font-weight: 800 !important;
   border-width: 2px !important;
+  border-color: #facc15 !important;
+  color: #facc15 !important;
+}
+
+.senior-mode .bg-sovereign-navy,
+.senior-mode .bg-emerald-600 {
+  background-color: #facc15 !important;
+  color: #000000 !important;
+  font-weight: 900 !important;
 }
 
 body {

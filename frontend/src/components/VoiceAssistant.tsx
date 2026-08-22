@@ -158,10 +158,10 @@ export const VoiceAssistant: React.FC = () => {
   };
 
   const quickTiles = [
-    { label: "🚑 Medical Advance (Para 68J)", query: "I need medical advance for treatment" },
-    { label: "🔄 Transfer Previous PF (Form 13)", query: "Transfer my previous PF balance" },
-    { label: "📈 Check 8.25% Passbook", query: "Show my passbook balance and interest" },
-    { label: "✨ Fix Name / Bank KYC", query: "Fix my name mismatch and bank details" }
+    { label: "🇮🇳 मुझे मेडिकल इमरजेंसी के लिए पैसे निकालने हैं", query: "मुझे मेडिकल इमरजेंसी के लिए पैसे निकालने हैं" },
+    { label: "🇮🇳 నా పాత కంపెనీ PF బ్యాలెన్స్ ట్రాన్స్ఫర్ చేయండి", query: "నా పాత కంపెనీ PF బ్యాలెన్స్ ట్రాన్స్ఫర్ చేయండి" },
+    { label: "📊 Show my interest earned this financial year", query: "Show my interest earned this financial year" },
+    { label: "✨ Fix my name mismatch with Aadhaar", query: "Fix my name mismatch and bank details" }
   ];
 
   return (

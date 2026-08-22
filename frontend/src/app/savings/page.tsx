@@ -263,6 +263,35 @@ export default function MySavingsHub() {
           </div>
         </div>
 
+        {/* Visual Compounding Growth Trajectory Bars */}
+        <div className="space-y-2 bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <div className="flex justify-between text-xs font-bold text-slate-700">
+            <span>📈 Sovereign Compounding Wealth Trajectory (8.25% Annual Yield)</span>
+            <span className="text-amber-800 font-mono">₹{retirementTotal.toLocaleString("en-IN")} at Age 58</span>
+          </div>
+          <div className="h-28 flex items-end gap-1.5 pt-4 px-2">
+            {forecast.filter((_, idx) => idx % Math.max(1, Math.floor(forecast.length / 14)) === 0 || idx === forecast.length - 1).map((point, i, arr) => {
+              const maxVal = arr[arr.length - 1]?.totalBalance || 1;
+              const heightPct = Math.max(10, Math.round((point.totalBalance / maxVal) * 100));
+              return (
+                <div key={point.year} className="flex-1 flex flex-col items-center gap-1 group">
+                  <div
+                    style={{ height: `${heightPct}%` }}
+                    className="w-full bg-gradient-to-t from-sovereign-navy via-emerald-600 to-amber-400 rounded-t transition-all group-hover:brightness-110 relative"
+                    title={`Age ${point.age} (${point.year}): ₹${point.totalBalance.toLocaleString("en-IN")}`}
+                  />
+                  <span className="text-[9px] text-slate-500 font-mono hidden sm:inline">{point.age}y</span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex justify-between text-[10px] text-slate-400 border-t border-slate-200 pt-1">
+            <span>Age {currentAge} (Now)</span>
+            <span>Compounding Multiplier: ~{((retirementTotal / Math.max(1, totalBal))).toFixed(1)}x Initial Balance</span>
+            <span>Age 58 (Retirement Target)</span>
+          </div>
+        </div>
+
         {/* Compounding Projection Table Preview */}
         <div className="overflow-x-auto max-h-48 rounded-xl border border-slate-200">
           <table className="w-full text-left text-xs">
