@@ -35,27 +35,23 @@ export default function RootLayout({
                     Built for <span className="text-saffron font-medium">Build What Moves India</span> (Varun Mayya × OpenAI Hackathon 2026)
                   </p>
                 </div>
-                <div className="flex flex-col sm:items-end text-[11px] space-y-0.5 text-center sm:text-right">
-                  <div>
-                    <span>Author & Principal Architect: <strong className="text-slate-200">Damik Reddy</strong></span>
-                  </div>
-                  <div>
-                    <a href="mailto:damikreddy2007@gmail.com" className="text-saffron hover:underline font-mono text-[11px]">
-                      damikreddy2007@gmail.com
-                    </a>
-                  </div>
-                  <div className="flex items-center justify-center sm:justify-end gap-2 text-[10px] text-slate-400 pt-0.5">
-                    <span className="text-emerald-400 font-semibold">Zero-Trust RLS Protected</span>
-                    <span>•</span>
-                    <span className="text-samriddhi-bright font-semibold">80/20 On-Site Sovereign Core</span>
-                  </div>
+                <div className="flex flex-wrap items-center gap-3 text-[11px]">
+                  <span>Created by <strong className="text-slate-200">Damik Reddy</strong></span>
+                  <span className="text-slate-600">|</span>
+                  <a href="mailto:damikreddy2007@gmail.com" className="text-slate-300 hover:text-saffron transition-colors">
+                    damikreddy2007@gmail.com
+                  </a>
+                  <span className="text-slate-600">•</span>
+                  <span className="text-emerald-400 font-semibold">Zero-Trust RLS Protected</span>
+                  <span className="text-slate-600">•</span>
+                  <span className="text-samriddhi-bright font-semibold">80/20 On-Site Sovereign Core</span>
                 </div>
               </div>
 
               {/* Compliance & Legal Disclaimer */}
               <div className="pt-3 border-t border-slate-800 text-[11px] text-slate-400 leading-relaxed bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
                 <p>
-                  ⚠️ <strong>Disclaimer:</strong> Jan-EPF AI is an independent, open-source proof-of-concept created by <strong>Damik Reddy</strong> (<a href="mailto:damikreddy2007@gmail.com" className="text-saffron hover:underline">damikreddy2007@gmail.com</a>) for the Build What Moves India Hackathon. Not affiliated with or endorsed by EPFO or the Government of India. All data is synthetic.
+                  ⚠️ <strong>Disclaimer:</strong> Jan-EPF AI is an independent, open-source proof-of-concept created by Damik Reddy for the Build What Moves India Hackathon. Not affiliated with or endorsed by EPFO or the Government of India. All data is synthetic.
                 </p>
               </div>
             </div>
