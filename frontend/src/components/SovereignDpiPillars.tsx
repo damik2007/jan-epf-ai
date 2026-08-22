@@ -20,15 +20,15 @@ export const SovereignDpiPillars: React.FC = () => {
   const pillars = [
     {
       id: 1,
-      title: "Sovereign UI Architecture",
+      title: "Institutional UI Architecture",
       icon: ShieldCheck,
-      badge: "Institutional Trust",
+      badge: "Sovereign Trust",
       color: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800",
-      headline: "Tabular Numerals & High Clarity",
+      headline: "Tabular Precision & Zero Visual Jitter",
       points: [
-        "Fixed-width tabular numerals (font-mono tabular-nums) eliminate visual jitter during real-time interest compounding.",
-        "Deep sovereign palette (#060D17 / #0B132B) with amber gold accents and high-contrast accessibility.",
-        "Calm visual hierarchy engineered to reduce anxiety during emergency medical and claim filings."
+        "Fixed-width tabular numerals eliminate layout shifts during real-time compounding calculations.",
+        "Deep navy palette with high-contrast accessibility across both light and dark modes.",
+        "Calm, purposeful visual hierarchy engineered to reduce anxiety during claim submissions."
       ]
     },
     {
@@ -37,26 +37,26 @@ export const SovereignDpiPillars: React.FC = () => {
       icon: Zap,
       badge: "80/20 Client Core",
       color: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800",
-      headline: "Zero Full-Screen Blocking Spinners",
+      headline: "Deterministic Instant Calculations",
       points: [
-        "100% optimistic local execution: Routine calculations (Para 68J, TDS, Levenshtein match) run on-device in <16ms.",
-        "Local skeleton shimmers preserve viewport layout with Zero Cumulative Layout Shift (CLS = 0).",
-        "Offline-tolerant form state in IndexedDB ensures zero progress loss during network fluctuations."
+        "100% optimistic local execution: Routine calculations (Para 68J, TDS, Levenshtein match) run on-device in <1ms.",
+        "Skeleton shimmers preserve viewport layout with Zero Cumulative Layout Shift (CLS = 0).",
+        "Offline-tolerant form state in local storage ensures zero progress loss during network interruptions."
       ]
     },
     {
       id: 3,
       title: "100% Financial Lineage",
       icon: Calculator,
-      badge: "Explain Every Rupee",
+      badge: "Mathematical Proof",
       color: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800",
-      headline: "Every Rupee has a Mathematical Proof",
+      headline: "Every Rupee Fully Reconciled",
       action: () => setExplainModalOpen(true),
-      actionLabel: "View Mathematical Derivation",
+      actionLabel: "Inspect Live Mathematical Proof",
       points: [
-        "1-Click transparent breakdown for Employee Share (12%), Employer Share (3.67%), and EPS (8.33%).",
-        "Explicit 8.25% annual compounding monthly running balance calculation log.",
-        "Cryptographically verifiable ledger state with SHA-256 audit trail tokens."
+        "Transparent triple-split derivation: Employee Share (12%), Employer Share (3.67%), and EPS Pension (8.33%).",
+        "Explicit 8.25% annual compounding monthly running balance audit ledger.",
+        "Tamper-evident cryptographic ledger state with SHA-256 audit trail tokens."
       ]
     },
     {
@@ -65,11 +65,11 @@ export const SovereignDpiPillars: React.FC = () => {
       icon: HeartHandshake,
       badge: "5-Second Grace",
       color: "text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800",
-      headline: "Human Language & Reassurance Safeguards",
+      headline: "Human Language & Accidental Error Safeguards",
       points: [
         "Live Gateway Health Pulses show real-time operational status for NPCI, UIDAI, and NSDL.",
-        "Plain empathetic human language replaces cryptic database errors (e.g. ORA-01000).",
-        "5-Second interactive undo grace period buffer on fund withdrawals to prevent accidental submissions."
+        "Empathetic human language replaces cryptic database error codes.",
+        "5-Second interactive undo grace period buffer on fund withdrawals to prevent accidental claims."
       ]
     },
     {
@@ -80,9 +80,9 @@ export const SovereignDpiPillars: React.FC = () => {
       color: "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-800",
       headline: "Desktop to Sub-50KB 2G Mobile",
       points: [
-        "Elder Comfort Senior Mode: 125% font scaling, 56px touch ergonomics, and WCAG AAA contrast.",
-        "Edge-TTS Neural Voice streaming across 10 Indian vernacular languages with zero API cost.",
-        "Lightweight client bundles optimized for budget mobile devices over rural 2G/3G connections."
+        "Elder Comfort Senior Mode: 150% font scaling, 56px touch ergonomics, and high-contrast palette.",
+        "Edge-TTS Neural Voice streaming across 10 Indian regional languages with zero API token cost.",
+        "Lightweight bundles optimized for budget mobile devices over rural 2G/3G connections."
       ]
     },
     {
@@ -91,11 +91,11 @@ export const SovereignDpiPillars: React.FC = () => {
       icon: Lock,
       badge: "DPDP & Presidio",
       color: "text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 border-cyan-200 dark:border-cyan-800",
-      headline: "100% PII Masking & Self-Healing Matrix",
+      headline: "On-Device PII Masking & Self-Healing Matrix",
       points: [
-        "Client-side Presidio PII tokenization masks 100% of Aadhaar and PAN before reaching telemetry logs.",
-        "Substitute Employee Resilience Matrix: 6 hot-swappable fallback circuits guaranteeing 100% uptime.",
-        "PostgreSQL Row-Level Security (RLS) policies enforcing strict multi-tenant boundary isolation."
+        "Client-side Presidio PII tokenization masks 100% of Aadhaar and PAN before telemetry logging.",
+        "Substitute Employee Resilience Matrix: 6 hot-swappable fallback circuits ensuring 100% uptime.",
+        "PostgreSQL Row-Level Security (RLS) policies enforcing multi-tenant boundary isolation."
       ]
     }
   ];
@@ -117,14 +117,6 @@ export const SovereignDpiPillars: React.FC = () => {
             Engineered for ₹21+ Lakh Crore in retirement assets across 70+ Million Indian workers with zero downtime and sub-second verification.
           </p>
         </div>
-
-        <button
-          onClick={() => setExplainModalOpen(true)}
-          className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all shadow-md shrink-0"
-        >
-          <Calculator className="w-4 h-4" />
-          <span>Explain Every Rupee</span>
-        </button>
       </div>
 
       {/* Grid of 6 Pillars */}

@@ -33,6 +33,7 @@ export default function CitizenLandingPage() {
   const t = getTranslation(language);
 
   const [loggingIn, setLoggingIn] = useState<boolean>(false);
+  const [activeSectionTab, setActiveSectionTab] = useState<"features" | "audience" | "benchmark" | "sre" | "pillars">("features");
 
   const personaScenarios = [
     {
@@ -365,20 +366,83 @@ export default function CitizenLandingPage() {
         </div>
       </div>
 
-      {/* The 8 High-Demand Real-World Features Matrix */}
-      <CitizenFeatureMatrix />
+      {/* Architectural Intelligence & Evaluator Showcase Tabs */}
+      <div className="space-y-4 pt-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <div>
+            <h3 className="text-base font-extrabold text-sovereign-navy dark:text-white flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              <span>Architectural Intelligence & Evaluator Showcase</span>
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Explore breakthroughs, audience journeys, transformation metrics, live SRE telemetry, and engineering pillars.
+            </p>
+          </div>
 
-      {/* Target Audience Problem & Feature Expectation Report */}
-      <AudienceSegmentReport />
+          {/* Tab Selection Chips */}
+          <div className="flex flex-wrap gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/80">
+            <button
+              onClick={() => setActiveSectionTab("features")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                activeSectionTab === "features"
+                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-xs border border-slate-200 dark:border-slate-700"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              🌟 Breakthroughs
+            </button>
+            <button
+              onClick={() => setActiveSectionTab("audience")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                activeSectionTab === "audience"
+                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-xs border border-slate-200 dark:border-slate-700"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              👥 Audience Journeys
+            </button>
+            <button
+              onClick={() => setActiveSectionTab("benchmark")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                activeSectionTab === "benchmark"
+                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-xs border border-slate-200 dark:border-slate-700"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              📊 Impact Benchmark
+            </button>
+            <button
+              onClick={() => setActiveSectionTab("sre")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                activeSectionTab === "sre"
+                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-xs border border-slate-200 dark:border-slate-700"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              ⚡ SRE Telemetry
+            </button>
+            <button
+              onClick={() => setActiveSectionTab("pillars")}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                activeSectionTab === "pillars"
+                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-xs border border-slate-200 dark:border-slate-700"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              🏛️ Engineering Pillars
+            </button>
+          </div>
+        </div>
 
-      {/* Live SRE Sovereign Telemetry & Resilience Monitor */}
-      <SreTelemetryPanel />
-
-      {/* Legacy EPFO vs Jan-EPF AI Impact Transformation Benchmark */}
-      <BenchmarkComparison />
-
-      {/* Core Architectural Engineering Pillars */}
-      <SovereignDpiPillars />
+        {/* Tab Content Display */}
+        <div className="transition-all duration-200">
+          {activeSectionTab === "features" && <CitizenFeatureMatrix />}
+          {activeSectionTab === "audience" && <AudienceSegmentReport />}
+          {activeSectionTab === "benchmark" && <BenchmarkComparison />}
+          {activeSectionTab === "sre" && <SreTelemetryPanel />}
+          {activeSectionTab === "pillars" && <SovereignDpiPillars />}
+        </div>
+      </div>
     </div>
   );
 }
