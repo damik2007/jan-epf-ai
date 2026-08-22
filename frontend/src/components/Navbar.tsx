@@ -13,7 +13,8 @@ import {
   Languages,
   Eye,
   ShieldCheck,
-  ChevronDown
+  ChevronDown,
+  Zap
 } from "lucide-react";
 
 import { getTranslation } from "@/lib/translations";
@@ -157,47 +158,90 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Persona Switcher & Active Citizen Badge */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <Link
+              href="/login"
+              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold bg-saffron/20 border border-saffron/40 text-saffron hover:bg-saffron hover:text-sovereign-darkest transition-all"
+              title="View all 4 Judge Test Scenarios"
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>Demo Logins</span>
+            </Link>
+
             <div className="relative group">
-              <div className="flex items-center gap-2 bg-sovereign-light border border-sovereign-accent px-3 py-1.5 rounded-lg cursor-pointer hover:border-saffron transition-all">
+              <button
+                type="button"
+                className="flex items-center gap-2 bg-sovereign-light border border-sovereign-accent px-3 py-1.5 rounded-lg hover:border-saffron transition-all text-left"
+              >
                 <UserCheck className="w-4 h-4 text-emerald-400" />
-                <div className="text-left">
+                <div>
                   <div className="text-xs font-bold text-white flex items-center gap-1">
                     <span>{activeCitizen.full_name}</span>
-                    <ChevronDown className="w-3 h-3 text-slate-400" />
+                    <ChevronDown className="w-3 h-3 text-slate-400 group-hover:rotate-180 transition-transform" />
                   </div>
                   <div className="text-[10px] text-slate-300">
                     UAN: {activeCitizen.uan.slice(0, 4)}••••{activeCitizen.uan.slice(-4)}
                   </div>
                 </div>
-              </div>
+              </button>
 
-              {/* Persona Dropdown Menu */}
-              <div className="absolute right-0 mt-1 w-72 bg-white text-slate-900 rounded-xl shadow-2xl border border-slate-200 p-2 hidden group-hover:block group-focus-within:block z-50 animate-in fade-in slide-in-from-top-1">
-                <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100">
-                  Switch Test Citizen Persona
+              {/* Rich Persona Dropdown Menu */}
+              <div className="absolute right-0 mt-1 w-84 bg-white text-slate-900 rounded-2xl shadow-2xl border border-slate-200 p-2 hidden group-hover:block group-focus-within:block z-50 animate-in fade-in slide-in-from-top-1">
+                <div className="px-3 py-1.5 flex justify-between items-center border-b border-slate-100 mb-1">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                    Switch Test Citizen Persona
+                  </span>
+                  <Link href="/login" className="text-[10px] text-saffron font-bold hover:underline">
+                    All Scenarios →
+                  </Link>
                 </div>
-                {citizens.map((c) => (
-                  <button
-                    key={c.uan}
-                    onClick={() => switchCitizen(c.uan)}
-                    className={`w-full text-left p-2 rounded-lg flex items-center justify-between text-xs transition-colors ${
-                      activeCitizen.uan === c.uan
-                        ? "bg-sovereign-navy text-white font-bold"
-                        : "hover:bg-slate-100 text-slate-800"
-                    }`}
-                  >
-                    <div>
-                      <div className="font-semibold">{c.full_name}</div>
-                      <div className={activeCitizen.uan === c.uan ? "text-slate-300 text-[10px]" : "text-slate-500 text-[10px]"}>
-                        {c.active_employment ? c.active_employment.establishment_name : c.pension_details ? `Senior Pensioner (${c.pension_details.scheme})` : "Gig / Unorganized Worker"}
-                      </div>
-                    </div>
-                    <span className="text-[10px] font-mono opacity-80">
-                      ₹{(c.passbook_summary.total_balance || 0).toLocaleString("en-IN")}
-                    </span>
-                  </button>
-                ))}
+
+                <div className="space-y-1">
+                  {citizens.map((c) => {
+                    const isSelected = activeCitizen.uan === c.uan;
+                    const scenarioTag =
+                      c.uan === "100982348712"
+                        ? "Form 31 Advance"
+                        : c.uan === "101294817203"
+                        ? "Form 13 Job Switch"
+                        : c.uan === "100112233445"
+                        ? "Senior Pensioner"
+                        : "e-Nomination / KYC";
+
+                    return (
+                      <button
+                        key={c.uan}
+                        onClick={() => switchCitizen(c.uan)}
+                        className={`w-full text-left p-2.5 rounded-xl flex flex-col gap-1 transition-all ${
+                          isSelected
+                            ? "bg-sovereign-navy text-white font-bold ring-2 ring-saffron/50 shadow-sm"
+                            : "hover:bg-slate-100 text-slate-800"
+                        }`}
+                      >
+                        <div className="flex justify-between items-center">
+                          <div className="font-bold text-xs flex items-center gap-1.5">
+                            <span>{c.full_name}</span>
+                            {isSelected && <span className="text-[9px] px-1.5 py-0.2 bg-emerald-500 text-white rounded font-bold">Active</span>}
+                          </div>
+                          <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold ${
+                            isSelected ? "bg-white/20 text-saffron" : "bg-slate-200 text-slate-700"
+                          }`}>
+                            {scenarioTag}
+                          </span>
+                        </div>
+
+                        <div className="flex justify-between items-center text-[10px]">
+                          <span className={isSelected ? "text-slate-300 truncate max-w-[160px]" : "text-slate-500 truncate max-w-[160px]"}>
+                            {c.active_employment ? c.active_employment.establishment_name : c.pension_details ? `EPS-95 Pensioner` : "Gig / Unorganized Worker"}
+                          </span>
+                          <span className="font-mono font-semibold">
+                            ₹{(c.passbook_summary.total_balance || (c.pension_details ? c.pension_details.monthly_pension_amount : 0)).toLocaleString("en-IN")}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
