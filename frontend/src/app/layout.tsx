@@ -25,21 +25,30 @@ export default function RootLayout({
           </main>
           <VoiceAssistant />
           <footer className="bg-sovereign-darkest text-slate-400 text-xs border-t border-sovereign-navy py-6 mt-12">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-              <div>
-                <p className="font-bold text-white">
-                  Jan-EPF AI • Digital Public Infrastructure Prototype
-                </p>
-                <p className="text-[11px] text-slate-400 mt-0.5">
-                  Built for <span className="text-saffron font-medium">Build What Moves India</span> (Varun Mayya × OpenAI Hackathon 2026)
-                </p>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                  <p className="font-bold text-white">
+                    Jan-EPF AI • Digital Public Infrastructure Prototype
+                  </p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Built for <span className="text-saffron font-medium">Build What Moves India</span> (Varun Mayya × OpenAI Hackathon 2026)
+                  </p>
+                </div>
+                <div className="flex items-center gap-4 text-[11px]">
+                  <span>Author & Principal Architect: <strong className="text-slate-200">Damik Reddy</strong></span>
+                  <span>•</span>
+                  <span className="text-emerald-400 font-semibold">Zero-Trust RLS Protected</span>
+                  <span>•</span>
+                  <span className="text-samriddhi-bright font-semibold">80/20 On-Site Sovereign Core</span>
+                </div>
               </div>
-              <div className="flex items-center gap-4 text-[11px]">
-                <span>Author & Principal Architect: <strong className="text-slate-200">Damik Reddy</strong></span>
-                <span>•</span>
-                <span className="text-emerald-400 font-semibold">Zero-Trust RLS Protected</span>
-                <span>•</span>
-                <span className="text-samriddhi-bright font-semibold">80/20 On-Site Sovereign Core</span>
+
+              {/* Compliance & Legal Disclaimer */}
+              <div className="pt-3 border-t border-slate-800 text-[11px] text-slate-400 leading-relaxed bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
+                <p>
+                  ⚠️ <strong>Disclaimer:</strong> Jan-EPF AI is an independent, open-source proof-of-concept created by Damik Reddy for the Build What Moves India Hackathon. Not affiliated with or endorsed by EPFO or the Government of India. All data is synthetic.
+                </p>
               </div>
             </div>
           </footer>

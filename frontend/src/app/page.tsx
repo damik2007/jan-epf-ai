@@ -78,10 +78,10 @@ export default function CitizenLandingPage() {
           <div className="space-y-2 max-w-2xl">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-saffron text-sovereign-darkest">
-                {t.govBanner}
+                CITIZEN REDESIGN PROTOTYPE
               </span>
               <span className="text-xs text-slate-300">
-                {t.uanLabel}: <strong className="font-mono text-white">{activeCitizen.uan}</strong>
+                SIMULATED UAN: <strong className="font-mono text-white">{activeCitizen.uan}</strong>
               </span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">

@@ -66,10 +66,10 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="inline-block w-2.5 h-2.5 rounded-full bg-saffron animate-pulse" />
           <span className="font-semibold text-saffron tracking-wide">
-            {t.govBanner}
+            PROTOTYPE PROOF-OF-CONCEPT
           </span>
           <span className="hidden sm:inline text-slate-400">|</span>
-          <span className="hidden sm:inline text-slate-300">{t.prototypeNotice}</span>
+          <span className="hidden sm:inline text-slate-300">Build What Moves India Hackathon (Varun Mayya × OpenAI)</span>
         </div>
 
         <div className="flex items-center gap-4">
