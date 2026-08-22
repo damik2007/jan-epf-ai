@@ -67,6 +67,26 @@ export function BenchmarkComparison() {
       icon: Zap,
       badge: "Self-Healing SRE Active",
       color: "emerald"
+    },
+    {
+      metric: "Zero-Trust PII & DPDP Act 2023",
+      legacy: "Unmasked Aadhaar & Bank Data in Logs",
+      legacyNote: "Vulnerable to data leaks, credential theft, and non-compliance with digital privacy laws.",
+      janEpf: "Presidio On-Device Masking & PostgreSQL RLS",
+      janEpfNote: "12-digit Aadhaar/PAN tokenized before log streams with PostgreSQL Row-Level Security tenant isolation.",
+      icon: ShieldCheck,
+      badge: "DPDP Act 2023 Compliant",
+      color: "blue"
+    },
+    {
+      metric: "DPI Economic Scalability",
+      legacy: "Multi-Million Dollar Server Cluster",
+      legacyNote: "Server clusters crash under 750k concurrent employer filings on the 15th of the month.",
+      janEpf: "80% On-Device Sovereign Computation",
+      janEpfNote: "Para 68 limits, TDS rules, and Levenshtein fuzzy match run on client browser for $0 API cost and <5ms response.",
+      icon: Sparkles,
+      badge: "$0 API Cloud Cost",
+      color: "amber"
     }
   ];
 

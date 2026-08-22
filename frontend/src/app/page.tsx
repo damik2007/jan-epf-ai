@@ -24,6 +24,7 @@ import {
 import { BenchmarkComparison } from "@/components/BenchmarkComparison";
 import { CitizenFeatureMatrix } from "@/components/CitizenFeatureMatrix";
 import { AudienceSegmentReport } from "@/components/AudienceSegmentReport";
+import { SreTelemetryPanel } from "@/components/SreTelemetryPanel";
 
 export default function CitizenLandingPage() {
   const { activeCitizen, isAuthenticated, login, logout, language } = useCitizen();
@@ -364,6 +365,9 @@ export default function CitizenLandingPage() {
 
       {/* Target Audience Problem & Feature Expectation Report */}
       <AudienceSegmentReport />
+
+      {/* Live SRE Sovereign Telemetry & Resilience Monitor */}
+      <SreTelemetryPanel />
 
       {/* Legacy EPFO vs Jan-EPF AI Impact Transformation Benchmark */}
       <BenchmarkComparison />
