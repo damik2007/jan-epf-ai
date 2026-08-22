@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str = "e9f8a3c1b7d5e2a4f6c8e0b2d4a6f8e0c2a4b6d8e0f2a4b6c8d0e2f4a6b8c0d2"
     JWT_ALGORITHM: str = "HS256"
     INTERNAL_SERVICE_SECRET: str = "sec_epf_internal_98a7b6c5d4e3f2a1"
+    INTERNAL_SECRET: str = "sec_epf_internal_98a7b6c5d4e3f2a1"
     WEBHOOK_HMAC_SECRET: str = "hmac_npci_callback_88e7d6c5b4a3f2"
 
     # Database & In-Memory Cache

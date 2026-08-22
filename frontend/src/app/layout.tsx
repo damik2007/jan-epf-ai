@@ -1,8 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { CitizenProvider } from "@/context/CitizenContext";
 import { Navbar } from "@/components/Navbar";
 import { VoiceAssistant } from "@/components/VoiceAssistant";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: "#002147",
+};
 
 export const metadata: Metadata = {
   title: "Jan-EPF AI • Rebuilding India's Provident Fund (EPFO)",

@@ -94,3 +94,16 @@ async def prometheus_metrics():
         content=get_prometheus_metrics_payload(),
         media_type="text/plain"
     )
+
+
+@app.get("/", tags=["System"])
+async def root():
+    """
+    Root API health and welcome index.
+    """
+    return {
+        "message": "Welcome to Jan-EPF AI - Sovereign Digital Provident Fund Platform",
+        "docs": "/docs",
+        "health": "/health",
+        "metrics": "/metrics"
+    }

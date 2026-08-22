@@ -2,7 +2,10 @@
 Jan-EPF AI: Voice Assistant & Multilingual Intent Classifier Route (Agent 2).
 Supports Hindi (हिंदी), Telugu (తెలుగు), Tamil (தமிழ்), and English with sovereign on-device token rules.
 """
+import os
+import httpx
 from fastapi import APIRouter
+from src.core.config import settings
 from src.core.data_store import mock_store
 from src.core.schemas import VoiceCommandRequest, VoiceCommandResponse
 
@@ -12,8 +15,24 @@ router = APIRouter(prefix="/voice", tags=["Voice Assistant"])
 @router.post("/intent", response_model=VoiceCommandResponse)
 async def parse_voice_intent(req: VoiceCommandRequest):
     raw_text = (req.audio_transcript or "").strip()
-    text = raw_text.lower()
     lang = req.detected_language or "en-IN"
+
+    # If raw audio is supplied, optionally transcribe via open-source Faster-Whisper microservice
+    if req.raw_audio_base64 and getattr(settings, "FASTER_WHISPER_URL", None):
+        try:
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                whisper_resp = await client.post(
+                    f"{settings.FASTER_WHISPER_URL}/v1/transcribe",
+                    json={"audio": req.raw_audio_base64, "language": lang.split("-")[0]},
+                    headers={"X-Service-Key": settings.INTERNAL_SECRET}
+                )
+                if whisper_resp.status_code == 200:
+                    raw_text = whisper_resp.json().get("text", raw_text)
+        except Exception:
+            # Fall back seamlessly to native token parser
+            pass
+
+    text = raw_text.lower()
 
     citizen = None
     if req.uan_context:

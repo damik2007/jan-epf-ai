@@ -265,6 +265,7 @@ class GrievanceDiagnosisResponse(BaseModel):
 # ==============================================================================
 class VoiceCommandRequest(BaseModel):
     audio_transcript: Optional[str] = None
+    raw_audio_base64: Optional[str] = None
     detected_language: str = "hi-IN"  # hi-IN, te-IN, ta-IN, en-IN
     uan_context: Optional[str] = None
 
