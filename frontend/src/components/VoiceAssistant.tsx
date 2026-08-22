@@ -13,10 +13,12 @@ import {
   CornerDownLeft,
   X
 } from "lucide-react";
+import { getTranslation } from "@/lib/translations";
 
 export const VoiceAssistant: React.FC = () => {
   const router = useRouter();
   const { activeCitizen, language } = useCitizen();
+  const t = getTranslation(language);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isListening, setIsListening] = useState<boolean>(false);
   const [transcript, setTranscript] = useState<string>("");
@@ -254,7 +256,7 @@ export const VoiceAssistant: React.FC = () => {
           }`}
         >
           {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5 text-saffron" />}
-          <span>{isListening ? "Listening... Tap to Stop" : "Speak to Voice Copilot"}</span>
+          <span>{isListening ? "Listening... Tap to Stop" : t.speakToVoice}</span>
           {isOpen ? <ChevronDown className="w-4 h-4 text-slate-300" /> : <ChevronUp className="w-4 h-4 text-slate-300" />}
         </button>
       </div>

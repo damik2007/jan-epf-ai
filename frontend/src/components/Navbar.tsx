@@ -95,10 +95,18 @@ export const Navbar: React.FC = () => {
               onChange={(e) => setLanguage(e.target.value)}
               className="bg-transparent text-white text-xs border-none focus:outline-none cursor-pointer font-bold"
             >
-              <option value="en-IN" className="bg-slate-900 text-white">English</option>
+              <option value="en-IN" className="bg-slate-900 text-white">English (English)</option>
+              <option value="hi-IN" className="bg-slate-900 text-white">हिन्दी (Hindi)</option>
               <option value="te-IN" className="bg-slate-900 text-white">తెలుగు (Telugu)</option>
-              <option value="hi-IN" className="bg-slate-900 text-white">हिंदी (Hindi)</option>
               <option value="ta-IN" className="bg-slate-900 text-white">தமிழ் (Tamil)</option>
+              <option value="kn-IN" className="bg-slate-900 text-white">ಕನ್ನಡ (Kannada)</option>
+              <option value="ml-IN" className="bg-slate-900 text-white">മലയാളം (Malayalam)</option>
+              <option value="mr-IN" className="bg-slate-900 text-white">मराठी (Marathi)</option>
+              <option value="bn-IN" className="bg-slate-900 text-white">বাংলা (Bengali)</option>
+              <option value="gu-IN" className="bg-slate-900 text-white">ગુજરાતી (Gujarati)</option>
+              <option value="pa-IN" className="bg-slate-900 text-white">ਪੰਜਾਬੀ (Punjabi)</option>
+              <option value="or-IN" className="bg-slate-900 text-white">ଓଡ଼ିଆ (Odia)</option>
+              <option value="as-IN" className="bg-slate-900 text-white">অসমীয়া (Assamese)</option>
             </select>
           </div>
         </div>
