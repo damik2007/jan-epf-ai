@@ -53,10 +53,20 @@ export function BenchmarkComparison() {
       legacy: "Desktop-Heavy Portal in English / Hindi",
       legacyNote: "Fails on low-end budget mobiles; lacks senior citizen high-contrast scaling.",
       janEpf: "Universal Mobile (320px+), 12 Indian Languages & Senior Mode",
-      janEpfNote: "130% Senior scaling, 48px touch targets, and open-source Faster-Whisper voice copilot.",
+      janEpfNote: "130% Senior scaling, 56px touch targets, and open-source Faster-Whisper voice copilot.",
       icon: ShieldCheck,
-      badge: "WCAG 2.1 AA Compliant",
+      badge: "WCAG 2.1 AAA Compliant",
       color: "amber"
+    },
+    {
+      metric: "Fault-Tolerance & SRE Pipeline",
+      legacy: "Single Point of Failure (SPOF) Outages",
+      legacyNote: "Server crashes halt citizen claims for days; portal down during monthly peak hours.",
+      janEpf: "Self-Healing CI/CD Pipeline & 6-Circuit Substitute Matrix",
+      janEpfNote: "Automated 5-stage canary health probes with retry loops in GitHub Actions + instant in-browser sovereign fallback.",
+      icon: Zap,
+      badge: "Self-Healing SRE Active",
+      color: "emerald"
     }
   ];
 
