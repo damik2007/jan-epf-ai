@@ -6,7 +6,6 @@ import { deduceMissingDateOfExit, calculateTdsDeduction } from "@/lib/determinis
 import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { StatutoryTooltip } from "@/components/StatutoryTooltip";
-import { PageAudioNarrator } from "@/components/PageAudioNarrator";
 import {
   Briefcase,
   ArrowRightLeft,
@@ -117,7 +116,6 @@ export default function ChangedJobsHub() {
             <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.careerTitle}
             </h1>
-            <PageAudioNarrator hub="career" />
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.careerSubtitle}

@@ -219,18 +219,18 @@ export default function CitizenLandingPage() {
       desc: t.homeMoneyDesc,
       href: "/money",
       icon: Wallet,
-      tag: "Para 68",
-      tagColor: "bg-emerald-100 text-emerald-800 border-emerald-300",
+      tag: "Instant Advance",
+      tagColor: "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800",
       accent: "from-emerald-600 to-teal-700",
-      stat: "Instant DBT"
+      stat: "Instant DBT Sanction"
     },
     {
       title: t.navCareer,
       desc: t.homeCareerDesc,
       href: "/career",
       icon: Briefcase,
-      tag: "Form 13",
-      tagColor: "bg-blue-100 text-blue-800 border-blue-300",
+      tag: "Job Switch Transfer",
+      tagColor: "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800",
       accent: "from-blue-600 to-indigo-800",
       stat: "Auto-Exit Deducer"
     },
@@ -239,20 +239,20 @@ export default function CitizenLandingPage() {
       desc: t.homeSavingsDesc,
       href: "/savings",
       icon: PiggyBank,
-      tag: "8.25%",
-      tagColor: "bg-amber-100 text-amber-900 border-amber-300",
+      tag: "8.25% Wealth",
+      tagColor: "bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800",
       accent: "from-amber-500 to-yellow-600",
-      stat: "₹7 Lakh EDLI"
+      stat: "₹7 Lakh Free Insurance"
     },
     {
       title: t.navFix,
       desc: t.homeFixDesc,
       href: "/fix",
       icon: Wrench,
-      tag: "Penny Drop",
-      tagColor: "bg-purple-100 text-purple-800 border-purple-300",
+      tag: "Self-Healing KYC",
+      tagColor: "bg-purple-100 text-purple-800 border-purple-300 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-800",
       accent: "from-purple-600 to-indigo-700",
-      stat: "3-Way Digital"
+      stat: "Para 72(5) Legal Shield"
     }
   ];
 
@@ -332,38 +332,9 @@ export default function CitizenLandingPage() {
 
       <ClaimReadinessScore />
 
-      {/* Interactive Chaos Simulator Trigger Banner */}
-      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-slate-900 via-sovereign-darkest to-sovereign-navy text-white border border-slate-800 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
-        <div className="flex items-center gap-3.5 relative z-10">
-          <div className="w-10 h-10 rounded-2xl bg-saffron text-sovereign-darkest flex items-center justify-center font-bold shrink-0 shadow-md">
-            <Sparkles className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-black text-white">
-                Zero-Rejection Claim Stress-Test Sandbox
-              </h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-saffron/20 text-saffron border border-saffron/40">
-                Evaluator Tool
-              </span>
-            </div>
-            <p className="text-xs text-slate-300 mt-0.5">
-              Intentionally inject name typos, missing exit dates, obsolete IFSCs, or 20% TDS traps to observe sub-millisecond deterministic self-healing.
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={() => setChaosSimulatorOpen(true)}
-          className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-saffron hover:bg-amber-400 text-sovereign-darkest font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-md shrink-0 relative z-10"
-        >
-          <Zap className="w-4 h-4" />
-          <span>Launch Chaos Sandbox</span>
-        </button>
-      </div>
-
       {/* 4 Topic-Centric Action Hubs Header */}
       <div>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-sovereign-navy dark:text-white tracking-tight">
               {t.quickActionsTitle}
@@ -372,9 +343,19 @@ export default function CitizenLandingPage() {
               {t.homeSubtitle}
             </p>
           </div>
-          <span className="text-xs font-bold px-3 py-1 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 rounded-full">
-            80/20 On-Site Sovereign Core
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => setChaosSimulatorOpen(true)}
+              className="text-xs font-bold px-3 py-1.5 bg-saffron/15 hover:bg-saffron text-sovereign-darkest dark:text-amber-300 dark:hover:text-slate-950 border border-saffron/40 rounded-xl flex items-center gap-1.5 transition-all shadow-sm"
+              title="Launch Chaos Sandbox to inject mismatches and test self-healing"
+            >
+              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              <span>Stress-Test Chaos Sandbox</span>
+            </button>
+            <span className="text-xs font-bold px-3 py-1.5 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 rounded-xl">
+              80/20 Sovereign Core
+            </span>
+          </div>
         </div>
 
         {/* 4 Cards Grid */}
