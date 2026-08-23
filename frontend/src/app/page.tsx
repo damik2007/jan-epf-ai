@@ -36,6 +36,26 @@ export default function CitizenLandingPage() {
   const [loggingIn, setLoggingIn] = useState<boolean>(false);
   const [activeSectionTab, setActiveSectionTab] = useState<"features" | "audience" | "benchmark" | "sre" | "pillars">("features");
 
+  const totalBalance = activeCitizen.passbook_summary?.total_balance || 0;
+  const [displayBalance, setDisplayBalance] = useState(0);
+
+  React.useEffect(() => {
+    const duration = 800;
+    const steps = 30;
+    const increment = totalBalance / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= totalBalance) {
+        setDisplayBalance(totalBalance);
+        clearInterval(timer);
+      } else {
+        setDisplayBalance(Math.round(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [totalBalance]);
+
   const personaScenarios = [
     {
       uan: "100982348712",
@@ -188,26 +208,6 @@ export default function CitizenLandingPage() {
   }
 
   // If visitor IS authenticated, display the full Citizen Dashboard
-  const totalBalance = activeCitizen.passbook_summary?.total_balance || 0;
-  
-  const [displayBalance, setDisplayBalance] = useState(0);
-  React.useEffect(() => {
-    const duration = 800;
-    const steps = 30;
-    const increment = totalBalance / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= totalBalance) {
-        setDisplayBalance(totalBalance);
-        clearInterval(timer);
-      } else {
-        setDisplayBalance(Math.round(current));
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
-  }, [totalBalance]);
-
   const employeeShare = activeCitizen.passbook_summary?.employee_share || 0;
   const interestEarned = activeCitizen.passbook_summary?.interest_credited_current_fy || 0;
 

@@ -1,7 +1,7 @@
 {
   "total": 30,
-  "passed": 30,
-  "failed": 0,
+  "passed": 29,
+  "failed": 1,
   "results": [
     {
       "test": "Navbar Exists",
@@ -26,102 +26,102 @@
     {
       "test": "Ramesh Kumar \u2192 Home",
       "status": "PASS",
-      "detail": "Content length: 4464 chars"
+      "detail": "Content length: 1155 chars"
     },
     {
       "test": "Ramesh Kumar \u2192 I Need Money",
       "status": "PASS",
-      "detail": "Content length: 1827 chars"
+      "detail": "Content length: 1897 chars"
     },
     {
       "test": "Ramesh Kumar \u2192 I Changed Jobs",
       "status": "PASS",
-      "detail": "Content length: 1707 chars"
+      "detail": "Content length: 1779 chars"
     },
     {
       "test": "Ramesh Kumar \u2192 My Savings",
       "status": "PASS",
-      "detail": "Content length: 3995 chars"
+      "detail": "Content length: 4065 chars"
     },
     {
       "test": "Ramesh Kumar \u2192 Fix Details",
       "status": "PASS",
-      "detail": "Content length: 1560 chars"
+      "detail": "Content length: 1634 chars"
     },
     {
       "test": "Priya Sharma \u2192 Home",
       "status": "PASS",
-      "detail": "Content length: 4464 chars"
+      "detail": "Content length: 1155 chars"
     },
     {
       "test": "Priya Sharma \u2192 I Need Money",
       "status": "PASS",
-      "detail": "Content length: 1827 chars"
+      "detail": "Content length: 1897 chars"
     },
     {
       "test": "Priya Sharma \u2192 I Changed Jobs",
       "status": "PASS",
-      "detail": "Content length: 1707 chars"
+      "detail": "Content length: 1779 chars"
     },
     {
       "test": "Priya Sharma \u2192 My Savings",
       "status": "PASS",
-      "detail": "Content length: 3995 chars"
+      "detail": "Content length: 4065 chars"
     },
     {
       "test": "Priya Sharma \u2192 Fix Details",
       "status": "PASS",
-      "detail": "Content length: 1560 chars"
+      "detail": "Content length: 1634 chars"
     },
     {
       "test": "Gurmeet Singh \u2192 Home",
       "status": "PASS",
-      "detail": "Content length: 4464 chars"
+      "detail": "Content length: 1155 chars"
     },
     {
       "test": "Gurmeet Singh \u2192 I Need Money",
       "status": "PASS",
-      "detail": "Content length: 1827 chars"
+      "detail": "Content length: 1897 chars"
     },
     {
       "test": "Gurmeet Singh \u2192 I Changed Jobs",
       "status": "PASS",
-      "detail": "Content length: 1707 chars"
+      "detail": "Content length: 1779 chars"
     },
     {
       "test": "Gurmeet Singh \u2192 My Savings",
       "status": "PASS",
-      "detail": "Content length: 3995 chars"
+      "detail": "Content length: 4065 chars"
     },
     {
       "test": "Gurmeet Singh \u2192 Fix Details",
       "status": "PASS",
-      "detail": "Content length: 1560 chars"
+      "detail": "Content length: 1634 chars"
     },
     {
       "test": "Sunita Devi \u2192 Home",
       "status": "PASS",
-      "detail": "Content length: 4464 chars"
+      "detail": "Content length: 1155 chars"
     },
     {
       "test": "Sunita Devi \u2192 I Need Money",
       "status": "PASS",
-      "detail": "Content length: 1827 chars"
+      "detail": "Content length: 1897 chars"
     },
     {
       "test": "Sunita Devi \u2192 I Changed Jobs",
       "status": "PASS",
-      "detail": "Content length: 1707 chars"
+      "detail": "Content length: 1779 chars"
     },
     {
       "test": "Sunita Devi \u2192 My Savings",
       "status": "PASS",
-      "detail": "Content length: 3995 chars"
+      "detail": "Content length: 4065 chars"
     },
     {
       "test": "Sunita Devi \u2192 Fix Details",
       "status": "PASS",
-      "detail": "Content length: 1560 chars"
+      "detail": "Content length: 1634 chars"
     },
     {
       "test": "Responsive Mobile 320px",
@@ -150,8 +150,8 @@
     },
     {
       "test": "Console Errors",
-      "status": "PASS",
-      "detail": "Zero JS console errors"
+      "status": "FAIL",
+      "detail": "18 JS errors: ['Error: Minified React error #310; visit https://react.dev/errors/310 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.\\n    at aT (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:80606)\\n    at aI (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:81695)\\n    at Object.useState (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:93944)\\n    at r.useState (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/20es43nb27oti.js:1:30428)\\n    at https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2yjjg96i7pv13.js:1:67142\\n    at aS (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:79321)\\n    at o1 (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:99614)\\n    at id (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:111303)\\n    at sh (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:154687)\\n    at https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:154532', '[Jan-EPF AI] Runtime Error: Error: Minified React error #310; visit https://react.dev/errors/310 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.\\n    at aT (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:80606)\\n    at aI (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:81695)\\n    at Object.useState (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:93944)\\n    at r.useState (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/20es43nb27oti.js:1:30428)\\n    at https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2yjjg96i7pv13.js:1:67142\\n    at aS (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:79321)\\n    at o1 (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:99614)\\n    at id (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:111303)\\n    at sh (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:154687)\\n    at https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:154532', 'Error: Minified React error #310; visit https://react.dev/errors/310 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.\\n    at aT (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:80606)\\n    at aI (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:81695)\\n    at Object.useState (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:93944)\\n    at r.useState (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/20es43nb27oti.js:1:30428)\\n    at https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2yjjg96i7pv13.js:1:67142\\n    at aS (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:79321)\\n    at o1 (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:99614)\\n    at id (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:111303)\\n    at sh (https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:154687)\\n    at https://frontend-blue-tau-0e2bu1kwsk.vercel.app/_next/static/immutable/chunks/2xo1-rxefd9xy.js:1:154532']"
     }
   ]
 }

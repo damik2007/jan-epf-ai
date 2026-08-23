@@ -66,7 +66,7 @@ fi
 
 # Step 4: Execute Production Deployment
 echo -e "\n${YELLOW}[4/4] Deploying Next.js 15 Frontend to Vercel Production...${NC}"
-DEPLOY_OUTPUT=$(${VERCEL_CMD} --prod --yes ${AUTH_ARGS})
+DEPLOY_OUTPUT=$(cd frontend && ${VERCEL_CMD} --prod --yes ${AUTH_ARGS})
 
 # Extract deployed URL
 DEPLOY_URL=$(echo "${DEPLOY_OUTPUT}" | grep -E '^https://' | tail -n 1 || true)
