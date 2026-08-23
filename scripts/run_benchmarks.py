@@ -5,7 +5,12 @@ Measures sub-5ms deterministic computations, fuzzy matching, and zero-trust PII 
 
 import time
 import statistics
+import sys
+import os
 from datetime import date
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from src.core.engine import (
     calculate_form_31_eligibility,
     calculate_fuzzy_name_match,
@@ -13,6 +18,8 @@ from src.core.engine import (
     calculate_tds_deduction,
     calculate_passbook_growth_forecast,
     lookup_and_resolve_ifsc,
+    prune_context_with_tiktoken,
+    evaluate_cheque_clip_semantics,
 )
 from src.core.security import PresidioPIISanitizer, TokenEncryptionVault
 
@@ -159,6 +166,45 @@ def run_benchmarks():
         "p99_ms": sorted(times)[int(0.99 * iterations)],
         "target_ms": 2.0,
         "status": "PASS" if statistics.mean(times) < 2.0 else "FAIL"
+    }
+
+    # 9. OpenAI tiktoken BPE Context Pruning & Budgeting
+    # Warm up encoder once before loop
+    _ = prune_context_with_tiktoken("warmup", max_tokens=10)
+    times = []
+    sample_grievance = "Citizen reports issue with PF advance claim under Para 68J. Hospital bills attached for ₹1,50,000." * 10
+    for _ in range(iterations):
+        t0 = time.perf_counter()
+        pruned, count = prune_context_with_tiktoken(sample_grievance, max_tokens=64)
+        t1 = time.perf_counter()
+        times.append((t1 - t0) * 1000)
+    results["tiktoken_context_pruning"] = {
+        "mean_ms": statistics.mean(times),
+        "p50_ms": statistics.median(times),
+        "p99_ms": sorted(times)[int(0.99 * iterations)],
+        "target_ms": 1.0,
+        "status": "PASS" if statistics.mean(times) < 1.0 else "FAIL"
+    }
+
+    # 10. OpenAI CLIP Zero-Shot Cheque Semantic Verification
+    times = []
+    for _ in range(iterations):
+        t0 = time.perf_counter()
+        clip_res = evaluate_cheque_clip_semantics(
+            sharpness_score=90.0,
+            contrast_score=80.0,
+            extracted_ifsc="SBIN0001234",
+            name_fuzzy_score=92.0,
+            has_signature_box=True
+        )
+        t1 = time.perf_counter()
+        times.append((t1 - t0) * 1000)
+    results["clip_cheque_semantics"] = {
+        "mean_ms": statistics.mean(times),
+        "p50_ms": statistics.median(times),
+        "p99_ms": sorted(times)[int(0.99 * iterations)],
+        "target_ms": 1.0,
+        "status": "PASS" if statistics.mean(times) < 1.0 else "FAIL"
     }
 
     print("=" * 88)

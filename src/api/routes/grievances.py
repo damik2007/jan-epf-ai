@@ -5,7 +5,7 @@ import httpx
 from fastapi import APIRouter, HTTPException, status
 from src.core.config import settings
 from src.core.data_store import mock_store
-from src.core.engine import triage_grievance_root_cause
+from src.core.engine import triage_grievance_root_cause, prune_context_with_tiktoken
 from src.core.schemas import (
     GrievanceDiagnosisRequest,
     GrievanceDiagnosisResponse
@@ -24,14 +24,17 @@ async def diagnose_grievance(req: GrievanceDiagnosisRequest):
             detail=f"Citizen with UAN {req.uan} not found."
         )
 
-    # 1. Check if LLM API Key is configured for deep generative triage
+    # 1. Prune description with tiktoken to enforce strict token budget (<256 tokens)
+    clean_desc, token_count = prune_context_with_tiktoken(req.complaint_description or "", max_tokens=256)
+
+    # 2. Check if LLM API Key is configured for deep generative triage
     api_key = settings.LLM_API_KEY or settings.OPENAI_API_KEY
     if api_key:
         try:
             prompt = (
                 f"You are Jan-EPF AI Grievance Copilot. Analyze the citizen grievance for UAN {req.uan}.\n"
                 f"Category: {req.complaint_category}\n"
-                f"Description: {req.complaint_description}\n"
+                f"Description (Tokens: {token_count}): {clean_desc}\n"
                 f"Return JSON strictly conforming to: root_cause_identified (str), error_code_classification (str), "
                 f"automated_fix_available (bool), recommended_action (str), predicted_resolution_days (int)."
             )
