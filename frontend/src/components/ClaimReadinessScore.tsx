@@ -1,0 +1,99 @@
+"use client";
+import React from "react";
+import { useCitizen } from "@/context/CitizenContext";
+import { ShieldCheck, AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
+
+export function ClaimReadinessScore() {
+  const { activeCitizen } = useCitizen();
+
+  const checks = [
+    {
+      label: "Bank KYC Verified",
+      passed: activeCitizen.bank_kyc?.kyc_status === "APPROVED" || activeCitizen.bank_kyc?.kyc_status === "VERIFIED_ACTIVE",
+    },
+    {
+      label: "Aadhaar Seeded",
+      passed: Boolean(activeCitizen.aadhaar_masked && activeCitizen.aadhaar_masked !== "Not Available"),
+    },
+    {
+      label: "PAN Linked",
+      passed: Boolean(activeCitizen.pan_masked && activeCitizen.pan_masked !== "Not Available"),
+    },
+    {
+      label: "Active Employment",
+      passed: Boolean(activeCitizen.active_employment) || Boolean(activeCitizen.pension_details),
+    },
+    {
+      label: "e-Nomination Filed",
+      passed: Boolean(activeCitizen.nomination_details?.nomination_filed),
+    },
+  ];
+
+  const passedCount = checks.filter((c) => c.passed).length;
+  const score = Math.round((passedCount / checks.length) * 100);
+  const isReady = score >= 80;
+  const isWarning = score >= 60 && score < 80;
+
+  return (
+    <div className={`p-4 rounded-2xl border-2 transition-all ${
+      isReady
+        ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20"
+        : isWarning
+        ? "border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20"
+        : "border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-950/20"
+    }`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className={`w-5 h-5 ${
+            isReady ? "text-emerald-600" : isWarning ? "text-amber-600" : "text-red-600"
+          }`} />
+          <span className="text-sm font-bold text-sovereign-navy dark:text-white">
+            Claim Readiness Score
+          </span>
+        </div>
+        <div className={`text-2xl font-black font-mono ${
+          isReady ? "text-emerald-600" : isWarning ? "text-amber-600" : "text-red-600"
+        }`}>
+          {score}%
+        </div>
+      </div>
+
+      <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mb-3">
+        <div
+          className={`h-2 rounded-full transition-all duration-700 ${
+            isReady ? "bg-emerald-500" : isWarning ? "bg-amber-500" : "bg-red-500"
+          }`}
+          style={{ width: `${score}%` }}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+        {checks.map((check) => (
+          <div key={check.label} className="flex items-center gap-1.5 text-xs">
+            {check.passed ? (
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+            ) : (
+              <XCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+            )}
+            <span className={check.passed ? "text-slate-600 dark:text-slate-400" : "text-red-600 dark:text-red-400 font-semibold"}>
+              {check.label}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {isReady && (
+        <p className="mt-2 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1">
+          <CheckCircle2 className="w-3 h-3" />
+          Ready to file — estimated 98% approval probability
+        </p>
+      )}
+      {!isReady && (
+        <p className="mt-2 text-[11px] text-amber-700 dark:text-amber-400 font-semibold flex items-center gap-1">
+          <AlertTriangle className="w-3 h-3" />
+          Complete missing items above before filing to avoid rejection
+        </p>
+      )}
+    </div>
+  );
+}

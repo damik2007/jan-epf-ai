@@ -41,6 +41,7 @@ export default function RootLayout({
                   <p className="font-bold text-white">
                     Jan-EPF AI • Digital Public Infrastructure Prototype
                   </p>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500">Zero-Rejection PF Claims for 70 Crore Indian Workers</p>
                   <p className="text-[11px] text-slate-400 mt-0.5">
                     Built for <span className="text-saffron font-medium">Build What Moves India</span> (Varun Mayya × OpenAI Hackathon 2026)
                   </p>

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useCitizen } from "@/context/CitizenContext";
 import { calculateFuzzyNameMatch, lookupIfsc } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import {
   Wrench,
   FileSignature,
@@ -166,6 +167,7 @@ export default function FixDetailsHub() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
+      <Breadcrumb currentPage="Fix My Details" />
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
@@ -330,7 +332,7 @@ export default function FixDetailsHub() {
           </button>
 
           {pennyDropResult && (
-            <div className={`p-4 rounded-xl border text-xs space-y-1.5 ${
+            <div className={`p-4 rounded-xl border text-xs space-y-1.5 animate-celebrate ${
               pennyDropResult.success
                 ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-800 text-emerald-950 dark:text-emerald-200"
                 : "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800 text-red-950 dark:text-red-200"
@@ -419,7 +421,7 @@ export default function FixDetailsHub() {
           </button>
 
           {jdSuccess && (
-            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl text-xs text-emerald-950 dark:text-emerald-200 space-y-1">
+            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl text-xs text-emerald-950 dark:text-emerald-200 space-y-1 animate-celebrate">
               <div className="font-extrabold flex items-center gap-1.5 text-sm">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 {t.jointDecSuccessTitle}
@@ -488,7 +490,7 @@ export default function FixDetailsHub() {
           </button>
 
           {nominationSuccess && (
-            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl text-xs text-emerald-950 dark:text-emerald-200 space-y-1">
+            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl text-xs text-emerald-950 dark:text-emerald-200 space-y-1 animate-celebrate">
               <div className="font-extrabold flex items-center gap-1.5 text-sm">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 {t.approved}
@@ -539,7 +541,7 @@ export default function FixDetailsHub() {
           </div>
 
           {copilotDiagnosis && (
-            <div className="p-4 bg-slate-50 dark:bg-slate-800 border-2 border-amber-300 dark:border-amber-700 rounded-2xl text-xs space-y-2 text-slate-900 dark:text-slate-100">
+            <div className="p-4 bg-slate-50 dark:bg-slate-800 border-2 border-amber-300 dark:border-amber-700 rounded-2xl text-xs space-y-2 text-slate-900 dark:text-slate-100 animate-celebrate">
               <div className="flex justify-between items-center">
                 <span className="font-extrabold text-amber-900 dark:text-amber-300 flex items-center gap-1.5 text-sm">
                   <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />

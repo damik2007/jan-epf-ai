@@ -6,6 +6,7 @@ import { useCitizen } from "@/context/CitizenContext";
 import { ChequeOCRScanner } from "@/components/ChequeOCRScanner";
 import { calculateForm31Eligibility } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import {
   Wallet,
   HeartPulse,
@@ -195,6 +196,7 @@ export default function NeedMoneyHub() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
+      <Breadcrumb currentPage="Need Money" />
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200">
         <div>
@@ -426,7 +428,7 @@ export default function NeedMoneyHub() {
 
       {/* STEP 3: INSTANT SETTLEMENT SUCCESS CONFIRMATION */}
       {currentStep === 3 && submittedResult && (
-        <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-emerald-500 p-8 shadow-xl text-center space-y-6 animate-in zoom-in-95">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-emerald-500 p-8 shadow-xl text-center space-y-6 animate-celebrate animate-in zoom-in-95">
           <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-inner">
             <CheckCircle2 className="w-10 h-10" />
           </div>

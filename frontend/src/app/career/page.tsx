@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useCitizen } from "@/context/CitizenContext";
 import { deduceMissingDateOfExit, calculateTdsDeduction } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import {
   Briefcase,
   ArrowRightLeft,
@@ -102,6 +103,7 @@ export default function ChangedJobsHub() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
+      <Breadcrumb currentPage="Changed Jobs" />
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
@@ -227,7 +229,7 @@ export default function ChangedJobsHub() {
                 </button>
               </div>
             ) : (
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl flex items-center gap-3 text-xs text-emerald-900 dark:text-emerald-200">
+              <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl flex items-center gap-3 text-xs text-emerald-900 dark:text-emerald-200 animate-celebrate">
                 <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <div>
                   <h4 className="font-extrabold text-sm text-emerald-900 dark:text-emerald-200">
@@ -325,7 +327,7 @@ export default function ChangedJobsHub() {
           </div>
 
           {settlementSuccess && (
-            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl flex items-center gap-3 text-xs text-emerald-900 dark:text-emerald-200">
+            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl flex items-center gap-3 text-xs text-emerald-900 dark:text-emerald-200 animate-celebrate">
               <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
               <div>
                 <h4 className="font-extrabold text-sm">{t.sanctionConfirmedTitle}</h4>

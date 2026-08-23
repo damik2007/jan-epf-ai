@@ -27,6 +27,7 @@ import { AudienceSegmentReport } from "@/components/AudienceSegmentReport";
 import { SreTelemetryPanel } from "@/components/SreTelemetryPanel";
 import { SovereignDpiPillars } from "@/components/SovereignDpiPillars";
 import { GatewayHealthPulse } from "@/components/GatewayHealthPulse";
+import { ClaimReadinessScore } from "@/components/ClaimReadinessScore";
 
 export default function CitizenLandingPage() {
   const { activeCitizen, isAuthenticated, login, logout, language } = useCitizen();
@@ -147,7 +148,7 @@ export default function CitizenLandingPage() {
                     </div>
                     <div className="flex justify-between text-slate-600 dark:text-slate-400">
                       <span>Simulated UAN:</span>
-                      <strong className="font-mono text-slate-900">{persona.uan}</strong>
+                      <strong className="font-mono text-slate-900 dark:text-white">{persona.uan}</strong>
                     </div>
                     <div className="flex justify-between text-slate-600 dark:text-slate-400">
                       <span>Current Corpus:</span>
@@ -188,6 +189,25 @@ export default function CitizenLandingPage() {
 
   // If visitor IS authenticated, display the full Citizen Dashboard
   const totalBalance = activeCitizen.passbook_summary?.total_balance || 0;
+  
+  const [displayBalance, setDisplayBalance] = useState(0);
+  React.useEffect(() => {
+    const duration = 800;
+    const steps = 30;
+    const increment = totalBalance / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= totalBalance) {
+        setDisplayBalance(totalBalance);
+        clearInterval(timer);
+      } else {
+        setDisplayBalance(Math.round(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [totalBalance]);
+
   const employeeShare = activeCitizen.passbook_summary?.employee_share || 0;
   const interestEarned = activeCitizen.passbook_summary?.interest_credited_current_fy || 0;
 
@@ -292,7 +312,7 @@ export default function CitizenLandingPage() {
               <span className="text-emerald-400 font-bold">● {t.verified}</span>
             </div>
             <div className="text-3xl sm:text-4xl font-black tracking-tight font-mono text-white">
-              ₹{totalBalance.toLocaleString("en-IN")}
+              ₹{displayBalance.toLocaleString("en-IN")}
             </div>
             <div className="space-y-2 pt-2 border-t border-white/10 text-xs text-slate-200">
               <div className="flex justify-between items-center">
@@ -307,6 +327,8 @@ export default function CitizenLandingPage() {
           </div>
         </div>
       </section>
+
+      <ClaimReadinessScore />
 
       {/* 4 Topic-Centric Action Hubs Header */}
       <div>
@@ -380,8 +402,10 @@ export default function CitizenLandingPage() {
           </div>
 
           {/* Tab Selection Chips */}
-          <div className="flex flex-wrap gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/80">
+          <div role="tablist" className="flex flex-wrap gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/80">
             <button
+              role="tab"
+              aria-selected={activeSectionTab === "features"}
               onClick={() => setActiveSectionTab("features")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeSectionTab === "features"
@@ -392,6 +416,8 @@ export default function CitizenLandingPage() {
               🌟 Breakthroughs
             </button>
             <button
+              role="tab"
+              aria-selected={activeSectionTab === "audience"}
               onClick={() => setActiveSectionTab("audience")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeSectionTab === "audience"
@@ -402,6 +428,8 @@ export default function CitizenLandingPage() {
               👥 Audience Journeys
             </button>
             <button
+              role="tab"
+              aria-selected={activeSectionTab === "benchmark"}
               onClick={() => setActiveSectionTab("benchmark")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeSectionTab === "benchmark"
@@ -412,6 +440,8 @@ export default function CitizenLandingPage() {
               📊 Impact Benchmark
             </button>
             <button
+              role="tab"
+              aria-selected={activeSectionTab === "sre"}
               onClick={() => setActiveSectionTab("sre")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeSectionTab === "sre"
@@ -422,6 +452,8 @@ export default function CitizenLandingPage() {
               ⚡ SRE Telemetry
             </button>
             <button
+              role="tab"
+              aria-selected={activeSectionTab === "pillars"}
               onClick={() => setActiveSectionTab("pillars")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeSectionTab === "pillars"

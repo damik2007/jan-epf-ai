@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useCitizen } from "@/context/CitizenContext";
 import { calculatePassbookCompounding, CompoundingYearData } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import {
   PiggyBank,
   Shield,
@@ -83,6 +84,7 @@ export default function MySavingsHub() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
+      <Breadcrumb currentPage="My Savings" />
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
