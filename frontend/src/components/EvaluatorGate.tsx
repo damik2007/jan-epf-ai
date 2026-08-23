@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Shield, Lock, KeyRound, ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
+import { Shield, Lock, KeyRound, ArrowRight, CheckCircle2, AlertCircle, Sparkles, Zap } from "lucide-react";
 
-const VALID_PASSCODES = ["damik2007", "damik2026", "hackathon2026", "epf2026", "varun2026", "epfo3.0"];
+const VALID_PASSCODES = ["damik2007", "damik2026", "hackathon2026", "epf2026", "varun2026", "epfo3.0", "demo", "evaluator"];
 
 export function EvaluatorGate({ children }: { children: React.ReactNode }) {
   const [isUnlocked, setIsUnlocked] = useState<boolean | null>(null);
@@ -13,7 +13,7 @@ export function EvaluatorGate({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
-      // 1. Check URL parameters for 1-click bypass link (e.g. ?key=hackathon2026)
+      // 1. Check URL parameters for 1-click bypass link (e.g. ?key=damik2007)
       const params = new URLSearchParams(window.location.search);
       const urlKey = params.get("key") || params.get("pass") || params.get("access");
       if (urlKey && VALID_PASSCODES.includes(urlKey.toLowerCase())) {
@@ -48,9 +48,16 @@ export function EvaluatorGate({ children }: { children: React.ReactNode }) {
         } catch {}
         setIsUnlocked(true);
       } else {
-        setErrorMsg("Invalid Evaluator Passcode. Access restricted to authorized judges.");
+        setErrorMsg("Invalid Evaluator Passcode. Use 1-Click Instant Demo below.");
       }
-    }, 400);
+    }, 300);
+  };
+
+  const handle1ClickBypass = () => {
+    try {
+      sessionStorage.setItem("jan_epf_unlocked", "true");
+    } catch {}
+    setIsUnlocked(true);
   };
 
   // While checking session state
@@ -78,87 +85,101 @@ export function EvaluatorGate({ children }: { children: React.ReactNode }) {
           </div>
           <div>
             <h1 className="text-sm font-black tracking-wider uppercase">Jan-EPF AI</h1>
-            <p className="text-[10px] text-slate-400 font-mono">Sovereign Pre-Release v1.0</p>
+            <p className="text-[10px] text-slate-400 font-mono">Build What Moves India 2026</p>
           </div>
         </div>
-        <span className="text-[10px] font-bold px-2.5 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/30 rounded-full flex items-center gap-1">
-          <Lock className="w-3 h-3" /> Protected Deployment
+        <span className="text-[10px] font-bold px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full flex items-center gap-1">
+          <CheckCircle2 className="w-3 h-3" /> Evaluator Ready
         </span>
       </div>
 
       {/* Main Lock Form */}
-      <div className="max-w-md mx-auto w-full my-auto py-12 space-y-6">
+      <div className="max-w-md mx-auto w-full my-auto py-10 space-y-5">
         <div className="space-y-2 text-center">
           <div className="w-16 h-16 rounded-2xl bg-slate-900 border-2 border-slate-800 flex items-center justify-center mx-auto shadow-2xl text-amber-400">
             <Lock className="w-8 h-8" />
           </div>
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white pt-2">
-            Evaluator Security Gate
+            Evaluator Showcase Gateway
           </h2>
           <p className="text-xs text-slate-400 leading-relaxed max-w-sm mx-auto">
-            This pre-release submission is locked to protect architectural assets and credits. Enter the Hackathon Evaluator passcode to unlock.
+            Sovereign Digital Public Infrastructure prototype for 70 crore Indian workers. Select 1-click instant access to test all 4 demographic scenarios.
           </p>
         </div>
 
-        <form onSubmit={handleUnlock} className="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl shadow-2xl space-y-4 backdrop-blur-md">
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-300 flex items-center gap-1.5">
-              <KeyRound className="w-3.5 h-3.5 text-amber-400" />
-              <span>Enter Evaluator Passcode</span>
+        {/* 1-Click Instant Bypass for Hackathon Evaluators */}
+        <div className="bg-gradient-to-br from-amber-500/20 via-slate-900 to-slate-900 border-2 border-amber-500/50 p-5 rounded-2xl shadow-2xl space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              Hackathon Judge &amp; Evaluator 1-Tap Access
+            </span>
+            <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
+              Zero-Friction
+            </span>
+          </div>
+
+          <p className="text-[11px] text-slate-300">
+            No SMS OTPs, passwords, or gatekeepers required. Tap below to immediately explore the rebuilt life-event hubs with pre-seeded personas.
+          </p>
+
+          <button
+            onClick={handle1ClickBypass}
+            className="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-500/30 active:scale-[0.98]"
+          >
+            <Zap className="w-4 h-4 fill-slate-950" />
+            <span>⚡ Enter Prototype (1-Click Instant Access)</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Optional Passcode Unlock */}
+        <form onSubmit={handleUnlock} className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl space-y-3">
+          <div className="space-y-1">
+            <label className="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
+              <KeyRound className="w-3 h-3 text-slate-400" />
+              <span>Or Enter Evaluator Passcode (damik2007)</span>
             </label>
-            <input
-              type="password"
-              value={passcodeInput}
-              onChange={(e) => setPasscodeInput(e.target.value)}
-              placeholder="Enter security passcode..."
-              autoFocus
-              className="w-full px-4 py-3 bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl text-sm text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-amber-400/20 font-mono tracking-widest"
-            />
+            <div className="flex gap-2">
+              <input
+                type="password"
+                value={passcodeInput}
+                onChange={(e) => setPasscodeInput(e.target.value)}
+                placeholder="damik2007"
+                className="flex-1 px-3 py-2 bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none font-mono"
+              />
+              <button
+                type="submit"
+                disabled={isVerifying || !passcodeInput.trim()}
+                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-xl transition-colors disabled:opacity-50"
+              >
+                {isVerifying ? "Verifying..." : "Unlock"}
+              </button>
+            </div>
           </div>
 
           {errorMsg && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2 animate-in fade-in">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-2 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-[11px] flex items-center gap-1.5">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
               <span>{errorMsg}</span>
             </div>
           )}
-
-          <button
-            type="submit"
-            disabled={isVerifying || !passcodeInput.trim()}
-            className="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-amber-500/20 disabled:opacity-50"
-          >
-            {isVerifying ? (
-              <span>Verifying Cryptographic Key...</span>
-            ) : (
-              <>
-                <span>Unlock Platform Access</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
-
-          <div className="pt-3 border-t border-slate-800 text-center">
-            <p className="text-[11px] text-slate-500">
-              🔒 Evaluator Access: Please enter the authorized passcode provided in your hackathon submission notes.
-            </p>
-          </div>
         </form>
 
-        <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800/80 text-center space-y-1">
+        <div className="p-3 rounded-xl bg-slate-900/40 border border-slate-800/80 text-center space-y-1">
           <p className="text-[11px] font-bold text-slate-400 flex items-center justify-center gap-1.5">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Zero-Trust Presidio Shield • Anti-Copy Protection Active</span>
+            <span>Zero-Trust Presidio Shield • 80/20 Sovereign Core Active</span>
           </p>
           <p className="text-[10px] text-slate-600">
-            Build What Moves India • Architected by Damik Reddy
+            Build What Moves India (Varun Mayya × OpenAI) • Architected by Damik Reddy
           </p>
         </div>
       </div>
 
       {/* Footer */}
       <div className="max-w-md mx-auto w-full text-center text-[10px] text-slate-600 py-2">
-        Protected Deployment • Jan-EPF AI Sovereign Sandbox
+        Jan-EPF AI • Sovereign Digital Public Infrastructure Prototype
       </div>
     </div>
   );
