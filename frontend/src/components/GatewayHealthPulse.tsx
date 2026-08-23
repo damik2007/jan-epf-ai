@@ -33,6 +33,10 @@ export const GatewayHealthPulse: React.FC = () => {
           <Lock className="w-3 h-3" />
           <span>Presidio PII Shield Active</span>
         </div>
+        <div className="flex items-center gap-1.5 text-emerald-400">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <span>PWA Offline 2G Ready</span>
+        </div>
       </div>
     </div>
   );

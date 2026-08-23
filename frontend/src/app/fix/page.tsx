@@ -7,6 +7,7 @@ import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { StatutoryTooltip } from "@/components/StatutoryTooltip";
 import { PageAudioNarrator } from "@/components/PageAudioNarrator";
+import { GrievanceLegalLetterModal } from "@/components/GrievanceLegalLetterModal";
 import {
   Wrench,
   FileSignature,
@@ -15,7 +16,8 @@ import {
   Zap,
   Sparkles,
   Search,
-  CreditCard
+  CreditCard,
+  Scale
 } from "lucide-react";
 
 interface PennyDropResult {
@@ -83,6 +85,7 @@ export default function FixDetailsHub() {
   );
   const [copilotDiagnosis, setCopilotDiagnosis] = useState<CopilotDiagnosis | null>(null);
   const [isDiagnosing, setIsDiagnosing] = useState<boolean>(false);
+  const [legalNoticeModalOpen, setLegalNoticeModalOpen] = useState<boolean>(false);
 
   const handleRunFuzzyCheck = () => {
     const score = calculateFuzzyNameMatch(activeCitizen.full_name, aadhaarInputName);
@@ -603,17 +606,37 @@ export default function FixDetailsHub() {
                   <span className="text-slate-500 dark:text-slate-400 block text-[10px]">{t.remedyAvailable}</span>
                   <span className="font-bold text-emerald-700 dark:text-emerald-400">{copilotDiagnosis.recommended_action}</span>
                 </div>
-                <button
-                  onClick={(e) => { const btn = e.currentTarget; btn.textContent = "✓ Reconciled Successfully"; btn.classList.add("bg-emerald-600"); setTimeout(() => { btn.textContent = "Apply Automated Fix"; btn.classList.remove("bg-emerald-600"); }, 2500); }}
-                  className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold text-xs shadow hover:bg-emerald-700 transition-all whitespace-nowrap"
-                >
-                  {t.applyAutoFixButton}
-                </button>
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={() => setLegalNoticeModalOpen(true)}
+                    className="bg-amber-500 hover:bg-amber-400 text-slate-950 px-3.5 py-2 rounded-lg font-extrabold text-xs shadow transition-all whitespace-nowrap flex items-center gap-1.5"
+                  >
+                    <Scale className="w-3.5 h-3.5 text-slate-950" />
+                    <span>Draft Para 72(5) Legal Notice</span>
+                  </button>
+
+                  <button
+                    onClick={(e) => { const btn = e.currentTarget; btn.textContent = "✓ Reconciled Successfully"; btn.classList.add("bg-emerald-600"); setTimeout(() => { btn.textContent = "Apply Automated Fix"; btn.classList.remove("bg-emerald-600"); }, 2500); }}
+                    className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold text-xs shadow hover:bg-emerald-700 transition-all whitespace-nowrap"
+                  >
+                    {t.applyAutoFixButton}
+                  </button>
+                </div>
               </div>
             </div>
           )}
         </div>
       )}
+
+      {/* Statutory Legal Grievance Petition Modal */}
+      <GrievanceLegalLetterModal
+        isOpen={legalNoticeModalOpen}
+        onClose={() => setLegalNoticeModalOpen(false)}
+        claimId="CLM-8823A41"
+        claimType="Form 31 Advance / Form 19 Final Settlement"
+        amountRequested={activeCitizen.passbook_summary?.total_balance || 185000}
+        daysDelayed={34}
+      />
     </div>
   );
 }

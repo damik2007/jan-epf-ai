@@ -79,6 +79,7 @@ app.include_router(voice.router, prefix="/api/v1")
 
 
 @app.get("/health", tags=["System"])
+@app.get("/api/v1/health", tags=["System"])
 async def health_check():
     """
     Liveness and readiness probe for Docker / Kubernetes / Azure Container Apps.

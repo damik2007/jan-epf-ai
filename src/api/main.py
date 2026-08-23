@@ -72,6 +72,7 @@ app.include_router(voice_router, prefix="/api/v1")
 
 
 @app.get("/health", status_code=status.HTTP_200_OK, tags=["System"])
+@app.get("/api/v1/health", status_code=status.HTTP_200_OK, tags=["System"])
 async def health_check():
     """
     Returns system status, sovereign mode state, and resilience matrix.

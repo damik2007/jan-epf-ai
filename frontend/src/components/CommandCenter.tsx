@@ -149,6 +149,28 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
       }
     },
     {
+      id: "action-presidio-playground",
+      category: "Evaluator Tools",
+      title: "🛡️ Presidio Zero-Trust PII & DPDP Act 2023 Sandbox",
+      subtitle: "Paste raw Aadhaar, PAN, phone data for live sub-0.1ms cryptographic tokenization & audit",
+      icon: Sparkles,
+      action: () => {
+        router.push("/#sre");
+        onClose();
+      }
+    },
+    {
+      id: "action-cpgrams-drafter",
+      category: "Evaluator Tools",
+      title: "📜 CPGRAMS / EPFiGMS Statutory Legal Letter Drafter",
+      subtitle: "Generate formal RPFC legal notice citing Para 72(5) 30-day statutory interest penalty",
+      icon: Wrench,
+      action: () => {
+        router.push("/fix");
+        onClose();
+      }
+    },
+    {
       id: "action-senior-mode",
       category: "System Toggles",
       title: seniorMode ? "Disable Senior Mode (100% Scale)" : "Enable Senior Mode (125% Scale + WCAG AAA)",

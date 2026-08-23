@@ -4,6 +4,7 @@ import { CitizenProvider } from "@/context/CitizenContext";
 import { Navbar } from "@/components/Navbar";
 import { VoiceAssistant } from "@/components/VoiceAssistant";
 import { EvaluatorGate } from "@/components/EvaluatorGate";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
   title: "Jan-EPF AI • Rebuilding India's Provident Fund (EPFO)",
   description:
     "Topic-Centric, Sovereign Digital Public Infrastructure for 70 Million Indian Citizens. Rebuilt for Build What Moves India.",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -27,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#060d17] text-slate-900 dark:text-slate-100 antialiased selection:bg-saffron selection:text-sovereign-darkest">
+        <ServiceWorkerRegister />
         <EvaluatorGate>
           <CitizenProvider>
             <Navbar />

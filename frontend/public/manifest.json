@@ -1,0 +1,20 @@
+{
+  "name": "Jan-EPF AI — Sovereign Zero-Rejection PF Claims",
+  "short_name": "Jan-EPF AI",
+  "description": "Zero-Rejection PF Claims and Sovereign Digital Public Infrastructure for 70 Crore Indian Workers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f1d",
+  "theme_color": "#ff9933",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["finance", "government", "productivity"],
+  "lang": "en-IN",
+  "dir": "ltr"
+}

@@ -38,7 +38,7 @@ async def diagnose_grievance(req: GrievanceDiagnosisRequest):
                 f"Return JSON strictly conforming to: root_cause_identified (str), error_code_classification (str), "
                 f"automated_fix_available (bool), recommended_action (str), predicted_resolution_days (int)."
             )
-            async with httpx.AsyncClient(timeout=6.0) as client:
+            async with httpx.AsyncClient(timeout=2.5) as client:
                 llm_resp = await client.post(
                     f"{settings.LLM_API_BASE_URL}/chat/completions",
                     headers={
