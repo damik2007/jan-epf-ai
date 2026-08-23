@@ -7,6 +7,9 @@ import { ChequeOCRScanner } from "@/components/ChequeOCRScanner";
 import { calculateForm31Eligibility } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { StatutoryTooltip } from "@/components/StatutoryTooltip";
+import { PageAudioNarrator } from "@/components/PageAudioNarrator";
+import { SettlementReceiptModal } from "@/components/SettlementReceiptModal";
 import {
   Wallet,
   HeartPulse,
@@ -18,7 +21,8 @@ import {
   ArrowRight,
   ArrowLeft,
   Activity,
-  RotateCcw
+  RotateCcw,
+  FileCheck
 } from "lucide-react";
 
 interface SubmittedClaimResult {
@@ -41,6 +45,7 @@ export default function NeedMoneyHub() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submittedResult, setSubmittedResult] = useState<SubmittedClaimResult | null>(null);
   const [undoSecondsLeft, setUndoSecondsLeft] = useState<number | null>(null);
+  const [receiptModalOpen, setReceiptModalOpen] = useState<boolean>(false);
 
   const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -77,6 +82,7 @@ export default function NeedMoneyHub() {
       label: t.medicalAdvanceTitle,
       icon: HeartPulse,
       para: t.medicalAdvanceBadge,
+      tooltipKey: "para68j" as const,
       color: "border-red-300 hover:border-red-500 bg-red-50/50",
       desc: t.medicalAdvanceDesc
     },
@@ -85,6 +91,7 @@ export default function NeedMoneyHub() {
       label: t.housingAdvanceTitle,
       icon: Home,
       para: t.housingAdvanceBadge,
+      tooltipKey: "para68b" as const,
       color: "border-blue-300 hover:border-blue-500 bg-blue-50/50",
       desc: t.housingAdvanceDesc
     },
@@ -93,6 +100,7 @@ export default function NeedMoneyHub() {
       label: t.marriageAdvanceTitle,
       icon: GraduationCap,
       para: t.marriageAdvanceBadge,
+      tooltipKey: "para68k" as const,
       color: "border-purple-300 hover:border-purple-500 bg-purple-50/50",
       desc: t.marriageAdvanceDesc
     }
@@ -198,7 +206,7 @@ export default function NeedMoneyHub() {
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
       <Breadcrumb currentPage="Need Money" />
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
@@ -207,6 +215,7 @@ export default function NeedMoneyHub() {
             <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.moneyTitle}
             </h1>
+            <PageAudioNarrator hub="money" />
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.moneySubtitle}
@@ -223,7 +232,7 @@ export default function NeedMoneyHub() {
                     ? "bg-saffron text-sovereign-darkest ring-2 ring-saffron/40 font-extrabold"
                     : currentStep > step
                     ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 text-slate-500"
+                    : "bg-slate-200 dark:bg-slate-700 text-slate-500"
                 }`}
               >
                 {currentStep > step ? "✓" : step}
@@ -258,9 +267,11 @@ export default function NeedMoneyHub() {
                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${r.color}`}>
                       <Icon className="w-5 h-5 text-slate-800 dark:text-slate-200" />
                     </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md font-mono">
-                      {r.para}
-                    </span>
+                    <StatutoryTooltip termKey={r.tooltipKey}>
+                      <span className="text-[10px] font-bold px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md font-mono">
+                        {r.para}
+                      </span>
+                    </StatutoryTooltip>
                   </div>
                   <h3 className="font-bold text-sm text-sovereign-navy dark:text-white">{r.label}</h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{r.desc}</p>
@@ -286,6 +297,29 @@ export default function NeedMoneyHub() {
               </div>
             </div>
 
+            {/* Quick Percentage Chips */}
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Quick Presets:</span>
+              {[0.25, 0.5, 0.75, 1.0].map((fraction) => {
+                const presetAmt = Math.max(5000, Math.round((eligibility.maxAdvanceAmount * fraction) / 1000) * 1000);
+                const isCurrent = requestedAmount === presetAmt;
+                return (
+                  <button
+                    key={fraction}
+                    type="button"
+                    onClick={() => setRequestedAmount(presetAmt)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold font-mono transition-all ${
+                      isCurrent
+                        ? "bg-sovereign-navy text-white dark:bg-amber-500 dark:text-slate-950 shadow-sm"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700"
+                    }`}
+                  >
+                    {fraction === 1.0 ? "100% (Max)" : `${fraction * 100}%`}
+                  </button>
+                );
+              })}
+            </div>
+
             {/* Range Slider */}
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
@@ -301,7 +335,7 @@ export default function NeedMoneyHub() {
                 step="1000"
                 value={requestedAmount}
                 onChange={(e) => setRequestedAmount(Number(e.target.value))}
-                className="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sovereign-navy"
+                className="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sovereign-navy dark:accent-amber-500"
               />
               <div className="flex justify-between text-[11px] text-slate-400 dark:text-slate-500">
                 <span>Min: ₹5,000</span>
@@ -469,22 +503,38 @@ export default function NeedMoneyHub() {
             </div>
           </div>
 
-          <div className="flex justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-3">
+            <button
+              onClick={() => setReceiptModalOpen(true)}
+              className="bg-saffron hover:bg-amber-400 text-sovereign-darkest px-6 py-2.5 rounded-xl font-black text-xs transition-all flex items-center gap-1.5 shadow-md"
+            >
+              <FileCheck className="w-4 h-4" />
+              <span>Download Settlement Certificate (PDF)</span>
+            </button>
             <button
               onClick={() => setCurrentStep(1)}
-              className="bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-sovereign-light transition-all"
+              className="bg-sovereign-navy dark:bg-slate-800 text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-sovereign-light transition-all"
             >
               {t.applyAnotherClaim}
             </button>
             <Link
               href="/savings"
-              className="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-emerald-700 transition-all"
+              className="bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-emerald-700 transition-all flex items-center gap-1.5"
             >
               {t.viewPassbook}
             </Link>
           </div>
         </div>
       )}
+
+      {/* Official Settlement Certificate Modal */}
+      <SettlementReceiptModal
+        isOpen={receiptModalOpen}
+        onClose={() => setReceiptModalOpen(false)}
+        claimType={`Form 31 Advance (${reasons.find((r) => r.id === selectedReason)?.para || "Para 68J"})`}
+        claimAmount={submittedResult?.amount_sanctioned ?? requestedAmount}
+        trackingId={submittedResult?.claim_id ?? "CLM-EPF-2026-89412"}
+      />
     </div>
   );
 }

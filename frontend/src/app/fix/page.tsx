@@ -5,13 +5,17 @@ import { useCitizen } from "@/context/CitizenContext";
 import { calculateFuzzyNameMatch, lookupIfsc } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { StatutoryTooltip } from "@/components/StatutoryTooltip";
+import { PageAudioNarrator } from "@/components/PageAudioNarrator";
 import {
   Wrench,
   FileSignature,
   AlertCircle,
   CheckCircle2,
   Zap,
-  Sparkles
+  Sparkles,
+  Search,
+  CreditCard
 } from "lucide-react";
 
 interface PennyDropResult {
@@ -169,7 +173,7 @@ export default function FixDetailsHub() {
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
       <Breadcrumb currentPage="Fix My Details" />
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center">
@@ -178,6 +182,7 @@ export default function FixDetailsHub() {
             <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.fixTitle}
             </h1>
+            <PageAudioNarrator hub="fix" />
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.fixSubtitle}
@@ -188,7 +193,7 @@ export default function FixDetailsHub() {
       {/* Navigation Sub-Tabs */}
       <div className="flex flex-wrap gap-2 bg-slate-200 dark:bg-slate-800 p-1.5 rounded-2xl text-xs font-bold border border-slate-300 dark:border-slate-700">
         {[
-          { id: "NAME_VALIDATE", label: `🔍 ${t.fuzzyCheckTitle}` },
+          { id: "NAME_VALIDATE", label: `🔍 Name & Spelling Match` },
           { id: "PENNY_DROP", label: `⚡ ${t.pennyDropTitle}` },
           { id: "JOINT_DECLARATION", label: `✍️ ${t.jointDecTitle}` },
           { id: "NOMINATION", label: `👨‍👩‍👧 ${t.nominationTitle}` },
@@ -213,9 +218,12 @@ export default function FixDetailsHub() {
         <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
           <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
-                {t.fuzzyCheckTitle}
-              </h3>
+              <div className="flex items-center gap-1.5">
+                <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
+                  Name &amp; Aadhaar Spelling Match
+                </h3>
+                <StatutoryTooltip termKey="fuzzy" />
+              </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.fuzzyCheckDesc}
               </p>
@@ -233,9 +241,18 @@ export default function FixDetailsHub() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                {t.aadhaarNameLabel}
-              </label>
+              <div className="flex justify-between items-center">
+                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+                  {t.aadhaarNameLabel}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setAadhaarInputName(`${activeCitizen.full_name}a`)}
+                  className="text-[10px] text-saffron hover:underline font-bold"
+                >
+                  ⚡ Test 1-Letter Typo
+                </button>
+              </div>
               <input
                 type="text"
                 value={aadhaarInputName}
@@ -243,11 +260,33 @@ export default function FixDetailsHub() {
                 placeholder="e.g. Ramesh Kumar"
                 className="w-full text-sm font-semibold p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sovereign-navy"
               />
+
+              {/* Real-Time Live Levenshtein Similarity Meter */}
+              {(() => {
+                const liveScore = calculateFuzzyNameMatch(activeCitizen.full_name, aadhaarInputName);
+                return (
+                  <div className="space-y-1 pt-1">
+                    <div className="flex justify-between text-[11px] font-bold">
+                      <span className="text-slate-500 dark:text-slate-400">Live Match Score:</span>
+                      <span className={`font-mono ${liveScore >= 85 ? "text-emerald-600 dark:text-emerald-400" : liveScore >= 70 ? "text-amber-600 dark:text-amber-400" : "text-red-600 dark:text-red-400"}`}>
+                        {liveScore}% {liveScore >= 85 ? "● Verified Match" : liveScore >= 70 ? "▲ Minor Variance" : "✖ Severe Typo"}
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                      <div
+                        style={{ width: `${liveScore}%` }}
+                        className={`h-full transition-all duration-200 ${liveScore >= 85 ? "bg-emerald-500" : liveScore >= 70 ? "bg-amber-500" : "bg-red-500"}`}
+                      />
+                    </div>
+                  </div>
+                );
+              })()}
+
               <button
                 onClick={handleRunFuzzyCheck}
-                className="w-full bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 hover:bg-sovereign-light text-white py-2 rounded-lg font-bold text-xs shadow transition-all"
+                className="w-full bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 hover:bg-sovereign-light text-white py-2 rounded-lg font-bold text-xs shadow transition-all mt-1"
               >
-                {t.fuzzyCheckTitle}
+                Run Official Pre-Flight Name Validation
               </button>
             </div>
           </div>
@@ -280,9 +319,12 @@ export default function FixDetailsHub() {
         <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
           <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
-                {t.pennyDropTitle}
-              </h3>
+              <div className="flex items-center gap-1.5">
+                <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
+                  {t.pennyDropTitle}
+                </h3>
+                <StatutoryTooltip termKey="pennydrop" />
+              </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.pennyDropDesc}
               </p>

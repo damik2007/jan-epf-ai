@@ -17,15 +17,17 @@ import {
   Sparkles,
   Command,
   X,
-  ArrowRight
+  ArrowRight,
+  Zap
 } from "lucide-react";
 
 interface CommandCenterProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenChaosSimulator?: () => void;
 }
 
-export function CommandCenter({ isOpen, onClose }: CommandCenterProps) {
+export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: CommandCenterProps) {
   const router = useRouter();
   const {
     citizens,
@@ -135,6 +137,17 @@ export function CommandCenter({ isOpen, onClose }: CommandCenterProps) {
       }
     },
     // System Controls
+    {
+      id: "action-chaos-sandbox",
+      category: "Evaluator Tools",
+      title: "⚡ Zero-Rejection Chaos Stress-Test Sandbox",
+      subtitle: "Inject 5 failure traps (name typos, missing DOE, merged IFSC) and watch real-time self-healing",
+      icon: Zap,
+      action: () => {
+        onClose();
+        if (onOpenChaosSimulator) onOpenChaosSimulator();
+      }
+    },
     {
       id: "action-senior-mode",
       category: "System Toggles",

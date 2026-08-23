@@ -56,7 +56,7 @@ export function AudienceSegmentReport() {
         "Previous employer forgets to mark Date of Exit (DOE), disabling Form 13 transfer for months.",
         "Passbook server (passbook.epfindia.gov.in) crashes with 500 errors during peak hours & weekends.",
         "Fragmented Member IDs from 3–4 previous jobs require sequential, slow manual transfers.",
-        "Unexpected 20% Section 192A TDS tax deductions when withdrawing before 5 years of service."
+        "Unexpected 10%–20% Section 192A TDS tax deductions on withdrawals over ₹50,000 before 5 continuous years of service."
       ],
       wishlist: [
         "1-Click Multi-Job Consolidation merging all previous Member IDs into active employment.",

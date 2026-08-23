@@ -36,7 +36,7 @@
       "eligible_claims": {
         "form_31_medical_advance": {
           "eligible": true,
-          "max_advance_amount": 109200.0,
+          "max_advance_amount": 156000.0,
           "reason_description": "Illness of self or family member (Para 68J)"
         },
         "form_31_housing_advance": {
@@ -208,7 +208,7 @@
       "eligible_claims": {
         "form_31_medical_advance": {
           "eligible": true,
-          "max_advance_amount": 28800.0,
+          "max_advance_amount": 48000.0,
           "reason_description": "Illness of self or family member (Para 68J)"
         },
         "e_nomination": {

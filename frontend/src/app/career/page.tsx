@@ -5,12 +5,15 @@ import { useCitizen } from "@/context/CitizenContext";
 import { deduceMissingDateOfExit, calculateTdsDeduction } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { StatutoryTooltip } from "@/components/StatutoryTooltip";
+import { PageAudioNarrator } from "@/components/PageAudioNarrator";
 import {
   Briefcase,
   ArrowRightLeft,
   CalendarCheck,
   CheckCircle2,
-  FileCheck2
+  FileCheck2,
+  Sparkles
 } from "lucide-react";
 
 export default function ChangedJobsHub() {
@@ -105,7 +108,7 @@ export default function ChangedJobsHub() {
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
       <Breadcrumb currentPage="Changed Jobs" />
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center">
@@ -114,6 +117,7 @@ export default function ChangedJobsHub() {
             <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.careerTitle}
             </h1>
+            <PageAudioNarrator hub="career" />
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.careerSubtitle}
@@ -181,11 +185,16 @@ export default function ChangedJobsHub() {
                 <div className="pt-2 border-t border-amber-200/60 dark:border-amber-800/40 flex items-center gap-1.5 text-xs text-amber-800 dark:text-amber-300">
                   <CalendarCheck className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
                   <div>
-                    <span className="font-semibold">{t.autoExitDateBadge}: </span>
-                    <strong className="text-slate-900 dark:text-white">{deducedExitDate}</strong>
-                    <span className="text-[10px] text-amber-700 dark:text-amber-400 block">
-                      ({t.autoExitDateDesc})
-                    </span>
+                    <div className="flex items-center gap-1">
+                      <span className="font-semibold">{t.autoExitDateBadge}: </span>
+                      <StatutoryTooltip termKey="doe">
+                        <strong className="text-slate-900 dark:text-white">{deducedExitDate}</strong>
+                      </StatutoryTooltip>
+                    </div>
+                    <div className="text-[10px] text-amber-700 dark:text-amber-400 flex items-center gap-1">
+                      <span>({t.autoExitDateDesc})</span>
+                      <StatutoryTooltip termKey="ecr" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -288,9 +297,13 @@ export default function ChangedJobsHub() {
                 className="mt-1 w-4 h-4 accent-amber-500 rounded cursor-pointer"
               />
               <label htmlFor="form15g" className="text-xs cursor-pointer">
-                <strong className="text-slate-900 dark:text-white block font-semibold">
-                  {t.zeroTdsShieldTitle}
-                </strong>
+                <div className="flex items-center gap-1">
+                  <strong className="text-slate-900 dark:text-white font-semibold">
+                    {t.zeroTdsShieldTitle}
+                  </strong>
+                  <StatutoryTooltip termKey="form15g" />
+                  <StatutoryTooltip termKey="section192a" />
+                </div>
                 <span className="text-slate-500 dark:text-slate-400 text-[11px]">
                   {t.zeroTdsShieldDesc}
                 </span>

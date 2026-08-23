@@ -23,6 +23,7 @@ import {
 import { getTranslation } from "@/lib/translations";
 import { EvaluatorTourModal } from "@/components/EvaluatorTourModal";
 import { CommandCenter } from "@/components/CommandCenter";
+import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
@@ -44,6 +45,7 @@ export const Navbar: React.FC = () => {
   const t = getTranslation(language);
 
   const [commandCenterOpen, setCommandCenterOpen] = React.useState(false);
+  const [chaosModalOpen, setChaosModalOpen] = React.useState(false);
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -214,6 +216,15 @@ export const Navbar: React.FC = () => {
               </kbd>
             </button>
 
+            <button
+              onClick={() => setChaosModalOpen(true)}
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition-all shadow-sm"
+              title="Open Zero-Rejection Claim Stress-Test Sandbox"
+            >
+              <Zap className="w-3.5 h-3.5 text-saffron" />
+              <span>Chaos Test</span>
+            </button>
+
             <EvaluatorTourModal />
 
             {!isAuthenticated ? (
@@ -338,6 +349,13 @@ export const Navbar: React.FC = () => {
       <CommandCenter
         isOpen={commandCenterOpen}
         onClose={() => setCommandCenterOpen(false)}
+        onOpenChaosSimulator={() => setChaosModalOpen(true)}
+      />
+
+      {/* Live Zero-Rejection Chaos Simulator Sandbox Modal */}
+      <ChaosSimulatorModal
+        isOpen={chaosModalOpen}
+        onClose={() => setChaosModalOpen(false)}
       />
     </header>
   );

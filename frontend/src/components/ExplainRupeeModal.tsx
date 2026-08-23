@@ -183,12 +183,12 @@ export const ExplainRupeeModal: React.FC<ExplainRupeeModalProps> = ({ isOpen, on
             ) : selectedTab === "ER" ? (
               <>
                 <div className="text-emerald-600 dark:text-emerald-400 font-bold">Employer Share = Monthly Basic Wage (₹{wage.toLocaleString("en-IN")}) × 3.67%</div>
-                <div className="text-[11px] text-slate-500">Employer matches 12% total, split into 3.67% EPF and 8.33% EPS.</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">Employer matches 12% total, split into 3.67% EPF and 8.33% EPS.</div>
               </>
             ) : selectedTab === "EPS" ? (
               <>
                 <div className="text-purple-600 dark:text-purple-400 font-bold">EPS Allocation = Min(Basic Wage, ₹15,000) × 8.33% = ₹1,250/mo</div>
-                <div className="text-[11px] text-slate-500">Accumulates toward lifelong guaranteed monthly pension after 10 years of service.</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">Accumulates toward lifelong guaranteed monthly pension after 10 years of service.</div>
               </>
             ) : (
               <>

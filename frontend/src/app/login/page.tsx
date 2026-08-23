@@ -39,7 +39,7 @@ export default function LoginPage() {
       balance: "₹3,42,500",
       badge: "Form 31 Advance",
       badgeColor: "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800",
-      testScenario: "Emergency Medical / Housing advance (Para 68J) with instant Canvas Cheque OCR pre-validation.",
+      testScenario: "Emergency Medical (Para 68J) / Housing (Para 68B) advance with instant Canvas Cheque OCR pre-validation.",
       icon: Coins
     },
     {
@@ -61,14 +61,14 @@ export default function LoginPage() {
       balance: "₹4,250 / mo",
       badge: "Senior Pensioner",
       badgeColor: "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800",
-      testScenario: "Auto-activates Senior Citizen Mode (125% scaling, warm gold palette) and EPS-95 monthly pension ledgers.",
+      testScenario: "Auto-activates Senior Citizen Mode (125%–130% Elder Comfort Scaling, warm gold palette) and EPS-95 monthly pension ledgers.",
       icon: HeartHandshake
     },
     {
       uan: "101889977665",
       name: "Sunita Devi (Age 34)",
       role: "Gig Healthcare Worker",
-      org: "QuickCart Delivery Logistics",
+      org: "QuickBite Logistics & Courier Services",
       balance: "₹86,400",
       badge: "e-Nomination & KYC",
       badgeColor: "bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border-purple-300 dark:border-purple-800",

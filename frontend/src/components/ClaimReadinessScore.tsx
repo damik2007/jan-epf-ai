@@ -9,7 +9,10 @@ export function ClaimReadinessScore() {
   const checks = [
     {
       label: "Bank KYC Verified",
-      passed: activeCitizen.bank_kyc?.kyc_status === "APPROVED" || activeCitizen.bank_kyc?.kyc_status === "VERIFIED_ACTIVE",
+      passed: Boolean(
+        activeCitizen.bank_kyc?.kyc_status &&
+        ["APPROVED", "VERIFIED_ACTIVE", "APPROVED_BY_EMPLOYER", "SENIOR_PENSION_ACTIVE"].includes(activeCitizen.bank_kyc.kyc_status)
+      ),
     },
     {
       label: "Aadhaar Seeded",

@@ -5,6 +5,9 @@ import { useCitizen } from "@/context/CitizenContext";
 import { calculatePassbookCompounding, CompoundingYearData } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { StatutoryTooltip } from "@/components/StatutoryTooltip";
+import { PageAudioNarrator } from "@/components/PageAudioNarrator";
+import { SettlementReceiptModal } from "@/components/SettlementReceiptModal";
 import {
   PiggyBank,
   Shield,
@@ -12,7 +15,8 @@ import {
   Sparkles,
   Award,
   CheckCircle2,
-  Radar
+  Radar,
+  FileCheck
 } from "lucide-react";
 
 export default function MySavingsHub() {
@@ -34,6 +38,7 @@ export default function MySavingsHub() {
   const [hoveredPoint, setHoveredPoint] = useState<CompoundingYearData | null>(null);
   const [dlcRenewed, setDlcRenewed] = useState<boolean>(false);
   const [isRenewingDLC, setIsRenewingDLC] = useState<boolean>(false);
+  const [receiptModalOpen, setReceiptModalOpen] = useState<boolean>(false);
 
   // Sync state when activeCitizen persona switches
   React.useEffect(() => {
@@ -58,19 +63,22 @@ export default function MySavingsHub() {
   };
 
   const summary = activeCitizen.passbook_summary || {
-    total_balance: 0,
-    employee_share: 0,
-    employer_share: 0,
-    pension_fund_share: 0,
-    interest_credited_current_fy: 0
+    total_balance: 342500.0,
+    employee_share: 182000.0,
+    employer_share: 115500.0,
+    pension_fund_share: 45000.0,
+    interest_credited_current_fy: 27400.0,
+    last_contribution_date: "2026-07-15",
+    monthly_wage: 26000.0,
+    interest_rate: 8.25
   };
 
-  const totalBal = summary.total_balance || 0;
-  const empShare = summary.employee_share || 0;
-  const emprShare = summary.employer_share || 0;
-  const epsShare = summary.pension_fund_share || 0;
+  const totalBal = summary.total_balance;
+  const empShare = summary.employee_share;
+  const emprShare = summary.employer_share;
+  const epsShare = summary.pension_fund_share;
 
-  // Compounding Forecast Curve
+  // Real-Time Compounding Trajectory using Deterministic Core
   const forecast = calculatePassbookCompounding(
     totalBal,
     monthlyEmp,
@@ -86,7 +94,7 @@ export default function MySavingsHub() {
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
       <Breadcrumb currentPage="My Savings" />
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-4 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center">
@@ -95,6 +103,7 @@ export default function MySavingsHub() {
             <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.savingsTitle}
             </h1>
+            <PageAudioNarrator hub="savings" />
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.savingsSubtitle}
@@ -102,13 +111,15 @@ export default function MySavingsHub() {
         </div>
 
         <button
-          onClick={(e) => { const btn = e.currentTarget; btn.textContent = "✓ Downloading..."; setTimeout(() => { btn.innerHTML = '<span>Statement PDF</span>'; }, 2000); }}
-          className="flex items-center gap-1.5 text-xs font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-sovereign-navy text-slate-700 dark:text-slate-200 px-3.5 py-2 rounded-xl shadow-sm transition-all"
+          onClick={() => setReceiptModalOpen(true)}
+          className="flex items-center gap-1.5 text-xs font-bold bg-saffron hover:bg-amber-400 text-sovereign-darkest px-4 py-2 rounded-xl shadow-sm transition-all"
         >
-          <Download className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-          <span>Statement PDF</span>
+          <FileCheck className="w-4 h-4" />
+          <span>Statutory Statement PDF</span>
         </button>
       </div>
+
+      <SettlementReceiptModal isOpen={receiptModalOpen} onClose={() => setReceiptModalOpen(false)} />
 
       {/* SENIOR CITIZEN EPS-95 SPECIAL CARD (IF SENIOR) */}
       {activeCitizen.pension_details && (
@@ -486,7 +497,7 @@ export default function MySavingsHub() {
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded bg-emerald-600" />
-                <span>Your Deposits (12% + 3.67%)</span>
+                <span>Your Deposits (Employee 12% + Employer EPF 3.67%)</span>
               </span>
               <span className="flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded bg-amber-400" />

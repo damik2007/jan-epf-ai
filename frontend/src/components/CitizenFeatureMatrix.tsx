@@ -72,7 +72,7 @@ export function CitizenFeatureMatrix() {
       id: "5",
       title: "5. Automated TDS Shield",
       tagline: "Form 15G 1-Click Auto-Filer",
-      description: "Detects service < 5 years and auto-generates Form 15G with 1 tap, shielding workers from surprise 20% Section 192A tax cuts.",
+      description: "Detects service < 5 years and auto-generates Form 15G with 1 tap, shielding workers from surprise 10%–20% Section 192A TDS deductions on withdrawals over ₹50,000.",
       route: "/career",
       cta: "Check TDS Exemption",
       icon: ShieldAlert,

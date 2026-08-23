@@ -28,6 +28,7 @@ import { SreTelemetryPanel } from "@/components/SreTelemetryPanel";
 import { SovereignDpiPillars } from "@/components/SovereignDpiPillars";
 import { GatewayHealthPulse } from "@/components/GatewayHealthPulse";
 import { ClaimReadinessScore } from "@/components/ClaimReadinessScore";
+import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
 
 export default function CitizenLandingPage() {
   const { activeCitizen, isAuthenticated, login, logout, language } = useCitizen();
@@ -38,6 +39,7 @@ export default function CitizenLandingPage() {
 
   const totalBalance = activeCitizen.passbook_summary?.total_balance || 0;
   const [displayBalance, setDisplayBalance] = useState(0);
+  const [chaosSimulatorOpen, setChaosSimulatorOpen] = useState(false);
 
   React.useEffect(() => {
     const duration = 800;
@@ -65,7 +67,7 @@ export default function CitizenLandingPage() {
       balance: "₹3,42,500",
       badge: "Form 31 Advance",
       badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-300",
-      testScenario: "Tests: Emergency Medical / Housing advance (Para 68J) with instant Canvas Cheque OCR pre-validation.",
+      testScenario: "Tests: Emergency Medical (Para 68J) or Housing (Para 68B) advance with instant Canvas Cheque OCR pre-validation.",
       icon: Coins
     },
     {
@@ -330,6 +332,35 @@ export default function CitizenLandingPage() {
 
       <ClaimReadinessScore />
 
+      {/* Interactive Chaos Simulator Trigger Banner */}
+      <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-slate-900 via-sovereign-darkest to-sovereign-navy text-white border border-slate-800 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative overflow-hidden">
+        <div className="flex items-center gap-3.5 relative z-10">
+          <div className="w-10 h-10 rounded-2xl bg-saffron text-sovereign-darkest flex items-center justify-center font-bold shrink-0 shadow-md">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-sm font-black text-white">
+                Zero-Rejection Claim Stress-Test Sandbox
+              </h3>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-saffron/20 text-saffron border border-saffron/40">
+                Evaluator Tool
+              </span>
+            </div>
+            <p className="text-xs text-slate-300 mt-0.5">
+              Intentionally inject name typos, missing exit dates, obsolete IFSCs, or 20% TDS traps to observe sub-millisecond deterministic self-healing.
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={() => setChaosSimulatorOpen(true)}
+          className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-saffron hover:bg-amber-400 text-sovereign-darkest font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-md shrink-0 relative z-10"
+        >
+          <Zap className="w-4 h-4" />
+          <span>Launch Chaos Sandbox</span>
+        </button>
+      </div>
+
       {/* 4 Topic-Centric Action Hubs Header */}
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
@@ -475,6 +506,12 @@ export default function CitizenLandingPage() {
           {activeSectionTab === "pillars" && <SovereignDpiPillars />}
         </div>
       </div>
+
+      {/* Live Zero-Rejection Chaos Simulator Sandbox Modal */}
+      <ChaosSimulatorModal
+        isOpen={chaosSimulatorOpen}
+        onClose={() => setChaosSimulatorOpen(false)}
+      />
     </div>
   );
 }
