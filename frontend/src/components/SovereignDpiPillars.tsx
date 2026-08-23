@@ -131,7 +131,7 @@ export const SovereignDpiPillars: React.FC = () => {
               className={`p-5 rounded-2xl border transition-all cursor-pointer card-hover-lift flex flex-col justify-between space-y-3 ${
                 isSelected
                   ? "border-amber-500 ring-2 ring-amber-500/30 bg-amber-50/20 dark:bg-slate-800"
-                  : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-850"
+                  : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-900"
               }`}
             >
               <div className="space-y-2.5">

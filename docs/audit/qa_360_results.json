@@ -1,0 +1,157 @@
+{
+  "total": 30,
+  "passed": 30,
+  "failed": 0,
+  "results": [
+    {
+      "test": "Navbar Exists",
+      "status": "PASS",
+      "detail": "Found at y=0"
+    },
+    {
+      "test": "Navbar Fixed Position",
+      "status": "PASS",
+      "detail": "Navbar stayed at y=0 after scrolling (delta=0.0px)"
+    },
+    {
+      "test": "Navbar CSS position:fixed",
+      "status": "PASS",
+      "detail": "Computed position = 'fixed'"
+    },
+    {
+      "test": "Navbar z-index",
+      "status": "PASS",
+      "detail": "z-index = 50"
+    },
+    {
+      "test": "Ramesh Kumar \u2192 Home",
+      "status": "PASS",
+      "detail": "Content length: 4464 chars"
+    },
+    {
+      "test": "Ramesh Kumar \u2192 I Need Money",
+      "status": "PASS",
+      "detail": "Content length: 1827 chars"
+    },
+    {
+      "test": "Ramesh Kumar \u2192 I Changed Jobs",
+      "status": "PASS",
+      "detail": "Content length: 1707 chars"
+    },
+    {
+      "test": "Ramesh Kumar \u2192 My Savings",
+      "status": "PASS",
+      "detail": "Content length: 3995 chars"
+    },
+    {
+      "test": "Ramesh Kumar \u2192 Fix Details",
+      "status": "PASS",
+      "detail": "Content length: 1560 chars"
+    },
+    {
+      "test": "Priya Sharma \u2192 Home",
+      "status": "PASS",
+      "detail": "Content length: 4464 chars"
+    },
+    {
+      "test": "Priya Sharma \u2192 I Need Money",
+      "status": "PASS",
+      "detail": "Content length: 1827 chars"
+    },
+    {
+      "test": "Priya Sharma \u2192 I Changed Jobs",
+      "status": "PASS",
+      "detail": "Content length: 1707 chars"
+    },
+    {
+      "test": "Priya Sharma \u2192 My Savings",
+      "status": "PASS",
+      "detail": "Content length: 3995 chars"
+    },
+    {
+      "test": "Priya Sharma \u2192 Fix Details",
+      "status": "PASS",
+      "detail": "Content length: 1560 chars"
+    },
+    {
+      "test": "Gurmeet Singh \u2192 Home",
+      "status": "PASS",
+      "detail": "Content length: 4464 chars"
+    },
+    {
+      "test": "Gurmeet Singh \u2192 I Need Money",
+      "status": "PASS",
+      "detail": "Content length: 1827 chars"
+    },
+    {
+      "test": "Gurmeet Singh \u2192 I Changed Jobs",
+      "status": "PASS",
+      "detail": "Content length: 1707 chars"
+    },
+    {
+      "test": "Gurmeet Singh \u2192 My Savings",
+      "status": "PASS",
+      "detail": "Content length: 3995 chars"
+    },
+    {
+      "test": "Gurmeet Singh \u2192 Fix Details",
+      "status": "PASS",
+      "detail": "Content length: 1560 chars"
+    },
+    {
+      "test": "Sunita Devi \u2192 Home",
+      "status": "PASS",
+      "detail": "Content length: 4464 chars"
+    },
+    {
+      "test": "Sunita Devi \u2192 I Need Money",
+      "status": "PASS",
+      "detail": "Content length: 1827 chars"
+    },
+    {
+      "test": "Sunita Devi \u2192 I Changed Jobs",
+      "status": "PASS",
+      "detail": "Content length: 1707 chars"
+    },
+    {
+      "test": "Sunita Devi \u2192 My Savings",
+      "status": "PASS",
+      "detail": "Content length: 3995 chars"
+    },
+    {
+      "test": "Sunita Devi \u2192 Fix Details",
+      "status": "PASS",
+      "detail": "Content length: 1560 chars"
+    },
+    {
+      "test": "Responsive Mobile 320px",
+      "status": "PASS",
+      "detail": "Body=320px, Viewport=320px"
+    },
+    {
+      "test": "Responsive Tablet 768px",
+      "status": "PASS",
+      "detail": "Body=768px, Viewport=768px"
+    },
+    {
+      "test": "Responsive Desktop 1440px",
+      "status": "PASS",
+      "detail": "Body=1440px, Viewport=1440px"
+    },
+    {
+      "test": "Double-click safety",
+      "status": "PASS",
+      "detail": "Found 0 submit-type buttons on /money"
+    },
+    {
+      "test": "Login Gateway Loads",
+      "status": "PASS",
+      "detail": "Content includes login elements: True"
+    },
+    {
+      "test": "Console Errors",
+      "status": "PASS",
+      "detail": "Zero JS console errors"
+    }
+  ]
+}

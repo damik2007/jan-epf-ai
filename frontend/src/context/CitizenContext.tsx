@@ -236,9 +236,13 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const mergeEmployment = (memberId: string) => {
     setActiveCitizen((prev) => {
       const targetEmp = prev.employment_history?.find((e) => e.member_id === memberId);
-      const transferAmount = targetEmp?.balance || 0;
+      // Idempotency guard: skip if already merged or no balance
+      if (!targetEmp || targetEmp.transfer_status === "TRANSFERRED_AND_MERGED" || !targetEmp.balance) {
+        return prev;
+      }
+      const transferAmount = targetEmp.balance;
       const updatedHistory = (prev.employment_history || []).map((e) =>
-        e.member_id === memberId ? { ...e, transfer_status: "TRANSFERRED_AND_MERGED" } : e
+        e.member_id === memberId ? { ...e, transfer_status: "TRANSFERRED_AND_MERGED", balance: 0 } : e
       );
       const newTotal = (prev.passbook_summary?.total_balance || 0) + transferAmount;
       const newEmpShare = (prev.passbook_summary?.employee_share || 0) + transferAmount;

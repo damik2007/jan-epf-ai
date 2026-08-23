@@ -12,12 +12,8 @@ import {
   Upload,
   Camera,
   CheckCircle2,
-  AlertTriangle,
-  FileCheck,
   RefreshCw,
-  Zap,
-  Building,
-  ShieldCheck
+  Zap
 } from "lucide-react";
 
 interface ChequeOCRScannerProps {

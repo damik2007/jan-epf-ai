@@ -10,7 +10,6 @@ import {
   XCircle,
   Sparkles,
   Zap,
-  ArrowRight,
   ChevronDown
 } from "lucide-react";
 

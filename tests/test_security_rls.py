@@ -4,7 +4,6 @@ Tests PostgreSQL RLS migration DDL structure, session context generation,
 and in-memory tenant/citizen data isolation.
 """
 import os
-import pytest
 from src.core.security_helpers import (
     InMemoryRLSEngine,
     RLSSessionContext,

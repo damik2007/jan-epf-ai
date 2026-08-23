@@ -6,7 +6,7 @@ HMAC webhook signatures, stateless JWT tokens, anti-hallucination guard, and RLS
 from datetime import timedelta
 import pytest
 from pydantic import BaseModel, Field
-from src.core.schemas import ClaimSubmissionRequest, ClaimType
+from src.core.schemas import ClaimType
 from src.core.security import (
     AntiHallucinationGuard,
     CryptographicSignatureManager,

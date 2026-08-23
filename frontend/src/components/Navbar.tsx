@@ -152,7 +152,7 @@ export const Navbar: React.FC = () => {
               <div className="flex items-center gap-1.5">
                 <span className="text-xl font-extrabold tracking-tight text-white">Jan-EPF</span>
                 <span className="text-xl font-extrabold text-saffron">AI</span>
-                <span className="text-[10px] uppercase tracking-widest px-1.5 py-0.2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded font-bold">
+                <span className="text-[10px] uppercase tracking-widest px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded font-bold">
                   Sovereign 2.0
                 </span>
               </div>
@@ -218,7 +218,7 @@ export const Navbar: React.FC = () => {
                 </button>
 
                 {/* Rich Persona Dropdown Menu */}
-                <div className="absolute right-0 mt-1 w-84 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-2 hidden group-hover:block group-focus-within:block z-50 animate-in fade-in slide-in-from-top-1">
+                <div className="absolute right-0 mt-1 w-80 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-2 hidden group-hover:block group-focus-within:block z-50 animate-in fade-in slide-in-from-top-1">
                   <div className="px-3 py-1.5 flex justify-between items-center border-b border-slate-100 dark:border-slate-800 mb-1">
                     <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-400">
                       Switch Citizen Persona
@@ -256,7 +256,7 @@ export const Navbar: React.FC = () => {
                           <div className="flex justify-between items-center">
                             <div className="font-bold text-xs flex items-center gap-1.5">
                               <span>{c.full_name}</span>
-                              {isSelected && <span className="text-[9px] px-1.5 py-0.2 bg-emerald-500 text-white rounded font-bold">Active</span>}
+                              {isSelected && <span className="text-[9px] px-1.5 py-0.5 bg-emerald-500 text-white rounded font-bold">Active</span>}
                             </div>
                             <span className={`text-[9px] px-2 py-0.5 rounded-full font-bold ${
                               isSelected ? "bg-white/20 text-saffron" : "bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300"

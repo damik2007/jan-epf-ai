@@ -6,7 +6,6 @@ import { useCitizen } from "@/context/CitizenContext";
 import {
   Mic,
   MicOff,
-  Volume2,
   VolumeX,
   Sparkles,
   ChevronUp,
@@ -18,8 +17,7 @@ import {
   ExternalLink,
   Bot,
   User,
-  Activity,
-  CheckCircle2
+  Activity
 } from "lucide-react";
 import { getTranslation } from "@/lib/translations";
 import { generateCopilotResponse, CopilotReply } from "@/lib/voiceCopilotBrain";
@@ -418,7 +416,7 @@ export const VoiceAssistant: React.FC = () => {
                   </div>
 
                   <div
-                    className={`p-3 rounded-2xl max-w-[85%] space-y-1.5 shadow-2xs ${
+                    className={`p-3 rounded-2xl max-w-[85%] space-y-1.5 shadow-sm ${
                       isUser
                         ? "bg-sovereign-navy text-white rounded-tr-none font-medium dark:bg-amber-500 dark:text-slate-950"
                         : "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-none border border-slate-200 dark:border-slate-700"
@@ -432,7 +430,7 @@ export const VoiceAssistant: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => speak(m.spokenText || m.text, m.langCode)}
-                            className="inline-flex items-center gap-1 text-[10px] font-extrabold text-sovereign-navy dark:text-white hover:text-saffron bg-white dark:bg-slate-900 px-2 py-0.5 rounded-md border border-slate-300 dark:border-slate-600 transition-all shadow-2xs"
+                            className="inline-flex items-center gap-1 text-[10px] font-extrabold text-sovereign-navy dark:text-white hover:text-saffron bg-white dark:bg-slate-900 px-2 py-0.5 rounded-md border border-slate-300 dark:border-slate-600 transition-all shadow-sm"
                           >
                             <RotateCcw className="w-3 h-3" />
                             <span>Replay</span>
@@ -448,7 +446,7 @@ export const VoiceAssistant: React.FC = () => {
                               setIsOpen(false);
                               router.push(m.targetRoute!);
                             }}
-                            className="inline-flex items-center gap-1 text-[10px] font-extrabold text-white bg-emerald-700 hover:bg-emerald-800 px-2 py-0.5 rounded-md transition-all shadow-2xs"
+                            className="inline-flex items-center gap-1 text-[10px] font-extrabold text-white bg-emerald-700 hover:bg-emerald-800 px-2 py-0.5 rounded-md transition-all shadow-sm"
                           >
                             <span>Open</span>
                             <ExternalLink className="w-3 h-3" />

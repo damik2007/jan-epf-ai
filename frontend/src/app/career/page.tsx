@@ -43,7 +43,8 @@ export default function ChangedJobsHub() {
   ];
 
   const previousJob = history[0];
-  const currentJob = history[1] || history[0];
+  const currentJob = history.length > 1 ? history[1] : history[0];
+  const hasPriorAccounts = history.length > 1;
 
   // Auto-deduce exit date
   const deducedExitDate = previousJob.last_ecr_wage_month
@@ -72,7 +73,7 @@ export default function ChangedJobsHub() {
           source_member_id: previousJob.member_id,
           target_member_id: currentJob.member_id
         }),
-        signal: AbortSignal.timeout(600)
+        signal: AbortSignal.timeout(3000)
       });
       if (res.ok) {
         const data = await res.json();

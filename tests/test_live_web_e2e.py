@@ -8,7 +8,6 @@ Validates:
 """
 import urllib.request
 import urllib.error
-import pytest
 
 BASE_URL = "https://frontend-blue-tau-0e2bu1kwsk.vercel.app"
 ROUTES = ["/", "/money", "/career", "/savings", "/fix", "/login"]

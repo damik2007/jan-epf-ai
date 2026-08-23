@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useCitizen } from "@/context/CitizenContext";
 import {
   Shield,
-  KeyRound,
   CheckCircle2,
   ArrowRight,
   UserCheck,
@@ -14,11 +13,7 @@ import {
   HeartHandshake,
   Zap,
   Fingerprint,
-  Smartphone,
-  Sparkles,
-  Lock,
-  RotateCcw,
-  Eye
+  Smartphone
 } from "lucide-react";
 
 export default function LoginPage() {

@@ -5,10 +5,7 @@ ECR exit date auto-deductions, Section 192A TDS logic, 8.25% compounding retirem
 IFSC bank merger resolver, and AI grievance root-cause triage.
 """
 from datetime import date
-import pytest
 from src.core.engine import (
-    BANK_MERGER_REGISTRY,
-    KNOWN_BANKS,
     calculate_form_31_eligibility,
     calculate_fuzzy_name_match,
     calculate_passbook_growth_forecast,

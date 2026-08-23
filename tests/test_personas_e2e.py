@@ -16,7 +16,6 @@ from src.core.engine import (
     calculate_fuzzy_name_match,
     calculate_passbook_growth_forecast,
     deduce_missing_date_of_exit,
-    lookup_and_resolve_ifsc,
 )
 
 

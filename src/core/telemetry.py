@@ -5,9 +5,8 @@ Tracks golden signals (latency, traffic, errors, saturation), circuit breakers, 
 import json
 import logging
 import sys
-import time
 from typing import Any, Dict
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import Counter, Histogram, generate_latest
 from src.core.security import PresidioPIISanitizer
 
 # Prometheus Metrics Definitions

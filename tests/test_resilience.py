@@ -4,7 +4,6 @@ Tests all 6 subsystem pillars, circuit breaker state machine (CLOSED -> OPEN -> 
 hot substitution triggers, cooldown expiration, and SRE status matrix diagnostics.
 """
 import time
-import pytest
 from src.core.resilience import (
     ComponentResilienceOrchestrator,
     FallbackMode,

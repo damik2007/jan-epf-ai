@@ -1,7 +1,6 @@
 import json
 import uuid
 from datetime import datetime
-from typing import List
 import httpx
 from fastapi import APIRouter, HTTPException, status
 from src.core.config import settings

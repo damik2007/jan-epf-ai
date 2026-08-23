@@ -17,7 +17,6 @@ import {
   ArrowRight,
   CheckCircle2,
   TrendingUp,
-  ShieldCheck,
   ChevronDown
 } from "lucide-react";
 
@@ -235,7 +234,7 @@ export function AudienceSegmentReport() {
                   className={`p-2.5 rounded-2xl border text-left transition-all flex flex-col justify-between gap-1.5 ${
                     isSelected
                       ? "bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 border-sovereign-navy dark:border-amber-500 shadow-md ring-2 ring-saffron/40"
-                      : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-750"
+                      : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
                   }`}
                 >
                   <TabIcon className={`w-4 h-4 ${isSelected ? "text-saffron dark:text-slate-950" : "text-slate-600 dark:text-slate-400"}`} />
@@ -251,7 +250,7 @@ export function AudienceSegmentReport() {
           </div>
 
           {/* Active Segment Detail Card */}
-          <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850 shadow-sm space-y-5 transition-all">
+          <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 shadow-sm space-y-5 transition-all">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-700">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-2xl bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 flex items-center justify-center shadow-md">

@@ -7,9 +7,8 @@ Tests:
 """
 import pytest
 from httpx import AsyncClient, ASGITransport
-from datetime import datetime
 from src.api.main import app as gateway_app
-from src.core.resilience import ComponentResilienceOrchestrator, SubsystemType, resilience_orchestrator
+from src.core.resilience import SubsystemType, resilience_orchestrator
 from src.core.security import CryptographicSignatureManager
 
 

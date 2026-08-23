@@ -5,7 +5,6 @@ Loads and manages high-fidelity citizen accounts, claims ledger, and digital joi
 import json
 import os
 from typing import Any, Dict, List, Optional
-from src.core.schemas import CitizenProfile
 
 
 class MockCitizenDataStore:

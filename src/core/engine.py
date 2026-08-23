@@ -6,9 +6,8 @@ and compound retirement forecasting.
 """
 import calendar
 from datetime import date
-import math
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 
 # ==============================================================================

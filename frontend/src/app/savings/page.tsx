@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useCitizen } from "@/context/CitizenContext";
-import { calculatePassbookCompounding } from "@/lib/deterministicEngine";
+import { calculatePassbookCompounding, CompoundingYearData } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
 import {
   PiggyBank,
@@ -30,7 +30,7 @@ export default function MySavingsHub() {
   const [monthlyEmp, setMonthlyEmp] = useState<number>(initialMonthlyContrib);
   const [monthlyEmpr, setMonthlyEmpr] = useState<number>(initialMonthlyContrib);
   const [simulatedRate, setSimulatedRate] = useState<number>(8.25);
-  const [hoveredPoint, setHoveredPoint] = useState<any | null>(null);
+  const [hoveredPoint, setHoveredPoint] = useState<CompoundingYearData | null>(null);
   const [dlcRenewed, setDlcRenewed] = useState<boolean>(false);
   const [isRenewingDLC, setIsRenewingDLC] = useState<boolean>(false);
 
@@ -100,7 +100,7 @@ export default function MySavingsHub() {
         </div>
 
         <button
-          onClick={() => alert("Downloading official tamper-evident PDF passbook statement...")}
+          onClick={(e) => { const btn = e.currentTarget; btn.textContent = "✓ Downloading..."; setTimeout(() => { btn.innerHTML = '<span>Statement PDF</span>'; }, 2000); }}
           className="flex items-center gap-1.5 text-xs font-bold bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-sovereign-navy text-slate-700 dark:text-slate-200 px-3.5 py-2 rounded-xl shadow-sm transition-all"
         >
           <Download className="w-4 h-4 text-slate-500 dark:text-slate-400" />
@@ -539,7 +539,7 @@ export default function MySavingsHub() {
               <span className="text-xs uppercase font-bold text-saffron tracking-wider">
                 {t.edliTitle}
               </span>
-              <span className="text-[10px] bg-emerald-500/30 text-emerald-300 px-2 py-0.2 rounded border border-emerald-400/40">
+              <span className="text-[10px] bg-emerald-500/30 text-emerald-300 px-2 py-0.5 rounded border border-emerald-400/40">
                 100% Free
               </span>
             </div>
@@ -551,7 +551,7 @@ export default function MySavingsHub() {
         </div>
 
         <button
-          onClick={() => alert("Nominee is registered. EDLI coverage certificate verified.")}
+          onClick={(e) => { const btn = e.currentTarget; btn.textContent = "✓ Verified"; btn.classList.add("bg-emerald-600", "text-white"); setTimeout(() => { btn.textContent = "Verify EDLI Coverage"; btn.classList.remove("bg-emerald-600", "text-white"); }, 2500); }}
           className="bg-white text-sovereign-darkest hover:bg-slate-100 px-4 py-2 rounded-xl font-bold text-xs shadow transition-all whitespace-nowrap"
         >
           {t.verified}

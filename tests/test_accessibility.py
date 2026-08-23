@@ -3,9 +3,6 @@ Jan-EPF AI: Exhaustive WCAG 2.1 AA Accessibility & Universal Device Compliance T
 Tests WCAG 2.1 relative luminance, mathematical contrast ratios, Senior Citizen Mode 150% scaling,
 touch target minimum bounds (>=48px), ARIA labels & screen reader semantics, and responsive viewport reflows.
 """
-import pytest
-
-
 # ==============================================================================
 # 1. WCAG 2.1 RELATIVE LUMINANCE & CONTRAST RATIO UTILITIES
 # ==============================================================================

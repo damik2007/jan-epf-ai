@@ -13,6 +13,25 @@ import {
   Sparkles
 } from "lucide-react";
 
+interface PennyDropResult {
+  success?: boolean;
+  npcI_reference_id?: string;
+  fuzzy_match_score?: number;
+  kyc_verified?: boolean;
+  registered_account_name?: string;
+  bank_response_code?: string;
+  is_ready_for_claims?: boolean;
+}
+
+interface CopilotDiagnosis {
+  root_cause_identified?: string;
+  error_code_classification?: string;
+  automated_fix_available?: boolean;
+  recommended_action?: string;
+  estimated_resolution_days?: number;
+  predicted_resolution_days?: number;
+}
+
 export default function FixDetailsHub() {
   const {
     activeCitizen,
@@ -36,7 +55,7 @@ export default function FixDetailsHub() {
   const [bankAcc, setBankAcc] = useState<string>("123456789012");
   const [bankIfsc, setBankIfsc] = useState<string>("SBIN0001234");
   const [holderName, setHolderName] = useState<string>(activeCitizen.full_name);
-  const [pennyDropResult, setPennyDropResult] = useState<any>(null);
+  const [pennyDropResult, setPennyDropResult] = useState<PennyDropResult | null>(null);
   const [isVerifyingPennyDrop, setIsVerifyingPennyDrop] = useState<boolean>(false);
 
   // State for Joint Declaration
@@ -57,7 +76,7 @@ export default function FixDetailsHub() {
   const [complaintText, setComplaintText] = useState<string>(
     "My claim got delayed because previous company did not enter my Date of Exit."
   );
-  const [copilotDiagnosis, setCopilotDiagnosis] = useState<any>(null);
+  const [copilotDiagnosis, setCopilotDiagnosis] = useState<CopilotDiagnosis | null>(null);
   const [isDiagnosing, setIsDiagnosing] = useState<boolean>(false);
 
   const handleRunFuzzyCheck = () => {
@@ -78,7 +97,7 @@ export default function FixDetailsHub() {
           ifsc_code: bankIfsc,
           account_holder_name: holderName
         }),
-        signal: AbortSignal.timeout(600)
+        signal: AbortSignal.timeout(3000)
       });
       if (res.ok) {
         const data = await res.json();
@@ -126,7 +145,7 @@ export default function FixDetailsHub() {
           complaint_category: "TRANSFER_OR_EXIT",
           complaint_description: complaintText
         }),
-        signal: AbortSignal.timeout(600)
+        signal: AbortSignal.timeout(3000)
       });
       if (res.ok) {
         const data = await res.json();
@@ -175,7 +194,7 @@ export default function FixDetailsHub() {
         ].map((tab) => (
           <button
             key={tab.id}
-            onClick={() => setActiveSection(tab.id as any)}
+            onClick={() => setActiveSection(tab.id as "NAME_VALIDATE" | "PENNY_DROP" | "JOINT_DECLARATION" | "NOMINATION" | "GRIEVANCE")}
             className={`px-3 py-2 rounded-xl transition-all ${
               activeSection === tab.id
                 ? "bg-white dark:bg-amber-500 text-sovereign-navy dark:text-slate-950 shadow-sm font-extrabold"
@@ -541,7 +560,7 @@ export default function FixDetailsHub() {
                   <span className="font-bold text-emerald-700 dark:text-emerald-400">{copilotDiagnosis.recommended_action}</span>
                 </div>
                 <button
-                  onClick={() => alert("Automated fix executed! Reconciled with national ledger.")}
+                  onClick={(e) => { const btn = e.currentTarget; btn.textContent = "✓ Reconciled Successfully"; btn.classList.add("bg-emerald-600"); setTimeout(() => { btn.textContent = "Apply Automated Fix"; btn.classList.remove("bg-emerald-600"); }, 2500); }}
                   className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold text-xs shadow hover:bg-emerald-700 transition-all whitespace-nowrap"
                 >
                   {t.applyAutoFixButton}

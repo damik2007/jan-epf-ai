@@ -6,14 +6,10 @@ Verifies defense-in-depth against:
 3. NPCI Webhook HMAC Signature Forgery & Replay Attacks
 4. Cross-Tenant RLS Privilege Escalation & Memory Tampering
 """
-import hmac
-import hashlib
-import time
 import pytest
 import jwt
 from httpx import AsyncClient, ASGITransport
 from src.api.main import app as gateway_app
-from src.core.config import settings
 from src.core.security import PresidioPIISanitizer, SecurityTokenManager, CryptographicSignatureManager
 
 
@@ -60,17 +56,17 @@ def test_red_team_jwt_forgery_and_tampering():
     parts = valid_token.split(".")
     tampered_payload = parts[0] + ".eyJzdWIiOiAiOTk5OTk5OTk5OTk5IiwgInJvbGUiOiAiYWRtaW4ifQ." + parts[2]
     with pytest.raises(Exception):
-        SecurityTokenManager.decode_token(tampered_payload)
+        SecurityTokenManager.verify_access_token(tampered_payload)
 
     # Attack 2: 'none' algorithm confusion attack
     none_token = jwt.encode({"sub": "admin", "role": "superadmin"}, key="", algorithm="none")
     with pytest.raises(Exception):
-        SecurityTokenManager.decode_token(none_token)
+        SecurityTokenManager.verify_access_token(none_token)
 
     # Attack 3: Forged secret key
     forged_token = jwt.encode({"sub": "100982348712"}, key="attacker_bogus_key", algorithm="HS256")
     with pytest.raises(Exception):
-        SecurityTokenManager.decode_token(forged_token)
+        SecurityTokenManager.verify_access_token(forged_token)
 
 
 # ==============================================================================

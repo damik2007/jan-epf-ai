@@ -12,9 +12,7 @@ import {
   Coins,
   Building2,
   HeartHandshake,
-  FileCheck2,
-  Zap,
-  Users
+  Zap
 } from "lucide-react";
 
 export function EvaluatorTourModal() {
@@ -58,8 +56,8 @@ export function EvaluatorTourModal() {
       title: "1-Click Multi-Job Consolidation & Missing Date of Exit (DOE)",
       badge: "Form 13 Auto-Merge",
       badgeColor: "bg-purple-100 text-purple-800 border-purple-300",
-      persona: "Vikram Malhotra (Job Switcher)",
-      uan: "100223344556",
+      persona: "Priya Sharma (Job Switcher)",
+      uan: "101234517203",
       headline: "Auto-Deducing Exit Dates from ECR Wage Timestamps",
       explanation:
         "When an employee switches companies and the old employer fails to mark the exit date, funds are locked for months. Jan-EPF AI auto-deduces the exit date from the last ECR wage deposit and merges accounts in 1 tap.",
@@ -108,22 +106,22 @@ export function EvaluatorTourModal() {
       {/* Guided Tour Modal */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white text-slate-900 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-2 border-slate-200 space-y-6 relative">
+          <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border-2 border-slate-200 dark:border-slate-800 space-y-6 relative">
             {/* Modal Header */}
-            <div className="flex justify-between items-start pb-3 border-b border-slate-100">
+            <div className="flex justify-between items-start pb-3 border-b border-slate-100 dark:border-slate-800">
               <div className="space-y-1">
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sovereign-navy text-white text-[10px] font-bold">
                   <Zap className="w-3 h-3 text-saffron" />
                   <span>EVALUATOR & CITIZEN PERSPECTIVE TOUR • STOP {current.step} OF 4</span>
                 </div>
-                <h2 className="text-lg sm:text-xl font-black text-sovereign-navy">
+                <h2 className="text-lg sm:text-xl font-black text-sovereign-navy dark:text-white">
                   {current.title}
                 </h2>
               </div>
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
+                className="p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -136,19 +134,19 @@ export function EvaluatorTourModal() {
                   <Icon className="w-6 h-6 text-saffron" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-slate-900 leading-snug">
+                  <h3 className="text-sm font-black text-slate-900 dark:text-white leading-snug">
                     {current.headline}
                   </h3>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className="text-[11px] text-slate-500 font-semibold">Simulated Persona:</span>
-                    <strong className="text-[11px] text-slate-800 font-bold">{current.persona}</strong>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold">Simulated Persona:</span>
+                    <strong className="text-[11px] text-slate-800 dark:text-slate-200 font-bold">{current.persona}</strong>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs text-slate-700 leading-relaxed space-y-2">
+              <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 leading-relaxed space-y-2">
                 <p>{current.explanation}</p>
-                <div className="flex items-center gap-1.5 font-bold text-emerald-800 pt-1 border-t border-slate-200">
+                <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-400 pt-1 border-t border-slate-200 dark:border-slate-700">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Proof Metric: {current.proof}</span>
                 </div>
@@ -156,7 +154,7 @@ export function EvaluatorTourModal() {
             </div>
 
             {/* Navigation & 1-Click Launch */}
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-3 border-t border-slate-100">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-1.5">
                 {tourStops.map((_, idx) => (
                   <button
@@ -182,14 +180,14 @@ export function EvaluatorTourModal() {
                 {currentStop < tourStops.length - 1 ? (
                   <button
                     onClick={() => setCurrentStop(currentStop + 1)}
-                    className="py-2.5 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black rounded-xl transition-all shadow-xs"
+                    className="py-2.5 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black rounded-xl transition-all shadow-sm"
                   >
                     Next Stop →
                   </button>
                 ) : (
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-xs"
+                    className="py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm"
                   >
                     Done ✓
                   </button>

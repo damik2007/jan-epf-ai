@@ -5,7 +5,7 @@ Strict data validation models for Citizens, Claims, Passbooks, KYC, OCR, Grievan
 from datetime import date, datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
 
 # ==============================================================================

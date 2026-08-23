@@ -2,7 +2,6 @@
 Jan-EPF AI: Voice Assistant & Multilingual Intent Classifier Route (Agent 2).
 Supports Hindi (हिंदी), Telugu (తెలుగు), Tamil (தமிழ்), and English with sovereign on-device token rules.
 """
-import os
 import httpx
 from fastapi import APIRouter
 from src.core.config import settings

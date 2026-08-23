@@ -9,9 +9,7 @@ import {
   TrendingUp,
   Building2,
   User,
-  HeartHandshake,
-  CheckCircle2,
-  Sparkles
+  HeartHandshake
 } from "lucide-react";
 
 interface ExplainRupeeModalProps {
@@ -180,7 +178,7 @@ export const ExplainRupeeModal: React.FC<ExplainRupeeModalProps> = ({ isOpen, on
             ) : selectedTab === "EE" ? (
               <>
                 <div className="text-blue-600 dark:text-blue-400 font-bold">Employee Share = Monthly Basic Wage (₹{wage.toLocaleString("en-IN")}) × 12.00%</div>
-                <div className="text-[11px] text-slate-500">Deducted from payroll and deposited into Member Account KNBLR0012345.</div>
+                <div className="text-[11px] text-slate-500 dark:text-slate-400">Deducted from payroll and deposited into Member Account {activeCitizen.active_employment?.member_id || "Member Account"}.</div>
               </>
             ) : selectedTab === "ER" ? (
               <>

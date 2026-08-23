@@ -17,9 +17,17 @@ import {
   ArrowRight,
   ArrowLeft,
   Activity,
-  RotateCcw,
-  AlertTriangle
+  RotateCcw
 } from "lucide-react";
+
+interface SubmittedClaimResult {
+  claim_id?: string;
+  amount_sanctioned?: number;
+  status?: string;
+  direct_benefit_transfer_account?: string;
+  audit_trace_token?: string;
+  processing_time_ms?: number;
+}
 
 export default function NeedMoneyHub() {
   const { activeCitizen, addClaim, language, apiUrl } = useCitizen();
@@ -30,10 +38,17 @@ export default function NeedMoneyHub() {
   const [requestedAmount, setRequestedAmount] = useState<number>(50000);
   const [kycVerified, setKycVerified] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [submittedResult, setSubmittedResult] = useState<any>(null);
+  const [submittedResult, setSubmittedResult] = useState<SubmittedClaimResult | null>(null);
   const [undoSecondsLeft, setUndoSecondsLeft] = useState<number | null>(null);
 
-  const timerIntervalRef = useRef<any>(null);
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Cleanup timer on unmount to prevent memory leak
+  useEffect(() => {
+    return () => {
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    };
+  }, []);
 
   const empShare = activeCitizen.passbook_summary?.employee_share || 0;
   const emprShare = activeCitizen.passbook_summary?.employer_share || 0;
@@ -103,7 +118,7 @@ export default function NeedMoneyHub() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(claimData),
-        signal: AbortSignal.timeout(600)
+        signal: AbortSignal.timeout(3000)
       });
       if (res.ok) {
         const data = await res.json();
@@ -160,8 +175,10 @@ export default function NeedMoneyHub() {
       count -= 1;
       setUndoSecondsLeft(count);
       if (count <= 0) {
-        clearInterval(timerIntervalRef.current);
-        timerIntervalRef.current = null;
+        if (timerIntervalRef.current) {
+          clearInterval(timerIntervalRef.current);
+          timerIntervalRef.current = null;
+        }
         handleFinalSubmit();
       }
     }, 1000);
@@ -185,11 +202,11 @@ export default function NeedMoneyHub() {
             <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
               <Wallet className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl font-black text-sovereign-navy">
+            <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.moneyTitle}
             </h1>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.moneySubtitle}
           </p>
         </div>
@@ -209,10 +226,10 @@ export default function NeedMoneyHub() {
               >
                 {currentStep > step ? "✓" : step}
               </div>
-              <span className={`text-xs font-semibold hidden md:inline ${currentStep === step ? "text-sovereign-navy" : "text-slate-400"}`}>
+              <span className={`text-xs font-semibold hidden md:inline ${currentStep === step ? "text-sovereign-navy dark:text-white" : "text-slate-400"}`}>
                 {step === 1 ? t.step1 : step === 2 ? t.step2 : t.step3}
               </span>
-              {step < 3 && <span className="text-slate-300 hidden md:inline">→</span>}
+              {step < 3 && <span className="text-slate-300 dark:text-slate-600 hidden md:inline">→</span>}
             </div>
           ))}
         </div>
@@ -228,10 +245,10 @@ export default function NeedMoneyHub() {
               return (
                 <div
                   key={r.id}
-                  onClick={() => setSelectedReason(r.id as any)}
+                  onClick={() => setSelectedReason(r.id as "MEDICAL" | "HOUSING" | "MARRIAGE")}
                   className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                     isSelected
-                      ? "border-amber-500 ring-2 ring-amber-500/20 shadow-md bg-amber-50/20 dark:bg-slate-850"
+                      ? "border-amber-500 ring-2 ring-amber-500/20 shadow-md bg-amber-50/20 dark:bg-slate-900"
                       : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700"
                   }`}
                 >
@@ -282,9 +299,9 @@ export default function NeedMoneyHub() {
                 step="1000"
                 value={requestedAmount}
                 onChange={(e) => setRequestedAmount(Number(e.target.value))}
-                className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sovereign-navy"
+                className="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sovereign-navy"
               />
-              <div className="flex justify-between text-[11px] text-slate-400">
+              <div className="flex justify-between text-[11px] text-slate-400 dark:text-slate-500">
                 <span>Min: ₹5,000</span>
                 <span>Max: ₹{eligibility.maxAdvanceAmount.toLocaleString("en-IN")}</span>
               </div>
@@ -321,7 +338,7 @@ export default function NeedMoneyHub() {
                 <Activity className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
                 <h4 className="text-sm font-extrabold text-emerald-950 dark:text-emerald-300">Pre-Flight Claim Health Diagnostic</h4>
               </div>
-              <span className="px-2.5 py-1 bg-emerald-600 text-white font-mono font-bold text-xs rounded-full shadow-2xs">
+              <span className="px-2.5 py-1 bg-emerald-600 text-white font-mono font-bold text-xs rounded-full shadow-sm">
                 99% Approval Probability
               </span>
             </div>
@@ -419,7 +436,7 @@ export default function NeedMoneyHub() {
               {t.approved}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-sovereign-navy dark:text-white">
-              ₹{submittedResult.amount_sanctioned.toLocaleString("en-IN")} {t.approved}
+              ₹{(submittedResult.amount_sanctioned ?? requestedAmount).toLocaleString("en-IN")} {t.approved}
             </h2>
             <p className="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">
               {t.sanctionConfirmedDesc}

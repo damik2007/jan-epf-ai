@@ -98,10 +98,10 @@ export default function CitizenLandingPage() {
             <Zap className="w-3.5 h-3.5" />
             <span>HACKATHON EVALUATOR & CITIZEN LOGIN GATEWAY</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-sovereign-navy tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-sovereign-navy dark:text-white tracking-tight">
             Select a Mock Citizen Persona to Begin
           </h1>
-          <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
             Instant 1-Click Evaluator & Citizen Gateway. Select any persona scenario below to immediately test the rebuilt life-event hubs with zero SMS OTP friction.
           </p>
         </div>
@@ -118,7 +118,7 @@ export default function CitizenLandingPage() {
                 className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative flex flex-col justify-between hover:shadow-xl hover:-translate-y-0.5 ${
                   isCurrent
                     ? "border-saffron bg-amber-50/50 shadow-md ring-2 ring-saffron/30"
-                    : "border-slate-200 bg-white hover:border-slate-400"
+                    : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-400"
                 }`}
               >
                 <div className="space-y-3">
@@ -128,11 +128,11 @@ export default function CitizenLandingPage() {
                         <Icon className="w-5 h-5 text-saffron" />
                       </div>
                       <div>
-                        <h2 className="text-base font-bold text-sovereign-navy flex items-center gap-1.5">
+                        <h2 className="text-base font-bold text-sovereign-navy dark:text-white flex items-center gap-1.5">
                           <span>{persona.name}</span>
                           {isCurrent && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
                         </h2>
-                        <p className="text-xs text-slate-500">{persona.role}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{persona.role}</p>
                       </div>
                     </div>
                     <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${persona.badgeColor}`}>
@@ -140,22 +140,22 @@ export default function CitizenLandingPage() {
                     </span>
                   </div>
 
-                  <div className="bg-slate-50 p-2.5 rounded-xl text-xs space-y-1 border border-slate-100">
-                    <div className="flex justify-between text-slate-600">
+                  <div className="bg-slate-50 dark:bg-slate-800 p-2.5 rounded-xl text-xs space-y-1 border border-slate-100 dark:border-slate-700">
+                    <div className="flex justify-between text-slate-600 dark:text-slate-400">
                       <span>Establishment:</span>
-                      <strong className="text-slate-800 truncate max-w-[180px]">{persona.org}</strong>
+                      <strong className="text-slate-800 dark:text-slate-200 truncate max-w-[180px]">{persona.org}</strong>
                     </div>
-                    <div className="flex justify-between text-slate-600">
+                    <div className="flex justify-between text-slate-600 dark:text-slate-400">
                       <span>Simulated UAN:</span>
                       <strong className="font-mono text-slate-900">{persona.uan}</strong>
                     </div>
-                    <div className="flex justify-between text-slate-600">
+                    <div className="flex justify-between text-slate-600 dark:text-slate-400">
                       <span>Current Corpus:</span>
                       <strong className="font-mono text-emerald-700 font-bold">{persona.balance}</strong>
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-600 italic bg-blue-50/50 p-2 rounded-lg border border-blue-100/50">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 italic bg-blue-50/50 p-2 rounded-lg border border-blue-100/50">
                     💡 {persona.testScenario}
                   </p>
                 </div>
@@ -173,12 +173,12 @@ export default function CitizenLandingPage() {
         </div>
 
         {/* Evaluator Security & Zero-Trust Notice */}
-        <div className="p-3.5 bg-white rounded-2xl border border-slate-200 shadow-xs text-center max-w-xl mx-auto space-y-1">
-          <p className="text-xs font-extrabold text-slate-800 flex items-center justify-center gap-1.5">
+        <div className="p-3.5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs text-center max-w-xl mx-auto space-y-1">
+          <p className="text-xs font-extrabold text-slate-800 dark:text-slate-200 flex items-center justify-center gap-1.5">
             <Shield className="w-4 h-4 text-emerald-600" />
             <span>Sovereign Sandbox Protocol • 100% Deterministic & Safe</span>
           </p>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
             Engineered with Zero-Trust local execution. Select any persona above to instantly test all 8 end-to-end statutory workflows.
           </p>
         </div>
@@ -312,14 +312,14 @@ export default function CitizenLandingPage() {
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
           <div>
-            <h2 className="text-xl sm:text-2xl font-bold text-sovereign-navy tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-sovereign-navy dark:text-white tracking-tight">
               {t.quickActionsTitle}
             </h2>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               {t.homeSubtitle}
             </p>
           </div>
-          <span className="text-xs font-bold px-3 py-1 bg-amber-50 text-amber-800 border border-amber-200 rounded-full">
+          <span className="text-xs font-bold px-3 py-1 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 rounded-full">
             80/20 On-Site Sovereign Core
           </span>
         </div>
@@ -332,7 +332,7 @@ export default function CitizenLandingPage() {
               <Link
                 key={hub.href}
                 href={hub.href}
-                className="group bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between relative overflow-hidden"
+                className="group bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between relative overflow-hidden"
               >
                 <div className="space-y-3">
                   <div className="flex justify-between items-start">
@@ -345,18 +345,18 @@ export default function CitizenLandingPage() {
                   </div>
 
                   <div>
-                    <h3 className="font-bold text-base text-sovereign-navy group-hover:text-saffron transition-colors">
+                    <h3 className="font-bold text-base text-sovereign-navy dark:text-white group-hover:text-saffron transition-colors">
                       {hub.title}
                     </h3>
-                    <p className="text-xs text-slate-500 mt-1 leading-relaxed line-clamp-3">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed line-clamp-3">
                       {hub.desc}
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-4 mt-4 border-t border-slate-100 flex justify-between items-center text-xs font-bold text-slate-600">
-                  <span className="text-[11px] text-slate-400">{hub.stat}</span>
-                  <div className="flex items-center gap-1 text-sovereign-navy group-hover:text-saffron group-hover:translate-x-1 transition-all">
+                <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center text-xs font-bold text-slate-600 dark:text-slate-400">
+                  <span className="text-[11px] text-slate-400 dark:text-slate-500">{hub.stat}</span>
+                  <div className="flex items-center gap-1 text-sovereign-navy dark:text-white group-hover:text-saffron group-hover:translate-x-1 transition-all">
                     <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -385,7 +385,7 @@ export default function CitizenLandingPage() {
               onClick={() => setActiveSectionTab("features")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeSectionTab === "features"
-                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-xs border border-slate-200 dark:border-slate-700"
+                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -395,7 +395,7 @@ export default function CitizenLandingPage() {
               onClick={() => setActiveSectionTab("audience")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeSectionTab === "audience"
-                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-xs border border-slate-200 dark:border-slate-700"
+                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -405,7 +405,7 @@ export default function CitizenLandingPage() {
               onClick={() => setActiveSectionTab("benchmark")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeSectionTab === "benchmark"
-                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-xs border border-slate-200 dark:border-slate-700"
+                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -415,7 +415,7 @@ export default function CitizenLandingPage() {
               onClick={() => setActiveSectionTab("sre")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeSectionTab === "sre"
-                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-xs border border-slate-200 dark:border-slate-700"
+                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >
@@ -425,7 +425,7 @@ export default function CitizenLandingPage() {
               onClick={() => setActiveSectionTab("pillars")}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
                 activeSectionTab === "pillars"
-                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-xs border border-slate-200 dark:border-slate-700"
+                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
               }`}
             >

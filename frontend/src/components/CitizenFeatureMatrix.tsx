@@ -123,7 +123,7 @@ export function CitizenFeatureMatrix() {
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sovereign-navy dark:bg-slate-800 text-white text-xs font-bold shadow-xs">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sovereign-navy dark:bg-slate-800 text-white text-xs font-bold shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-saffron" />
             <span>SOLVING REAL CITIZEN PAIN POINTS • EPFO 3.0 TRANSFORMATION</span>
           </div>
@@ -152,11 +152,11 @@ export function CitizenFeatureMatrix() {
             return (
               <div
                 key={f.id}
-                className={`bg-gradient-to-br ${f.accent} dark:bg-slate-850 rounded-2xl p-4 border flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 transition-all duration-200 space-y-3`}
+                className={`bg-gradient-to-br ${f.accent} dark:bg-slate-900 rounded-2xl p-4 border flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 transition-all duration-200 space-y-3`}
               >
                 <div className="space-y-2">
                   <div className="flex justify-between items-start">
-                    <div className="w-9 h-9 rounded-xl bg-sovereign-navy dark:bg-slate-800 text-white flex items-center justify-center shadow-xs">
+                    <div className="w-9 h-9 rounded-xl bg-sovereign-navy dark:bg-slate-800 text-white flex items-center justify-center shadow-sm">
                       <Icon className="w-4 h-4 text-saffron" />
                     </div>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${f.badgeColor}`}>
@@ -176,7 +176,7 @@ export function CitizenFeatureMatrix() {
 
                 <Link
                   href={f.route}
-                  className="w-full py-2 px-3 bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 hover:bg-sovereign-light text-white text-xs font-bold rounded-xl flex items-center justify-between transition-colors shadow-xs group"
+                  className="w-full py-2 px-3 bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 hover:bg-sovereign-light text-white text-xs font-bold rounded-xl flex items-center justify-between transition-colors shadow-sm group"
                 >
                   <span>{f.cta}</span>
                   <ArrowRight className="w-3.5 h-3.5 text-saffron dark:text-slate-950 group-hover:translate-x-0.5 transition-transform" />

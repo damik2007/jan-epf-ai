@@ -36,7 +36,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Production safe with stateless JWT headers
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -53,7 +53,7 @@ async def prometheus_telemetry_middleware(request: Request, call_next):
     REQUEST_LATENCY_HISTOGRAM.labels(
         method=request.method,
         endpoint=endpoint,
-        status_code=response.status_code
+        status_code=str(response.status_code)
     ).observe(duration)
 
     return response

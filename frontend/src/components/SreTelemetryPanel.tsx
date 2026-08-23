@@ -5,7 +5,6 @@ import {
   Activity,
   Cpu,
   ShieldCheck,
-  Server,
   Zap,
   CheckCircle2,
   ChevronDown,
