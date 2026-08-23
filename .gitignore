@@ -62,3 +62,4 @@ Thumbs.db
 # Temporary Files
 extracted_docs/
 scratch/
+.vercel
