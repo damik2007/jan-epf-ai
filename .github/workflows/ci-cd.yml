@@ -200,25 +200,26 @@ jobs:
     runs-on: ubuntu-latest
     needs: [docker-build]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
       - name: Deploy Frontend to Vercel
-        if: ${{ secrets.VERCEL_TOKEN != '' }}
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        if: env.VERCEL_TOKEN != ''
         run: |
           cd frontend && npx --yes vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy Backend to Azure Container Apps
-        if: ${{ secrets.AZURE_CREDENTIALS != '' }}
+        if: env.AZURE_CREDENTIALS != ''
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy Container to Azure Container Apps
-        if: ${{ secrets.AZURE_CREDENTIALS != '' }}
+        if: env.AZURE_CREDENTIALS != ''
         run: |
           az containerapp up \
             --name jan-epf-api \
