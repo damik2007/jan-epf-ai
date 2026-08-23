@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import mockData from "@/data/MOCK_CITIZEN_ACCOUNTS.json";
 import { playNeuralSpeech } from "@/lib/edgeTtsPlayer";
 
@@ -75,7 +75,7 @@ export interface Citizen {
   };
 }
 
-interface SubmittedClaim {
+export interface SubmittedClaim {
   claim_id: string;
   uan: string;
   claim_type: string;
@@ -110,19 +110,83 @@ interface CitizenContextType {
   apiUrl: string;
 }
 
+const STORAGE_KEY_CITIZENS = "jan_epf_citizens_data_v2";
+const STORAGE_KEY_CLAIMS = "jan_epf_claims_data_v2";
+const STORAGE_KEY_ACTIVE_UAN = "jan_epf_active_uan_v2";
+
 const CitizenContext = createContext<CitizenContextType | undefined>(undefined);
 
 export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [citizens, setCitizens] = useState<Citizen[]>(mockData.citizens as Citizen[]);
-  const [activeCitizen, setActiveCitizen] = useState<Citizen>(mockData.citizens[0] as Citizen);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  // 1. Initial State Loaders (with localStorage persistence)
+  const [citizens, setCitizens] = useState<Citizen[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY_CITIZENS);
+        if (saved) return JSON.parse(saved);
+      } catch {}
+    }
+    return mockData.citizens as Citizen[];
+  });
+
+  const [activeCitizen, setActiveCitizen] = useState<Citizen>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const savedUan = sessionStorage.getItem("jan_epf_uan") || localStorage.getItem(STORAGE_KEY_ACTIVE_UAN);
+        if (savedUan) {
+          const found = (mockData.citizens as Citizen[]).find((c) => c.uan === savedUan);
+          if (found) return found;
+        }
+      } catch {}
+    }
+    return mockData.citizens[0] as Citizen;
+  });
+
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const savedAuth = sessionStorage.getItem("jan_epf_auth");
+        if (savedAuth === "true") return true;
+      } catch {}
+    }
+    return false;
+  });
+
   const [language, setLanguage] = useState<string>("en-IN");
   const [seniorMode, setSeniorMode] = useState<boolean>(false);
   const [theme, setThemeState] = useState<"light" | "dark">("light");
-  const [claimsHistory, setClaimsHistory] = useState<SubmittedClaim[]>([]);
+  const [claimsHistory, setClaimsHistory] = useState<SubmittedClaim[]>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY_CLAIMS);
+        if (saved) return JSON.parse(saved);
+      } catch {}
+    }
+    return [];
+  });
+
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-  // Check saved theme & session on mount
+  // 2. Cross-Tab State Synchronization via BroadcastChannel
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let channel: BroadcastChannel | null = null;
+    try {
+      channel = new BroadcastChannel("jan_epf_state_sync");
+      channel.onmessage = (event) => {
+        if (event.data?.type === "STATE_UPDATED") {
+          if (event.data.citizens) setCitizens(event.data.citizens);
+          if (event.data.activeCitizen) setActiveCitizen(event.data.activeCitizen);
+          if (event.data.claimsHistory) setClaimsHistory(event.data.claimsHistory);
+        }
+      };
+    } catch {}
+
+    return () => {
+      channel?.close();
+    };
+  }, []);
+
+  // 3. Check saved theme & auto-hydrate on mount
   useEffect(() => {
     try {
       const savedTheme = localStorage.getItem("jan_epf_theme") as "light" | "dark" | null;
@@ -135,7 +199,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
 
       const savedAuth = sessionStorage.getItem("jan_epf_auth");
-      const savedUan = sessionStorage.getItem("jan_epf_uan");
+      const savedUan = sessionStorage.getItem("jan_epf_uan") || localStorage.getItem(STORAGE_KEY_ACTIVE_UAN);
       if (savedAuth === "true" && savedUan) {
         const found = citizens.find((c) => c.uan === savedUan);
         if (found) {
@@ -143,10 +207,25 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setIsAuthenticated(true);
         }
       }
-    } catch {
-      // Storage unavailable
-    }
+    } catch {}
   }, [citizens]);
+
+  const broadcastStateChange = (newCitizens: Citizen[], newActive: Citizen, newClaims?: SubmittedClaim[]) => {
+    try {
+      localStorage.setItem(STORAGE_KEY_CITIZENS, JSON.stringify(newCitizens));
+      localStorage.setItem(STORAGE_KEY_ACTIVE_UAN, newActive.uan);
+      if (newClaims) localStorage.setItem(STORAGE_KEY_CLAIMS, JSON.stringify(newClaims));
+
+      const channel = new BroadcastChannel("jan_epf_state_sync");
+      channel.postMessage({
+        type: "STATE_UPDATED",
+        citizens: newCitizens,
+        activeCitizen: newActive,
+        claimsHistory: newClaims || claimsHistory
+      });
+      channel.close();
+    } catch {}
+  };
 
   const setTheme = (newTheme: "light" | "dark") => {
     setThemeState(newTheme);
@@ -164,14 +243,14 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  // Check if activeCitizen is Gurmeet Singh (Senior) and suggest Senior Mode
+  // Senior Mode Auto-Detection for Gurmeet Singh
   useEffect(() => {
     if (activeCitizen.uan === "100112233445") {
       setSeniorMode(true);
     }
   }, [activeCitizen.uan]);
 
-  // Gentle audio cue when Senior Mode is activated (Powered by Edge-TTS)
+  // Audio Cue when Senior Mode is Activated
   useEffect(() => {
     if (typeof window !== "undefined" && seniorMode) {
       playNeuralSpeech(
@@ -181,7 +260,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [seniorMode, language]);
 
-  const login = (uan: string) => {
+  const login = useCallback((uan: string) => {
     const found = citizens.find((c) => c.uan === uan);
     if (found) {
       setActiveCitizen(found);
@@ -189,19 +268,21 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       try {
         sessionStorage.setItem("jan_epf_auth", "true");
         sessionStorage.setItem("jan_epf_uan", uan);
+        localStorage.setItem(STORAGE_KEY_ACTIVE_UAN, uan);
       } catch {}
     }
-  };
+  }, [citizens]);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     setIsAuthenticated(false);
     try {
       sessionStorage.removeItem("jan_epf_auth");
       sessionStorage.removeItem("jan_epf_uan");
+      localStorage.removeItem(STORAGE_KEY_ACTIVE_UAN);
     } catch {}
-  };
+  }, []);
 
-  const switchCitizen = (uan: string) => {
+  const switchCitizen = useCallback((uan: string) => {
     const found = citizens.find((c) => c.uan === uan);
     if (found) {
       setActiveCitizen(found);
@@ -209,34 +290,40 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       try {
         sessionStorage.setItem("jan_epf_auth", "true");
         sessionStorage.setItem("jan_epf_uan", uan);
+        localStorage.setItem(STORAGE_KEY_ACTIVE_UAN, uan);
       } catch {}
     }
-  };
+  }, [citizens]);
 
-  const addClaim = (claim: SubmittedClaim) => {
-    setClaimsHistory((prev) => [claim, ...prev]);
-    // Deduct advance amount from live active citizen passbook balance for full realism
-    setActiveCitizen((prev) => {
-      const deduction = claim.amount_sanctioned || claim.amount_requested || 0;
-      const newTotal = Math.max(0, (prev.passbook_summary?.total_balance || 0) - deduction);
-      const newEmpShare = Math.max(0, (prev.passbook_summary?.employee_share || 0) - deduction);
-      const updated = {
-        ...prev,
-        passbook_summary: {
-          ...prev.passbook_summary,
-          total_balance: newTotal,
-          employee_share: newEmpShare
-        }
-      };
-      setCitizens((all) => all.map((c) => (c.uan === updated.uan ? updated : c)));
-      return updated;
+  const addClaim = useCallback((claim: SubmittedClaim) => {
+    setClaimsHistory((prev) => {
+      const updatedClaims = [claim, ...prev];
+      setActiveCitizen((currentActive) => {
+        const deduction = claim.amount_sanctioned || claim.amount_requested || 0;
+        const newTotal = Math.max(0, (currentActive.passbook_summary?.total_balance || 0) - deduction);
+        const newEmpShare = Math.max(0, (currentActive.passbook_summary?.employee_share || 0) - deduction);
+        const updated = {
+          ...currentActive,
+          passbook_summary: {
+            ...currentActive.passbook_summary,
+            total_balance: newTotal,
+            employee_share: newEmpShare
+          }
+        };
+        setCitizens((all) => {
+          const newAll = all.map((c) => (c.uan === updated.uan ? updated : c));
+          broadcastStateChange(newAll, updated, updatedClaims);
+          return newAll;
+        });
+        return updated;
+      });
+      return updatedClaims;
     });
-  };
+  }, []);
 
-  const mergeEmployment = (memberId: string) => {
+  const mergeEmployment = useCallback((memberId: string) => {
     setActiveCitizen((prev) => {
       const targetEmp = prev.employment_history?.find((e) => e.member_id === memberId);
-      // Idempotency guard: skip if already merged or no balance
       if (!targetEmp || targetEmp.transfer_status === "TRANSFERRED_AND_MERGED" || !targetEmp.balance) {
         return prev;
       }
@@ -256,12 +343,16 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
           employee_share: newEmpShare
         }
       };
-      setCitizens((all) => all.map((c) => (c.uan === updated.uan ? updated : c)));
+      setCitizens((all) => {
+        const newAll = all.map((c) => (c.uan === updated.uan ? updated : c));
+        broadcastStateChange(newAll, updated);
+        return newAll;
+      });
       return updated;
     });
-  };
+  }, []);
 
-  const renewDLC = () => {
+  const renewDLC = useCallback(() => {
     setActiveCitizen((prev) => {
       if (!prev.pension_details) return prev;
       const updated = {
@@ -272,12 +363,16 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
           last_disbursement_date: "2026-08-01 (Current FY Active)"
         }
       };
-      setCitizens((all) => all.map((c) => (c.uan === updated.uan ? updated : c)));
+      setCitizens((all) => {
+        const newAll = all.map((c) => (c.uan === updated.uan ? updated : c));
+        broadcastStateChange(newAll, updated);
+        return newAll;
+      });
       return updated;
     });
-  };
+  }, []);
 
-  const updateActiveCitizenKYC = (bankName: string, accountMasked: string, ifsc: string) => {
+  const updateActiveCitizenKYC = useCallback((bankName: string, accountMasked: string, ifsc: string) => {
     setActiveCitizen((prev) => {
       const updated = {
         ...prev,
@@ -290,18 +385,26 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
           penny_drop_verified: true
         }
       };
-      setCitizens((all) => all.map((c) => (c.uan === updated.uan ? updated : c)));
+      setCitizens((all) => {
+        const newAll = all.map((c) => (c.uan === updated.uan ? updated : c));
+        broadcastStateChange(newAll, updated);
+        return newAll;
+      });
       return updated;
     });
-  };
+  }, []);
 
-  const updateActiveCitizenName = (newName: string) => {
+  const updateActiveCitizenName = useCallback((newName: string) => {
     setActiveCitizen((prev) => {
       const updated = { ...prev, full_name: newName };
-      setCitizens((all) => all.map((c) => (c.uan === updated.uan ? updated : c)));
+      setCitizens((all) => {
+        const newAll = all.map((c) => (c.uan === updated.uan ? updated : c));
+        broadcastStateChange(newAll, updated);
+        return newAll;
+      });
       return updated;
     });
-  };
+  }, []);
 
   return (
     <CitizenContext.Provider

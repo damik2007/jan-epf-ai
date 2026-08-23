@@ -86,6 +86,7 @@ export default function FixDetailsHub() {
   const [copilotDiagnosis, setCopilotDiagnosis] = useState<CopilotDiagnosis | null>(null);
   const [isDiagnosing, setIsDiagnosing] = useState<boolean>(false);
   const [legalNoticeModalOpen, setLegalNoticeModalOpen] = useState<boolean>(false);
+  const [autoFixApplied, setAutoFixApplied] = useState<boolean>(false);
 
   const handleRunFuzzyCheck = () => {
     const score = calculateFuzzyNameMatch(activeCitizen.full_name, aadhaarInputName);
@@ -616,10 +617,13 @@ export default function FixDetailsHub() {
                   </button>
 
                   <button
-                    onClick={(e) => { const btn = e.currentTarget; btn.textContent = "✓ Reconciled Successfully"; btn.classList.add("bg-emerald-600"); setTimeout(() => { btn.textContent = "Apply Automated Fix"; btn.classList.remove("bg-emerald-600"); }, 2500); }}
+                    onClick={() => {
+                      setAutoFixApplied(true);
+                      setTimeout(() => setAutoFixApplied(false), 2500);
+                    }}
                     className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold text-xs shadow hover:bg-emerald-700 transition-all whitespace-nowrap"
                   >
-                    {t.applyAutoFixButton}
+                    {autoFixApplied ? "✓ Reconciled Successfully" : t.applyAutoFixButton}
                   </button>
                 </div>
               </div>

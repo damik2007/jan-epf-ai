@@ -16,16 +16,20 @@ import tiktoken
 # ==============================================================================
 def clean_name_for_comparison(name: str) -> str:
     """
-    Normalizes names by stripping honorifics, titles, punctuation, and extra whitespace.
+    Normalizes names by stripping honorifics, titles, punctuation, and extra whitespace,
+    with full support for Indic Unicode scripts (Devanagari, Telugu, Tamil, etc.).
     """
     if not name:
         return ""
     normalized = name.upper()
-    # Strip common titles / prefixes
-    prefixes = [r"\bSHRI\b", r"\bSMT\b", r"\bMR\b", r"\bMRS\b", r"\bMS\b", r"\bDR\b"]
+    # Strip common titles / prefixes (English + Indic: श्री, श्रीमती, जी, గారు, திரு)
+    prefixes = [
+        r"\bSHRI\b", r"\bSMT\b", r"\bMR\b", r"\bMRS\b", r"\bMS\b", r"\bDR\b", r"\bPROF\b",
+        r"श्री", r"श्रीमती", r"जी", r"గారు", r"திரு"
+    ]
     for p in prefixes:
         normalized = re.sub(p, " ", normalized)
-    normalized = re.sub(r"[^A-Z0-9\s]", " ", normalized)
+    normalized = re.sub(r"[^\w\s]", " ", normalized, flags=re.UNICODE)
     tokens = [t.strip() for t in normalized.split() if t.strip()]
     return " ".join(tokens)
 
@@ -529,4 +533,93 @@ def evaluate_cheque_clip_semantics(
             "holder_alignment_pct": round(name_fuzzy_score, 1)
         }
     }
+
+
+# ==============================================================================
+# 8. STATUTORY EPS-95 PENSION & EDLI INSURANCE CALCULATION ENGINE (PARA 12 & 16)
+# ==============================================================================
+def calculate_edli_insurance(monthly_wage: float, epf_balance: float = 350000.0) -> int:
+    """
+    Computes EDLI (Employees' Deposit Linked Insurance Scheme 1976) statutory cover.
+    Formula: 35 * avg monthly wage (cap ₹15k) + 50% avg EPF balance (cap ₹1.75L).
+    Floor: ₹2,50,000 | Ceiling: ₹7,00,000.
+    """
+    wage_comp = 35.0 * min(15000.0, max(0.0, monthly_wage))
+    balance_comp = min(175000.0, max(0.0, epf_balance) * 0.50)
+    total = wage_comp + balance_comp
+    return min(700000, max(250000, int(round(total))))
+
+
+def calculate_eps95_pension(
+    monthly_wage: float,
+    service_years: float,
+    ncp_days: int = 0,
+    current_age: int = 58,
+    total_epf_balance: float = 350000.0
+) -> Dict[str, Any]:
+    """
+    Computes statutory monthly superannuation / early / deferred pension under EPS-95.
+    Includes wage ceiling, superannuation bonus, early reduction, and family pension.
+    """
+    effective_years = max(0.0, service_years - (float(ncp_days) / 365.0))
+    pensionable_salary = min(15000.0, max(0.0, monthly_wage))
+
+    # Service < 9.5 years: Form 10C Withdrawal Benefit (Table D)
+    if effective_years < 9.5:
+        factor = min(10.2, effective_years * 1.02)
+        lump_sum = int(round(factor * pensionable_salary))
+        return {
+            "monthly_pension": 0,
+            "pension_type": "WITHDRAWAL_BENEFIT_TABLE_D",
+            "pensionable_service_years": round(effective_years, 1),
+            "bonus_years_applied": 0,
+            "early_reduction_pct": 0.0,
+            "deferred_bonus_pct": 0.0,
+            "table_d_withdrawal_lump_sum": lump_sum,
+            "family_pension_breakdown": {"widow_pension": 0, "children_pension": 0, "orphan_pension": 0},
+            "edli_coverage_amount": calculate_edli_insurance(monthly_wage, total_epf_balance)
+        }
+
+    # Superannuation bonus (+2 years for 20+ years service at age 58+)
+    bonus_years = 2 if (effective_years >= 20.0 and current_age >= 58) else 0
+    pensionable_service = effective_years + bonus_years
+
+    # Base formula: (Salary * Service) / 70
+    base_pension = (pensionable_salary * pensionable_service) / 70.0
+
+    early_reduction = 0.0
+    deferred_bonus = 0.0
+    pension_type = "SUPERANNUATION_PENSION"
+
+    if 50 <= current_age < 58:
+        early_reduction = float((58 - current_age) * 4)
+        base_pension *= (1.0 - (early_reduction / 100.0))
+        pension_type = "EARLY_PENSION"
+    elif 58 < current_age <= 60:
+        deferred_bonus = float((current_age - 58) * 4)
+        base_pension *= (1.0 + (deferred_bonus / 100.0))
+        pension_type = "DEFERRED_PENSION"
+
+    # Minimum guarantee of ₹1,000/month under Para 12(7A)
+    final_pension = max(1000, int(round(base_pension)))
+
+    widow = max(1000, int(round(final_pension * 0.50)))
+    children = max(250, int(round(widow * 0.25)))
+    orphan = max(750, int(round(widow * 0.75)))
+
+    return {
+        "monthly_pension": final_pension,
+        "pension_type": pension_type,
+        "pensionable_service_years": round(pensionable_service, 1),
+        "bonus_years_applied": bonus_years,
+        "early_reduction_pct": early_reduction,
+        "deferred_bonus_pct": deferred_bonus,
+        "family_pension_breakdown": {
+            "widow_pension": widow,
+            "children_pension": children,
+            "orphan_pension": orphan
+        },
+        "edli_coverage_amount": calculate_edli_insurance(monthly_wage, total_epf_balance)
+    }
+
 

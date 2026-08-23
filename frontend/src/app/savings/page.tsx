@@ -39,6 +39,7 @@ export default function MySavingsHub() {
   const [dlcRenewed, setDlcRenewed] = useState<boolean>(false);
   const [isRenewingDLC, setIsRenewingDLC] = useState<boolean>(false);
   const [receiptModalOpen, setReceiptModalOpen] = useState<boolean>(false);
+  const [edliVerified, setEdliVerified] = useState<boolean>(false);
 
   // Sync state when activeCitizen persona switches
   React.useEffect(() => {
@@ -564,10 +565,17 @@ export default function MySavingsHub() {
         </div>
 
         <button
-          onClick={(e) => { const btn = e.currentTarget; btn.textContent = "✓ Verified"; btn.classList.add("bg-emerald-600", "text-white"); setTimeout(() => { btn.textContent = "Verify EDLI Coverage"; btn.classList.remove("bg-emerald-600", "text-white"); }, 2500); }}
-          className="bg-white text-sovereign-darkest hover:bg-slate-100 px-4 py-2 rounded-xl font-bold text-xs shadow transition-all whitespace-nowrap"
+          onClick={() => {
+            setEdliVerified(true);
+            setTimeout(() => setEdliVerified(false), 2500);
+          }}
+          className={`px-4 py-2 rounded-xl font-bold text-xs shadow transition-all whitespace-nowrap ${
+            edliVerified
+              ? "bg-emerald-600 text-white"
+              : "bg-white text-sovereign-darkest hover:bg-slate-100"
+          }`}
         >
-          {t.verified}
+          {edliVerified ? "✓ Verified Statutory Cover" : t.verified}
         </button>
       </div>
 

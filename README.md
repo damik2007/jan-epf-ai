@@ -77,28 +77,30 @@ Over **30% to 35% of all EPFO (Employees' Provident Fund Organisation) claims** 
 
 ---
 
-## 🔬 OpenAI Open-Source Research & Integration Blueprint
+## 🔬 80/20 Sovereign Architecture & OpenAI Integration Blueprint
 
 ```mermaid
 graph TD
-    subgraph "CLIENT EDGE TIER (Zero Cloud Cost / Sub-5ms)"
-        A["Citizen Voice"] --> B["whisper.cpp (WASM)"]
-        C["Canvas Cheque Scanner"] --> D["OpenCLIP Zero-Shot"]
-        E["Grievance Input"] --> F["tiktoken (BPE Pruning)"]
+    subgraph "CLIENT EDGE TIER (80% Sovereign Core • $0 Cloud Cost • <0.05ms)"
+        A["Citizen Voice"] --> B["Web Speech API / WASM Audio Ingest"]
+        C["Canvas Cheque Scanner"] --> D["Laplacian Edge Variance & IFSC Lookup"]
+        E["Grievance / Form Input"] --> F["tiktoken Rust BPE Token Pruning"]
+        M["Name / Identity Verification"] --> N["Unicode Indic Levenshtein Matcher"]
+        O["Statutory Actuarial Engine"] --> P["EPS-95, Form 31, TDS & 8.25% Math"]
     end
 
-    subgraph "AZURE CONTAINER APPS TIER (Central India)"
-        B -.->|Sanitized Text| G["FastAPI Gateway"]
-        D -.->|Confidence Score| G
-        F -.->|Token Budgeted| G
-        G --> H["faster-whisper (CTranslate2 INT8)"]
-        G --> I["Swarm 3-Way Multi-Agent Handshake"]
-        G --> J["Llama 3.2 3B (vLLM / Triton)"]
+    subgraph "SERVER & MULTI-MODAL AI TIER (20% High-Leverage Cloud AI)"
+        B -.->|Sanitized Input| G["FastAPI Sovereign Gateway"]
+        D -.->|Base64 Image| G
+        F -.->|Token Budgeted <256 tok| G
+        G --> H["Dual-Mode GPT-4o Vision & OCR Fallback"]
+        G --> I["Swarm Multi-Agent Consensus Handshake"]
+        G --> J["Self-Hosted Llama 3.2 on Azure Container Apps"]
+        G --> Q["Presidio Zero-Trust PII Token Vault"]
     end
 
-    subgraph "CI/CD & LEGAL COMPLIANCE TIER"
-        K["openai/evals Harness"] --> L["1,000+ EPFO Statutory Legal Scenarios"]
-        L --> M["Zero-Hallucination Production Gate"]
+    subgraph "OBSERVABILITY & COMPLIANCE TIER"
+        K["Automated Evals Harness"] --> L["Statutory EPFO Regression Suite (100% Pass)"]
     end
 ```
 

@@ -6,6 +6,8 @@ IFSC bank merger resolver, and AI grievance root-cause triage.
 """
 from datetime import date
 from src.core.engine import (
+    calculate_edli_insurance,
+    calculate_eps95_pension,
     calculate_form_31_eligibility,
     calculate_fuzzy_name_match,
     calculate_passbook_growth_forecast,
@@ -400,3 +402,45 @@ def test_triage_grievance_categories():
     )
     assert diag_general["error_code_classification"] == "INFO_EPFO_STANDARD_INQUIRY"
     assert diag_general["auto_remediation_route"] == "/money"
+
+
+# ==============================================================================
+# 8. STATUTORY EPS-95 PENSION & EDLI INSURANCE TESTS (PARA 12 & 16)
+# ==============================================================================
+def test_calculate_eps95_pension_scenarios():
+    # 1. Superannuation Pension at age 58 with 20+ years service (gets +2 bonus years)
+    p_super = calculate_eps95_pension(monthly_wage=25000.0, service_years=25.0, current_age=58)
+    assert p_super["pension_type"] == "SUPERANNUATION_PENSION"
+    assert p_super["bonus_years_applied"] == 2
+    assert p_super["pensionable_service_years"] == 27.0
+    # (15000 * 27) / 70 = 5785.71 -> 5786
+    assert p_super["monthly_pension"] == 5786
+    assert p_super["family_pension_breakdown"]["widow_pension"] == 2893
+
+    # 2. Early Pension at age 52 (6 years short of 58 -> 24% reduction)
+    p_early = calculate_eps95_pension(monthly_wage=20000.0, service_years=15.0, current_age=52)
+    assert p_early["pension_type"] == "EARLY_PENSION"
+    assert p_early["early_reduction_pct"] == 24.0
+    # Base: (15000 * 15) / 70 = 3214.28; after 24% reduction = 2442.85 -> 2443
+    assert p_early["monthly_pension"] == 2443
+
+    # 3. Form 10C Withdrawal Benefit for service < 9.5 years
+    p_tab_d = calculate_eps95_pension(monthly_wage=18000.0, service_years=4.0, current_age=28)
+    assert p_tab_d["pension_type"] == "WITHDRAWAL_BENEFIT_TABLE_D"
+    assert p_tab_d["monthly_pension"] == 0
+    assert p_tab_d["table_d_withdrawal_lump_sum"] > 0
+
+    # 4. Minimum Statutory Pension Guarantee (Floor: ₹1,000/month)
+    p_min = calculate_eps95_pension(monthly_wage=3000.0, service_years=10.0, current_age=58)
+    assert p_min["monthly_pension"] >= 1000
+
+
+def test_calculate_edli_insurance_scenarios():
+    # Statutory ceiling: ₹7,00,000
+    edli_high = calculate_edli_insurance(monthly_wage=35000.0, epf_balance=500000.0)
+    assert edli_high == 700000
+
+    # Statutory floor: ₹2,50,000
+    edli_low = calculate_edli_insurance(monthly_wage=2000.0, epf_balance=10000.0)
+    assert edli_low == 250000
+
