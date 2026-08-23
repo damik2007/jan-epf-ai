@@ -16,11 +16,13 @@ import {
   ChevronDown,
   Zap,
   Sun,
-  Moon
+  Moon,
+  Search
 } from "lucide-react";
 
 import { getTranslation } from "@/lib/translations";
 import { EvaluatorTourModal } from "@/components/EvaluatorTourModal";
+import { CommandCenter } from "@/components/CommandCenter";
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
@@ -40,6 +42,19 @@ export const Navbar: React.FC = () => {
   } = useCitizen();
 
   const t = getTranslation(language);
+
+  const [commandCenterOpen, setCommandCenterOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setCommandCenterOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const navItems = [
     {
@@ -186,6 +201,19 @@ export const Navbar: React.FC = () => {
 
           {/* Persona Switcher & Active Citizen Badge & Evaluator Tour */}
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setCommandCenterOpen(true)}
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sovereign-light/80 hover:bg-sovereign-light text-slate-300 hover:text-white border border-sovereign-accent text-xs transition-all shadow-sm"
+              title="Open Command Center (⌘K)"
+              aria-label="Open Command Center"
+            >
+              <Search className="w-3.5 h-3.5 text-saffron" />
+              <span className="text-xs font-semibold">Search</span>
+              <kbd className="px-1.5 py-0.5 text-[10px] font-mono bg-sovereign-darkest text-slate-400 rounded border border-sovereign-accent/60">
+                ⌘K
+              </kbd>
+            </button>
+
             <EvaluatorTourModal />
 
             {!isAuthenticated ? (
@@ -305,6 +333,12 @@ export const Navbar: React.FC = () => {
           );
         })}
       </div>
+
+      {/* Cmd+K Omnibar Command Center Modal */}
+      <CommandCenter
+        isOpen={commandCenterOpen}
+        onClose={() => setCommandCenterOpen(false)}
+      />
     </header>
   );
 };
