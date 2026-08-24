@@ -543,7 +543,7 @@ export default function NeedMoneyHub() {
         onClose={() => setReceiptModalOpen(false)}
         claimType={`Form 31 Advance (${reasons.find((r) => r.id === selectedReason)?.para || "Para 68J"})`}
         claimAmount={submittedResult?.amount_sanctioned ?? requestedAmount}
-        trackingId={submittedResult?.claim_id ?? "CLM-EPF-2026-89412"}
+        trackingId={submittedResult?.claim_id ?? `CLM-EPF-2026-${activeCitizen.uan.slice(-5)}`}
       />
     </div>
   );

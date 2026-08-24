@@ -62,8 +62,12 @@ export default function FixDetailsHub() {
   const [nameMatchScore, setNameMatchScore] = useState<number | null>(null);
 
   // State for Penny Drop
-  const [bankAcc, setBankAcc] = useState<string>("123456789012");
-  const [bankIfsc, setBankIfsc] = useState<string>("SBIN0001234");
+  const [bankAcc, setBankAcc] = useState<string>(
+    activeCitizen.bank_kyc?.account_number_masked?.replace(/[^\d]/g, "")
+      ? "501004" + activeCitizen.bank_kyc.account_number_masked.slice(-4)
+      : "501004998812"
+  );
+  const [bankIfsc, setBankIfsc] = useState<string>(activeCitizen.bank_kyc?.ifsc_code || "HDFC0001234");
   const [holderName, setHolderName] = useState<string>(activeCitizen.full_name);
   const [pennyDropResult, setPennyDropResult] = useState<PennyDropResult | null>(null);
   const [isVerifyingPennyDrop, setIsVerifyingPennyDrop] = useState<boolean>(false);
@@ -75,7 +79,8 @@ export default function FixDetailsHub() {
 
   // State for e-Nomination
   const [nomineeName, setNomineeName] = useState<string>(
-    activeCitizen.nomination_details?.suggested_nominee?.name || "Manoj Kumar"
+    activeCitizen.nomination_details?.suggested_nominee?.name ||
+      (activeCitizen.full_name.includes("Devi") || activeCitizen.full_name.includes("Sharma") ? "Manoj Kumar" : "Sunita Devi")
   );
   const [nomineeRelation, setNomineeRelation] = useState<string>(
     activeCitizen.nomination_details?.suggested_nominee?.relationship || "Spouse"
