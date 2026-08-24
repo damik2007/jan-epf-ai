@@ -34,7 +34,7 @@ export default function RootLayout({
         <EvaluatorGate>
           <CitizenProvider>
             <Navbar />
-            <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-40 sm:pt-36 md:pt-28 pb-48 sm:pb-32">
+            <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-20 pb-48 sm:pb-32">
               {children}
             </main>
             <VoiceAssistant />
