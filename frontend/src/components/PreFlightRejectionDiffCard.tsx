@@ -23,10 +23,10 @@ export function PreFlightRejectionDiffCard({
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
-    <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden transition-all">
+    <div className="rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl shadow-xl overflow-hidden transition-all duration-300">
       <div
         onClick={() => setIsExpanded(!isExpanded)}
-        className="px-4 py-3 bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center cursor-pointer select-none"
+        className="px-4 py-3 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-700/50 flex justify-between items-center cursor-pointer select-none"
       >
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />

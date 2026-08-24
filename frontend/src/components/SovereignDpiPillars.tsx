@@ -104,7 +104,7 @@ export function SovereignDpiPillars() {
   ];
 
   return (
-    <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden">
+    <div className="w-full bg-slate-900/80 backdrop-blur-2xl bg-gradient-to-br from-slate-900/90 via-sovereign-darkest/90 to-sovereign-navy/90 rounded-3xl p-6 sm:p-8 border border-slate-700/50 shadow-2xl text-white space-y-6 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-96 h-96 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}

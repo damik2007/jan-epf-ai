@@ -143,26 +143,26 @@ export function StatutoryTooltip({ termKey, children, inline = true }: Statutory
 
       {isOpen && (
         <div
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 sm:w-80 p-3.5 bg-slate-900 text-white rounded-2xl shadow-2xl border border-slate-700 z-50 text-left animate-in fade-in zoom-in-95 pointer-events-auto"
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 sm:w-80 p-4 backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/95 text-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.85)] border border-white/20 ring-1 ring-white/10 z-50 text-left animate-in fade-in zoom-in-95 pointer-events-auto"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="flex items-start justify-between gap-2 border-b border-slate-800 pb-2 mb-2">
+          <div className="flex items-start justify-between gap-2 border-b border-white/15 pb-2 mb-2.5">
             <div>
               <h4 className="text-xs font-black text-saffron">{def.title}</h4>
-              <p className="text-[10px] text-slate-400 font-mono">{def.clause}</p>
+              <p className="text-[10px] text-slate-300 font-mono mt-0.5">{def.clause}</p>
             </div>
-            <span className="text-[9px] px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 rounded font-bold uppercase tracking-wider">
+            <span className="text-[9px] px-2 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full font-bold uppercase tracking-wider shrink-0">
               Legal Shield
             </span>
           </div>
 
-          <p className="text-[11px] text-slate-300 leading-relaxed mb-2">
+          <p className="text-[11px] text-slate-200 leading-relaxed mb-2.5 font-normal">
             {def.plainText}
           </p>
 
-          <div className="p-2 rounded-xl bg-emerald-950/40 border border-emerald-800/60 text-[10px] text-emerald-300 flex items-start gap-1.5">
-            <span className="font-bold text-emerald-400">💡 Citizen Impact:</span>
-            <span>{def.rupeeImpact}</span>
+          <div className="p-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 text-[10px] text-emerald-300 flex items-start gap-1.5 shadow-inner">
+            <span className="font-bold text-amber-300 shrink-0">💡 Citizen Impact:</span>
+            <span className="text-slate-200">{def.rupeeImpact}</span>
           </div>
         </div>
       )}

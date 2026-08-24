@@ -146,7 +146,7 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-5 shadow-sm">
+    <div className="backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/90 text-white rounded-3xl border border-white/20 p-5 shadow-2xl">
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 flex items-center justify-center">
@@ -173,7 +173,7 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-sovereign-navy dark:hover:border-amber-500 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all bg-slate-50 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-800 min-h-[160px]"
+          className="border-2 border-dashed border-white/30 hover:border-white/60 hover:bg-white/10 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all bg-white/5 backdrop-blur-xl min-h-[160px]"
         >
           <input
             type="file"

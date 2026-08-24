@@ -33,7 +33,7 @@ export const ExplainRupeeModal: React.FC<ExplainRupeeModalProps> = ({ isOpen, on
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-5 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+      <div className="backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/95 text-white rounded-3xl max-w-2xl w-full p-6 sm:p-7 shadow-[0_25px_70px_rgba(0,0,0,0.85)] border border-white/20 ring-1 ring-white/10 space-y-5 animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto relative">
         {/* Modal Header */}
         <div className="flex justify-between items-start border-b border-slate-100 dark:border-slate-800 pb-4">
           <div className="flex items-center gap-3">
