@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useCitizen } from "@/context/CitizenContext";
 import { calculatePassbookCompounding, CompoundingYearData } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
@@ -111,13 +112,13 @@ export default function MySavingsHub() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-          <a
+          <Link
             href="/money"
             className="flex items-center justify-center gap-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 min-h-[44px] rounded-xl shadow-sm transition-all flex-1 sm:flex-initial"
           >
             <Wallet className="w-4 h-4" />
             <span>Need Funds? Advance ➔</span>
-          </a>
+          </Link>
           <button
             onClick={() => setReceiptModalOpen(true)}
             className="flex items-center justify-center gap-1.5 text-xs font-bold bg-saffron hover:bg-amber-400 text-sovereign-darkest px-4 py-2 min-h-[44px] rounded-xl shadow-sm transition-all flex-1 sm:flex-initial"

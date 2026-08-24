@@ -382,13 +382,13 @@ export default function ChangedJobsHub() {
                   </p>
                 </div>
               </div>
-              <a
+              <Link
                 href="/savings"
                 className="px-4 py-2.5 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all whitespace-nowrap w-full sm:w-auto"
               >
                 <span>View Updated Savings Ledger</span>
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </Link>
             </div>
           )}
         </div>

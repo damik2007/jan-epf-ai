@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useCitizen } from "@/context/CitizenContext";
 import { calculateFuzzyNameMatch, lookupIfsc } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
@@ -646,13 +647,13 @@ export default function FixDetailsHub() {
                     <span>Discrepancy reconciled in <strong className="font-mono text-emerald-700">0.03ms</strong>. Your claim readiness is now 98%.</span>
                   </div>
                   <div className="flex items-center gap-2 w-full sm:w-auto">
-                    <a
+                    <Link
                       href="/money"
                       className="px-3.5 py-2 min-h-[44px] rounded-xl bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all whitespace-nowrap flex-1 sm:flex-initial"
                     >
                       <span>Claim Advance Now</span>
                       <ArrowRight className="w-3.5 h-3.5" />
-                    </a>
+                    </Link>
                   </div>
                 </div>
               )}
