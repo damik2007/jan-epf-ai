@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useCitizen } from "@/context/CitizenContext";
 import { deduceMissingDateOfExit, calculateTdsDeduction } from "@/lib/deterministicEngine";
 import { getTranslation } from "@/lib/translations";
@@ -13,7 +14,8 @@ import {
   CalendarCheck,
   CheckCircle2,
   FileCheck2,
-  Sparkles
+  Sparkles,
+  ArrowRight
 } from "lucide-react";
 
 export default function ChangedJobsHub() {
@@ -247,16 +249,25 @@ export default function ChangedJobsHub() {
                 </button>
               </div>
             ) : (
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl flex items-center gap-3 text-xs text-emerald-900 dark:text-emerald-200 animate-celebrate">
-                <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <div>
-                  <h4 className="font-extrabold text-sm text-emerald-900 dark:text-emerald-200">
-                    {t.transferSuccessTitle}
-                  </h4>
-                  <p className="text-emerald-700 dark:text-emerald-400 mt-0.5">
-                    {t.transferSuccessDesc}
-                  </p>
+              <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs text-emerald-900 dark:text-emerald-200 animate-celebrate">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <div>
+                    <h4 className="font-extrabold text-sm text-emerald-900 dark:text-emerald-200">
+                      {t.transferSuccessTitle}
+                    </h4>
+                    <p className="text-emerald-700 dark:text-emerald-400 mt-0.5">
+                      {t.transferSuccessDesc}
+                    </p>
+                  </div>
                 </div>
+                <Link
+                  href="/savings"
+                  className="px-3.5 py-1.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold text-xs flex items-center gap-1 shadow-sm shrink-0 whitespace-nowrap"
+                >
+                  <span>View in Savings</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             )}
           </div>

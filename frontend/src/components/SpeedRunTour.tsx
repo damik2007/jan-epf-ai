@@ -57,6 +57,14 @@ const SPEED_RUN_STEPS: SpeedRunStep[] = [
     route: "/savings",
     personaUan: "101889977665",
     highlightAction: "Visual passbook triple-split with month-by-month compounding."
+  },
+  {
+    step: 5,
+    title: "5. Live In-Browser Latency Benchmarks (<0.05ms)",
+    desc: "1,000-iteration live CPU runner, 3-way evals matrix, raw microsecond traces, and JSON audit export.",
+    route: "/benchmarks",
+    personaUan: "100982348712",
+    highlightAction: "OpenAI 3-part proof standard with 100% reproducible test runs."
   }
 ];
 
@@ -108,7 +116,7 @@ export function SpeedRunTour() {
               className="flex items-center gap-2 text-xs font-bold text-saffron hover:text-amber-300 transition-colors"
             >
               <Zap className="w-4 h-4" />
-              <span>⚡ 60s Evaluator Speed-Run ({currentStep.step}/4)</span>
+              <span>⚡ 60s Evaluator Speed-Run ({currentStep.step}/5)</span>
             </button>
             <div className="flex items-center gap-2">
               <button
@@ -138,7 +146,7 @@ export function SpeedRunTour() {
                   <h4 className="text-xs font-black text-white flex items-center gap-1.5">
                     <span>Judge 60-Second Speed Run</span>
                     <span className="text-[9px] px-1.5 py-0.2 rounded bg-saffron/20 text-saffron border border-saffron/40">
-                      Step {currentStep.step} of 4
+                      Step {currentStep.step} of 5
                     </span>
                   </h4>
                 </div>

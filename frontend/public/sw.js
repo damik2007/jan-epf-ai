@@ -10,6 +10,7 @@ const STATIC_ASSETS = [
   "/career",
   "/savings",
   "/fix",
+  "/benchmarks",
   "/login",
   "/manifest.json"
 ];
