@@ -17,13 +17,13 @@
 /* ELDER COMFORT MODE (Senior Citizen Friendly - WCAG AAA 7:1 Contrast, Obsidian Navy & Warm Gold) */
 .senior-mode {
   font-size: 125% !important;
-  --background: #faf8f5 !important;
-  --foreground: #0b132b !important;
-  --card: #ffffff !important;
-  --card-foreground: #0b132b !important;
-  --border: #f59e0b !important;
-  background-color: #faf8f5 !important;
-  color: #0b132b !important;
+  --background: #0b132b !important;
+  --foreground: #fdf4dc !important;
+  --card: #111b3d !important;
+  --card-foreground: #fdf4dc !important;
+  --border: #d4af37 !important;
+  background-color: #0b132b !important;
+  color: #fdf4dc !important;
 }
 
 .senior-mode * {
@@ -33,23 +33,23 @@
 .senior-mode .bg-white,
 .senior-mode .bg-slate-50,
 .senior-mode .bg-slate-100 {
-  background-color: #ffffff !important;
-  color: #0b132b !important;
-  border-color: #e2d9cc !important;
-  box-shadow: 0 4px 20px rgba(11, 19, 43, 0.05) !important;
+  background-color: #111b3d !important;
+  color: #fdf4dc !important;
+  border-color: #d4af37 !important;
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1) !important;
 }
 
 .senior-mode .text-slate-500,
 .senior-mode .text-slate-600,
 .senior-mode .text-slate-700 {
-  color: #1c2d42 !important;
-  font-weight: 600 !important;
+  color: #d4af37 !important;
+  font-weight: 700 !important;
 }
 
 .senior-mode .text-slate-800,
 .senior-mode .text-slate-900,
 .senior-mode .text-sovereign-navy {
-  color: #0b132b !important;
+  color: #ffffff !important;
   font-weight: 900 !important;
 }
 
@@ -65,8 +65,9 @@
 }
 
 .senior-mode .bg-sovereign-navy {
-  background-color: #0b132b !important;
+  background-color: #111b3d !important;
   color: #ffffff !important;
+  border: 2px solid #d4af37 !important;
 }
 
 /* ==============================================================================

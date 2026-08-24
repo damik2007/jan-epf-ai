@@ -15,7 +15,8 @@ import {
   Award,
   CheckCircle2,
   Radar,
-  FileCheck
+  FileCheck,
+  Wallet
 } from "lucide-react";
 
 export default function MySavingsHub() {
@@ -109,13 +110,22 @@ export default function MySavingsHub() {
           </p>
         </div>
 
-        <button
-          onClick={() => setReceiptModalOpen(true)}
-          className="flex items-center gap-1.5 text-xs font-bold bg-saffron hover:bg-amber-400 text-sovereign-darkest px-4 py-2 rounded-xl shadow-sm transition-all"
-        >
-          <FileCheck className="w-4 h-4" />
-          <span>Statutory Statement PDF</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <a
+            href="/money"
+            className="flex items-center justify-center gap-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 min-h-[44px] rounded-xl shadow-sm transition-all flex-1 sm:flex-initial"
+          >
+            <Wallet className="w-4 h-4" />
+            <span>Need Funds? Advance ➔</span>
+          </a>
+          <button
+            onClick={() => setReceiptModalOpen(true)}
+            className="flex items-center justify-center gap-1.5 text-xs font-bold bg-saffron hover:bg-amber-400 text-sovereign-darkest px-4 py-2 min-h-[44px] rounded-xl shadow-sm transition-all flex-1 sm:flex-initial"
+          >
+            <FileCheck className="w-4 h-4" />
+            <span>Passbook Receipt PDF</span>
+          </button>
+        </div>
       </div>
 
       <SettlementReceiptModal isOpen={receiptModalOpen} onClose={() => setReceiptModalOpen(false)} />

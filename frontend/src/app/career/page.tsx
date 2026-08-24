@@ -372,14 +372,23 @@ export default function ChangedJobsHub() {
           </div>
 
           {settlementSuccess && (
-            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-xl flex items-center gap-3 text-xs text-emerald-900 dark:text-emerald-200 animate-celebrate">
-              <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
-              <div>
-                <h4 className="font-extrabold text-sm">{t.sanctionConfirmedTitle}</h4>
-                <p className="text-emerald-700 dark:text-emerald-400 mt-0.5">
-                  ₹{tdsCalc.netDisbursement.toLocaleString("en-IN")} {t.disbursedToLabel} {activeCitizen.bank_kyc.bank_name}.
-                </p>
+            <div className="p-5 bg-emerald-50 dark:bg-emerald-950/40 border-2 border-emerald-400 dark:border-emerald-800 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs text-emerald-900 dark:text-emerald-200 animate-celebrate">
+              <div className="flex items-center gap-3">
+                <CheckCircle2 className="w-7 h-7 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <div>
+                  <h4 className="font-extrabold text-sm">{t.sanctionConfirmedTitle}</h4>
+                  <p className="text-emerald-700 dark:text-emerald-400 mt-0.5">
+                    ₹{tdsCalc.netDisbursement.toLocaleString("en-IN")} {t.disbursedToLabel} {activeCitizen.bank_kyc.bank_name}.
+                  </p>
+                </div>
               </div>
+              <a
+                href="/savings"
+                className="px-4 py-2.5 min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all whitespace-nowrap w-full sm:w-auto"
+              >
+                <span>View Updated Savings Ledger</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
             </div>
           )}
         </div>

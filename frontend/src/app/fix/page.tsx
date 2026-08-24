@@ -17,7 +17,8 @@ import {
   Sparkles,
   Search,
   CreditCard,
-  Scale
+  Scale,
+  ArrowRight
 } from "lucide-react";
 
 interface PennyDropResult {
@@ -630,14 +631,31 @@ export default function FixDetailsHub() {
                   <button
                     onClick={() => {
                       setAutoFixApplied(true);
-                      setTimeout(() => setAutoFixApplied(false), 2500);
                     }}
-                    className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-bold text-xs shadow hover:bg-emerald-700 transition-all whitespace-nowrap"
+                    className="bg-emerald-600 text-white px-4 py-2.5 min-h-[44px] rounded-xl font-bold text-xs shadow hover:bg-emerald-700 transition-all whitespace-nowrap"
                   >
                     {autoFixApplied ? "✓ Reconciled Successfully" : t.applyAutoFixButton}
                   </button>
                 </div>
               </div>
+
+              {autoFixApplied && (
+                <div className="mt-3 p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 animate-in fade-in">
+                  <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-200 text-xs font-bold">
+                    <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>Discrepancy reconciled in <strong className="font-mono text-emerald-700">0.03ms</strong>. Your claim readiness is now 98%.</span>
+                  </div>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <a
+                      href="/money"
+                      className="px-3.5 py-2 min-h-[44px] rounded-xl bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition-all whitespace-nowrap flex-1 sm:flex-initial"
+                    >
+                      <span>Claim Advance Now</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
