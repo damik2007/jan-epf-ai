@@ -372,9 +372,10 @@ export default function CopilotWorkstationPage() {
             className={`px-3 py-1.5 rounded-xl border text-xs font-bold font-mono flex items-center gap-1.5 transition-all ${
               autoSpeak ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "bg-white/5 text-slate-400 border-white/15"
             }`}
+            title={autoSpeak ? "Voice Auto-Speak Active (Click to Mute for Chat-First)" : "Chat-First Mode (Click to Enable Voice Auto-Speak)"}
           >
-            {autoSpeak ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-            <span>Auto-Speak: {autoSpeak ? "ON" : "OFF"}</span>
+            {autoSpeak ? <Volume2 className="w-4 h-4 text-emerald-300" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+            <span>{autoSpeak ? "🔊 Voice Mode (Auto-Speak Active)" : "💬 Chat-First Mode (Silent)"}</span>
           </button>
         </div>
       </div>

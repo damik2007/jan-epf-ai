@@ -207,16 +207,28 @@ def calculate_tds_deduction(
             "exemption_reason": "Settlement amount is below the statutory threshold of Rs 50,000"
         }
 
+    if not pan_linked:
+        rate = 20.0
+        tds_amount = round(withdrawal_amount * (rate / 100.0), 2)
+        net_disbursement = round(withdrawal_amount - tds_amount, 2)
+        return {
+            "tds_applicable": True,
+            "tds_rate_percent": rate,
+            "tds_amount": tds_amount,
+            "net_disbursement": net_disbursement,
+            "exemption_reason": "No PAN linked on portal (Section 206AA statutory 20% deduction applied; Form 15G invalid without PAN)."
+        }
+
     if form_15g_submitted:
         return {
             "tds_applicable": False,
             "tds_rate_percent": 0.0,
             "tds_amount": 0.0,
             "net_disbursement": withdrawal_amount,
-            "exemption_reason": "Form 15G / 15H Self-Declaration verified (Zero TDS)"
+            "exemption_reason": "Form 15G / 15H Self-Declaration verified with linked PAN (Zero TDS)"
         }
 
-    rate = 10.0 if pan_linked else 20.0
+    rate = 10.0
     tds_amount = round(withdrawal_amount * (rate / 100.0), 2)
     net_disbursement = round(withdrawal_amount - tds_amount, 2)
 

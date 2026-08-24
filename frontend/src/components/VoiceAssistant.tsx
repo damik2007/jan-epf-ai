@@ -652,7 +652,7 @@ export const VoiceAssistant: React.FC = () => {
                     setAutoSpeakEnabled(!autoSpeakEnabled);
                   }
                 }}
-                className={`p-1.5 rounded-xl border transition-all ${
+                className={`px-3 py-1.5 rounded-xl border text-xs font-bold font-mono flex items-center gap-1.5 transition-all ${
                   isSpeaking
                     ? "bg-red-500/30 text-red-300 border-red-500/40 animate-pulse"
                     : autoSpeakEnabled
@@ -662,6 +662,9 @@ export const VoiceAssistant: React.FC = () => {
                 title={isSpeaking ? "Stop Voice Playback" : autoSpeakEnabled ? "Voice Auto-Speak Active (Click to Mute for Chat-First)" : "Chat-First Mode (Click to Enable Voice Auto-Speak)"}
               >
                 {isSpeaking || autoSpeakEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+                <span className="hidden sm:inline">
+                  {autoSpeakEnabled ? "🔊 Voice Mode" : "🔇 Text Mode"}
+                </span>
               </button>
 
               {/* Full-Screen Workstation Toggle */}

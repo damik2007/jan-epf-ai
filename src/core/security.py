@@ -273,12 +273,13 @@ class CryptographicSignatureManager:
         return hashlib.sha256(payload_str.encode("utf-8")).hexdigest()
 
     @staticmethod
-    def verify_webhook_signature(payload_bytes: bytes, signature_header: Optional[str]) -> bool:
+    def verify_webhook_signature(payload: Any, signature_header: Optional[str]) -> bool:
         """
         Verifies NPCI penny-drop webhook callback HMAC signature with constant-time check.
         """
-        if not signature_header or not payload_bytes:
+        if not signature_header or not payload:
             return False
+        payload_bytes = payload.encode("utf-8") if isinstance(payload, str) else bytes(payload)
         expected_sig = hmac.new(
             settings.WEBHOOK_HMAC_SECRET.encode("utf-8"),
             payload_bytes,
@@ -287,10 +288,11 @@ class CryptographicSignatureManager:
         return hmac.compare_digest(expected_sig, signature_header)
 
     @staticmethod
-    def sign_webhook_payload(payload_bytes: bytes) -> str:
+    def sign_webhook_payload(payload: Any) -> str:
         """
         Generates HMAC-SHA256 signature for outgoing webhook tests.
         """
+        payload_bytes = payload.encode("utf-8") if isinstance(payload, str) else bytes(payload)
         return hmac.new(
             settings.WEBHOOK_HMAC_SECRET.encode("utf-8"),
             payload_bytes,
