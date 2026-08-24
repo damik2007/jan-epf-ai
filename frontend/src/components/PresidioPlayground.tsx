@@ -171,7 +171,7 @@ export function PresidioPlayground() {
               </span>
             </div>
             <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
-              Real-Time Sovereign PII De-Identification &amp; Tokenization Bench
+              Real-Time Sovereign PII De-Identification & Tokenization Bench
             </h3>
           </div>
         </div>

@@ -156,7 +156,7 @@ export default function ArchitectureResearchPage() {
               </div>
               <h4 className="text-sm font-bold text-white">Name & Spelling Mismatches</h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                Aadhaar vs EPFO spelling differences (e.g., &quot;Shri Ramesh Kumar&quot; vs &quot;Ramesh Kumar&quot;) wait 20 days only to be rejected.
+                Aadhaar vs EPFO spelling differences (e.g., "Shri Ramesh Kumar" vs "Ramesh Kumar") wait 20 days only to be rejected.
               </p>
               <div className="pt-2 border-t border-slate-700/60 text-xs font-bold text-emerald-400 flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
@@ -253,7 +253,7 @@ export default function ArchitectureResearchPage() {
                 Aadhaar, PAN, and Bank Account numbers are masked client-side before any diagnostic telemetry or LLM inference. Raw citizen credentials never cross network boundaries unencrypted.
               </p>
               <div className="text-[11px] font-mono text-emerald-400 pt-1">
-                &bull; DPDP Act Sec 4 &amp; 9 Data Minimization
+                &bull; DPDP Act Sec 4 & 9 Data Minimization
               </div>
             </div>
 
@@ -319,7 +319,7 @@ export default function ArchitectureResearchPage() {
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2 text-white font-extrabold text-sm">
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
-            <span>Statutory, Legal &amp; Architectural Compliance Blueprint</span>
+            <span>Statutory, Legal & Architectural Compliance Blueprint</span>
           </div>
           <div className="flex flex-wrap items-center gap-2 font-mono text-[10px]">
             <span className="px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800">DPDP ACT 2023 COMPLIANT</span>
@@ -332,7 +332,7 @@ export default function ArchitectureResearchPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-[11px] leading-relaxed text-slate-400">
           <div className="space-y-1">
-            <strong className="text-slate-200 block text-xs">1. Synthetic Personas &amp; Zero-Trust PII Masking</strong>
+            <strong className="text-slate-200 block text-xs">1. Synthetic Personas & Zero-Trust PII Masking</strong>
             <p>
               All citizen profiles (Ramesh Kumar, Priya Sharma, Gurmeet Singh, Sunita Devi) and simulated credentials (UANs, masked Aadhaar <code className="text-emerald-400">XXXX-XXXX-8712</code>, PAN <code className="text-emerald-400">ABCDE****F</code>) are 100% synthetic mock datasets created solely for research and hackathon benchmarking. No real citizen PII is collected or persisted.
             </p>
@@ -346,7 +346,7 @@ export default function ArchitectureResearchPage() {
           </div>
 
           <div className="space-y-1">
-            <strong className="text-slate-200 block text-xs">3. Algorithmic Veracity &amp; Non-Affiliation</strong>
+            <strong className="text-slate-200 block text-xs">3. Algorithmic Veracity & Non-Affiliation</strong>
             <p>
               Timing benchmarks execute standard algorithms (Wagner-Fischer Levenshtein, Laplacian Variance, Tiktoken BPE) using native W3C <code className="text-amber-400">performance.now()</code>. Jan-EPF AI is an independent Digital Public Infrastructure (DPI) open-source research prototype built for the OpenAI &times; Varun Mayya hackathon and is not an official entity of the statutory EPFO organization.
             </p>

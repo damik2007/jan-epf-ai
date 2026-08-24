@@ -238,7 +238,7 @@ export default function FixDetailsHub() {
             <div>
               <div className="flex items-center gap-1.5">
                 <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
-                  Name &amp; Aadhaar Spelling Match
+                  Name & Aadhaar Spelling Match
                 </h3>
                 <StatutoryTooltip termKey="fuzzy" />
               </div>

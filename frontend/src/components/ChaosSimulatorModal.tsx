@@ -377,7 +377,7 @@ export function ChaosSimulatorModal({ isOpen, onClose }: ChaosSimulatorModalProp
         {/* Modal Footer */}
         <div className="p-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center">
           <span className="text-xs text-slate-500 dark:text-slate-400">
-            Powered by 80/20 Sovereign Core &amp; Deterministic Mathematics
+            Powered by 80/20 Sovereign Core & Deterministic Mathematics
           </span>
           <button
             onClick={onClose}

@@ -153,14 +153,14 @@ export function LiveSreNetworkPulse() {
             <div className="flex items-center gap-2">
               <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
-                Live SRE &amp; Azure Network Pulse
+                Live SRE & Azure Network Pulse
               </span>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
                 P99 &lt; 15ms
               </span>
             </div>
             <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
-              Real-Time Azure Container Health &amp; Deterministic Fallback Telemetry
+              Real-Time Azure Container Health & Deterministic Fallback Telemetry
             </h3>
           </div>
         </div>

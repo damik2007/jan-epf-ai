@@ -388,7 +388,7 @@ export default function BenchmarksPage() {
               <div>
                 <h3 className="text-base sm:text-lg font-extrabold text-white flex items-center gap-2">
                   <Terminal className="w-4 h-4 text-emerald-400" />
-                  <span>Microsecond Execution Trace &amp; Token Receipt Console</span>
+                  <span>Microsecond Execution Trace & Token Receipt Console</span>
                 </h3>
                 <p className="text-xs text-slate-300 mt-0.5">
                   Raw input/output traces, Presidio PII tokenization masks, and Rust Tiktoken context counts.
@@ -421,9 +421,9 @@ export default function BenchmarksPage() {
                 </button>
               </div>
               <div className="text-slate-400"><span className="text-slate-500">[0.0000 ms]</span> Ingress: Raw Citizen Claim Payload Received (UAN: 100982348712)</div>
-              <div className="text-blue-400"><span className="text-slate-500">[0.0085 ms]</span> Presidio PII Tokenizer: Masked Aadhaar (••••••••8712) &amp; Bank Account</div>
+              <div className="text-blue-400"><span className="text-slate-500">[0.0085 ms]</span> Presidio PII Tokenizer: Masked Aadhaar (••••••••8712) & Bank Account</div>
               <div className="text-amber-400"><span className="text-slate-500">[0.0152 ms]</span> Tiktoken Rust BPE: Pruned context from 412 tokens ➔ 64 tokens (84.4% reduction)</div>
-              <div className="text-emerald-400"><span className="text-slate-500">[0.0269 ms]</span> Levenshtein Matcher: &quot;Ramesh Kumar&quot; vs &quot;Shri Ramesh Kumar&quot; (Score = 91.4% PASS)</div>
+              <div className="text-emerald-400"><span className="text-slate-500">[0.0269 ms]</span> Levenshtein Matcher: "Ramesh Kumar" vs "Shri Ramesh Kumar" (Score = 91.4% PASS)</div>
               <div className="text-emerald-400"><span className="text-slate-500">[0.0274 ms]</span> Form 31 Actuary: Para 68J Cap Calculated = ₹1,56,000 (Sanctioned: ₹85,000)</div>
               <div className="text-emerald-400"><span className="text-slate-500">[0.0275 ms]</span> Section 192A TDS Shield: Service = 8.2 yrs (&gt;5.0 yrs) ➔ 0% Tax Deducted (₹0 Penalty)</div>
               <div className="text-purple-400"><span className="text-slate-500">[0.0345 ms]</span> Egress: Signed Settlement Certificate Generated (CLM-EPF-2026-89412)</div>
@@ -466,7 +466,7 @@ export default function BenchmarksPage() {
                   <span className="text-xs text-slate-400 font-mono">70 Crore Workers</span>
                 </div>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
-                  National Exchequer ROI &amp; Cloud Economics Calculator
+                  National Exchequer ROI & Cloud Economics Calculator
                 </h3>
                 <p className="text-xs text-slate-300 mt-1 max-w-2xl">
                   Simulate annual cloud bill savings at national scale across 70 Crore Indian workers.
@@ -474,7 +474,7 @@ export default function BenchmarksPage() {
               </div>
 
               <span className="text-xs font-mono font-black px-3 py-1.5 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700">
-                100% On-Device &amp; Self-Hosted
+                100% On-Device & Self-Hosted
               </span>
             </div>
 
@@ -536,12 +536,12 @@ export default function BenchmarksPage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono">
-                  LIVE STATIC &amp; RUNTIME AUDIT
+                  LIVE STATIC & RUNTIME AUDIT
                 </span>
                 <span className="text-xs text-slate-400 font-mono">Bandit AST &bull; Playwright &bull; DPDP 2023</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
-                Security Certifications &amp; SRE Resilience Audit
+                Security Certifications & SRE Resilience Audit
               </h3>
               <p className="text-xs text-slate-300 mt-1 max-w-2xl">
                 Real-time AST static analysis, Playwright 360 automated user flow testing, and DPDP Act 2023 compliance scorecard.
@@ -569,7 +569,7 @@ export default function BenchmarksPage() {
               </p>
               <div className="pt-2 border-t border-slate-700/60 text-[11px] font-mono text-emerald-400 flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Zero CWE-89 &amp; CWE-79 injection vectors</span>
+                <span>Zero CWE-89 & CWE-79 injection vectors</span>
               </div>
             </div>
 
@@ -605,7 +605,7 @@ export default function BenchmarksPage() {
               </p>
               <div className="pt-2 border-t border-slate-700/60 text-[11px] font-mono text-purple-400 flex items-center gap-1">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Section 4, 6 &amp; 9 statutory provisions satisfied</span>
+                <span>Section 4, 6 & 9 statutory provisions satisfied</span>
               </div>
             </div>
           </div>

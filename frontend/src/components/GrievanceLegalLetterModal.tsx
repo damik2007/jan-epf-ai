@@ -135,7 +135,7 @@ Audit Reference: JAN-EPF-PETITION-${Math.random().toString(36).substring(2, 9).t
                 </span>
               </div>
               <h3 className="text-base font-black text-white">
-                Statutory Legal Notice &amp; Interest Penalty Drafter
+                Statutory Legal Notice & Interest Penalty Drafter
               </h3>
             </div>
           </div>

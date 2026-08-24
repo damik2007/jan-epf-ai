@@ -90,7 +90,7 @@ export function SettlementReceiptModal({
                 Digital Public Infrastructure • Zero-Rejection Statutory Protocol
               </p>
               <p className="text-[10px] text-slate-500 font-mono">
-                Statutory Compliance: Employees&apos; Provident Funds &amp; Miscellaneous Provisions Act, 1952
+                Statutory Compliance: Employees&apos; Provident Funds & Miscellaneous Provisions Act, 1952
               </p>
             </div>
 
@@ -129,7 +129,7 @@ export function SettlementReceiptModal({
               </span>
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-slate-500 block">Disbursement Bank &amp; IFSC</span>
+              <span className="text-[10px] uppercase font-bold text-slate-500 block">Disbursement Bank & IFSC</span>
               <span className="font-mono font-semibold">
                 {activeCitizen.bank_kyc?.bank_name} ({activeCitizen.bank_kyc?.ifsc_code})
               </span>

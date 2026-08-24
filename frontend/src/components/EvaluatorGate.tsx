@@ -112,7 +112,7 @@ export function EvaluatorGate({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-between">
             <span className="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-amber-400" />
-              Hackathon Judge &amp; Evaluator 1-Tap Access
+              Hackathon Judge & Evaluator 1-Tap Access
             </span>
             <span className="text-[9px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40">
               Zero-Friction

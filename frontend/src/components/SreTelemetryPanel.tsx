@@ -69,11 +69,11 @@ export function SreTelemetryPanel() {
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
-                Live SRE Telemetry &amp; Resilience Monitor
+                Live SRE Telemetry & Resilience Monitor
               </span>
             </div>
             <h3 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
-              Sovereign Operational Health, Azure Ping &amp; DPDP Compliance
+              Sovereign Operational Health, Azure Ping & DPDP Compliance
             </h3>
           </div>
         </div>
