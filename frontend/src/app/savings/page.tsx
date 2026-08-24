@@ -420,7 +420,7 @@ export default function MySavingsHub() {
           ) : (
             <div className="px-3 py-2 bg-white/60 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 flex justify-between items-center">
               <span>💡 At retirement, ~<strong>{Math.round(((retirementTotal - ((forecast[0]?.employeeShare || 0) + (forecast[0]?.employerShare || 0) + ((monthlyEmp + monthlyEmpr) * 12 * (58 - currentAge)))) / Math.max(1, retirementTotal)) * 100)}%</strong> of your total wealth is created solely by 8.25% compounding interest.</span>
-              <span className="text-xs font-mono text-slate-400 font-bold hidden sm:inline">Tap bar to inspect</span>
+              <span className="text-xs font-mono text-slate-500 dark:text-slate-400 font-bold hidden sm:inline">Tap bar to inspect</span>
             </div>
           )}
 

@@ -232,15 +232,15 @@ export default function NeedMoneyHub() {
                     ? "bg-saffron text-sovereign-darkest ring-2 ring-saffron/40 font-extrabold"
                     : currentStep > step
                     ? "bg-emerald-600 text-white"
-                    : "bg-slate-200 dark:bg-slate-700 text-slate-500"
+                    : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
                 }`}
               >
                 {currentStep > step ? "✓" : step}
               </div>
-              <span className={`text-xs font-semibold hidden md:inline ${currentStep === step ? "text-sovereign-navy dark:text-white" : "text-slate-400"}`}>
+              <span className={`text-xs font-semibold hidden md:inline ${currentStep === step ? "text-sovereign-navy dark:text-white" : "text-slate-500 dark:text-slate-400"}`}>
                 {step === 1 ? t.step1 : step === 2 ? t.step2 : t.step3}
               </span>
-              {step < 3 && <span className="text-slate-300 dark:text-slate-600 hidden md:inline">→</span>}
+              {step < 3 && <span className="text-slate-400 dark:text-slate-500 hidden md:inline">→</span>}
             </div>
           ))}
         </div>
@@ -347,7 +347,7 @@ export default function NeedMoneyHub() {
                 onChange={(e) => setRequestedAmount(Number(e.target.value))}
                 className="w-full h-2.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-sovereign-navy dark:accent-amber-500"
               />
-              <div className="flex justify-between text-[11px] text-slate-400 dark:text-slate-500">
+              <div className="flex justify-between text-[11px] text-slate-500 dark:text-slate-400">
                 <span>Min: ₹5,000</span>
                 <span>Max: ₹{eligibility.maxAdvanceAmount.toLocaleString("en-IN")}</span>
               </div>
@@ -507,7 +507,7 @@ export default function NeedMoneyHub() {
             </div>
             <div className="flex justify-between py-1">
               <span className="text-slate-500 dark:text-slate-400">{t.auditHashLabel}</span>
-              <span className="font-mono text-[10px] text-slate-400 truncate max-w-[180px]">
+              <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 truncate max-w-[180px]">
                 {submittedResult.audit_trace_token}
               </span>
             </div>

@@ -217,7 +217,7 @@ export default function LoginPage() {
                           <p className="text-xs text-slate-500 dark:text-slate-400">{persona.role}</p>
                         </div>
                       </div>
-                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${persona.badgeColor}`}>
+                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border shadow-sm ${persona.badgeColor}`}>
                         {persona.badge}
                       </span>
                     </div>

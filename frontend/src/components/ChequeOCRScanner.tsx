@@ -182,7 +182,7 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
             accept="image/*"
             className="hidden"
           />
-          <Upload className="w-8 h-8 text-slate-400 dark:text-slate-500 mb-2" />
+          <Upload className="w-8 h-8 text-slate-500 dark:text-slate-400 mb-2" />
           <p className="text-xs font-semibold text-slate-700 dark:text-slate-200 text-center">
             Click to upload Cheque or Bank Passbook photo
           </p>
@@ -225,7 +225,7 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
                       </span>
                     </>
                   ) : (
-                    <span className="text-slate-400">Ready for check</span>
+                    <span className="text-slate-500 dark:text-slate-400">Ready for check</span>
                   )}
                 </div>
               </div>
@@ -241,7 +241,7 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
                       {fuzzyScore}% Match
                     </span>
                   ) : (
-                    <span className="text-slate-400">Pending upload</span>
+                    <span className="text-slate-500 dark:text-slate-400">Pending upload</span>
                   )}
                 </div>
               </div>
