@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useCitizen } from "@/context/CitizenContext";
 import {
@@ -17,7 +17,9 @@ import {
   ExternalLink,
   Bot,
   User,
-  Activity
+  Activity,
+  ShieldCheck,
+  Building2
 } from "lucide-react";
 import { getTranslation } from "@/lib/translations";
 import { generateCopilotResponse, CopilotReply } from "@/lib/voiceCopilotBrain";
@@ -57,47 +59,53 @@ export const VoiceAssistant: React.FC = () => {
   const accumulatedTranscriptRef = useRef<string>("");
   const hasDispatchedRef = useRef<boolean>(false);
 
+  const uan = activeCitizen.uan || "100982348712";
+  const fullName = activeCitizen.full_name || "Citizen";
+  const firstName = fullName.split(" ")[0];
+  const company = activeCitizen.active_employment?.establishment_name || "Active Employer";
+  const balanceStr = (activeCitizen.passbook_summary?.total_balance ?? 0).toLocaleString("en-IN");
+
+  // Determine persona-specific attributes
+  const isRamesh = fullName.includes("Ramesh") || uan.includes("100982348712");
+  const isPriya = fullName.includes("Priya") || uan.includes("101294817203");
+  const isGurmeet = fullName.includes("Gurmeet") || uan.includes("100112233445");
+  const isSunita = fullName.includes("Sunita") || uan.includes("101889977665");
+
   // Synchronize persona and language changes dynamically
   useEffect(() => {
     setActiveSpeechLang(language || "en-IN");
     stopNeuralSpeech();
     setIsSpeaking(false);
 
-    const firstName = activeCitizen.full_name ? activeCitizen.full_name.split(" ")[0] : "Citizen";
-    const isSenior = !!activeCitizen.pension_details;
-    const balanceStr = (activeCitizen.passbook_summary?.total_balance ?? 0).toLocaleString("en-IN");
-    const pensionStr = (activeCitizen.pension_details?.monthly_pension_amount ?? 4250).toLocaleString("en-IN");
-    const company = activeCitizen.active_employment?.establishment_name || "Active Employer";
-
     let greeting = "";
-    if (language.startsWith("hi")) {
-      greeting = isSenior
-        ? `नमस्ते ${firstName} जी! आपके ईपीएस-95 खाते में मासिक पेंशन ₹${pensionStr} और कुल बचत ₹${balanceStr} है। डिजिटल जीवन प्रमाण पत्र या पेंशन के बारे में पूछें।`
-        : `नमस्ते ${firstName} जी! आपके ${company} पीएफ खाते में ₹${balanceStr} जमा हैं। आप मुझसे पैसे निकालने, कंपनी बदलने, या आधार सुधार के बारे में पूछ सकते हैं।`;
-    } else if (language.startsWith("te")) {
-      greeting = isSenior
-        ? `నమస్కారం ${firstName} గారు! మీ నెలవారీ పెన్షన్ ₹${pensionStr} మరియు మొత్తం బ్యాలెన్స్ ₹${balanceStr}. జీవన్ ప్రమాణ్ లేదా పెన్షన్ వివరాల కోసం అడగండి.`
-        : `నమస్కారం ${firstName} గారు! మీ ${company} ఖాతాలో ₹${balanceStr} ఉన్నాయి. అడ్వాన్స్ లేదా జాబ్ బదిలీ కోసం మాట్లాడండి.`;
-    } else if (language.startsWith("ta")) {
-      greeting = isSenior
-        ? `வணக்கம் ${firstName}! உங்கள் ஓய்வூதிய தொகை ₹${pensionStr}/மாதம். உங்கள் சேமிப்பு விவரங்களை அறிய கேளுங்கள்.`
-        : `வணக்கம் ${firstName}! உங்கள் ${company} பிஎஃப் கணக்கில் ₹${balanceStr} உள்ளது. நான் உங்களுக்கு எவ்வாறு உதவ முடியும்?`;
+    if (isGurmeet) {
+      greeting = language.startsWith("hi")
+        ? `नमस्ते सरदार गुरमीत सिंह जी! आपके ईपीएस-95 खाते में मासिक पेंशन ₹3,250 और कुल बचत सुरक्षित है। डिजिटल जीवन प्रमाण पत्र या पेंशन के बारे में पूछें।`
+        : `Hello Sardar Gurmeet Singh Ji! Welcome to your EPS-95 Senior Pension portal. Your monthly pension of ₹3,250/mo is active. How can I assist with your Jeevan Pramaan life certificate?`;
+    } else if (isPriya) {
+      greeting = language.startsWith("hi")
+        ? `नमस्ते प्रिया जी! आपके ${company} खाते में ₹${balanceStr} हैं। आपकी पिछली इंफोसिस नौकरी की एग्जिट डेट ऑटो-डिड्यूस करने या खाता ट्रांसफर करने के लिए कहें।`
+        : `Hello Priya! Your total corpus is ₹${balanceStr}. I can help you auto-deduce your missing exit date for Infosys and merge your previous accounts in 1 click.`;
+    } else if (isSunita) {
+      greeting = language.startsWith("hi")
+        ? `नमस्ते सुनीता जी! आपके ${company} खाते में ₹${balanceStr} जमा हैं। ₹7 लाख ईडीएलआई नॉमिनेशन भरने या 1-क्लिक बैंक पेनी ड्रॉप सत्यापन के बारे में पूछें।`
+        : `Hello Sunita Devi! Your active balance is ₹${balanceStr}. I can assist you with 1-Click Penny Drop Bank KYC and ₹7 Lakh free EDLI nomination for Manoj Kumar.`;
     } else {
-      greeting = isSenior
-        ? `Hello ${firstName}! Welcome to your EPS-95 Pension portal. Your monthly pension is ₹${pensionStr}/mo with ₹${balanceStr} in passbook. How can I assist you today?`
-        : `Hello ${firstName}! I am your Jan-EPF AI Companion. Your active ${company} balance is ₹${balanceStr}. How can I help you today?`;
+      greeting = language.startsWith("hi")
+        ? `नमस्ते रमेश कुमार जी! आपके पेन्या अपेरल्स पीएफ खाते में ₹${balanceStr} जमा हैं। आप ₹48,000 मेडिकल एडवांस या 0% टीडीएस नियम के बारे में पूछ सकते हैं।`
+        : `Hello Ramesh Kumar! Your Peenya Apparels EPF balance is ₹${balanceStr} (14.5 yrs service, 0% TDS). How can I assist with your Para 68J emergency advance today?`;
     }
 
     setMessages([
       {
-        id: `init-${activeCitizen.uan}-${Date.now()}`,
+        id: `init-${uan}-${Date.now()}`,
         sender: "copilot",
         text: greeting,
         spokenText: greeting,
         time: "Just now"
       }
     ]);
-  }, [activeCitizen.uan, activeCitizen.full_name, activeCitizen.passbook_summary?.total_balance, language]);
+  }, [uan, fullName, balanceStr, language, isGurmeet, isPriya, isSunita, company]);
 
   // Auto-scroll chat to latest message
   useEffect(() => {
@@ -174,7 +182,7 @@ export const VoiceAssistant: React.FC = () => {
       time: now
     };
 
-    // Construct context strictly from active citizen to avoid persona bleed
+    // Construct context strictly from active citizen
     const citizenContext = {
       name: activeCitizen.full_name || "Citizen",
       uan: activeCitizen.uan || "000000000000",
@@ -185,7 +193,8 @@ export const VoiceAssistant: React.FC = () => {
       interestCurrentFY: activeCitizen.passbook_summary?.interest_credited_current_fy ?? 0,
       employer: activeCitizen.active_employment?.establishment_name || "Active Employer",
       pensionAmount: activeCitizen.pension_details?.monthly_pension_amount,
-      edliCoverage: activeCitizen.insurance_details?.edli_coverage_amount || 700000
+      edliCoverage: activeCitizen.insurance_details?.edli_coverage_amount || 700000,
+      serviceYears: activeCitizen.active_employment?.total_service_years ?? 5
     };
 
     const reply: CopilotReply = generateCopilotResponse(
@@ -249,7 +258,6 @@ export const VoiceAssistant: React.FC = () => {
           };
 
           recognition.onend = () => {
-            // If ended with accumulated text not yet dispatched, process it now
             if (!hasDispatchedRef.current && accumulatedTranscriptRef.current.trim().length > 1) {
               hasDispatchedRef.current = true;
               handleProcessUserMessage(accumulatedTranscriptRef.current);
@@ -331,79 +339,152 @@ export const VoiceAssistant: React.FC = () => {
     }
   };
 
-  const quickTiles = [
-    {
-      label: "🇮🇳 मेडिकल इमरजेंसी एडवांस",
-      query: "मुझे मेडिकल इमरजेंसी के लिए पैसे निकालने हैं",
-      lang: "hi-IN"
-    },
-    {
-      label: "🇮🇳 నా PF బ్యాలెన్స్ & వడ్డీ",
-      query: "నా పాస్‌బుక్ బ్యాలెన్స్ మరియు వడ్డీ ఎంత?",
-      lang: "te-IN"
-    },
-    {
-      label: "🔄 1-Click Job PF Transfer",
-      query: "How to transfer previous company PF balance?",
-      lang: "en-IN"
-    },
-    {
-      label: "✍️ Fix Aadhaar Name Mismatch",
-      query: "Fix my name mismatch with Aadhaar and run Penny Drop",
-      lang: "en-IN"
+  // 100% Account-Specific Evaluator Test Pills
+  const accountTestPills = useMemo(() => {
+    if (isRamesh) {
+      return [
+        { label: "🇮🇳 [हिंदी] ₹48k मेडिकल एडवांस", query: "मुझे पेन्या अपेरल्स पीएफ से ₹48,000 मेडिकल एडवांस चाहिए", lang: "hi-IN" },
+        { label: "🛡️ [TDS] 0% टैक्स छूट नियम", query: "मेरी 14.5 साल की सेवा पर 0% टीडीएस नियम बताएं", lang: "hi-IN" },
+        { label: "📜 [Passbook] Peenya Apparels", query: "पेन्या अपेरल्स पीएफ बैलेंस और 8.25% ब्याज विवरण", lang: "hi-IN" },
+        { label: "🇬🇧 [English] Para 68J Medical Cap", query: "Check my Para 68J maximum medical advance limit", lang: "en-IN" }
+      ];
     }
-  ];
+    if (isPriya) {
+      return [
+        { label: "💼 [Career] Infosys PF ट्रांसफर करें", query: "इंफोसिस से नया पीएफ खाता ट्रांसफर और मर्ज करें", lang: "hi-IN" },
+        { label: "📅 [ECR] एग्जिट डेट ऑटो-डिड्यूस", query: "इंफोसिस नौकरी छोड़ने की तारीख ECR से निकालें", lang: "hi-IN" },
+        { label: "🔍 [Fuzzy] आधार नाम स्पेलिंग फिक्स", query: "आधार और पीएफ में प्रिया शर्मा नाम सुधार", lang: "hi-IN" },
+        { label: "🇬🇧 [English] Merge 3 PF Accounts", query: "Merge my 3 previous PF accounts to active UAN", lang: "en-IN" }
+      ];
+    }
+    if (isGurmeet) {
+      return [
+        { label: "👴 [Pension] अगस्त पेंशन स्टेटस (₹3,250)", query: "मेरी मासिक ईपीएस-95 पेंशन और पीपीओ स्थिति", lang: "hi-IN" },
+        { label: "🪪 [DLC] जीवन प्रमाण पत्र रिन्यू", query: "डिजिटल जीवन प्रमाण पत्र रिन्यू करें", lang: "hi-IN" },
+        { label: "🛡️ [Family] विधवा पेंशन अधिकार", query: "ईपीएस-95 परिवार एवं विधवा पेंशन नियम बताएं", lang: "hi-IN" },
+        { label: "🇬🇧 [English] Check PPO-DL-2024-99881", query: "Check my PPO-DL-2024-99881 pension disbursement", lang: "en-IN" }
+      ];
+    }
+    // Sunita Devi
+    return [
+      { label: "🏦 [KYC] 1-Click पेनी ड्रॉप वेरिफिकेशन", query: "बैंक खाते का तत्काल पेनी ड्रॉप सत्यापन करें", lang: "hi-IN" },
+      { label: "🛡️ [EDLI] ₹7 लाख नॉमिनेशन भरें", query: "मनोज कुमार को ₹7 लाख ईडीएलआई बीमा का नॉमिनी बनाएं", lang: "hi-IN" },
+      { label: "📈 [Score] रेडीनेस स्कोर 98% करें", query: "मेरा क्लेम रेडीनेस स्कोर 78% से 98% कैसे होगा?", lang: "hi-IN" },
+      { label: "🇬🇧 [English] Surat Logistics KYC", query: "Verify bank KYC for Surat Logistics account", lang: "en-IN" }
+    ];
+  }, [isRamesh, isPriya, isGurmeet]);
+
+  // 100% Account-Specific Quick Action Tiles
+  const accountQuickTiles = useMemo(() => {
+    if (isRamesh) {
+      return [
+        { label: "🏥 Peenya Apparels ₹1.56L Advance", query: "मुझे मेडिकल इमरजेंसी के लिए पैसे निकालने हैं", lang: "hi-IN" },
+        { label: "📊 8.25% FY Interest Credit", query: "पेन्या अपेरल्स में इस साल का ब्याज कितना है?", lang: "hi-IN" },
+        { label: "🛡️ Section 192A TDS 0% Proof", query: "मेरी सेवा 14.5 साल है, टीडीएस क्यों शून्य है?", lang: "hi-IN" },
+        { label: "✍️ Check Bank A/C ••••8712", query: "बैंक खाता सत्यापन स्थिति", lang: "hi-IN" }
+      ];
+    }
+    if (isPriya) {
+      return [
+        { label: "🔄 1-Click Form 13 Job Switch", query: "How to transfer previous company PF balance?", lang: "en-IN" },
+        { label: "📅 Deducing Infosys Exit Date", query: "How does ECR auto-deduce missing date of exit?", lang: "en-IN" },
+        { label: "📈 Cyber Hub ₹4.75L Compounding", query: "నా పాస్‌బుక్ బ్యాలెన్స్ మరియు వడ్డీ ఎంత?", lang: "te-IN" },
+        { label: "✍️ Aadhaar Priyaa vs Priya Fix", query: "Fix my name mismatch with Aadhaar and run Penny Drop", lang: "en-IN" }
+      ];
+    }
+    if (isGurmeet) {
+      return [
+        { label: "👴 ₹3,250/mo Pension Disbursement", query: "मेरी मासिक पेंशन कब खाते में आएगी?", lang: "hi-IN" },
+        { label: "🪪 Facial Biometric Jeevan Pramaan", query: "जीवन प्रमाण पत्र फेस आरडी कैसे काम करता है?", lang: "hi-IN" },
+        { label: "🛡️ EPS-95 Widow Pension ₹1,625", query: "परिवार पेंशन के क्या नियम हैं?", lang: "hi-IN" },
+        { label: "📜 PPO-DL-2024-99881 Slip", query: "Download my digital PPO card", lang: "en-IN" }
+      ];
+    }
+    // Sunita Devi
+    return [
+      { label: "🏦 NPCI Penny Drop (HDFC ••••8912)", query: "बैंक खाते का तत्काल पेनी ड्रॉप सत्यापन करें", lang: "hi-IN" },
+      { label: "🛡️ ₹7 Lakh Free EDLI Insurance", query: "ईडीएलआई 1976 बीमा के क्या नियम हैं?", lang: "hi-IN" },
+      { label: "📋 Nominee: Manoj Kumar (100%)", query: "मनोज कुमार को ई-नॉमिनी कैसे बनाएं?", lang: "hi-IN" },
+      { label: "📈 Claim Readiness 78% -> 98%", query: "मेरा क्लेम रेडीनेस स्कोर कैसे बढ़ेगा?", lang: "hi-IN" }
+    ];
+  }, [isRamesh, isPriya, isGurmeet]);
 
   return (
     <div
       className={`fixed z-50 transition-all duration-300 ${
         isOpen
-          ? "bottom-4 right-2 left-2 sm:left-auto sm:right-4 max-w-md w-auto sm:w-[420px] px-1 sm:px-3"
-          : "bottom-20 right-3.5 sm:bottom-4 sm:right-4"
+          ? "bottom-4 right-2 left-2 sm:left-auto sm:right-4 max-w-md w-auto sm:w-[430px] px-1 sm:px-2"
+          : "bottom-20 right-3.5 sm:bottom-5 sm:right-5"
       }`}
     >
+      {/* 1. ULTRA-LUXURY SEE-THROUGH GLASSMODAL CONTAINER */}
       {isOpen && (
-        <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-sovereign-navy dark:border-slate-700 p-4 mb-3 transition-all animate-in slide-in-from-bottom-5 space-y-3 flex flex-col max-h-[75vh]">
-          {/* Header */}
-          <div className="flex justify-between items-center pb-2.5 border-b border-slate-100 dark:border-slate-800 shrink-0">
+        <div className="backdrop-blur-2xl bg-slate-900/65 dark:bg-slate-950/75 border border-white/25 dark:border-white/15 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.75)] p-4 sm:p-5 mb-3 transition-all animate-in slide-in-from-bottom-5 space-y-3 flex flex-col max-h-[78vh] relative overflow-hidden ring-1 ring-white/15 text-white">
+          {/* Ambient Saffron / Cyan Glow */}
+          <div className="absolute top-0 right-0 w-72 h-72 bg-saffron/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-60 h-60 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Frosted Glass Header */}
+          <div className="relative z-10 flex justify-between items-center pb-2.5 border-b border-white/15 shrink-0">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-saffron flex items-center justify-center text-sovereign-darkest shadow-sm">
+              <div className="w-8 h-8 rounded-xl bg-saffron/90 flex items-center justify-center text-sovereign-darkest shadow-md ring-1 ring-white/20">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h4 className="text-xs font-black text-sovereign-navy dark:text-white">Jan-EPF Neural Voice AI</h4>
-                <div className="flex items-center gap-1 text-[10px] text-emerald-700 dark:text-emerald-400 font-extrabold">
-                  <Activity className="w-3 h-3 animate-pulse" />
-                  <span>Human Natural Cadence • Edge-TTS</span>
+                <div className="flex items-center gap-1.5">
+                  <h4 className="text-xs font-black text-white tracking-tight">Jan-EPF Sovereign Voice AI</h4>
+                  <span className="px-1.5 py-0.2 rounded-full bg-emerald-500/20 text-emerald-300 text-[9px] font-mono border border-emerald-500/30">
+                    Live
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 text-[10px] text-slate-300 font-medium">
+                  <span className="text-saffron font-bold truncate max-w-[120px]">{firstName}</span>
+                  <span>•</span>
+                  <span className="font-mono text-slate-400 text-[9px]">{uan.slice(0, 4)} •••• {uan.slice(-4)}</span>
                 </div>
               </div>
             </div>
+
             <div className="flex items-center gap-1">
               {isSpeaking && (
                 <button
                   onClick={stopSpeaking}
                   title="Stop audio speech"
-                  className="text-amber-600 dark:text-amber-400 hover:text-amber-800 p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-[10px] font-bold flex items-center gap-1"
+                  className="text-amber-300 hover:text-amber-100 p-1.5 rounded-xl bg-amber-500/20 border border-amber-400/40 text-[10px] font-bold flex items-center gap-1 backdrop-blur-md transition-all shadow-sm"
                 >
                   <VolumeX className="w-3.5 h-3.5" />
-                  <span>Stop</span>
+                  <span>Mute</span>
                 </button>
               )}
+
               <button
                 onClick={() => {
                   stopSpeaking();
                   stopListening();
                   setIsOpen(false);
                 }}
-                className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="text-slate-300 hover:text-white p-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 transition-all backdrop-blur-md"
+                title="Minimize voice copilot"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 py-1 text-xs max-h-[260px] scroll-touch">
+          {/* Account Context Chip Bar */}
+          <div className="relative z-10 px-2.5 py-1.5 rounded-xl bg-white/10 dark:bg-white/5 border border-white/15 flex items-center justify-between text-[10px] text-slate-300 font-mono shrink-0">
+            <div className="flex items-center gap-1.5 truncate">
+              <Building2 className="w-3 h-3 text-saffron shrink-0" />
+              <span className="truncate max-w-[160px] font-bold text-white">{company}</span>
+            </div>
+            <div className="flex items-center gap-1 text-emerald-400 font-bold shrink-0">
+              <ShieldCheck className="w-3 h-3" />
+              <span>₹{balanceStr}</span>
+            </div>
+          </div>
+
+          {/* Messages Scroll Area */}
+          <div className="relative z-10 flex-1 overflow-y-auto space-y-2.5 pr-1 py-1 text-xs max-h-[260px] scroll-touch">
             {messages.map((m) => {
               const isUser = m.sender === "user";
               return (
@@ -414,29 +495,29 @@ export const VoiceAssistant: React.FC = () => {
                   <div
                     className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold ${
                       isUser
-                        ? "bg-sovereign-navy text-white dark:bg-amber-500 dark:text-slate-950"
-                        : "bg-saffron text-sovereign-darkest"
+                        ? "bg-saffron text-sovereign-darkest shadow-md"
+                        : "bg-white/20 text-white border border-white/25"
                     }`}
                   >
-                    {isUser ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
+                    {isUser ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5 text-saffron" />}
                   </div>
 
                   <div
-                    className={`p-3 rounded-2xl max-w-[85%] space-y-1.5 shadow-sm ${
+                    className={`p-3 rounded-2xl max-w-[85%] space-y-1.5 shadow-md ${
                       isUser
-                        ? "bg-sovereign-navy text-white rounded-tr-none font-medium dark:bg-amber-500 dark:text-slate-950"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-tl-none border border-slate-200 dark:border-slate-700"
+                        ? "backdrop-blur-md bg-saffron/90 text-sovereign-darkest font-semibold rounded-tr-none border border-saffron/80"
+                        : "backdrop-blur-md bg-white/15 dark:bg-slate-800/60 text-slate-100 rounded-tl-none border border-white/20 dark:border-white/10"
                     }`}
                   >
                     <p className="whitespace-pre-line leading-relaxed text-xs">{m.text}</p>
 
                     {!isUser && (
-                      <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-200/60 dark:border-slate-700/60">
+                      <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-white/15">
                         {m.spokenText && (
                           <button
                             type="button"
                             onClick={() => speak(m.spokenText || m.text, m.langCode)}
-                            className="inline-flex items-center gap-1 text-[10px] font-extrabold text-sovereign-navy dark:text-white hover:text-saffron bg-white dark:bg-slate-900 px-2 py-0.5 rounded-md border border-slate-300 dark:border-slate-600 transition-all shadow-sm"
+                            className="inline-flex items-center gap-1 text-[10px] font-extrabold text-white hover:text-saffron bg-white/15 hover:bg-white/25 px-2 py-0.5 rounded-md border border-white/20 transition-all backdrop-blur-md shadow-sm"
                           >
                             <RotateCcw className="w-3 h-3" />
                             <span>Replay</span>
@@ -452,9 +533,9 @@ export const VoiceAssistant: React.FC = () => {
                               setIsOpen(false);
                               router.push(m.targetRoute!);
                             }}
-                            className="inline-flex items-center gap-1 text-[10px] font-extrabold text-white bg-emerald-700 hover:bg-emerald-800 px-2 py-0.5 rounded-md transition-all shadow-sm"
+                            className="inline-flex items-center gap-1 text-[10px] font-extrabold text-sovereign-darkest bg-saffron hover:bg-saffron-light px-2.5 py-0.5 rounded-md transition-all shadow-md font-bold"
                           >
-                            <span>Open</span>
+                            <span>Open Hub</span>
                             <ExternalLink className="w-3 h-3" />
                           </button>
                         )}
@@ -469,15 +550,15 @@ export const VoiceAssistant: React.FC = () => {
 
           {/* Live Mic Waveform Indicator */}
           {isListening && (
-            <div className="flex items-center justify-between px-3 py-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-xl border border-emerald-200 dark:border-emerald-800 shrink-0">
+            <div className="relative z-10 flex items-center justify-between px-3 py-2 bg-emerald-950/60 backdrop-blur-md rounded-xl border border-emerald-400/40 shrink-0">
               <div className="flex items-center gap-1">
                 <span
                   style={{ height: `${Math.max(8, micVolume * 0.35)}px` }}
-                  className="w-1 bg-emerald-500 rounded-full transition-all duration-75"
+                  className="w-1 bg-emerald-400 rounded-full transition-all duration-75"
                 />
                 <span
                   style={{ height: `${Math.max(12, micVolume * 0.55)}px` }}
-                  className="w-1 bg-emerald-600 rounded-full transition-all duration-75"
+                  className="w-1 bg-emerald-300 rounded-full transition-all duration-75"
                 />
                 <span
                   style={{ height: `${Math.max(6, micVolume * 0.25)}px` }}
@@ -489,16 +570,16 @@ export const VoiceAssistant: React.FC = () => {
                 />
                 <span
                   style={{ height: `${Math.max(10, micVolume * 0.45)}px` }}
-                  className="w-1 bg-emerald-500 rounded-full transition-all duration-75"
+                  className="w-1 bg-emerald-400 rounded-full transition-all duration-75"
                 />
                 <span
                   style={{ height: `${Math.max(7, micVolume * 0.3)}px` }}
-                  className="w-1 bg-emerald-600 rounded-full transition-all duration-75"
+                  className="w-1 bg-emerald-300 rounded-full transition-all duration-75"
                 />
               </div>
 
-              <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 truncate max-w-[200px]">
-                {transcript ? `"${transcript}"` : `Listening in ${activeSpeechLang.split("-")[0].toUpperCase()}...`}
+              <span className="text-[11px] font-bold text-emerald-300 truncate max-w-[200px]">
+                {transcript ? `"${transcript}"` : `Listening for ${firstName}...`}
               </span>
 
               <button
@@ -510,52 +591,34 @@ export const VoiceAssistant: React.FC = () => {
                     stopListening();
                   }
                 }}
-                className="px-2 py-0.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-md text-[10px] font-bold"
+                className="px-2.5 py-0.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md text-[10px] font-bold"
               >
                 Done
               </button>
             </div>
           )}
 
-          {/* 1-Tap Vernacular Voice Test Pills for Evaluators */}
-          <div className="space-y-1 pt-1 border-t border-slate-200 dark:border-slate-800">
-            <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 font-bold">
-              <span>⚡ 1-Tap Indic Voice Test Prompts:</span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-mono">Whisper ASR • ₹0 Bill</span>
+          {/* 100% Account-Specific Evaluator Test Pills */}
+          <div className="relative z-10 space-y-1 pt-1 border-t border-white/15">
+            <div className="flex justify-between items-center text-[10px] text-slate-300 font-bold">
+              <span>⚡ Account-Specific Voice Test Prompts:</span>
+              <span className="text-saffron font-mono">{firstName}&apos;s Profile</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              <button
-                type="button"
-                onClick={() => handleProcessUserMessage("मुझे अस्पताल के लिए ₹50,000 एडवांस चाहिए")}
-                className="px-2 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-[10px] font-bold hover:bg-amber-100 transition-all text-left"
-              >
-                🇮🇳 [हिंदी] ₹50k मेडिकल एडवांस
-              </button>
-              <button
-                type="button"
-                onClick={() => handleProcessUserMessage("నా పాత కంపెనీ PF బ్యాలెన్స్ బదిలీ చేయండి")}
-                className="px-2 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-900 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-[10px] font-bold hover:bg-blue-100 transition-all text-left"
-              >
-                🇮🇳 [తెలుగు] PF ఖాతా బదిలీ
-              </button>
-              <button
-                type="button"
-                onClick={() => handleProcessUserMessage("எனது மொத்த சேமிப்பு மற்றும் வட்டி விவரங்கள்")}
-                className="px-2 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/40 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-[10px] font-bold hover:bg-purple-100 transition-all text-left"
-              >
-                🇮🇳 [தமிழ்] 8.25% வட்டி பாஸ்புக்
-              </button>
-              <button
-                type="button"
-                onClick={() => handleProcessUserMessage("Fix 1-letter name typo from Aadhaar")}
-                className="px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold hover:bg-emerald-100 transition-all text-left"
-              >
-                🇬🇧 [English] Fix Aadhaar Typo
-              </button>
+              {accountTestPills.map((pill, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handleProcessUserMessage(pill.query, pill.lang)}
+                  className="px-2 py-1 rounded-lg backdrop-blur-md bg-white/10 hover:bg-white/20 border border-white/20 text-white text-[10px] font-semibold transition-all text-left shadow-sm hover:border-saffron/60"
+                >
+                  {pill.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Input Form */}
+          {/* Glass Input Form */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -564,41 +627,41 @@ export const VoiceAssistant: React.FC = () => {
                 setTypedInput("");
               }
             }}
-            className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700 shrink-0"
+            className="relative z-10 flex items-center gap-1.5 backdrop-blur-md bg-white/10 dark:bg-white/5 p-1.5 rounded-2xl border border-white/20 focus-within:border-saffron/70 shrink-0 transition-all"
           >
             <input
               type="text"
               value={typedInput}
               onChange={(e) => setTypedInput(e.target.value)}
-              placeholder="Ask anything: 'How to withdraw?', 'Balance?', 'Hi'..."
-              className="w-full text-xs font-medium px-2.5 py-1.5 bg-transparent focus:outline-none text-slate-800 dark:text-slate-100 placeholder:text-slate-400"
+              placeholder={`Ask anything for ${firstName}: 'Balance?', 'Withdraw?', 'TDS?'...`}
+              className="w-full text-xs font-medium px-2.5 py-1.5 bg-transparent focus:outline-none text-white placeholder:text-slate-400"
             />
             <button
               type="submit"
               disabled={!typedInput.trim()}
-              className="p-2 rounded-xl bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 text-white hover:bg-sovereign-light disabled:opacity-40 transition-all shrink-0 shadow-sm"
+              className="p-2 rounded-xl bg-saffron text-sovereign-darkest hover:bg-saffron-light disabled:opacity-40 transition-all shrink-0 shadow-md font-bold"
               title="Send message"
             >
               <Send className="w-3.5 h-3.5" />
             </button>
           </form>
 
-          {/* Quick Tiles */}
-          <div className="space-y-1 shrink-0">
-            <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-              Instant 1-Tap Queries
+          {/* Account-Specific Quick Query Tiles */}
+          <div className="relative z-10 space-y-1 shrink-0">
+            <div className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+              1-Tap Account Queries ({company})
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-              {quickTiles.map((tile, idx) => (
+              {accountQuickTiles.map((tile, idx) => (
                 <button
                   key={idx}
                   onClick={() => {
                     handleProcessUserMessage(tile.query, tile.lang);
                   }}
-                  className="text-left text-[11px] font-semibold bg-slate-50 dark:bg-slate-800 hover:bg-sovereign-navy dark:hover:bg-amber-500 hover:text-white dark:hover:text-slate-950 px-2.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 transition-all flex items-center justify-between group truncate"
+                  className="text-left text-[11px] font-semibold backdrop-blur-md bg-white/10 hover:bg-white/20 text-white px-2.5 py-1.5 rounded-xl border border-white/15 transition-all flex items-center justify-between group truncate hover:border-saffron/50"
                 >
                   <span className="truncate max-w-[170px]">{tile.label}</span>
-                  <CornerDownLeft className="w-3 h-3 text-slate-400 group-hover:text-white dark:group-hover:text-slate-950 shrink-0 ml-1" />
+                  <CornerDownLeft className="w-3 h-3 text-slate-400 group-hover:text-saffron shrink-0 ml-1" />
                 </button>
               ))}
             </div>
@@ -606,7 +669,7 @@ export const VoiceAssistant: React.FC = () => {
         </div>
       )}
 
-      {/* Floating Action Button */}
+      {/* 2. ULTRA-PREMIUM SEE-THROUGH GLASS FLOATING ACTION BUTTON */}
       <div className="flex items-center justify-end">
         <button
           onClick={() => {
@@ -619,10 +682,10 @@ export const VoiceAssistant: React.FC = () => {
               startListening();
             }
           }}
-          className={`flex items-center shadow-2xl font-bold transition-all transform hover:scale-105 border-2 ${
+          className={`flex items-center shadow-[0_10px_35px_rgba(0,0,0,0.5)] font-bold transition-all duration-300 transform hover:scale-105 border ${
             isListening
-              ? "bg-red-500 text-white border-white animate-pulse"
-              : "bg-sovereign-navy text-white border-saffron hover:bg-sovereign-light dark:bg-slate-900 dark:border-amber-400"
+              ? "backdrop-blur-xl bg-red-600/50 border-red-300 text-white shadow-[0_0_30px_rgba(239,68,68,0.6)] animate-pulse"
+              : "backdrop-blur-xl bg-slate-900/40 hover:bg-slate-900/60 dark:bg-slate-950/45 dark:hover:bg-slate-950/65 border-white/30 hover:border-saffron/80 text-white ring-1 ring-white/15 hover:shadow-[0_0_25px_rgba(255,153,51,0.4)]"
           } ${
             isOpen
               ? "px-4 py-2.5 rounded-full text-xs sm:text-sm gap-2"
@@ -631,11 +694,11 @@ export const VoiceAssistant: React.FC = () => {
           title="Speak to Jan-EPF Voice Copilot"
         >
           {isListening ? (
-            <MicOff className="w-5 h-5" />
+            <MicOff className="w-5 h-5 text-red-200" />
           ) : (
             <Mic className="w-5 h-5 text-saffron shrink-0" />
           )}
-          <span className={isOpen ? "inline" : "hidden sm:inline font-bold"}>
+          <span className={isOpen ? "inline" : "hidden sm:inline font-bold text-white drop-shadow-sm"}>
             {isListening ? "Listening..." : t.speakToVoice}
           </span>
           {isOpen ? (
