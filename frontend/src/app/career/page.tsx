@@ -119,7 +119,7 @@ export default function ChangedJobsHub() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
       <Breadcrumb currentPage="Changed Jobs" />
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">

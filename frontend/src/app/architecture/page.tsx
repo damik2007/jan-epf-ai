@@ -51,7 +51,7 @@ export default function ArchitectureResearchPage() {
   ];
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
       <Breadcrumb currentPage="🏛️ Architecture & Citizen Research Lab" />
 
       {/* 1. TOP HERO ISLAND CARD (Unified, Zero Inner Scroll, Rich Sovereign Dark Finish) */}
@@ -125,7 +125,7 @@ export default function ArchitectureResearchPage() {
 
       {/* TAB 1: 1.98M GRIEVANCE ROOT CAUSES (SOVEREIGN DARK FINISH) */}
       {activeTab === "grievances" && (
-        <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in duration-200 relative overflow-hidden">
+        <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-700/80 pb-4 relative z-10">
@@ -222,7 +222,7 @@ export default function ArchitectureResearchPage() {
 
       {/* TAB 2: DPDP ACT 2023 & LEGAL COMPLIANCE (SOVEREIGN DARK FINISH) */}
       {activeTab === "legal" && (
-        <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in duration-200 relative overflow-hidden">
+        <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
           
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-700/80 pb-4 relative z-10">
@@ -290,35 +290,35 @@ export default function ArchitectureResearchPage() {
 
       {/* TAB 3: DEMOGRAPHIC COHORT RESEARCH */}
       {activeTab === "personas" && (
-        <div className="space-y-4 animate-in fade-in duration-200">
+        <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200">
           <AudienceSegmentReport />
         </div>
       )}
 
       {/* TAB 4: 18 FORMS VS 4 LIFE EVENT HUBS */}
       {activeTab === "forms" && (
-        <div className="space-y-4 animate-in fade-in duration-200">
+        <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200">
           <CitizenFeatureMatrix />
         </div>
       )}
 
       {/* TAB 5: 80/20 SOVEREIGN ARCHITECTURE PILLARS */}
       {activeTab === "pillars" && (
-        <div className="space-y-4 animate-in fade-in duration-200">
+        <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200">
           <SovereignDpiPillars />
         </div>
       )}
 
       {/* TAB 6: SRE RESILIENCE & CIRCUIT BREAKERS */}
       {activeTab === "sre" && (
-        <div className="space-y-4 animate-in fade-in duration-200">
+        <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200">
           <SreTelemetryPanel />
         </div>
       )}
    
             {/* TAB 7: TOOLS, TECH STACK & ENGINEERING TOOLCHAIN */}
       {activeTab === "stack" && (
-        <div className="space-y-4 animate-in fade-in duration-200">
+        <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200">
           <TechStackMatrix />
         </div>
       )}

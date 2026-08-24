@@ -108,7 +108,7 @@ export default function BenchmarksPage() {
   const commercialCostInCrores = ((claimsSliderValue * 1000000 * 0.03 * 85) / 10000000).toFixed(2);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-300">
+    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
       <Breadcrumb currentPage={t.benchmarksTitle || "Evals & Proof Benchmarks"} />
 
       {/* Hero Proof Header */}
@@ -196,7 +196,7 @@ export default function BenchmarksPage() {
 
       {/* TAB 1: 3-WAY EVALS MATRIX (SOVEREIGN DARK FINISH) */}
       {activeTab === "evals" && (
-        <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in duration-200 relative overflow-hidden">
+        <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-slate-700/80 gap-3 relative z-10">
@@ -296,7 +296,7 @@ export default function BenchmarksPage() {
 
       {/* TAB 2: 1,000-RUN LATENCY BENCHMARK (SOVEREIGN DARK FINISH) */}
       {activeTab === "latency" && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out">
+        <div className="space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out slide-in-from-bottom-2 duration-300 ease-out">
           <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -380,7 +380,7 @@ export default function BenchmarksPage() {
 
       {/* TAB 3: RAW TRACE & TOKEN RECEIPTS (SOVEREIGN DARK FINISH) */}
       {activeTab === "traces" && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out">
+        <div className="space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out slide-in-from-bottom-2 duration-300 ease-out">
           <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -453,7 +453,7 @@ export default function BenchmarksPage() {
 
       {/* TAB 4: NATIONAL EXCHEQUER ROI (SOVEREIGN DARK FINISH) */}
       {activeTab === "economics" && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out">
+        <div className="space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out slide-in-from-bottom-2 duration-300 ease-out">
           <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -547,7 +547,7 @@ export default function BenchmarksPage() {
 
       {/* TAB 5: SECURITY AUDIT (SOVEREIGN DARK FINISH & LIVE INTERACTIVE ENGINE) */}
       {activeTab === "security" && (
-        <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in duration-200 relative overflow-hidden">
+        <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-slate-700/80 gap-3 relative z-10">

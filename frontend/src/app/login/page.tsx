@@ -127,7 +127,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 py-4 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto space-y-8 py-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
       {/* Header Banner */}
       <div className="text-center space-y-3">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-saffron/10 border border-saffron/30 text-saffron text-xs font-bold">
@@ -188,7 +188,7 @@ export default function LoginPage() {
 
       {/* MODE A: EVALUATOR 1-CLICK FASTPATH (4 PERSONAS) */}
       {authMode === "EVALUATOR_FASTPATH" && (
-        <div className="space-y-4 animate-in fade-in">
+        <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {personaScenarios.map((persona) => {
               const Icon = persona.icon;

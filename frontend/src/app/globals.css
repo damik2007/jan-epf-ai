@@ -105,8 +105,6 @@ html {
 }
 
 /* Smooth Theme Transitions — only on leaf interactive elements, NOT on layout containers */
-/* IMPORTANT: Do NOT add div, section, or header here. transition on ancestors breaks position:fixed. */
-body,
 button,
 a,
 footer,

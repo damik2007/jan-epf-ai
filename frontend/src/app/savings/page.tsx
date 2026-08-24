@@ -93,7 +93,7 @@ export default function MySavingsHub() {
   const retirementTotal = forecast[forecast.length - 1]?.totalBalance || totalBal;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
       <Breadcrumb currentPage="My Savings" />
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
@@ -398,7 +398,7 @@ export default function MySavingsHub() {
 
           {/* Active Hover Data Inspector */}
           {hoveredPoint ? (
-            <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-amber-400/60 shadow-lg flex flex-wrap justify-between items-center gap-2 animate-in fade-in duration-150">
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-amber-400/60 shadow-lg flex flex-wrap justify-between items-center gap-2 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-150">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
                 <span className="text-xs font-bold text-slate-900 dark:text-white">

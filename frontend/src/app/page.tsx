@@ -141,7 +141,7 @@ export default function CitizenLandingPage() {
   // If visitor is NOT authenticated, display the 1-Click Persona Login Gateway
   if (!isAuthenticated) {
     return (
-      <div className="max-w-4xl mx-auto space-y-8 py-4 animate-in fade-in duration-300">
+      <div className="max-w-4xl mx-auto space-y-8 py-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
         {/* Header Banner */}
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-saffron/10 border border-saffron/30 text-saffron text-xs font-bold">
@@ -280,7 +280,7 @@ export default function CitizenLandingPage() {
   ];
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-8 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
       {/* 1. CITIZEN WELCOME HERO BANNER */}
       <section className="bg-gradient-to-br from-[#001738] via-[#0A2540] to-[#001f3f] text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-blue-900/60 relative overflow-hidden mt-2 sm:mt-3 card-hover-lift">
         <div className="absolute top-0 right-0 w-96 h-96 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
@@ -325,7 +325,7 @@ export default function CitizenLandingPage() {
                     {uanCopied ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-slate-300" />}
                   </button>
                   {uanCopied && (
-                    <span className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-bold rounded shadow-lg whitespace-nowrap animate-in fade-in">
+                    <span className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-bold rounded shadow-lg whitespace-nowrap animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
                       Copied!
                     </span>
                   )}

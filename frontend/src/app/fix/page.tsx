@@ -179,7 +179,7 @@ export default function FixDetailsHub() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
       <Breadcrumb currentPage="Fix My Details" />
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
@@ -645,7 +645,7 @@ export default function FixDetailsHub() {
               </div>
 
               {autoFixApplied && (
-                <div className="mt-3 p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 animate-in fade-in">
+                <div className="mt-3 p-4 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
                   <div className="flex items-center gap-2 text-emerald-900 dark:text-emerald-200 text-xs font-bold">
                     <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>Discrepancy reconciled in <strong className="font-mono text-emerald-700">0.03ms</strong>. Your claim readiness is now 98%.</span>

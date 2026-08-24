@@ -204,7 +204,7 @@ export default function NeedMoneyHub() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
       <Breadcrumb currentPage="Need Money" />
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
@@ -418,7 +418,7 @@ export default function NeedMoneyHub() {
 
           {/* 5-SECOND DEFENSIVE UNDO BUFFER */}
           {undoSecondsLeft !== null && (
-            <div className="p-4 rounded-2xl bg-amber-500/10 border-2 border-amber-500 flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in">
+            <div className="p-4 rounded-2xl bg-amber-500/10 border-2 border-amber-500 flex flex-col sm:flex-row items-center justify-between gap-3 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-full bg-amber-500 text-black font-black flex items-center justify-center font-mono text-sm shrink-0 animate-pulse">
                   {undoSecondsLeft}s
