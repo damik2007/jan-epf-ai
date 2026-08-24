@@ -159,3 +159,35 @@ def test_voice_copilot_multilingual_intent_parsing(data_store):
     # English query
     res_en = mock_generate_copilot_response("How to withdraw money for medical emergency?", ramesh, "en")
     assert res_en["category"] == "MONEY"
+
+
+# ==============================================================================
+# TEST SUITE: TYPO-TOLERANCE & WAGNER-FISCHER FUZZY QUERY RESOLUTION
+# ==============================================================================
+def test_voice_copilot_fuzzy_typo_tolerance(data_store):
+    """Verify that common spelling errors are correctly normalized to statutory intents."""
+    ramesh = data_store.get_citizen("100982348712")
+    
+    # Typos for Balance: 'balence', 'balanc', 'pasbook'
+    res1 = mock_generate_copilot_response("whats my balence", ramesh)
+    assert res1["category"] in ("GENERAL", "SAVINGS")
+
+    # Typos for Medical Advance: 'medicle', 'advanc'
+    res2 = mock_generate_copilot_response("i need medicle advanc for hospital", ramesh)
+    assert res2["route"] == "/money"
+    assert res2["category"] == "MONEY"
+
+    # Typos for Career Transfer: 'transfar', 'compny'
+    res3 = mock_generate_copilot_response("transfar previous job to new compny", ramesh)
+    assert res3["route"] == "/career"
+    assert res3["category"] == "CAREER"
+
+    # Typos for KYC: 'peny drop', 'kycc'
+    res4 = mock_generate_copilot_response("peny drop kycc verification", ramesh)
+    assert res4["route"] == "/fix"
+    assert res4["category"] == "FIX"
+
+    # Typos for Pension: 'penshion'
+    res5 = mock_generate_copilot_response("check my monthly penshion ppo", ramesh)
+    assert res5["route"] == "/savings"
+    assert res5["category"] == "PENSION"

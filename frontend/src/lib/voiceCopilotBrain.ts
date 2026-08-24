@@ -1,5 +1,6 @@
 // Jan-EPF AI Sovereign Agent Harness Reasoning, Tooling & Orchestration Engine (6-Layer Architecture)
 // Built on the Billion-Dollar Harness Standard: Context (Glean) + Tools (Stripe) + Orchestration (Devin) + Memory (Notion) + Guardrails (NeMo) + Evals (LangSmith)
+// Featuring Wagner-Fischer Fuzzy Typo-Tolerance & Phonetic Intent Normalization
 
 export interface CitizenContextData {
   name: string;
@@ -40,6 +41,13 @@ export interface OrchestrationStep {
   status: "DONE" | "RUNNING" | "PENDING";
 }
 
+export interface FuzzyTypoAlignment {
+  originalQuery: string;
+  correctedTerm: string;
+  resolvedIntent: string;
+  similarityPct: number;
+}
+
 export interface HarnessLayerBreakdown {
   contextLayer: {
     standard?: string;
@@ -52,6 +60,7 @@ export interface HarnessLayerBreakdown {
   };
   toolLayer: AgentToolCall;
   orchestrationLayer?: OrchestrationStep[];
+  fuzzyAlignment?: FuzzyTypoAlignment;
   memoryLayer: {
     standard?: string;
     sessionId: string;
@@ -95,14 +104,131 @@ export interface CopilotReply {
   harness: HarnessLayerBreakdown;
 }
 
-// 6-Layer Sovereign Harness Response Generator
+// ==============================================================================
+// WAGNER-FISCHER FUZZY LEVENSHTEIN & TYPO-TOLERANCE MATCHING ENGINE
+// ==============================================================================
+
+function computeLevenshtein(a: string, b: string): number {
+  const m = a.length;
+  const n = b.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+
+  const d: number[][] = [];
+  for (let i = 0; i <= m; i++) d[i] = [i];
+  for (let j = 0; j <= n; j++) d[0][j] = j;
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      d[i][j] = Math.min(
+        d[i - 1][j] + 1,
+        d[i - 1][j - 1] + 1,
+        d[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return d[m][n];
+}
+
+function wordSimilarity(word: string, target: string): number {
+  if (word === target) return 1.0;
+  if (word.includes(target) || target.includes(word)) return 0.92;
+  const maxLen = Math.max(word.length, target.length);
+  if (maxLen === 0) return 1.0;
+  const dist = computeLevenshtein(word, target);
+  return Math.max(0, 1 - dist / maxLen);
+}
+
+interface MatchResult {
+  matched: boolean;
+  score: number;
+  word: string;
+  target: string;
+}
+
+function matchFuzzyKeywords(words: string[], targetKeywords: string[], threshold: number = 0.76): MatchResult {
+  let bestScore = 0;
+  let matchedWord = "";
+  let matchedTarget = "";
+
+  for (const word of words) {
+    if (word.length < 2) continue;
+    for (const target of targetKeywords) {
+      const score = wordSimilarity(word, target);
+      if (score > bestScore) {
+        bestScore = score;
+        matchedWord = word;
+        matchedTarget = target;
+      }
+    }
+  }
+
+  return {
+    matched: bestScore >= threshold,
+    score: Math.round(bestScore * 100),
+    word: matchedWord,
+    target: matchedTarget
+  };
+}
+
+// Comprehensive Typo Dictionaries for EPF Domain
+const GREETINGS_KEYWORDS = [
+  "hi", "hii", "hiii", "hello", "helo", "hellow", "hey", "heyy", "hye",
+  "namaste", "namste", "nmste", "namaskar", "namaskaram", "vanakkam", "vanakam",
+  "kem cho", "sat sri akaal", "adaab", "नमस्ते", "வணக்கம்", "నమస్కారం"
+];
+
+const BALANCE_KEYWORDS = [
+  "balance", "balence", "balanc", "balnce", "blance", "balnace", "balens", "balanse",
+  "bylance", "passbook", "pasbook", "passbok", "pasbuk", "corpus", "corpas", "corpos",
+  "interest", "intrest", "intrestt", "funds", "fund", "money", "mny", "hisab", "khata",
+  "paisa", "paise", "rupay", "rupya", "kitna", "kitna paisa", "kitna balance", "पैसे", "बैलेंस", "खाता", "పాస్ బుక్", "బ్యాలెన్స్"
+];
+
+const ADVANCE_KEYWORDS = [
+  "advance", "advanc", "advanse", "advaunce", "withdraw", "withdra", "withdrw", "withdrow",
+  "withdral", "withdrwal", "medical", "medicle", "medcl", "madical", "illness", "ilness",
+  "ilnes", "hospital", "hospitl", "emergency", "emergenci", "emergensy", "treatment",
+  "ilaj", "bimari", "claim", "clame", "nikal", "nikalna", "chahiye", "form 31", "form31", "पैसा निकालना", "अग्रिम", "इलाज"
+];
+
+const CAREER_KEYWORDS = [
+  "transfer", "transfar", "trnsfer", "trnsfr", "transfr", "switch", "swtch", "exit",
+  "ext", "exit date", "ext date", "doe", "doee", "ecr", "infosys", "consolidate",
+  "merge", "marge", "company", "compny", "previous", "prev", "job", "chodna", "नौकरी", "ट्रांसफर", "एग्जिट"
+];
+
+const KYC_KEYWORDS = [
+  "kyc", "kycc", "penny", "peny", "pny", "penny drop", "peny drop", "pny drop", "drop",
+  "bank", "bankk", "ifsc", "spelling", "speling", "fuzzy", "mismatch", "correction",
+  "aadhaar", "adhaar", "adhar", "pan", "pan card", "sudhar", "joint declaration", "नाम", "आधार", "बैंक"
+];
+
+const PENSION_KEYWORDS = [
+  "pension", "penshion", "pensin", "penshn", "pnsion", "eps", "eps95", "ppo", "dlc",
+  "jeevan", "jevan", "jeevan pramaan", "jevan praman", "life certificate", "retire",
+  "retired", "senior", "पेंशन", "जीवन प्रमाण"
+];
+
+const TDS_KEYWORDS = [
+  "tds", "tdss", "tax", "tx", "192a", "15g", "form15g", "form 15g", "exemption", "katna", "टैक्स", "टीडीएस"
+];
+
+const PRIVACY_KEYWORDS = [
+  "privacy", "privcy", "mask", "masking", "hide", "hiding", "discreet", "discret",
+  "chupao", "chipao", "gupt", "गुप्त", "छिपाओ"
+];
+
+// 6-Layer Sovereign Harness Response Generator with Wagner-Fischer Alignment
 export function generateCopilotResponse(
   userInput: string,
   citizen: CitizenContextData,
   currentLanguage: string,
   turnCount: number = 1
 ): CopilotReply {
-  const query = userInput.trim().toLowerCase();
+  const rawClean = userInput.trim().toLowerCase();
+  const tokens = rawClean.split(/\s+/).filter(Boolean);
 
   const isHindi = /[\u0900-\u097F]/.test(userInput) || currentLanguage.startsWith("hi");
   const isTelugu = /[\u0C00-\u0C7F]/.test(userInput) || currentLanguage.startsWith("te");
@@ -180,7 +306,7 @@ export function generateCopilotResponse(
     "jailbreak"
   ];
 
-  if (adversarialPatterns.some((pattern) => query.includes(pattern))) {
+  if (adversarialPatterns.some((pattern) => rawClean.includes(pattern))) {
     baseHarness.guardrailLayer.passed = false;
     baseHarness.guardrailLayer.promptInjectionDetected = true;
     baseHarness.guardrailLayer.securityScore = "Grade S+ (Attack Intercepted)";
@@ -196,16 +322,52 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 2. GREETINGS & CONVERSATIONAL INTRODUCTION
+  // 2. WAGNER-FISCHER FUZZY INTENT RESOLUTION
   // ============================================================================
-  const greetingKeywords = [
-    "hi", "hello", "hey", "namaste", "namaskar", "namaskaram", "vanakkam",
-    "good morning", "good afternoon", "good evening", "kem cho", "sat sri akaal",
-    "adaab", "नमस्ते", "வணக்கம்", "నమస్కారం"
-  ];
-  const isGreeting = greetingKeywords.some((g) => query === g || query.startsWith(g + " ") || query.startsWith(g + "!") || query.startsWith(g + ","));
+  const matchGreetings = matchFuzzyKeywords(tokens, GREETINGS_KEYWORDS, 0.82);
+  const matchBalance = matchFuzzyKeywords(tokens, BALANCE_KEYWORDS, 0.74);
+  const matchAdvance = matchFuzzyKeywords(tokens, ADVANCE_KEYWORDS, 0.74);
+  const matchCareer = matchFuzzyKeywords(tokens, CAREER_KEYWORDS, 0.74);
+  const matchKyc = matchFuzzyKeywords(tokens, KYC_KEYWORDS, 0.74);
+  const matchPension = matchFuzzyKeywords(tokens, PENSION_KEYWORDS, 0.74);
+  const matchTds = matchFuzzyKeywords(tokens, TDS_KEYWORDS, 0.74);
+  const matchPrivacy = matchFuzzyKeywords(tokens, PRIVACY_KEYWORDS, 0.74);
 
-  if (isGreeting) {
+  // Set fuzzy alignment metadata if a typo was corrected
+  if (matchBalance.matched && matchBalance.word !== matchBalance.target) {
+    baseHarness.fuzzyAlignment = {
+      originalQuery: userInput,
+      correctedTerm: matchBalance.target,
+      resolvedIntent: "Passbook & Balance Breakdown",
+      similarityPct: matchBalance.score
+    };
+  } else if (matchAdvance.matched && matchAdvance.word !== matchAdvance.target) {
+    baseHarness.fuzzyAlignment = {
+      originalQuery: userInput,
+      correctedTerm: matchAdvance.target,
+      resolvedIntent: "Para 68J Emergency Advance",
+      similarityPct: matchAdvance.score
+    };
+  } else if (matchCareer.matched && matchCareer.word !== matchCareer.target) {
+    baseHarness.fuzzyAlignment = {
+      originalQuery: userInput,
+      correctedTerm: matchCareer.target,
+      resolvedIntent: "Job Transfer & ECR Exit Date",
+      similarityPct: matchCareer.score
+    };
+  } else if (matchKyc.matched && matchKyc.word !== matchKyc.target) {
+    baseHarness.fuzzyAlignment = {
+      originalQuery: userInput,
+      correctedTerm: matchKyc.target,
+      resolvedIntent: "NPCI Penny Drop Bank KYC",
+      similarityPct: matchKyc.score
+    };
+  }
+
+  // ============================================================================
+  // 3. GREETINGS INTENT
+  // ============================================================================
+  if (matchGreetings.matched || rawClean === "hi" || rawClean === "hello" || rawClean === "hey") {
     baseHarness.memoryLayer.lastTopic = "GREETING";
 
     if (isHindi) {
@@ -258,16 +420,9 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 3. BALANCE & PASSBOOK DETAILED BREAKDOWN INTENT
+  // 4. BALANCE & PASSBOOK DETAILED BREAKDOWN INTENT (Fuzzy Typo Tolerant)
   // ============================================================================
-  const balanceKeywords = [
-    "balance", "whats my balance", "current balance", "my balance", "how much money",
-    "check balance", "show balance", "passbook", "corpus", "funds", "kitna paisa",
-    "पैसे", "बैलेंस", "खाता", "పాస్ బుక్", "బ్యాలెన్స్", "డబ్బులు", "total balance", "epf balance"
-  ];
-  const isBalanceQuery = balanceKeywords.some((b) => query.includes(b));
-
-  if (isBalanceQuery) {
+  if (matchBalance.matched) {
     baseHarness.toolLayer = {
       standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "download_passbook_statement",
@@ -306,20 +461,9 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 4. MEDICAL ADVANCE, WITHDRAWALS & PARA 68 CLAIMS
+  // 5. MEDICAL ADVANCE, WITHDRAWALS & PARA 68 (Fuzzy Typo Tolerant)
   // ============================================================================
-  if (
-    query.includes("medical") ||
-    query.includes("advance") ||
-    query.includes("withdraw") ||
-    query.includes("form 31") ||
-    query.includes("claim") ||
-    query.includes("illness") ||
-    query.includes("hospital") ||
-    query.includes("इलाज") ||
-    query.includes("अग्रिम") ||
-    query.includes("पैसा निकालना")
-  ) {
+  if (matchAdvance.matched) {
     const maxAdvance = Math.min(156000, Math.round(citizen.balance * 0.75));
     baseHarness.toolLayer = {
       standard: "Stripe ($70B Standard) • In-Browser Hands",
@@ -365,22 +509,9 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 5. JOB SWITCH, MISSING EXIT DATE (ECR) & FORM 13 TRANSFER
+  // 6. JOB SWITCH, MISSING EXIT DATE & FORM 13 (Fuzzy Typo Tolerant)
   // ============================================================================
-  if (
-    query.includes("job") ||
-    query.includes("switch") ||
-    query.includes("transfer") ||
-    query.includes("exit date") ||
-    query.includes("date of exit") ||
-    query.includes("doe") ||
-    query.includes("ecr") ||
-    query.includes("form 13") ||
-    query.includes("infosys") ||
-    query.includes("नौकरी") ||
-    query.includes("ट्रांसफर") ||
-    query.includes("एग्जिट")
-  ) {
+  if (matchCareer.matched) {
     baseHarness.toolLayer = {
       standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "auto_deduce_exit_date",
@@ -424,19 +555,9 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 6. BANK KYC, PENNY DROP & NAME SPELLING FIX
+  // 7. BANK KYC, PENNY DROP & NAME SPELLING (Fuzzy Typo Tolerant)
   // ============================================================================
-  if (
-    query.includes("kyc") ||
-    query.includes("bank") ||
-    query.includes("penny drop") ||
-    query.includes("fuzzy") ||
-    query.includes("spelling") ||
-    query.includes("joint declaration") ||
-    query.includes("नाम") ||
-    query.includes("आधार") ||
-    query.includes("बैंक")
-  ) {
+  if (matchKyc.matched) {
     baseHarness.toolLayer = {
       standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "verify_npci_penny_drop",
@@ -479,18 +600,9 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 7. PENSION, EPS-95, SENIOR CITIZEN & JEEVAN PRAMAAN
+  // 8. PENSION, EPS-95, SENIOR CITIZEN & JEEVAN PRAMAAN (Fuzzy Typo Tolerant)
   // ============================================================================
-  if (
-    query.includes("pension") ||
-    query.includes("eps") ||
-    query.includes("jeevan pramaan") ||
-    query.includes("dlc") ||
-    query.includes("life certificate") ||
-    query.includes("senior") ||
-    query.includes("पेंशन") ||
-    query.includes("जीवन प्रमाण")
-  ) {
+  if (matchPension.matched) {
     baseHarness.memoryLayer.lastTopic = "EPS95_SENIOR_PENSION";
 
     if (isGurmeet) {
@@ -515,9 +627,9 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 8. DISCREET PRIVACY MODE (AUTONOMOUS TOOL CALL)
+  // 9. DISCREET PRIVACY MODE (Fuzzy Typo Tolerant)
   // ============================================================================
-  if (query.includes("privacy") || query.includes("mask") || query.includes("hide") || query.includes("गुप्त") || query.includes("छिपा")) {
+  if (matchPrivacy.matched) {
     baseHarness.toolLayer = {
       standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "toggle_discreet_privacy",
@@ -541,9 +653,9 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 9. TAX RULES & SECTION 192A
+  // 10. TAX RULES & SECTION 192A (Fuzzy Typo Tolerant)
   // ============================================================================
-  if (query.includes("tds") || query.includes("tax") || query.includes("192a") || query.includes("15g") || query.includes("टैक्स") || query.includes("टीडीएस")) {
+  if (matchTds.matched) {
     baseHarness.memoryLayer.lastTopic = "SECTION_192A_TDS";
 
     const isExempt = serviceYears >= 5.0;
@@ -560,7 +672,7 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 10. DEFAULT CONVERSATIONAL RESPONSE (DYNAMIC, CONTEXT-AWARE)
+  // 11. DEFAULT CONVERSATIONAL RESPONSE (DYNAMIC, CONTEXT-AWARE)
   // ============================================================================
   if (isHindi) {
     return {

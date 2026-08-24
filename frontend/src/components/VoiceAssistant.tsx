@@ -537,6 +537,18 @@ export const VoiceAssistant: React.FC = () => {
                     <p className="whitespace-pre-wrap leading-relaxed">{m.text}</p>
 
                     {/* ======================================================================== */}
+                    {/* 🔍 WAGNER-FISCHER FUZZY TYPO-CORRECTION BADGE                            */}
+                    {/* ======================================================================== */}
+                    {m.harness?.fuzzyAlignment && m.sender === "copilot" && (
+                      <div className="px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-mono flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                        <span>
+                          <strong>🔍 Fuzzy Typo Engine:</strong> Auto-aligned &apos;{m.harness.fuzzyAlignment.originalQuery}&apos; ➔ {m.harness.fuzzyAlignment.resolvedIntent} ({m.harness.fuzzyAlignment.similarityPct}% match)
+                        </span>
+                      </div>
+                    )}
+
+                    {/* ======================================================================== */}
                     {/* ⚡ THE SOVEREIGN AGENT HARNESS EXECUTION CARDS (6-LAYER ARCHITECTURE)     */}
                     {/* ======================================================================== */}
                     {m.harness && m.sender === "copilot" && (
