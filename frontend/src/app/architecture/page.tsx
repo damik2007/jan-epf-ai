@@ -10,6 +10,7 @@ import { CitizenFeatureMatrix } from "@/components/CitizenFeatureMatrix";
 import { SovereignDpiPillars } from "@/components/SovereignDpiPillars";
 import { SreTelemetryPanel } from "@/components/SreTelemetryPanel";
 import { TechStackMatrix } from "@/components/TechStackMatrix";
+import { SovereignAgentHarnessShowcase } from "@/components/SovereignAgentHarnessShowcase";
 import {
   Landmark,
   Layers,
@@ -33,14 +34,15 @@ export default function ArchitectureResearchPage() {
   const { language } = useCitizen();
   const t = getTranslation(language);
 
-  const [activeTab, setActiveTab] = useState<"personas" | "forms" | "pillars" | "sre" | "grievances" | "legal" | "stack">("grievances");
+  const [activeTab, setActiveTab] = useState<"harness" | "personas" | "forms" | "pillars" | "sre" | "grievances" | "legal" | "stack">("harness");
 
   const tabs: Array<{
-    id: "personas" | "forms" | "pillars" | "sre" | "grievances" | "legal" | "stack";
+    id: "harness" | "personas" | "forms" | "pillars" | "sre" | "grievances" | "legal" | "stack";
     label: string;
     icon: any;
     badge: string;
   }> = [
+    { id: "harness", label: "⚡ Sovereign Agent Harness", icon: Sparkles, badge: "6-Layer Architecture" },
     { id: "grievances", label: "📊 1.98M Grievance Root Causes", icon: FileText, badge: "CPGRAMS Data" },
     { id: "legal", label: "⚖️ DPDP Act 2023 & Aadhaar Sec 29", icon: Lock, badge: "Statutory Law" },
     { id: "personas", label: "👥 Demographic Personas (70M Workers)", icon: Users, badge: "4 Cohorts" },
@@ -54,7 +56,7 @@ export default function ArchitectureResearchPage() {
     <div className="space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
       <Breadcrumb currentPage="🏛️ Architecture & Citizen Research Lab" />
 
-      {/* 1. TOP HERO ISLAND CARD (Unified, Zero Inner Scroll, Rich Sovereign Dark Finish) */}
+      {/* 1. TOP HERO ISLAND CARD */}
       <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 text-white border border-slate-800 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 space-y-4 max-w-4xl">
@@ -76,14 +78,14 @@ export default function ArchitectureResearchPage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-white/10 text-xs font-mono">
             <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+              <span className="text-[10px] text-slate-300 font-sans block uppercase">Agent Harness</span>
+              <span className="text-lg sm:text-xl font-extrabold text-saffron">6 LAYERS</span>
+              <span className="text-[10px] text-slate-400 block font-sans">Context ➔ Tools ➔ Evals</span>
+            </div>
+            <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
               <span className="text-[10px] text-slate-300 font-sans block uppercase">CPGRAMS Dataset</span>
               <span className="text-lg sm:text-xl font-extrabold text-emerald-300">1.98M AUDITED</span>
               <span className="text-[10px] text-slate-400 block font-sans">Parliamentary records</span>
-            </div>
-            <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
-              <span className="text-[10px] text-slate-300 font-sans block uppercase">Worker Cohorts</span>
-              <span className="text-lg sm:text-xl font-extrabold text-amber-300">4 DEMOGRAPHICS</span>
-              <span className="text-[10px] text-slate-400 block font-sans">70M EPFO workers</span>
             </div>
             <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
               <span className="text-[10px] text-slate-300 font-sans block uppercase">Form Elimination</span>
@@ -99,7 +101,7 @@ export default function ArchitectureResearchPage() {
         </div>
       </div>
 
-      {/* 2. FLOATING ISLAND TAB SWITCHER CAPSULE (No Side Scrollbar - Responsive Flex Wrap) */}
+      {/* 2. FLOATING ISLAND TAB SWITCHER CAPSULE */}
       <div className="w-full flex flex-wrap items-center justify-center gap-1.5 p-1.5 bg-slate-200/80 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-300/80 dark:border-slate-700/80 text-xs font-bold shadow-sm">
         {tabs.map((tab) => {
           const Icon = tab.icon;
@@ -123,7 +125,14 @@ export default function ArchitectureResearchPage() {
 
       {/* 3. ACTIVE SUBSECTION CONTENT ISLAND */}
 
-      {/* TAB 1: 1.98M GRIEVANCE ROOT CAUSES (SOVEREIGN DARK FINISH) */}
+      {/* TAB 0: SOVEREIGN AGENT HARNESS */}
+      {activeTab === "harness" && (
+        <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out">
+          <SovereignAgentHarnessShowcase />
+        </div>
+      )}
+
+      {/* TAB 1: 1.98M GRIEVANCE ROOT CAUSES */}
       {activeTab === "grievances" && (
         <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -220,7 +229,7 @@ export default function ArchitectureResearchPage() {
         </div>
       )}
 
-      {/* TAB 2: DPDP ACT 2023 & LEGAL COMPLIANCE (SOVEREIGN DARK FINISH) */}
+      {/* TAB 2: DPDP ACT 2023 & LEGAL COMPLIANCE */}
       {activeTab === "legal" && (
         <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -316,7 +325,7 @@ export default function ArchitectureResearchPage() {
         </div>
       )}
    
-            {/* TAB 7: TOOLS, TECH STACK & ENGINEERING TOOLCHAIN */}
+      {/* TAB 7: TOOLS, TECH STACK & ENGINEERING TOOLCHAIN */}
       {activeTab === "stack" && (
         <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200">
           <TechStackMatrix />
