@@ -176,7 +176,7 @@ export const Navbar: React.FC = () => {
       <div className="w-full px-4 sm:px-6 lg:px-10">
         <div className="flex justify-between items-center h-16 gap-4 lg:gap-8">
           {/* Logo & Subtitle */}
-          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-h-[44px]">
+          <Link prefetch={true} href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-h-[44px]">
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-saffron via-samriddhi-gold to-emerald-500 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
               <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-sovereign-darkest font-bold" />
             </div>
@@ -202,6 +202,7 @@ export const Navbar: React.FC = () => {
               return (
                 <Link
                   key={item.href}
+                  prefetch={true}
                   href={item.href}
                   className={`flex items-center gap-1.5 px-3 lg:px-3.5 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all min-h-[44px] whitespace-nowrap shrink-0 ${
                     isActive
@@ -342,6 +343,7 @@ export const Navbar: React.FC = () => {
           return (
             <Link
               key={item.href}
+              prefetch={true}
               href={item.href}
               className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap font-medium min-h-[44px] transition-all ${
                 isActive

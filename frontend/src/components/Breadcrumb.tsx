@@ -9,7 +9,7 @@ interface BreadcrumbProps {
 export function Breadcrumb({ currentPage }: BreadcrumbProps) {
   return (
     <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mb-4">
-      <Link href="/" className="flex items-center gap-1 hover:text-saffron transition-colors">
+      <Link prefetch={true} href="/" className="flex items-center gap-1 hover:text-saffron transition-colors">
         <Home className="w-3.5 h-3.5" />
         <span>Home</span>
       </Link>
