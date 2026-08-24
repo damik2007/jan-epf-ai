@@ -162,6 +162,10 @@ DEFAULT_VOICES = {
     "gu-IN-male": "gu-IN-NiranjanNeural",# Gujarati male
     "pa-IN": "pa-IN-GurpreetNeural",    # Punjabi female
     "pa-IN-male": "pa-IN-HarmohanNeural",# Punjabi male
+    "or-IN": "or-IN-SubhasiniNeural",   # Odia female
+    "as-IN": "as-IN-YashicaNeural",     # Assamese female
+    "ur-IN": "ur-IN-SalmanNeural",      # Urdu male
+    "ur-IN-female": "ur-IN-GulNeural",  # Urdu female
     "en-IN": "en-IN-NeerjaNeural",      # Indian English female
     "en-IN-male": "en-IN-PrabhatNeural", # Indian English male
 }

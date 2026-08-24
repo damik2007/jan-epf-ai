@@ -29,7 +29,8 @@ import {
   Brain,
   Activity,
   Play,
-  Languages
+  Languages,
+  MessageSquare
 } from "lucide-react";
 import { getTranslation } from "@/lib/translations";
 import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown } from "@/lib/voiceCopilotBrain";
@@ -123,7 +124,8 @@ export const VoiceAssistant: React.FC = () => {
   const [typedInput, setTypedInput] = useState<string>("");
   const [activeSpeechLang, setActiveSpeechLang] = useState<string>(language || "en-IN");
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-  const [autoSpeakEnabled, setAutoSpeakEnabled] = useState<boolean>(true);
+  // CHAT-FIRST BY DEFAULT: autoSpeakEnabled defaults to false to prevent wasteful audio API calls
+  const [autoSpeakEnabled, setAutoSpeakEnabled] = useState<boolean>(false);
   const [selectedVoice, setSelectedVoice] = useState<string>("en-IN-PrabhatNeural");
   const [showVoiceSettings, setShowVoiceSettings] = useState<boolean>(false);
   const [selectedLangFilter, setSelectedLangFilter] = useState<string>("ALL");
@@ -284,7 +286,6 @@ export const VoiceAssistant: React.FC = () => {
 
   // Speech synthesis
   const speak = useCallback((rawText: string, targetLang?: string) => {
-    if (!autoSpeakEnabled) return;
     const voiceLang = targetLang || activeSpeechLang || "en-IN";
     setIsSpeaking(true);
 
@@ -297,7 +298,7 @@ export const VoiceAssistant: React.FC = () => {
     ).catch(() => {
       setIsSpeaking(false);
     });
-  }, [activeSpeechLang, autoSpeakEnabled, selectedVoice]);
+  }, [activeSpeechLang, selectedVoice]);
 
   const stopSpeaking = useCallback(() => {
     stopNeuralSpeech();
@@ -388,6 +389,7 @@ export const VoiceAssistant: React.FC = () => {
     setMessages((prev) => [...prev, userMsg, copilotMsg]);
     setActiveSpeechLang(reply.langCode);
 
+    // Speak response ONLY IF user triggered voice command or if auto-speak is explicitly turned ON
     if (triggerVoice || autoSpeakEnabled) {
       speak(reply.spokenText, reply.langCode);
     }
@@ -510,7 +512,7 @@ export const VoiceAssistant: React.FC = () => {
                 <h3 className="font-bold text-xs sm:text-sm tracking-tight text-white flex items-center gap-1.5">
                   <span>Jan-EPF AI Agent</span>
                   <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
-                    13 Indic Languages Live
+                    {autoSpeakEnabled ? "🔊 Voice Mode" : "💬 Chat-First Mode"}
                   </span>
                 </h3>
                 <p className="text-[10px] text-slate-300 truncate max-w-[200px] sm:max-w-[260px]">
@@ -627,21 +629,21 @@ export const VoiceAssistant: React.FC = () => {
 
                     {/* Auto-Speak Toggle */}
                     <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] shrink-0">
-                      <span className="text-slate-300">Auto-Speak Spoken Audio:</span>
+                      <span className="text-slate-300">Voice Auto-Speak:</span>
                       <button
                         onClick={() => setAutoSpeakEnabled(!autoSpeakEnabled)}
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all ${
                           autoSpeakEnabled ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40" : "bg-white/10 text-slate-400"
                         }`}
                       >
-                        {autoSpeakEnabled ? "ON" : "OFF"}
+                        {autoSpeakEnabled ? "ENABLED (Speaks Aloud)" : "MUTED (Chat-First)"}
                       </button>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Audio Speech Mute / Unmute Toggle */}
+              {/* Chat / Voice Mode Toggle Button */}
               <button
                 onClick={() => {
                   if (isSpeaking) {
@@ -657,7 +659,7 @@ export const VoiceAssistant: React.FC = () => {
                     ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                     : "bg-white/10 text-slate-400 border-white/15"
                 }`}
-                title={isSpeaking ? "Stop Voice Playback" : autoSpeakEnabled ? "Voice Enabled (Click to Mute)" : "Voice Muted (Click to Enable)"}
+                title={isSpeaking ? "Stop Voice Playback" : autoSpeakEnabled ? "Voice Auto-Speak Active (Click to Mute for Chat-First)" : "Chat-First Mode (Click to Enable Voice Auto-Speak)"}
               >
                 {isSpeaking || autoSpeakEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
               </button>
@@ -736,7 +738,7 @@ export const VoiceAssistant: React.FC = () => {
                     )}
 
                     {/* ======================================================================== */}
-                    {/* ⚡ THE SOVEREIGN AGENT HARNESS EXECUTION CARDS (6-LAYER ARCHITECTURE)     */}
+                    {/* ⚡ THE SOVEREIGN AGENT HARNESS EXECUTION CARERS (6-LAYER ARCHITECTURE)     */}
                     {/* ======================================================================== */}
                     {m.harness && m.sender === "copilot" && (
                       <div className="space-y-2 pt-1 font-mono text-[10px]">
@@ -975,7 +977,7 @@ export const VoiceAssistant: React.FC = () => {
               type="text"
               value={typedInput}
               onChange={(e) => setTypedInput(e.target.value)}
-              placeholder="Ask anything or command your Sovereign Agent..."
+              placeholder="Ask anything or type your message..."
               className="flex-1 bg-white/10 border border-white/20 rounded-2xl px-3.5 py-2.5 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-saffron/70 transition-all"
             />
 
@@ -990,35 +992,23 @@ export const VoiceAssistant: React.FC = () => {
         </div>
       )}
 
-      {/* 2. REBRANDED SLEEK & COMPACT FLOATING TRIGGER BUTTON: ⚡ AI Agent */}
+      {/* 2. REBRANDED SLEEK & COMPACT FLOATING TRIGGER BUTTON: ⚡ AI Agent (Chat-First on Click) */}
       <div className="flex justify-end">
         <button
           onClick={() => {
-            if (!isOpen) {
-              setIsOpen(true);
-              startListening();
-            } else if (isListening) {
+            if (isListening) {
               stopListening();
-            } else {
-              startListening();
             }
+            setIsOpen(!isOpen);
           }}
-          className={`flex items-center font-bold transition-all duration-300 transform hover:scale-105 border ${
-            isListening
-              ? "backdrop-blur-2xl bg-red-600/70 border-red-300 text-white shadow-[0_0_30px_rgba(239,68,68,0.8)] animate-pulse px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm gap-2"
-              : "backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/95 text-white border-white/20 hover:border-saffron/70 shadow-[0_10px_35px_rgba(0,0,0,0.65)] ring-1 ring-white/10 hover:shadow-[0_0_25px_rgba(255,153,51,0.4)] px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm gap-2"
-          }`}
-          title="Open Jan-EPF AI Agent"
+          className="backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/95 text-white border border-white/20 hover:border-saffron/70 shadow-[0_10px_35px_rgba(0,0,0,0.65)] ring-1 ring-white/10 hover:shadow-[0_0_25px_rgba(255,153,51,0.4)] px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
+          title="Open Jan-EPF AI Agent (Chat-First)"
         >
-          {isListening ? (
-            <MicOff className="w-4 h-4 text-red-200" />
-          ) : (
-            <div className="w-5 h-5 rounded-lg bg-saffron text-sovereign-darkest flex items-center justify-center text-[10px] font-black shadow">
-              ⚡
-            </div>
-          )}
+          <div className="w-5 h-5 rounded-lg bg-saffron text-sovereign-darkest flex items-center justify-center text-[10px] font-black shadow">
+            ⚡
+          </div>
           <span className="font-extrabold text-white tracking-tight drop-shadow-sm">
-            {isListening ? "Listening..." : "AI Agent"}
+            AI Agent
           </span>
           {isOpen ? (
             <ChevronDown className="w-3.5 h-3.5 text-slate-300 shrink-0" />
