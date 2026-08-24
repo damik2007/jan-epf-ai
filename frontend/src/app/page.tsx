@@ -250,7 +250,7 @@ export default function CitizenLandingPage() {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* 1. CITIZEN WELCOME HERO BANNER */}
-      <section className="bg-gradient-to-br from-sovereign-darkest via-sovereign-navy to-sovereign-light text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-sovereign-accent relative overflow-hidden">
+      <section className="bg-gradient-to-br from-[#001738] via-[#0A2540] to-[#001f3f] text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-blue-900/60 relative overflow-hidden mt-2 sm:mt-3">
         <div className="absolute top-0 right-0 w-96 h-96 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-samriddhi-gold/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -296,7 +296,7 @@ export default function CitizenLandingPage() {
           </div>
 
           {/* Quick Balance Card */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl w-full lg:w-80 shadow-2xl space-y-3">
+          <div className="bg-white/5 backdrop-blur-md border border-white/15 p-5 rounded-2xl w-full lg:w-80 shadow-2xl space-y-3 shrink-0">
             <div className="flex justify-between items-center text-xs text-slate-300">
               <span>{t.totalBalanceLabel}</span>
               <span className="text-emerald-400 font-bold">● {t.verified}</span>
