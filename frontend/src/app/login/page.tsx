@@ -274,7 +274,7 @@ export default function LoginPage() {
 
           <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-left text-xs space-y-1 font-mono">
             <div className="text-slate-500">Universal Account Number (UAN):</div>
-            <div className="font-bold text-slate-900 dark:text-white">{uanInput} (Ramesh Kumar)</div>
+            <div className="font-bold text-slate-900 dark:text-white">{uanInput} ({personaScenarios.find((p) => p.uan === uanInput)?.name || activeCitizen.full_name})</div>
           </div>
 
           <button
@@ -305,7 +305,7 @@ export default function LoginPage() {
               Resilient 6-Digit Aadhaar OTP
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Sent to Aadhaar-linked mobile ending in <strong>XXXX-4819</strong>.
+              Sent to Aadhaar-linked mobile ending in <strong>XXXX-{activeCitizen.phone ? activeCitizen.phone.slice(-4) : "4819"}</strong>.
             </p>
           </div>
 
