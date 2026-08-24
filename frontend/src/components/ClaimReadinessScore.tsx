@@ -60,7 +60,7 @@ export function ClaimReadinessScore() {
           <ShieldCheck className={`w-5 h-5 ${
             isReady ? "text-emerald-600" : isWarning ? "text-amber-600" : "text-red-600"
           }`} />
-          <span className="text-sm font-bold text-sovereign-navy dark:text-white">
+          <span className="text-sm font-bold text-white">
             Claim Readiness Score
           </span>
         </div>

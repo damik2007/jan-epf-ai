@@ -96,17 +96,17 @@ export default function MySavingsHub() {
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
       <Breadcrumb currentPage="My Savings" />
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-700/70">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center">
               <PiggyBank className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
+            <h1 className="text-2xl font-black text-white">
               {t.savingsTitle}
             </h1>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-slate-300 mt-1">
             {t.savingsSubtitle}
           </p>
         </div>
@@ -153,19 +153,19 @@ export default function MySavingsHub() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
             <div className="bg-white/80 dark:bg-slate-900/80 p-3 rounded-xl border border-amber-200 dark:border-amber-800/60">
-              <div className="text-[10px] text-slate-500 dark:text-slate-400">{t.monthlyPensionLabel}</div>
+              <div className="text-[10px] text-slate-300">{t.monthlyPensionLabel}</div>
               <div className="text-xl font-extrabold text-amber-950 dark:text-amber-300 font-mono">
                 ₹{activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")}/mo
               </div>
             </div>
             <div className="bg-white/80 dark:bg-slate-900/80 p-3 rounded-xl border border-amber-200 dark:border-amber-800/60">
-              <div className="text-[10px] text-slate-500 dark:text-slate-400">Disbursement</div>
+              <div className="text-[10px] text-slate-300">Disbursement</div>
               <div className="text-sm font-bold text-slate-800 dark:text-slate-200">
                 {activeCitizen.pension_details.last_disbursement_date}
               </div>
             </div>
             <div className="bg-white/80 dark:bg-slate-900/80 p-3 rounded-xl border border-amber-200 dark:border-amber-800/60">
-              <div className="text-[10px] text-slate-500 dark:text-slate-400">{t.lifeCertificateStatus}</div>
+              <div className="text-[10px] text-slate-300">{t.lifeCertificateStatus}</div>
               <div className="text-sm font-bold text-emerald-700 dark:text-emerald-400">
                 {dlcRenewed ? "Auto-Verified (Face RD)" : t.verified}
               </div>
@@ -191,19 +191,19 @@ export default function MySavingsHub() {
       )}
 
       {/* TRIPLE-SPLIT VISUAL PASSBOOK */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-5">
+      <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-6 shadow-sm space-y-5">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
-            <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
+            <h3 className="text-sm font-bold text-white">
               {t.tripleSplitTitle}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-300">
               {t.tripleSplitDesc}
             </p>
           </div>
           <div className="text-right">
-            <span className="text-xs text-slate-500 dark:text-slate-400">{t.totalBalanceLabel}</span>
-            <div className="text-2xl font-black text-sovereign-navy dark:text-white font-mono">
+            <span className="text-xs text-slate-300">{t.totalBalanceLabel}</span>
+            <div className="text-2xl font-black text-white font-mono">
               ₹{totalBal.toLocaleString("en-IN")}
             </div>
           </div>
@@ -228,7 +228,7 @@ export default function MySavingsHub() {
               title={t.pensionFundShare}
             />
           </div>
-          <div className="flex flex-col sm:flex-row justify-between gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+          <div className="flex flex-col sm:flex-row justify-between gap-1 text-[11px] font-semibold text-slate-300">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" /> {t.employeeShare}: ₹{empShare.toLocaleString("en-IN")}
             </span>
@@ -248,7 +248,7 @@ export default function MySavingsHub() {
             <div className="text-lg font-extrabold text-emerald-950 dark:text-emerald-200 font-mono mt-1">
               ₹{empShare.toLocaleString("en-IN")}
             </div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Tax-Free Withdrawable</p>
+            <p className="text-[10px] text-slate-300 mt-0.5">Tax-Free Withdrawable</p>
           </div>
 
           <div className="p-3.5 rounded-xl border border-blue-200 dark:border-blue-800/60 bg-blue-50/40 dark:bg-blue-950/20">
@@ -256,7 +256,7 @@ export default function MySavingsHub() {
             <div className="text-lg font-extrabold text-blue-950 dark:text-blue-200 font-mono mt-1">
               ₹{emprShare.toLocaleString("en-IN")}
             </div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{t.interestAccrualBadge}</p>
+            <p className="text-[10px] text-slate-300 mt-0.5">{t.interestAccrualBadge}</p>
           </div>
 
           <div className="p-3.5 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50/40 dark:bg-amber-950/20">
@@ -264,21 +264,21 @@ export default function MySavingsHub() {
             <div className="text-lg font-extrabold text-amber-950 dark:text-amber-200 font-mono mt-1">
               ₹{(summary.interest_credited_current_fy || 27400).toLocaleString("en-IN")}
             </div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Sovereign Yield</p>
+            <p className="text-[10px] text-slate-300 mt-0.5">Sovereign Yield</p>
           </div>
         </div>
       </div>
 
       {/* EMPLOYER ECR COMPLIANCE RADAR (PF THEFT ALERT WATCHDOG) */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-3">
+      <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-5 shadow-sm space-y-3">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2">
             <Radar className="w-5 h-5 text-emerald-600 dark:text-emerald-400 animate-pulse" />
             <div>
-              <h3 className="text-sm font-extrabold text-sovereign-navy dark:text-white">
+              <h3 className="text-sm font-extrabold text-white">
                 Employer ECR Compliance Radar (PF Theft Alert Watchdog)
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-slate-300">
                 Statutory monthly wage challan verification for {activeCitizen.active_employment?.establishment_name || "Active Employer"}
               </p>
             </div>
@@ -289,34 +289,34 @@ export default function MySavingsHub() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-          <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Last Salary Deducted</span>
+          <div className="bg-slate-800/70 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+            <span className="text-[10px] text-slate-300 block">Last Salary Deducted</span>
             <strong className="text-slate-800 dark:text-slate-200 font-mono font-bold">₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")} (12% Emp Share)</strong>
           </div>
 
-          <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 block">EPFO ECR Deposit Date</span>
+          <div className="bg-slate-800/70 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+            <span className="text-[10px] text-slate-300 block">EPFO ECR Deposit Date</span>
             <strong className="text-emerald-700 dark:text-emerald-400 font-bold">14th July 2026 (Before 15th Deadline)</strong>
           </div>
 
-          <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Statutory Status</span>
+          <div className="bg-slate-800/70 p-3 rounded-xl border border-slate-200 dark:border-slate-700">
+            <span className="text-[10px] text-slate-300 block">Statutory Status</span>
             <strong className="text-emerald-700 dark:text-emerald-400 font-bold">Protected • No Missing Challans</strong>
           </div>
         </div>
       </div>
 
       {/* 8.25% COMPOUNDING RETIREMENT WEALTH FORECASTER */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-5">
+      <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-6 shadow-sm space-y-5">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-saffron" />
-              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
+              <h3 className="text-sm font-bold text-white">
                 {t.forecasterTitle}
               </h3>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-slate-300">
               {t.forecasterDesc}
             </p>
           </div>
@@ -331,11 +331,11 @@ export default function MySavingsHub() {
         </div>
 
         {/* Interactive Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-800/70 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
           <div>
             <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               <span>{t.currentAgeLabel}</span>
-              <span className="font-bold text-sovereign-navy dark:text-white">{currentAge} Years</span>
+              <span className="font-bold text-white">{currentAge} Years</span>
             </div>
             <input
               type="range"
@@ -354,7 +354,7 @@ export default function MySavingsHub() {
           <div>
             <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
               <span>Monthly Contribution:</span>
-              <span className="font-bold text-sovereign-navy dark:text-white">₹{(monthlyEmp + monthlyEmpr).toLocaleString("en-IN")}</span>
+              <span className="font-bold text-white">₹{(monthlyEmp + monthlyEmpr).toLocaleString("en-IN")}</span>
             </div>
             <input
               type="range"
@@ -376,7 +376,7 @@ export default function MySavingsHub() {
         </div>
 
         {/* Visual Compounding Growth Trajectory - High-Fidelity Interactive Graph */}
-        <div className="space-y-3 bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm">
+        <div className="space-y-3 bg-slate-800/70/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <div>
               <span className="text-xs font-extrabold text-slate-800 dark:text-white flex items-center gap-1.5">
@@ -385,7 +385,7 @@ export default function MySavingsHub() {
                   8.25% Annual Yield
                 </span>
               </span>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-[11px] text-slate-300 mt-0.5">
                 Hover over any year to inspect deposits vs. compounded statutory interest
               </p>
             </div>
@@ -398,15 +398,15 @@ export default function MySavingsHub() {
 
           {/* Active Hover Data Inspector */}
           {hoveredPoint ? (
-            <div className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-amber-400/60 shadow-lg flex flex-wrap justify-between items-center gap-2 animate-in fade-in duration-150">
+            <div className="p-3 bg-slate-900/90 rounded-xl border border-amber-400/60 shadow-lg flex flex-wrap justify-between items-center gap-2 animate-in fade-in duration-150">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
-                <span className="text-xs font-bold text-slate-900 dark:text-white">
+                <span className="text-xs font-bold text-white">
                   Age {hoveredPoint.age} ({hoveredPoint.year})
                 </span>
               </div>
               <div className="flex flex-wrap gap-3 text-xs font-mono">
-                <span className="text-slate-600 dark:text-slate-400">
+                <span className="text-slate-300">
                   Deposited: <strong className="text-slate-900 dark:text-slate-200">₹{(hoveredPoint.employeeShare + hoveredPoint.employerShare).toLocaleString("en-IN")}</strong>
                 </span>
                 <span className="text-amber-600 dark:text-amber-400">
@@ -418,7 +418,7 @@ export default function MySavingsHub() {
               </div>
             </div>
           ) : (
-            <div className="px-3 py-2 bg-white/60 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 text-[11px] text-slate-500 dark:text-slate-400 flex justify-between items-center">
+            <div className="px-3 py-2 bg-white/60 dark:bg-slate-900/60 rounded-xl border border-slate-700/70 text-[11px] text-slate-300 flex justify-between items-center">
               <span>💡 At retirement, ~<strong>{Math.round(((retirementTotal - ((forecast[0]?.employeeShare || 0) + (forecast[0]?.employerShare || 0) + ((monthlyEmp + monthlyEmpr) * 12 * (58 - currentAge)))) / Math.max(1, retirementTotal)) * 100)}%</strong> of your total wealth is created solely by 8.25% compounding interest.</span>
               <span className="text-xs font-mono text-slate-400 font-bold hidden sm:inline">Tap bar to inspect</span>
             </div>
@@ -428,19 +428,19 @@ export default function MySavingsHub() {
           <div className="relative h-56 w-full pt-4 pb-2 px-2 flex flex-col justify-end">
             {/* Background Axis Reference Lines */}
             <div className="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-20 dark:opacity-30 pb-6 pt-2">
-              <div className="border-b border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400">
+              <div className="border-b border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-300">
                 <span>₹{retirementTotal.toLocaleString("en-IN")}</span>
                 <span>Target 100%</span>
               </div>
-              <div className="border-b border-dashed border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400">
+              <div className="border-b border-dashed border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-300">
                 <span>₹{Math.round(retirementTotal * 0.75).toLocaleString("en-IN")}</span>
                 <span>75%</span>
               </div>
-              <div className="border-b border-dashed border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400">
+              <div className="border-b border-dashed border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-300">
                 <span>₹{Math.round(retirementTotal * 0.5).toLocaleString("en-IN")}</span>
                 <span>50%</span>
               </div>
-              <div className="border-b border-dashed border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-500 dark:text-slate-400">
+              <div className="border-b border-dashed border-slate-400 dark:border-slate-600 w-full flex justify-between text-[9px] font-mono text-slate-300">
                 <span>₹{Math.round(retirementTotal * 0.25).toLocaleString("en-IN")}</span>
                 <span>25%</span>
               </div>
@@ -492,7 +492,7 @@ export default function MySavingsHub() {
                         className={`text-[9px] font-mono mt-1 transition-colors ${
                           isHovered
                             ? "font-black text-amber-500 dark:text-amber-400"
-                            : "text-slate-500 dark:text-slate-400"
+                            : "text-slate-300"
                         }`}
                       >
                         {point.age}y
@@ -503,7 +503,7 @@ export default function MySavingsHub() {
             </div>
           </div>
 
-          <div className="flex flex-wrap justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-700/80 pt-2 gap-2">
+          <div className="flex flex-wrap justify-between items-center text-[10px] text-slate-300 border-t border-slate-200 dark:border-slate-700/80 pt-2 gap-2">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded bg-emerald-600" />
@@ -530,14 +530,14 @@ export default function MySavingsHub() {
                 <th className="p-2.5">{t.employeeShare}</th>
                 <th className="p-2.5">{t.employerShare}</th>
                 <th className="p-2.5">Annual Interest</th>
-                <th className="p-2.5 text-right font-extrabold text-sovereign-navy dark:text-white">Total Corpus</th>
+                <th className="p-2.5 text-right font-extrabold text-white">Total Corpus</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {forecast.filter((_, idx) => idx % 2 === 0 || idx === forecast.length - 1).map((row) => (
                 <tr key={row.year} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-800 dark:text-slate-200">
                   <td className="p-2.5 font-medium">{row.year}</td>
-                  <td className="p-2.5 text-slate-500 dark:text-slate-400">{row.age}</td>
+                  <td className="p-2.5 text-slate-300">{row.age}</td>
                   <td className="p-2.5 font-mono">₹{row.employeeShare.toLocaleString("en-IN")}</td>
                   <td className="p-2.5 font-mono">₹{row.employerShare.toLocaleString("en-IN")}</td>
                   <td className="p-2.5 font-mono text-amber-700 dark:text-amber-400">₹{row.annualInterest.toLocaleString("en-IN")}</td>
@@ -589,17 +589,17 @@ export default function MySavingsHub() {
       </div>
 
       {/* PASSBOOK TRANSACTION & CLAIMS SETTLEMENT LEDGER */}
-      <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-md space-y-4">
+      <div className="bg-slate-900/90 rounded-3xl border-2 border-slate-700/70 p-6 shadow-md space-y-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 flex items-center justify-center font-bold">
               <PiggyBank className="w-4 h-4 text-saffron dark:text-slate-950" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-sovereign-navy dark:text-white">
+              <h3 className="text-base font-extrabold text-white">
                 Passbook Transaction & Claims Settlement Ledger
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-slate-300">
                 Live immutable audit ledger with real-time claim debits and ECR wage credits
               </p>
             </div>
@@ -616,7 +616,7 @@ export default function MySavingsHub() {
 
         <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold">
+            <thead className="bg-slate-800/70 text-slate-600 dark:text-slate-300 font-bold">
               <tr>
                 <th className="p-3">Date</th>
                 <th className="p-3">Transaction Description</th>
@@ -630,10 +630,10 @@ export default function MySavingsHub() {
               {/* Dynamic Claim Debits (From User Submissions) */}
               {claimsHistory.map((claim) => (
                 <tr key={claim.claim_id} className="bg-rose-50/40 dark:bg-rose-950/20 hover:bg-rose-50/80 dark:hover:bg-rose-950/40 transition-colors">
-                  <td className="p-3 font-mono text-slate-600 dark:text-slate-400">{claim.timestamp || "Today"}</td>
-                  <td className="p-3 font-medium text-slate-900 dark:text-white">
+                  <td className="p-3 font-mono text-slate-300">{claim.timestamp || "Today"}</td>
+                  <td className="p-3 font-medium text-white">
                     <span className="font-bold">{claim.claim_type.replace(/_/g, " ")}</span>
-                    <span className="block text-[10px] text-slate-500 dark:text-slate-400">Claim Ref: {claim.claim_id}</span>
+                    <span className="block text-[10px] text-slate-300">Claim Ref: {claim.claim_id}</span>
                   </td>
                   <td className="p-3">
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-200 border border-rose-300 dark:border-rose-700">
@@ -649,7 +649,7 @@ export default function MySavingsHub() {
                       Disbursed to {claim.dbt_account || "Bank Account"}
                     </span>
                   </td>
-                  <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                  <td className="p-3 text-right font-mono font-bold text-white">
                     ₹{totalBal.toLocaleString("en-IN")}
                   </td>
                 </tr>
@@ -657,10 +657,10 @@ export default function MySavingsHub() {
 
               {/* Standard Monthly ECR Credits */}
               <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
-                <td className="p-3 font-mono text-slate-600 dark:text-slate-400">14-Jul-2026</td>
-                <td className="p-3 font-medium text-slate-900 dark:text-white">
+                <td className="p-3 font-mono text-slate-300">14-Jul-2026</td>
+                <td className="p-3 font-medium text-white">
                   <span>Monthly Wage Contribution (ECR Challan #98234)</span>
-                  <span className="block text-[10px] text-slate-500 dark:text-slate-400">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
+                  <span className="block text-[10px] text-slate-300">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
                 </td>
                 <td className="p-3">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700">
@@ -670,19 +670,19 @@ export default function MySavingsHub() {
                 <td className="p-3 font-mono font-bold text-emerald-700 dark:text-emerald-400">
                   + ₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")}
                 </td>
-                <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                <td className="p-3 text-slate-300 text-[11px]">
                   Deposit on 14-Jul-2026 (On-Time)
                 </td>
-                <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                <td className="p-3 text-right font-mono font-bold text-white">
                   ₹{totalBal.toLocaleString("en-IN")}
                 </td>
               </tr>
 
               <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
-                <td className="p-3 font-mono text-slate-600 dark:text-slate-400">12-Jun-2026</td>
-                <td className="p-3 font-medium text-slate-900 dark:text-white">
+                <td className="p-3 font-mono text-slate-300">12-Jun-2026</td>
+                <td className="p-3 font-medium text-white">
                   <span>Monthly Wage Contribution (ECR Challan #97102)</span>
-                  <span className="block text-[10px] text-slate-500 dark:text-slate-400">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
+                  <span className="block text-[10px] text-slate-300">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
                 </td>
                 <td className="p-3">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700">
@@ -692,19 +692,19 @@ export default function MySavingsHub() {
                 <td className="p-3 font-mono font-bold text-emerald-700 dark:text-emerald-400">
                   + ₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")}
                 </td>
-                <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                <td className="p-3 text-slate-300 text-[11px]">
                   Deposit on 12-Jun-2026 (On-Time)
                 </td>
-                <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                <td className="p-3 text-right font-mono font-bold text-white">
                   ₹{(totalBal - ((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12)).toLocaleString("en-IN")}
                 </td>
               </tr>
 
               <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
-                <td className="p-3 font-mono text-slate-600 dark:text-slate-400">31-Mar-2026</td>
-                <td className="p-3 font-medium text-slate-900 dark:text-white">
+                <td className="p-3 font-mono text-slate-300">31-Mar-2026</td>
+                <td className="p-3 font-medium text-white">
                   <span>FY 2025-26 Annual Statutory Interest Credit (8.25%)</span>
-                  <span className="block text-[10px] text-slate-500 dark:text-slate-400">EPFO Central Board of Trustees Annual Compound Settlement</span>
+                  <span className="block text-[10px] text-slate-300">EPFO Central Board of Trustees Annual Compound Settlement</span>
                 </td>
                 <td className="p-3">
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
@@ -714,10 +714,10 @@ export default function MySavingsHub() {
                 <td className="p-3 font-mono font-bold text-amber-700 dark:text-amber-400">
                   + ₹{(activeCitizen.passbook_summary?.interest_credited_current_fy || 27400).toLocaleString("en-IN")}
                 </td>
-                <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                <td className="p-3 text-slate-300 text-[11px]">
                   Central CBT Statutory Order #2026-EPF-825
                 </td>
-                <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                <td className="p-3 text-right font-mono font-bold text-white">
                   ₹{(totalBal - 58000).toLocaleString("en-IN")}
                 </td>
               </tr>
