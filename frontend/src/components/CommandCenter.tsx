@@ -19,7 +19,8 @@ import {
   X,
   ArrowRight,
   Zap,
-  Download
+  Download,
+  Landmark
 } from "lucide-react";
 
 interface CommandCenterProps {
@@ -189,6 +190,17 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
       icon: Wrench,
       action: () => {
         router.push("/fix");
+        onClose();
+      }
+    },
+    {
+      id: "hub-architecture",
+      category: "🏛️ Human Life-Event Hubs",
+      title: "🏛️ Architecture & Citizen Research Lab",
+      subtitle: "1.98M Grievance Analysis, Demographic Personas & 80/20 Sovereign Core",
+      icon: Landmark,
+      action: () => {
+        router.push("/architecture");
         onClose();
       }
     },

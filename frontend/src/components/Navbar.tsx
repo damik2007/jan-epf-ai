@@ -19,7 +19,8 @@ import {
   Moon,
   Search,
   Activity,
-  LogOut
+  LogOut,
+  Landmark
 } from "lucide-react";
 
 import { getTranslation } from "@/lib/translations";
@@ -88,6 +89,11 @@ export const Navbar: React.FC = () => {
       label: "Benchmarks",
       href: "/benchmarks",
       icon: Activity
+    },
+    {
+      label: t.navArchitecture || "Architecture",
+      href: "/architecture",
+      icon: Landmark
     }
   ];
 
