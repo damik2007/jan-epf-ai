@@ -21,7 +21,10 @@ import {
   Shield,
   LogOut,
   ChevronDown,
-  Activity
+  Activity,
+  Eye,
+  EyeOff,
+  Copy
 } from "lucide-react";
 import { ClaimReadinessScore } from "@/components/ClaimReadinessScore";
 import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
@@ -31,6 +34,42 @@ export default function CitizenLandingPage() {
   const t = getTranslation(language);
 
   const [chaosSimulatorOpen, setChaosSimulatorOpen] = useState(false);
+  const [privacyMode, setPrivacyMode] = useState<boolean>(false);
+  const [uanCopied, setUanCopied] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("jan_epf_privacy_mode");
+      if (saved !== null) setPrivacyMode(saved === "true");
+    }
+  }, []);
+
+  const togglePrivacyMode = () => {
+    setPrivacyMode((prev) => {
+      const next = !prev;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("jan_epf_privacy_mode", String(next));
+      }
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "p") {
+        e.preventDefault();
+        togglePrivacyMode();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  const handleCopyUan = () => {
+    navigator.clipboard.writeText(activeCitizen.uan);
+    setUanCopied(true);
+    setTimeout(() => setUanCopied(false), 2000);
+  };
 
   const totalBalance = activeCitizen.passbook_summary?.total_balance || 0;
   const [displayBalance, setDisplayBalance] = useState(0);
@@ -243,31 +282,72 @@ export default function CitizenLandingPage() {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* 1. CITIZEN WELCOME HERO BANNER */}
-      <section className="bg-gradient-to-br from-[#001738] via-[#0A2540] to-[#001f3f] text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-blue-900/60 relative overflow-hidden mt-2 sm:mt-3">
+      <section className="bg-gradient-to-br from-[#001738] via-[#0A2540] to-[#001f3f] text-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-blue-900/60 relative overflow-hidden mt-2 sm:mt-3 card-hover-lift">
         <div className="absolute top-0 right-0 w-96 h-96 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-samriddhi-gold/10 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="space-y-3 max-w-2xl">
+            <div className="flex flex-wrap items-center gap-3">
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-saffron text-sovereign-darkest">
                 CITIZEN REDESIGN PROTOTYPE
               </span>
-              <span className="text-xs text-slate-300">
-                SIMULATED UAN: <strong className="font-mono text-white">{activeCitizen.uan}</strong>
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/60 text-emerald-300 border border-emerald-800/50 flex items-center gap-1.5 shadow-sm">
+                🛡️ DPDP Protected Account ID
               </span>
+            </div>
+
+            <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-2 w-fit backdrop-blur-sm">
+              <span className="text-xs text-slate-400 font-medium tracking-wide">
+                UAN:
+              </span>
+              <strong className="font-mono text-white text-base sm:text-lg tracking-wider min-w-[140px]">
+                {privacyMode 
+                  ? `${activeCitizen.uan.substring(0, 4)} •••• ${activeCitizen.uan.substring(8)}` 
+                  : `${activeCitizen.uan.substring(0, 4)} ${activeCitizen.uan.substring(4, 8)} ${activeCitizen.uan.substring(8)}`}
+              </strong>
+              <div className="flex items-center gap-1 border-l border-white/10 pl-2.5 ml-1">
+                <button
+                  type="button"
+                  onClick={togglePrivacyMode}
+                  className="p-1.5 rounded-md hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                  title={privacyMode ? "Show full details (⌘P)" : "Hide sensitive details (⌘P)"}
+                >
+                  {privacyMode ? <EyeOff className="w-4 h-4 text-saffron" /> : <Eye className="w-4 h-4 text-slate-300" />}
+                </button>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={handleCopyUan}
+                    className="p-1.5 rounded-md hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                    title="Copy UAN to clipboard"
+                  >
+                    {uanCopied ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-slate-300" />}
+                  </button>
+                  {uanCopied && (
+                    <span className="absolute -top-7 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-emerald-600 text-white text-[10px] font-bold rounded shadow-lg whitespace-nowrap animate-in fade-in">
+                      Copied!
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
+                {activeCitizen.full_name}
+              </h1>
               <button
+                type="button"
                 onClick={logout}
-                className="text-[11px] px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-slate-300 flex items-center gap-1 transition-colors ml-2"
+                className="text-[11px] px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-slate-300 flex items-center gap-1.5 transition-colors h-fit"
                 title="Switch persona or logout"
               >
                 <LogOut className="w-3 h-3 text-saffron" />
-                <span>Switch / Logout</span>
+                <span>Switch Profile</span>
               </button>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-              {activeCitizen.full_name}
-            </h1>
+
             <p className="text-sm text-slate-300 leading-relaxed">
               {activeCitizen.active_employment
                 ? `${t.activeEstablishmentLabel}: ${activeCitizen.active_employment.establishment_name} (${activeCitizen.active_employment.total_service_years} years)`
@@ -288,23 +368,41 @@ export default function CitizenLandingPage() {
             </div>
           </div>
 
-          {/* Quick Balance Card */}
+          {/* Quick Balance Card with Discreet Privacy Mode */}
           <div className="bg-white/5 backdrop-blur-md border border-white/15 p-5 rounded-2xl w-full lg:w-80 shadow-2xl space-y-3 shrink-0">
             <div className="flex justify-between items-center text-xs text-slate-300">
-              <span>{t.totalBalanceLabel}</span>
+              <div className="flex items-center gap-1.5">
+                <span>{t.totalBalanceLabel}</span>
+                <button
+                  type="button"
+                  onClick={togglePrivacyMode}
+                  className="p-1 rounded-md hover:bg-white/10 text-slate-300 hover:text-white transition-colors"
+                  title={privacyMode ? "Show balances (Discreet Mode Active)" : "Hide balances (Privacy Mode)"}
+                >
+                  {privacyMode ? <EyeOff className="w-3.5 h-3.5 text-saffron" /> : <Eye className="w-3.5 h-3.5 text-slate-300" />}
+                </button>
+              </div>
               <span className="text-emerald-400 font-bold">● {t.verified}</span>
             </div>
-            <div className="text-3xl sm:text-4xl font-black tracking-tight font-mono text-white">
-              ₹{displayBalance.toLocaleString("en-IN")}
+            <div className="text-3xl sm:text-4xl font-black tracking-tight font-mono text-white flex items-center">
+              {privacyMode ? (
+                <span className="tracking-widest text-slate-300 font-sans select-none">₹ ••••••••</span>
+              ) : (
+                <span>₹{displayBalance.toLocaleString("en-IN")}</span>
+              )}
             </div>
             <div className="space-y-2 pt-2 border-t border-white/10 text-xs text-slate-200 font-mono">
               <div className="flex justify-between items-center">
                 <span className="text-slate-300">Employee Share (12%):</span>
-                <span className="font-bold text-white">₹{employeeShare.toLocaleString("en-IN")}</span>
+                <span className="font-bold text-white">
+                  {privacyMode ? "₹ ••••••" : `₹${employeeShare.toLocaleString("en-IN")}`}
+                </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-slate-300">FY Interest (8.25%):</span>
-                <span className="font-bold text-amber-300">₹{interestEarned.toLocaleString("en-IN")}</span>
+                <span className="font-bold text-amber-300">
+                  {privacyMode ? "₹ •••••" : `₹${interestEarned.toLocaleString("en-IN")}`}
+                </span>
               </div>
             </div>
           </div>
