@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { CitizenProvider } from "@/context/CitizenContext";
 import { Navbar } from "@/components/Navbar";
+import { RouteProgressBar } from "@/components/RouteProgressBar";
 import { VoiceAssistant } from "@/components/VoiceAssistant";
 import { EvaluatorGate } from "@/components/EvaluatorGate";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-slate-50 dark:bg-[#060d17] text-slate-900 dark:text-slate-100 antialiased selection:bg-saffron selection:text-sovereign-darkest">
         <ServiceWorkerRegister />
+        <RouteProgressBar />
         <EvaluatorGate>
           <CitizenProvider>
             <Navbar />

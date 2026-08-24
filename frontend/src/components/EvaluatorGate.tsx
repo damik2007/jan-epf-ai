@@ -18,13 +18,16 @@ export function EvaluatorGate({ children }: { children: React.ReactNode }) {
       const urlKey = params.get("key") || params.get("pass") || params.get("access");
       if (urlKey && VALID_PASSCODES.includes(urlKey.toLowerCase())) {
         sessionStorage.setItem("jan_epf_unlocked", "true");
+        localStorage.setItem("jan_epf_unlocked", "true");
         setIsUnlocked(true);
         return;
       }
 
-      // 2. Check saved session
-      const saved = sessionStorage.getItem("jan_epf_unlocked");
-      if (saved === "true") {
+      // 2. Check saved session & local storage
+      const savedSession = sessionStorage.getItem("jan_epf_unlocked");
+      const savedLocal = localStorage.getItem("jan_epf_unlocked");
+      if (savedSession === "true" || savedLocal === "true") {
+        sessionStorage.setItem("jan_epf_unlocked", "true");
         setIsUnlocked(true);
       } else {
         setIsUnlocked(false);
@@ -45,6 +48,7 @@ export function EvaluatorGate({ children }: { children: React.ReactNode }) {
       if (VALID_PASSCODES.includes(cleaned)) {
         try {
           sessionStorage.setItem("jan_epf_unlocked", "true");
+          localStorage.setItem("jan_epf_unlocked", "true");
         } catch {}
         setIsUnlocked(true);
       } else {
@@ -56,6 +60,7 @@ export function EvaluatorGate({ children }: { children: React.ReactNode }) {
   const handle1ClickBypass = () => {
     try {
       sessionStorage.setItem("jan_epf_unlocked", "true");
+      localStorage.setItem("jan_epf_unlocked", "true");
     } catch {}
     setIsUnlocked(true);
   };
