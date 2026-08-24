@@ -29,8 +29,8 @@ export function CitizenFeatureMatrix() {
       cta: "Test Instant Payout",
       icon: Zap,
       badge: "EPFO 3.0 Standard",
-      badgeColor: "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800",
-      accent: "from-emerald-500/10 to-teal-500/5 border-emerald-200 dark:border-emerald-800/40"
+      badgeColor: "bg-emerald-950/60 text-emerald-300 border-emerald-800/60",
+      accent: "hover:border-emerald-500/50"
     },
     {
       id: "2",
@@ -41,8 +41,8 @@ export function CitizenFeatureMatrix() {
       cta: "Run Diagnostic",
       icon: Activity,
       badge: "Zero-Rejection Shield",
-      badgeColor: "bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border-blue-300 dark:border-blue-800",
-      accent: "from-blue-500/10 to-indigo-500/5 border-blue-200 dark:border-blue-800/40"
+      badgeColor: "bg-blue-950/60 text-blue-300 border-blue-800/60",
+      accent: "hover:border-blue-500/50"
     },
     {
       id: "3",
@@ -53,8 +53,8 @@ export function CitizenFeatureMatrix() {
       cta: "View Deposit Watchdog",
       icon: Radar,
       badge: "Statutory Compliance",
-      badgeColor: "bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border-rose-300 dark:border-rose-800",
-      accent: "from-rose-500/10 to-orange-500/5 border-rose-200 dark:border-rose-800/40"
+      badgeColor: "bg-rose-950/60 text-rose-300 border-rose-800/60",
+      accent: "hover:border-rose-500/50"
     },
     {
       id: "4",
@@ -65,8 +65,8 @@ export function CitizenFeatureMatrix() {
       cta: "Merge Accounts",
       icon: GitMerge,
       badge: "Form 13 Auto-Merge",
-      badgeColor: "bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border-purple-300 dark:border-purple-800",
-      accent: "from-purple-500/10 to-fuchsia-500/5 border-purple-200 dark:border-purple-800/40"
+      badgeColor: "bg-purple-950/60 text-purple-300 border-purple-800/60",
+      accent: "hover:border-purple-500/50"
     },
     {
       id: "5",
@@ -77,8 +77,8 @@ export function CitizenFeatureMatrix() {
       cta: "Check TDS Exemption",
       icon: ShieldAlert,
       badge: "Tax Protection",
-      badgeColor: "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800",
-      accent: "from-amber-500/10 to-yellow-500/5 border-amber-200 dark:border-amber-800/40"
+      badgeColor: "bg-amber-950/60 text-amber-300 border-amber-800/60",
+      accent: "hover:border-amber-500/50"
     },
     {
       id: "6",
@@ -89,8 +89,8 @@ export function CitizenFeatureMatrix() {
       cta: "Renew Life Certificate",
       icon: HeartHandshake,
       badge: "EPS-95 Pension",
-      badgeColor: "bg-orange-100 dark:bg-orange-950/60 text-orange-800 dark:text-orange-300 border-orange-300 dark:border-orange-800",
-      accent: "from-orange-500/10 to-amber-500/5 border-orange-200 dark:border-orange-800/40"
+      badgeColor: "bg-orange-950/60 text-orange-300 border-orange-800/60",
+      accent: "hover:border-orange-500/50"
     },
     {
       id: "7",
@@ -101,8 +101,8 @@ export function CitizenFeatureMatrix() {
       cta: "Submit Digital Joint Decl.",
       icon: FileCheck2,
       badge: "Zero Paperwork",
-      badgeColor: "bg-teal-100 dark:bg-teal-950/60 text-teal-800 dark:text-teal-300 border-teal-300 dark:border-teal-800",
-      accent: "from-teal-500/10 to-emerald-500/5 border-teal-200 dark:border-teal-800/40"
+      badgeColor: "bg-teal-950/60 text-teal-300 border-teal-800/60",
+      accent: "hover:border-teal-500/50"
     },
     {
       id: "8",
@@ -113,31 +113,33 @@ export function CitizenFeatureMatrix() {
       cta: "Diagnose Delay",
       icon: Users,
       badge: "EPFiGMS Modernization",
-      badgeColor: "bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 border-indigo-300 dark:border-indigo-800",
-      accent: "from-indigo-500/10 to-blue-500/5 border-indigo-200 dark:border-indigo-800/40"
+      badgeColor: "bg-indigo-950/60 text-indigo-300 border-indigo-800/60",
+      accent: "hover:border-indigo-500/50"
     }
   ];
 
   return (
-    <section className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy border border-slate-700/80 rounded-3xl p-6 sm:p-8 text-white shadow-2xl space-y-6 relative overflow-hidden">
+    <section className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
+
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-700/80 relative z-10">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sovereign-navy dark:bg-slate-800 text-white text-xs font-bold shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-white text-[10px] font-mono tracking-wider font-bold shadow-sm uppercase">
             <Sparkles className="w-3.5 h-3.5 text-saffron" />
-            <span>SOLVING REAL CITIZEN PAIN POINTS • EPFO 3.0 TRANSFORMATION</span>
+            <span>Solving Real Citizen Pain Points • EPFO 3.0 Transformation</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-white mt-2">
             The 8 High-Demand Real-World Features Matrix
           </h2>
-          <p className="text-xs text-slate-300 max-w-3xl">
+          <p className="text-xs text-slate-300 max-w-3xl mt-1">
             Derived directly from public grievances and community audits. Every statutory roadblock is solved on-device with zero-trust sovereign architecture.
           </p>
         </div>
 
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="px-3.5 py-2 rounded-xl bg-slate-800/80 text-white hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all text-slate-300 shrink-0"
+          className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-bold flex items-center gap-1.5 transition-all text-slate-300 shrink-0 border border-white/10"
         >
           <span>{isOpen ? "Collapse Matrix" : "Expand Matrix"}</span>
           <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
@@ -146,41 +148,43 @@ export function CitizenFeatureMatrix() {
 
       {/* 8 Feature Cards Grid */}
       {isOpen && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-in fade-in duration-300">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 relative z-10 animate-in fade-in duration-300">
           {features.map((f) => {
             const Icon = f.icon;
             return (
               <div
                 key={f.id}
-                className={`bg-gradient-to-br ${f.accent} dark:bg-slate-900 rounded-2xl p-4 border flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 transition-all duration-200 space-y-3`}
+                className={`p-5 rounded-2xl bg-slate-800/70 backdrop-blur-md border border-slate-700/80 transition-all shadow-lg flex flex-col justify-between group overflow-hidden ${f.accent}`}
               >
-                <div className="space-y-2">
-                  <div className="flex justify-between items-start">
-                    <div className="w-9 h-9 rounded-xl bg-sovereign-navy dark:bg-slate-800 text-white flex items-center justify-center shadow-sm">
-                      <Icon className="w-4 h-4 text-saffron" />
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 text-saffron flex items-center justify-center font-bold group-hover:scale-105 transition-transform">
+                      <Icon className="w-5 h-5" />
                     </div>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${f.badgeColor}`}>
+                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border font-mono ${f.badgeColor}`}>
                       {f.badge}
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="text-sm font-black text-slate-900 dark:text-white leading-snug">{f.title}</h3>
-                    <p className="text-[11px] font-bold text-slate-300">{f.tagline}</p>
+                    <h3 className="text-sm font-extrabold text-white group-hover:text-saffron transition-colors leading-snug">{f.title}</h3>
+                    <p className="text-[11px] font-bold text-slate-400 mt-0.5">{f.tagline}</p>
                   </div>
 
-                  <p className="text-xs text-slate-300 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed pb-2">
                     {f.description}
                   </p>
                 </div>
 
-                <Link
-                  href={f.route}
-                  className="w-full py-2 px-3 bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 hover:bg-sovereign-light text-white text-xs font-bold rounded-xl flex items-center justify-between transition-colors shadow-sm group"
-                >
-                  <span>{f.cta}</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-saffron dark:text-slate-950 group-hover:translate-x-0.5 transition-transform" />
-                </Link>
+                <div className="pt-2 border-t border-slate-700/60 mt-2">
+                  <Link
+                    href={f.route}
+                    className="w-full py-2.5 px-3 bg-saffron text-sovereign-darkest hover:bg-amber-400 text-xs font-extrabold rounded-xl flex items-center justify-between transition-all shadow-md group-hover:shadow-[0_0_10px_rgba(245,158,11,0.3)]"
+                  >
+                    <span>{f.cta}</span>
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                  </Link>
+                </div>
               </div>
             );
           })}

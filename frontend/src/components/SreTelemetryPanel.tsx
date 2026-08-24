@@ -27,7 +27,7 @@ export function SreTelemetryPanel() {
       sub: "$0 API Cloud Bill • Sub-5ms Execution",
       status: "OPTIMAL",
       icon: Cpu,
-      color: "text-emerald-400 border-emerald-500/30 bg-emerald-500/10"
+      color: "text-emerald-300 border-emerald-800/60 bg-emerald-950/60"
     },
     {
       label: "Zero-Trust Presidio Shield",
@@ -35,7 +35,7 @@ export function SreTelemetryPanel() {
       sub: "Aadhaar / PAN Tokenized • DPDP Act 2023",
       status: "ACTIVE",
       icon: ShieldCheck,
-      color: "text-blue-400 border-blue-500/30 bg-blue-500/10"
+      color: "text-blue-300 border-blue-800/60 bg-blue-950/60"
     },
     {
       label: "Substitute SRE Resilience",
@@ -43,7 +43,7 @@ export function SreTelemetryPanel() {
       sub: "WASM OCR • Web Speech • Offline IndexedDB",
       status: "CANARY VERIFIED",
       icon: Zap,
-      color: "text-amber-400 border-amber-500/30 bg-amber-500/10"
+      color: "text-amber-300 border-amber-800/60 bg-amber-950/60"
     },
     {
       label: "PostgreSQL Row-Level Security",
@@ -51,41 +51,41 @@ export function SreTelemetryPanel() {
       sub: "RLS Policies Enforced • 0% Cross-Tenant Leak",
       status: "ENFORCED",
       icon: Database,
-      color: "text-purple-400 border-purple-500/30 bg-purple-500/10"
+      color: "text-purple-300 border-purple-800/60 bg-purple-950/60"
     }
   ];
 
   return (
-    <section className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy border border-slate-700/80 rounded-3xl p-6 sm:p-8 text-white shadow-2xl space-y-6 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+    <section className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 relative z-10">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 relative z-10 border-b border-slate-700/80 pb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30 shadow-inner">
+          <div className="w-11 h-11 rounded-2xl bg-white/10 border border-white/10 text-emerald-400 flex items-center justify-center shadow-md">
             <Activity className="w-5 h-5 animate-pulse" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping inline-block" />
                 Live SRE Telemetry &amp; Resilience Monitor
               </span>
             </div>
-            <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
+            <h3 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
               Sovereign Operational Health, Azure Ping &amp; DPDP Compliance
             </h3>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 mt-2 sm:mt-0">
           {/* Sub-tab Switchers */}
-          <div className="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+          <div className="flex items-center bg-slate-800/70 p-1 rounded-xl border border-slate-700/80 text-xs shadow-inner">
             <button
               onClick={() => setActiveSubTab("pulse")}
-              className={`px-3 py-1 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
                 activeSubTab === "pulse"
-                  ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40"
+                  ? "bg-emerald-950/60 text-emerald-300 border border-emerald-800/60 shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -93,9 +93,9 @@ export function SreTelemetryPanel() {
             </button>
             <button
               onClick={() => setActiveSubTab("presidio")}
-              className={`px-3 py-1 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
                 activeSubTab === "presidio"
-                  ? "bg-blue-500/20 text-blue-300 border border-blue-500/40"
+                  ? "bg-blue-950/60 text-blue-300 border border-blue-800/60 shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -103,9 +103,9 @@ export function SreTelemetryPanel() {
             </button>
             <button
               onClick={() => setActiveSubTab("metrics")}
-              className={`px-3 py-1 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
                 activeSubTab === "metrics"
-                  ? "bg-slate-800 text-white border border-slate-700"
+                  ? "bg-slate-700 text-white border border-slate-600 shadow-sm"
                   : "text-slate-400 hover:text-white"
               }`}
             >
@@ -115,7 +115,7 @@ export function SreTelemetryPanel() {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 transition-all"
+            className="p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-300 transition-all shrink-0"
             title="Toggle Panel"
           >
             <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
@@ -130,28 +130,28 @@ export function SreTelemetryPanel() {
           {activeSubTab === "presidio" && <PresidioPlayground />}
 
           {activeSubTab === "metrics" && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               {/* Metrics Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {metrics.map((m, idx) => {
                   const Icon = m.icon;
                   return (
                     <div
                       key={idx}
-                      className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between space-y-2 hover:border-slate-700 transition-colors"
+                      className="bg-slate-800/70 backdrop-blur-md border border-slate-700/80 rounded-2xl p-5 flex flex-col justify-between space-y-3 hover:border-saffron/50 transition-colors shadow-lg group relative overflow-hidden"
                     >
                       <div className="flex justify-between items-start">
-                        <span className="text-xs text-slate-400 font-semibold">{m.label}</span>
-                        <span className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border ${m.color}`}>
+                        <span className="text-xs text-slate-300 font-semibold">{m.label}</span>
+                        <span className={`text-[9px] font-mono font-bold px-2.5 py-0.5 rounded-full border ${m.color}`}>
                           {m.status}
                         </span>
                       </div>
 
                       <div>
-                        <div className="text-lg font-black font-mono text-white tracking-tight">
+                        <div className="text-xl font-extrabold font-mono text-white tracking-tight">
                           {m.value}
                         </div>
-                        <p className="text-[11px] text-slate-400 mt-0.5 font-sans">
+                        <p className="text-[11px] text-slate-400 mt-1 font-sans">
                           {m.sub}
                         </p>
                       </div>
@@ -161,15 +161,17 @@ export function SreTelemetryPanel() {
               </div>
 
               {/* SRE Canary Pipeline Verification Banner */}
-              <div className="p-3.5 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
-                <div className="flex items-center gap-2 text-slate-300">
-                  <Terminal className="w-4 h-4 text-saffron shrink-0" />
+              <div className="p-4 rounded-2xl bg-slate-800/70 backdrop-blur-md border border-slate-700/80 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs shadow-lg">
+                <div className="flex items-center gap-3 text-slate-300">
+                  <div className="p-1.5 rounded-lg bg-saffron/20 text-saffron">
+                    <Terminal className="w-4 h-4 shrink-0" />
+                  </div>
                   <span>
                     <strong className="text-white">CI/CD SRE Canary Watchdog:</strong> 5-Stage Automated Probe Suite verified on GitHub Actions with auto-retry canary loops.
                   </span>
                 </div>
-                <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20 shrink-0 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" /> Zero Outage SLA
+                <span className="text-[10px] font-mono font-bold text-emerald-300 bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-800/60 shrink-0 flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Zero Outage SLA
                 </span>
               </div>
             </div>
