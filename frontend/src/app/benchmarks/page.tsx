@@ -194,96 +194,102 @@ export default function BenchmarksPage() {
         ))}
       </div>
 
-      {/* TAB 1: 3-WAY EVALS MATRIX */}
+      {/* TAB 1: 3-WAY EVALS MATRIX (SOVEREIGN DARK FINISH) */}
       {activeTab === "evals" && (
-        <div className="space-y-6 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
-            <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div>
-                <h3 className="text-base font-extrabold text-sovereign-navy dark:text-white">
-                  Quantitative Evaluations (Evals) vs Standardized Baselines
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Comparing Legacy EPFO Portal vs Naive Commercial LLM Wrappers vs Jan-EPF AI Sovereign 80/20 Core.
-                </p>
-              </div>
-              <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-                100% Deterministic Ground Truth
-              </span>
-            </div>
+        <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 animate-in fade-in duration-200 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold">
-                    <th className="p-3 rounded-l-xl">Evaluation Metric / Task</th>
-                    <th className="p-3">❌ Legacy EPFO Portal</th>
-                    <th className="p-3">⚠️ Naive LLM Wrapper</th>
-                    <th className="p-3 rounded-r-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300">
-                      ✅ Jan-EPF AI (Sovereign)
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-medium">
-                  <tr>
-                    <td className="p-3 font-bold text-slate-800 dark:text-slate-200">Initial Claim Rejection Rate</td>
-                    <td className="p-3 text-red-600 font-mono font-bold">35% – 48.4% Fail</td>
-                    <td className="p-3 text-amber-600 font-mono">18.5% (Hallucinations)</td>
-                    <td className="p-3 text-emerald-600 font-mono font-bold bg-emerald-50/50 dark:bg-emerald-950/20">
-                      0.0% Initial Rejections
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="p-3 font-bold text-slate-800 dark:text-slate-200">Para 68J Medical Limit Math</td>
-                    <td className="p-3 text-slate-500">Manual review (21 days)</td>
-                    <td className="p-3 text-amber-600">62% accuracy (confuses basic wage cap)</td>
-                    <td className="p-3 text-emerald-600 font-bold bg-emerald-50/50 dark:bg-emerald-950/20">
-                      100.0% Statutory Math (&lt;0.001ms)
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="p-3 font-bold text-slate-800 dark:text-slate-200">Section 192A TDS Tax Shield</td>
-                    <td className="p-3 text-red-600 font-bold">Unlawful 20% TDS deducted</td>
-                    <td className="p-3 text-amber-600">44% tax threshold errors</td>
-                    <td className="p-3 text-emerald-600 font-bold bg-emerald-50/50 dark:bg-emerald-950/20">
-                      100% Tax Shield + Auto Form 15G
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="p-3 font-bold text-slate-800 dark:text-slate-200">Missing Date of Exit Recovery</td>
-                    <td className="p-3 text-red-600">Stuck in employer purgatory</td>
-                    <td className="p-3 text-slate-500">Cannot deduce calendar dates</td>
-                    <td className="p-3 text-emerald-600 font-bold bg-emerald-50/50 dark:bg-emerald-950/20">
-                      ECR Timestamp Auto-Deduction (0.04ms)
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="p-3 font-bold text-slate-800 dark:text-slate-200">Bank Cheque Blur Detection</td>
-                    <td className="p-3 text-red-600">21-day delayed rejection</td>
-                    <td className="p-3 text-slate-500">$0.02 cloud vision call per upload</td>
-                    <td className="p-3 text-emerald-600 font-bold bg-emerald-50/50 dark:bg-emerald-950/20">
-                      HTML5 Canvas Laplacian (&gt;40) On-Device
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="p-3 font-bold text-slate-800 dark:text-slate-200">Rural 2G / Offline Resilience</td>
-                    <td className="p-3 text-red-600">Complete HTTP 504 timeout</td>
-                    <td className="p-3 text-red-600">Fails without active cloud connection</td>
-                    <td className="p-3 text-emerald-600 font-bold bg-emerald-50/50 dark:bg-emerald-950/20">
-                      100% Offline PWA ServiceWorker Cache
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="p-3 font-bold text-slate-800 dark:text-slate-200">Exchequer Annual Operating Cost</td>
-                    <td className="p-3 text-slate-500">₹420+ Cr (Physical office queues)</td>
-                    <td className="p-3 text-red-600 font-mono">₹17.85 Cr / yr (Cloud LLM tokens)</td>
-                    <td className="p-3 text-emerald-600 font-mono font-bold bg-emerald-50/50 dark:bg-emerald-950/20">
-                      ₹0.00 / Request (Sovereign Edge)
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-slate-700/80 gap-3 relative z-10">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-950 text-blue-300 border border-blue-800 font-mono">
+                  BENCHMARK HARNESS
+                </span>
+                <span className="text-xs text-slate-400 font-mono">Statistical Ground Truth SLA</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
+                Quantitative Evaluations (Evals) vs Standardized Baselines
+              </h3>
+              <p className="text-xs text-slate-300 mt-1 max-w-2xl">
+                Comparing Legacy EPFO Portal vs Naive Commercial LLM Wrappers vs Jan-EPF AI Sovereign 80/20 Core across statutory SLAs.
+              </p>
             </div>
+            <span className="text-xs font-bold px-3 py-1.5 rounded-xl bg-emerald-950/80 text-emerald-300 border border-emerald-700 font-mono shrink-0">
+              100% Deterministic Ground Truth
+            </span>
+          </div>
+
+          <div className="overflow-x-auto relative z-10">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-slate-800/90 text-slate-200 font-bold border-b border-slate-700">
+                  <th className="p-3.5 rounded-l-xl">Evaluation Metric / Task</th>
+                  <th className="p-3.5">&#10060; Legacy EPFO Portal</th>
+                  <th className="p-3.5">&#9888;&#65039; Naive LLM Wrapper</th>
+                  <th className="p-3.5 rounded-r-xl bg-emerald-950/60 text-emerald-300 border-l border-emerald-800/60 font-black">
+                    &#10003; Jan-EPF AI (Sovereign)
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800">
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="p-3.5 font-bold text-white">Initial Claim Rejection Rate</td>
+                  <td className="p-3.5 font-mono text-red-400 font-bold">35% – 48.4% Fail</td>
+                  <td className="p-3.5 font-mono text-amber-400">18.5% (Hallucinations)</td>
+                  <td className="p-3.5 font-mono text-emerald-400 font-black bg-emerald-950/30 border-l border-emerald-800/40">
+                    0.0% Initial Rejections
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="p-3.5 font-bold text-white">Para 68J Medical Limit Math</td>
+                  <td className="p-3.5 font-mono text-slate-400">Manual review (21 days)</td>
+                  <td className="p-3.5 font-mono text-amber-400">62% accuracy (confuses wage cap)</td>
+                  <td className="p-3.5 font-mono text-emerald-400 font-black bg-emerald-950/30 border-l border-emerald-800/40">
+                    100.0% Statutory Math (&lt;0.001ms)
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="p-3.5 font-bold text-white">Section 192A TDS Tax Shield</td>
+                  <td className="p-3.5 font-mono text-red-400 font-bold">Unlawful 20% TDS deducted</td>
+                  <td className="p-3.5 font-mono text-amber-400">44% tax threshold errors</td>
+                  <td className="p-3.5 font-mono text-emerald-400 font-black bg-emerald-950/30 border-l border-emerald-800/40">
+                    100% Tax Shield + Auto Form 15G
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="p-3.5 font-bold text-white">Missing Date of Exit Recovery</td>
+                  <td className="p-3.5 font-mono text-red-400 font-bold">Stuck in employer purgatory</td>
+                  <td className="p-3.5 font-mono text-amber-400">Cannot deduce calendar dates</td>
+                  <td className="p-3.5 font-mono text-emerald-400 font-black bg-emerald-950/30 border-l border-emerald-800/40">
+                    ECR Timestamp Auto-Deduction (0.04ms)
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="p-3.5 font-bold text-white">Bank Cheque Blur Detection</td>
+                  <td className="p-3.5 font-mono text-red-400 font-bold">21-day delayed rejection</td>
+                  <td className="p-3.5 font-mono text-slate-300">$0.02 cloud vision call per upload</td>
+                  <td className="p-3.5 font-mono text-emerald-400 font-black bg-emerald-950/30 border-l border-emerald-800/40">
+                    HTML5 Canvas Laplacian (&gt;40) On-Device
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="p-3.5 font-bold text-white">Rural 2G / Offline Resilience</td>
+                  <td className="p-3.5 font-mono text-red-400 font-bold">Complete HTTP 504 timeout</td>
+                  <td className="p-3.5 font-mono text-amber-400">Fails without active cloud connection</td>
+                  <td className="p-3.5 font-mono text-emerald-400 font-black bg-emerald-950/30 border-l border-emerald-800/40">
+                    100% Offline PWA ServiceWorker Cache
+                  </td>
+                </tr>
+                <tr className="hover:bg-slate-800/40 transition-colors">
+                  <td className="p-3.5 font-bold text-white">Exchequer Annual Operating Cost</td>
+                  <td className="p-3.5 font-mono text-slate-400">&#8377;420+ Cr (Physical office queues)</td>
+                  <td className="p-3.5 font-mono text-amber-400 font-bold">&#8377;17.85 Cr / yr (Cloud LLM tokens)</td>
+                  <td className="p-3.5 font-mono text-emerald-400 font-black bg-emerald-950/30 border-l border-emerald-800/40">
+                    &#8377;0.00 / Request (Sovereign Edge)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       )}

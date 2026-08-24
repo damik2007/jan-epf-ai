@@ -2,29 +2,31 @@
 
 import React, { useState } from "react";
 import {
-  ShieldCheck,
+  Shield,
   Zap,
-  Calculator,
+  TrendingUp,
   HeartHandshake,
-  Globe2,
+  Smartphone,
   Lock,
+  ExternalLink,
+  CheckCircle2,
   Sparkles,
-  ArrowUpRight
+  Layers,
+  Cpu
 } from "lucide-react";
 import { ExplainRupeeModal } from "@/components/ExplainRupeeModal";
 
-export const SovereignDpiPillars: React.FC = () => {
-  const [explainModalOpen, setExplainModalOpen] = useState<boolean>(false);
-  const [activePillar, setActivePillar] = useState<number>(0);
+export function SovereignDpiPillars() {
+  const [explainRupeeOpen, setExplainRupeeOpen] = useState(false);
 
   const pillars = [
     {
       id: 1,
-      title: "Institutional UI Architecture",
-      icon: ShieldCheck,
-      badge: "Sovereign Trust",
-      color: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800",
-      headline: "Tabular Precision & Zero Visual Jitter",
+      title: "1. Institutional UI Architecture",
+      subtitle: "Tabular Precision & Zero Visual Jitter",
+      icon: Shield,
+      tag: "SOVEREIGN TRUST",
+      badgeColor: "bg-blue-950 text-blue-300 border-blue-800",
       points: [
         "Fixed-width tabular numerals eliminate layout shifts during real-time compounding calculations.",
         "Deep navy palette with high-contrast accessibility across both light and dark modes.",
@@ -33,11 +35,11 @@ export const SovereignDpiPillars: React.FC = () => {
     },
     {
       id: 2,
-      title: "Sub-50ms On-Device Engine",
+      title: "2. Sub-50ms On-Device Engine",
+      subtitle: "Deterministic Instant Calculations",
       icon: Zap,
-      badge: "80/20 Client Core",
-      color: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800",
-      headline: "Deterministic Instant Calculations",
+      tag: "80/20 CLIENT CORE",
+      badgeColor: "bg-amber-950 text-amber-300 border-amber-800",
       points: [
         "100% optimistic local execution: Routine calculations (Para 68J, TDS, Levenshtein match) run on-device in <1ms.",
         "Skeleton shimmers preserve viewport layout with Zero Cumulative Layout Shift (CLS = 0).",
@@ -46,26 +48,27 @@ export const SovereignDpiPillars: React.FC = () => {
     },
     {
       id: 3,
-      title: "100% Financial Lineage",
-      icon: Calculator,
-      badge: "Mathematical Proof",
-      color: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800",
-      headline: "Every Rupee Fully Reconciled",
-      action: () => setExplainModalOpen(true),
-      actionLabel: "Inspect Live Mathematical Proof",
+      title: "3. 100% Financial Lineage",
+      subtitle: "Every Rupee Fully Reconciled",
+      icon: TrendingUp,
+      tag: "MATHEMATICAL PROOF",
+      badgeColor: "bg-emerald-950 text-emerald-300 border-emerald-800",
       points: [
         "Transparent triple-split derivation: Employee Share (12%), Employer Share (3.67%), and EPS Pension (8.33%).",
         "Explicit 8.25% annual compounding monthly running balance audit ledger.",
         "Tamper-evident cryptographic ledger state with SHA-256 audit trail tokens."
-      ]
+      ],
+      hasAction: true,
+      actionLabel: "Inspect Live Mathematical Proof ↗",
+      onAction: () => setExplainRupeeOpen(true)
     },
     {
       id: 4,
-      title: "Defensive Reassurance UX",
+      title: "4. Defensive Reassurance UX",
+      subtitle: "Human Language & Accidental Error Safeguards",
       icon: HeartHandshake,
-      badge: "5-Second Grace",
-      color: "text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-800",
-      headline: "Human Language & Accidental Error Safeguards",
+      tag: "5-SECOND GRACE",
+      badgeColor: "bg-rose-950 text-rose-300 border-rose-800",
       points: [
         "Live Gateway Health Pulses show real-time operational status for NPCI, UIDAI, and NSDL.",
         "Empathetic human language replaces cryptic database error codes.",
@@ -74,24 +77,24 @@ export const SovereignDpiPillars: React.FC = () => {
     },
     {
       id: 5,
-      title: "Universal Multi-Modal Reach",
-      icon: Globe2,
-      badge: "Inclusive DPI",
-      color: "text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40 border-purple-200 dark:border-purple-800",
-      headline: "Desktop to Sub-50KB 2G Mobile",
+      title: "5. Universal Multi-Modal Reach",
+      subtitle: "Desktop to Sub-50KB 2G Mobile",
+      icon: Smartphone,
+      tag: "INCLUSIVE DPI",
+      badgeColor: "bg-purple-950 text-purple-300 border-purple-800",
       points: [
         "Elder Comfort Senior Mode: 150% font scaling, 56px touch ergonomics, and high-contrast palette.",
-        "Edge-TTS Neural Voice streaming across 10 Indian regional languages with zero API token cost.",
+        "Edge-TTS Neural Voice streaming across 13 Indian regional languages with zero API token cost.",
         "Lightweight bundles optimized for budget mobile devices over rural 2G/3G connections."
       ]
     },
     {
       id: 6,
-      title: "Zero-Trust Security Core",
+      title: "6. Zero-Trust Security Core",
+      subtitle: "On-Device PII Masking & Self-Healing Matrix",
       icon: Lock,
-      badge: "DPDP & Presidio",
-      color: "text-cyan-600 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 border-cyan-200 dark:border-cyan-800",
-      headline: "On-Device PII Masking & Self-Healing Matrix",
+      tag: "DPDP & PRESIDIO",
+      badgeColor: "bg-teal-950 text-teal-300 border-teal-800",
       points: [
         "Client-side Presidio PII tokenization masks 100% of Aadhaar and PAN before telemetry logging.",
         "Substitute Employee Resilience Matrix: 6 hot-swappable fallback circuits ensuring 100% uptime.",
@@ -101,79 +104,77 @@ export const SovereignDpiPillars: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+    <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Header */}
+      <div className="border-b border-slate-700/80 pb-4 relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-amber-500/10 dark:bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
+            <span className="p-1.5 rounded-lg bg-saffron/20 text-saffron">
               <Sparkles className="w-4 h-4" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black text-sovereign-navy dark:text-white tracking-tight">
-              Core Architectural Engineering Pillars
-            </h2>
+            </span>
+            <span className="text-[10px] font-bold tracking-wider uppercase text-saffron font-mono">
+              SOVEREIGN ARCHITECTURE BLUEPRINT
+            </span>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-            Engineered for ₹21+ Lakh Crore in retirement assets across 70+ Million Indian workers with zero downtime and sub-second verification.
+          <h3 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
+            Core Architectural Engineering Pillars
+          </h3>
+          <p className="text-xs text-slate-300 mt-1 max-w-2xl">
+            Engineered for &#8377;21+ Lakh Crore in retirement assets across 70+ Million Indian workers with zero downtime and sub-second verification.
           </p>
+        </div>
+        <div className="px-3 py-1.5 rounded-xl bg-white/10 border border-white/10 text-xs font-mono text-emerald-300 font-bold shrink-0">
+          6 Core Pillars Active
         </div>
       </div>
 
-      {/* Grid of 6 Pillars */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {pillars.map((p, idx) => {
-          const Icon = p.icon;
-          const isSelected = activePillar === idx;
+      {/* 6 Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 relative z-10">
+        {pillars.map((pillar) => {
+          const Icon = pillar.icon;
           return (
             <div
-              key={p.id}
-              onClick={() => setActivePillar(idx)}
-              className={`p-5 rounded-2xl border transition-all cursor-pointer card-hover-lift flex flex-col justify-between space-y-3 ${
-                isSelected
-                  ? "border-amber-500 ring-2 ring-amber-500/30 bg-amber-50/20 dark:bg-slate-800"
-                  : "border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50/50 dark:bg-slate-900"
-              }`}
+              key={pillar.id}
+              className="p-6 rounded-2xl bg-slate-800/70 backdrop-blur-md border border-slate-700/80 hover:border-saffron/50 transition-all shadow-lg space-y-3 flex flex-col justify-between group relative overflow-hidden"
             >
-              <div className="space-y-2.5">
-                <div className="flex justify-between items-start">
-                  <div className={`p-2.5 rounded-xl border ${p.color}`}>
+              <div className="space-y-3 relative z-10">
+                <div className="flex justify-between items-center">
+                  <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 text-saffron flex items-center justify-center font-bold group-hover:scale-105 transition-transform">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                    {p.badge}
+                  <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border font-mono ${pillar.badgeColor}`}>
+                    {pillar.tag}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-extrabold text-sovereign-navy dark:text-white">
-                    {p.id}. {p.title}
-                  </h3>
-                  <div className="text-xs font-semibold text-slate-700 dark:text-slate-300 mt-0.5">
-                    {p.headline}
-                  </div>
+                  <h4 className="text-sm font-extrabold text-white group-hover:text-saffron transition-colors">
+                    {pillar.title}
+                  </h4>
+                  <p className="text-[11px] text-slate-400 font-medium">
+                    {pillar.subtitle}
+                  </p>
                 </div>
 
-                <ul className="space-y-1.5 pt-1 text-xs text-slate-600 dark:text-slate-300">
-                  {p.points.map((pt, pIdx) => (
-                    <li key={pIdx} className="flex items-start gap-1.5">
-                      <span className="text-amber-500 font-bold shrink-0 mt-0.5">•</span>
-                      <span className="leading-snug">{pt}</span>
+                <ul className="space-y-2 pt-2 border-t border-slate-700/60 text-xs text-slate-300">
+                  {pillar.points.map((pt, idx) => (
+                    <li key={idx} className="flex items-start gap-2">
+                      <span className="text-saffron text-sm leading-none shrink-0 mt-0.5">&bull;</span>
+                      <span className="leading-relaxed">{pt}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              {p.action && (
-                <div className="pt-2">
+              {pillar.hasAction && (
+                <div className="pt-2 relative z-10">
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      p.action!();
-                    }}
-                    className="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                    onClick={pillar.onAction}
+                    className="w-full py-2.5 px-3 rounded-xl bg-saffron text-sovereign-darkest hover:bg-amber-400 font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md"
                   >
-                    <span>{p.actionLabel}</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
+                    <span>{pillar.actionLabel}</span>
                   </button>
                 </div>
               )}
@@ -182,11 +183,11 @@ export const SovereignDpiPillars: React.FC = () => {
         })}
       </div>
 
-      {/* Explain Rupee Interactive Modal */}
+      {/* Rupee Lineage Audit Modal */}
       <ExplainRupeeModal
-        isOpen={explainModalOpen}
-        onClose={() => setExplainModalOpen(false)}
+        isOpen={explainRupeeOpen}
+        onClose={() => setExplainRupeeOpen(false)}
       />
     </div>
   );
-};
+}
