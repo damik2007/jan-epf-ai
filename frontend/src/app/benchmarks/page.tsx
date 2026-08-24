@@ -171,8 +171,8 @@ export default function BenchmarksPage() {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 p-1.5 bg-slate-200 dark:bg-slate-800/80 rounded-2xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
+            {/* Island Tab Switcher Capsule */}
+      <div className="flex overflow-x-auto p-1.5 bg-slate-200/80 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-300/80 dark:border-slate-700/80 text-xs font-bold shadow-sm scrollbar-none gap-1.5">
         {[
           { id: "evals", label: t.tab3WayEvals || "🧪 3-Way Evals Matrix" },
           { id: "latency", label: t.tab1000RunLatency || "⚡ 1,000-Run Latency Benchmark" },
@@ -183,10 +183,10 @@ export default function BenchmarksPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`px-4 py-2.5 rounded-xl transition-all ${
+            className={`px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
               activeTab === tab.id
-                ? "bg-white dark:bg-amber-500 text-sovereign-navy dark:text-slate-950 shadow font-extrabold"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                ? "bg-white dark:bg-amber-500 text-sovereign-navy dark:text-slate-950 shadow-sm font-black border border-slate-200 dark:border-amber-400 scale-100"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/40 dark:hover:bg-slate-700/50"
             }`}
           >
             {tab.label}
@@ -559,34 +559,6 @@ export default function BenchmarksPage() {
 
 
       
-      {/* TAB 6: DEMOGRAPHIC PERSONAS */}
-      {activeTab === "personas" && (
-        <div className="animate-in fade-in duration-200">
-          <AudienceSegmentReport />
-        </div>
-      )}
-
-      {/* TAB 7: STATUTORY FEATURE MATRIX */}
-      {activeTab === "feature_matrix" && (
-        <div className="animate-in fade-in duration-200">
-          <CitizenFeatureMatrix />
-        </div>
-      )}
-
-      {/* TAB 8: SRE TELEMETRY & CIRCUIT BREAKERS */}
-      {activeTab === "sre_telemetry" && (
-        <div className="animate-in fade-in duration-200">
-          <SreTelemetryPanel />
-        </div>
-      )}
-
-      {/* TAB 9: SOVEREIGN DPI PILLARS */}
-      {activeTab === "dpi_pillars" && (
-        <div className="animate-in fade-in duration-200">
-          <SovereignDpiPillars />
-        </div>
-      )}
-
       {/* Formal Statutory & Legal Disclaimers Card */}
       <div className="bg-slate-900/90 text-slate-300 rounded-3xl p-6 sm:p-7 border border-slate-800 space-y-4 font-sans text-xs shadow-xl">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">

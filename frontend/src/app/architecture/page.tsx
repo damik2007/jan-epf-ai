@@ -70,52 +70,53 @@ export default function ArchitectureResearchPage() {
             Empirical research across 1.98 Million EPF grievances, demographic cohort studies of India&apos;s 70 Million EPFO workforce, and the technical specification of our 80/20 Sovereign Core Digital Public Infrastructure.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <div className="flex items-center gap-1.5 text-xs bg-white/10 px-3 py-1 rounded-lg backdrop-blur-sm border border-white/10 text-emerald-300 font-bold">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>1.98M Grievances Analyzed</span>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-white/10 text-xs font-mono">
+            <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+              <span className="text-[10px] text-slate-300 font-sans block uppercase">CPGRAMS Dataset</span>
+              <span className="text-xl font-extrabold text-emerald-300">1.98M AUDITED</span>
+              <span className="text-[10px] text-slate-400 block font-sans">Parliamentary committee records</span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs bg-white/10 px-3 py-1 rounded-lg backdrop-blur-sm border border-white/10 text-amber-300 font-bold">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>35%+ Rejection Root Causes Solved</span>
+            <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+              <span className="text-[10px] text-slate-300 font-sans block uppercase">Worker Cohorts</span>
+              <span className="text-xl font-extrabold text-amber-300">4 DEMOGRAPHICS</span>
+              <span className="text-[10px] text-slate-400 block font-sans">70 Million EPFO workers</span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs bg-white/10 px-3 py-1 rounded-lg backdrop-blur-sm border border-white/10 text-blue-300 font-bold">
-              <Lock className="w-3.5 h-3.5" />
-              <span>DPDP Act 2023 Compliant</span>
+            <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+              <span className="text-[10px] text-slate-300 font-sans block uppercase">Form Elimination</span>
+              <span className="text-xl font-extrabold text-blue-300">18 FORMS ➔ 0</span>
+              <span className="text-[10px] text-slate-400 block font-sans">4 Life-Event Portals</span>
+            </div>
+            <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
+              <span className="text-[10px] text-slate-300 font-sans block uppercase">Statutory Shield</span>
+              <span className="text-xl font-extrabold text-purple-300">DPDP 2023</span>
+              <span className="text-[10px] text-slate-400 block font-sans">Zero-Trust Presidio Vault</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Navigation Subsystem Tabs */}
-      <div className="flex overflow-x-auto pb-2 gap-2 scrollbar-none border-b border-slate-200 dark:border-slate-800">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold text-xs whitespace-nowrap transition-all ${
-                isActive
-                  ? "bg-saffron text-sovereign-darkest shadow-md scale-100"
-                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
-              }`}
-            >
-              <Icon className="w-4 h-4 shrink-0" />
-              <span>{tab.label}</span>
-              <span
-                className={`text-[9px] px-1.5 py-0.5 rounded font-mono ${
-                  isActive
-                    ? "bg-sovereign-darkest/20 text-sovereign-darkest"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-500"
-                }`}
-              >
-                {tab.badge}
-              </span>
-            </button>
-          );
-        })}
+      {/* Island Tab Switcher Capsule */}
+      <div className="flex overflow-x-auto p-1.5 bg-slate-200/80 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-300/80 dark:border-slate-700/80 text-xs font-bold shadow-sm scrollbar-none gap-1.5">
+        {[
+          { id: "personas", label: "👥 Demographic Personas (70M Workers)" },
+          { id: "forms", label: "🏛️ 18 Archaic Forms vs 4 Hubs" },
+          { id: "pillars", label: "🇮🇳 80/20 Sovereign Core Blueprint" },
+          { id: "sre", label: "⚡ SRE Resilience & Circuit Breakers" },
+          { id: "grievances", label: "📊 1.98M Grievance Root Causes" },
+          { id: "legal", label: "⚖️ DPDP Act 2023 & Aadhaar Sec 29" }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            className={`px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
+              activeTab === tab.id
+                ? "bg-white dark:bg-amber-500 text-sovereign-navy dark:text-slate-950 shadow-sm font-black border border-slate-200 dark:border-amber-400 scale-100"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/40 dark:hover:bg-slate-700/50"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       {/* TAB 1: DEMOGRAPHIC COHORT RESEARCH */}
