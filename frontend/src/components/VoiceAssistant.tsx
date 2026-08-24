@@ -75,7 +75,6 @@ export const VoiceAssistant: React.FC = () => {
 
   const uan = activeCitizen.uan || "100982348712";
   const fullName = activeCitizen.full_name || "Citizen";
-  const firstName = fullName.split(" ")[0];
   const company = activeCitizen.active_employment?.establishment_name || "Active Employer";
   const balanceStr = (activeCitizen.passbook_summary?.total_balance ?? 0).toLocaleString("en-IN");
 
@@ -84,11 +83,50 @@ export const VoiceAssistant: React.FC = () => {
   const isGurmeet = fullName.includes("Gurmeet") || uan.includes("100112233445");
   const isSunita = fullName.includes("Sunita") || uan.includes("101889977665");
 
+  // Load past conversation turns from local storage if available (Layer 04: Notion AI Memory Standard)
+  useEffect(() => {
+    if (typeof window !== "undefined" && uan) {
+      try {
+        const saved = localStorage.getItem(`jan_epf_harness_history_${uan}`);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setMessages(parsed);
+            setTurnCounter(parsed.length);
+            return;
+          }
+        }
+      } catch {}
+    }
+  }, [uan]);
+
+  // Persist conversation turns to local storage (Layer 04: Notion AI Memory Standard)
+  useEffect(() => {
+    if (typeof window !== "undefined" && uan && messages.length > 0) {
+      try {
+        localStorage.setItem(`jan_epf_harness_history_${uan}`, JSON.stringify(messages));
+      } catch {}
+    }
+  }, [messages, uan]);
+
   // Synchronize persona and language changes dynamically
   useEffect(() => {
     setActiveSpeechLang(language || "en-IN");
     stopNeuralSpeech();
     setIsSpeaking(false);
+
+    // If already loaded from localStorage, don't overwrite
+    if (typeof window !== "undefined" && uan) {
+      const saved = localStorage.getItem(`jan_epf_harness_history_${uan}`);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return;
+          }
+        } catch {}
+      }
+    }
 
     let greeting = "";
     if (isGurmeet) {
@@ -131,7 +169,7 @@ export const VoiceAssistant: React.FC = () => {
         sessionId: `HARNESS-UAN-${uan}`,
         turnsCount: 1,
         lastTopic: "SESSION_INIT",
-        memorySummary: `Session active • Turn #1 • In-memory state preserved`
+        memorySummary: `Session active • Turn #1 • Preserved in localStorage`
       },
       guardrailLayer: {
         standard: "NeMo / Llama Guard • Statutory Shield",
@@ -516,6 +554,10 @@ export const VoiceAssistant: React.FC = () => {
               <Layers className="w-3 h-3" />
               <span>Devin ReAct</span>
             </div>
+            <div className="flex items-center gap-1 text-purple-300">
+              <Brain className="w-3 h-3" />
+              <span>Notion Memory</span>
+            </div>
             <div className="flex items-center gap-1 text-emerald-400">
               <ShieldCheck className="w-3 h-3" />
               <span>NeMo: Grade S+</span>
@@ -641,6 +683,7 @@ export const VoiceAssistant: React.FC = () => {
                 </div>
 
                 <div className="space-y-2 text-[11px]">
+                  {/* Layer 01 */}
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
                     <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 01 • Zero-Shot Context (Glean)</span>
                     <div className="text-white font-bold">{fullName}</div>
@@ -649,15 +692,32 @@ export const VoiceAssistant: React.FC = () => {
                     <div className="text-slate-300">Establishment: {company}</div>
                   </div>
 
+                  {/* Layer 02 */}
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                    <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 02 • In-Browser Hands (Stripe)</span>
+                    <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 02 • In-Browser Hands (Stripe - 6 Tools)</span>
                     <div className="text-slate-300">1. execute_advance_preflight</div>
                     <div className="text-slate-300">2. auto_deduce_exit_date</div>
                     <div className="text-slate-300">3. verify_npci_penny_drop</div>
                     <div className="text-slate-300">4. toggle_discreet_privacy</div>
                     <div className="text-slate-300">5. download_passbook_statement</div>
+                    <div className="text-slate-300">6. switch_indic_language</div>
                   </div>
 
+                  {/* Layer 03 */}
+                  <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                    <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 03 • Orchestration (Devin)</span>
+                    <div className="text-amber-300 font-bold">Plan ➔ Execute ➔ Verify ➔ Disburse</div>
+                    <div className="text-slate-300">Multi-Step ReAct State Machine</div>
+                  </div>
+
+                  {/* Layer 04 */}
+                  <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
+                    <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 04 • Sovereign Memory (Notion)</span>
+                    <div className="text-purple-300 font-bold">Session Context Persistence</div>
+                    <div className="text-slate-300">Preserved in localStorage across turns</div>
+                  </div>
+
+                  {/* Layer 05 */}
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
                     <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 05 • Guardrail Status (NeMo)</span>
                     <div className="text-emerald-400 font-bold">Grade S+ Security</div>
@@ -665,6 +725,7 @@ export const VoiceAssistant: React.FC = () => {
                     <div className="text-slate-300">HMAC-SHA256 DBT Ledger Chaining</div>
                   </div>
 
+                  {/* Layer 06 */}
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
                     <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 06 • Real-Time Evals (LangSmith)</span>
                     <div className="flex justify-between text-slate-300">
@@ -736,6 +797,9 @@ export const VoiceAssistant: React.FC = () => {
               )}
               <button onClick={() => handleProcessUserMessage("Toggle discreet privacy mode")} className="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-slate-200 whitespace-nowrap">
                 👁️ Privacy Mode
+              </button>
+              <button onClick={() => handleProcessUserMessage("Switch to Hindi language")} className="px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-slate-200 whitespace-nowrap">
+                🌐 13 Indic Languages
               </button>
             </div>
           </div>

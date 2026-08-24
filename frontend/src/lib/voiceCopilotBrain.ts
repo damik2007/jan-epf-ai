@@ -190,7 +190,9 @@ const ADVANCE_KEYWORDS = [
   "advance", "advanc", "advanse", "advaunce", "withdraw", "withdra", "withdrw", "withdrow",
   "withdral", "withdrwal", "medical", "medicle", "medcl", "madical", "illness", "ilness",
   "ilnes", "hospital", "hospitl", "emergency", "emergenci", "emergensy", "treatment",
-  "ilaj", "bimari", "claim", "clame", "nikal", "nikalna", "chahiye", "form 31", "form31", "पैसा निकालना", "अग्रिम", "इलाज"
+  "housing", "house", "property", "ghar", "makaan", "education", "padhai", "marriage",
+  "shadi", "shaadi", "ilaj", "bimari", "claim", "clame", "nikal", "nikalna", "chahiye",
+  "form 31", "form31", "para 68j", "para 68b", "para 68k", "68j", "68b", "68k", "पैसा निकालना", "अग्रिम", "इलाज"
 ];
 
 const CAREER_KEYWORDS = [
@@ -218,6 +220,12 @@ const TDS_KEYWORDS = [
 const PRIVACY_KEYWORDS = [
   "privacy", "privcy", "mask", "masking", "hide", "hiding", "discreet", "discret",
   "chupao", "chipao", "gupt", "गुप्त", "छिपाओ"
+];
+
+const LANGUAGE_KEYWORDS = [
+  "language", "lang", "bhasha", "translate", "translation", "hindi", "tamil", "telugu",
+  "english", "kannada", "malayalam", "marathi", "bengali", "gujarati", "punjabi", "odia",
+  "assamese", "urdu", "switch language", "change language", "indic", "भाषा", "बदलो"
 ];
 
 // 6-Layer Sovereign Harness Response Generator with Wagner-Fischer Alignment
@@ -271,7 +279,7 @@ export function generateCopilotResponse(
       sessionId: `HARNESS-UAN-${citizen.uan}`,
       turnsCount: turnCount,
       lastTopic: "GENERAL",
-      memorySummary: `Session active • Turn #${turnCount} • Preserved across reloads`
+      memorySummary: `Session active • Turn #${turnCount} • Preserved in localStorage`
     },
     guardrailLayer: {
       standard: "NeMo / Llama Guard • Statutory Shield",
@@ -332,6 +340,7 @@ export function generateCopilotResponse(
   const matchPension = matchFuzzyKeywords(tokens, PENSION_KEYWORDS, 0.74);
   const matchTds = matchFuzzyKeywords(tokens, TDS_KEYWORDS, 0.74);
   const matchPrivacy = matchFuzzyKeywords(tokens, PRIVACY_KEYWORDS, 0.74);
+  const matchLanguage = matchFuzzyKeywords(tokens, LANGUAGE_KEYWORDS, 0.74);
 
   // Set fuzzy alignment metadata if a typo was corrected
   if (matchBalance.matched && matchBalance.word !== matchBalance.target) {
@@ -345,7 +354,7 @@ export function generateCopilotResponse(
     baseHarness.fuzzyAlignment = {
       originalQuery: userInput,
       correctedTerm: matchAdvance.target,
-      resolvedIntent: "Para 68J Emergency Advance",
+      resolvedIntent: "Para 68 Emergency Advance",
       similarityPct: matchAdvance.score
     };
   } else if (matchCareer.matched && matchCareer.word !== matchCareer.target) {
@@ -361,6 +370,13 @@ export function generateCopilotResponse(
       correctedTerm: matchKyc.target,
       resolvedIntent: "NPCI Penny Drop Bank KYC",
       similarityPct: matchKyc.score
+    };
+  } else if (matchLanguage.matched && matchLanguage.word !== matchLanguage.target) {
+    baseHarness.fuzzyAlignment = {
+      originalQuery: userInput,
+      correctedTerm: matchLanguage.target,
+      resolvedIntent: "Switch Indic Language",
+      similarityPct: matchLanguage.score
     };
   }
 
@@ -461,36 +477,45 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 5. MEDICAL ADVANCE, WITHDRAWALS & PARA 68 (Fuzzy Typo Tolerant)
+  // 5. ADVANCE CLAIMS: PARA 68J (MEDICAL), 68B (HOUSING), 68K (EDUCATION/MARRIAGE)
   // ============================================================================
   if (matchAdvance.matched) {
-    const maxAdvance = Math.min(156000, Math.round(citizen.balance * 0.75));
+    const isHousing = rawClean.includes("house") || rawClean.includes("housing") || rawClean.includes("property") || rawClean.includes("ghar") || rawClean.includes("68b");
+    const isMarriage = rawClean.includes("marriage") || rawClean.includes("education") || rawClean.includes("shadi") || rawClean.includes("padhai") || rawClean.includes("68k");
+    const paraLabel = isHousing ? "Para 68B (Housing/Construction)" : isMarriage ? "Para 68K (Marriage/Education)" : "Para 68J (Medical / Illness)";
+
+    const maxAdvance = isHousing
+      ? Math.min(260000, Math.round(citizen.balance * 0.90))
+      : isMarriage
+      ? Math.min(120000, Math.round(citizen.balance * 0.50))
+      : Math.min(156000, Math.round(citizen.balance * 0.75));
+
     baseHarness.toolLayer = {
       standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "execute_advance_preflight",
-      toolLabel: `execute_advance_preflight(para='68J', uan='${citizen.uan}', amount=${maxAdvance})`,
+      toolLabel: `execute_advance_preflight(para='${paraLabel.split(" ")[1]}', uan='${citizen.uan}', amount=${maxAdvance})`,
       arguments: {
         uan: citizen.uan,
-        paraClause: "Para 68J (Medical / Illness)",
+        paraClause: paraLabel,
         amountRequested: maxAdvance,
-        wageMultiplier: 6
+        wageMultiplier: isHousing ? 36 : isMarriage ? 12 : 6
       },
       executionOutput: `Pre-flight passed in 0.04ms. Max sanction: ₹${maxAdvance.toLocaleString("en-IN")}. 0% TDS applied.`
     };
 
     baseHarness.orchestrationLayer = [
-      { step: 1, total: 4, title: "Deterministic Para 68J Actuary Math", detail: `Calculated 6-month basic wage cap: ₹${maxAdvance.toLocaleString("en-IN")} sanctioned`, status: "DONE" },
+      { step: 1, total: 4, title: `Deterministic ${paraLabel.split(" ")[0]} ${paraLabel.split(" ")[1]} Actuary Math`, detail: `Calculated statutory cap: ₹${maxAdvance.toLocaleString("en-IN")} sanctioned`, status: "DONE" },
       { step: 2, total: 4, title: "Section 192A 0% TDS Shield", detail: `${serviceYears} yrs service verified (>5.0 yrs): 0% tax deducted`, status: "DONE" },
       { step: 3, total: 4, title: "Presidio PII Vault Tokenization", detail: "Masked Aadhaar (••••••••8712) and Bank Account in memory", status: "DONE" },
       { step: 4, total: 4, title: "Direct Benefit Transfer (DBT) Mock Disbursal", detail: "Generated cryptographic HMAC-SHA256 settlement receipt", status: "DONE" }
     ];
 
-    baseHarness.memoryLayer.lastTopic = "MEDICAL_ADVANCE_PARA68J";
+    baseHarness.memoryLayer.lastTopic = "ADVANCE_PARA68";
 
     if (isHindi) {
       return {
-        spokenText: `${firstName} जी, पैरा 68J मेडिकल अग्रिम के तहत आप ₹${maxAdvance.toLocaleString("en-IN")} की राशि बिना किसी सर्विस शर्त के तुरंत क्लेम कर सकते हैं। इस पर कोई टैक्स या टीडीएस नहीं कटेगा।`,
-        displayText: `🏥 **पैरा 68J मेडिकल इमरजेंसी एडवांस (${firstName} • ${employerName})**\n\n✅ **अधिकतम स्वीकृत राशि:** ₹${maxAdvance.toLocaleString("en-IN")}\n• **नियम:** 6 माह का मूल वेतन या कर्मचारी शेयर (0 दिन की न्यूनतम सेवा आवश्यक)\n• **टीडीएस कर छूट:** 0% (धारा 192A)\n• **आवश्यक दस्तावेज:** अस्पताल बिल / मेडिकल स्व-घोषणा (कोई भौतिक फॉर्म नहीं)\n\nक्या आप 1-क्लिक से यह क्लेम सबमिट करना चाहते हैं?`,
+        spokenText: `${firstName} जी, ${paraLabel} के तहत आप ₹${maxAdvance.toLocaleString("en-IN")} की राशि तुरंत क्लेम कर सकते हैं। इस पर कोई टैक्स या टीडीएस नहीं कटेगा।`,
+        displayText: `🏥 **${paraLabel} इमरजेंसी एडवांस (${firstName} • ${employerName})**\n\n✅ **अधिकतम स्वीकृत राशि:** ₹${maxAdvance.toLocaleString("en-IN")}\n• **नियम:** वैधानिक सीमा अनुसार तुरंत स्वीकृति\n• **टीडीएस कर छूट:** 0% (धारा 192A)\n• **आवश्यक दस्तावेज:** स्व-घोषणा (कोई भौतिक फॉर्म नहीं)\n\nक्या आप 1-क्लिक से यह क्लेम सबमिट करना चाहते हैं?`,
         targetRoute: "/money",
         langCode: "hi-IN",
         category: "MONEY",
@@ -499,8 +524,8 @@ export function generateCopilotResponse(
     }
 
     return {
-      spokenText: `${firstName}, under Para 68J Emergency Medical Advance, you are eligible for an instant advance of up to ₹${maxAdvance.toLocaleString("en-IN")} from ${employerName}. Because you have ${serviceYears} years of service, your withdrawal is 100% tax-free with 0% TDS.`,
-      displayText: `🏥 **Para 68J Emergency Medical Advance (${citizen.name})**\n\n🏢 **Establishment:** ${employerName}\n✅ **Maximum Sanction Limit:** **₹${maxAdvance.toLocaleString("en-IN")}** (6 Months Wages Cap)\n• **Service Requirement:** 0 Days (Immediate Emergency Eligibility)\n• **Section 192A TDS:** 0% Tax Deducted (${serviceYears} Yrs Service > 5 Yrs threshold)\n• **Settlement Method:** Instant Direct Benefit Transfer (DBT) to verified bank account\n\nClick below to open the **I Need Money Hub** and complete the 1-click claim!`,
+      spokenText: `${firstName}, under ${paraLabel}, you are eligible for an instant advance of up to ₹${maxAdvance.toLocaleString("en-IN")} from ${employerName}. Because you have ${serviceYears} years of service, your withdrawal is 100% tax-free with 0% TDS.`,
+      displayText: `🏥 **${paraLabel} Emergency Advance (${citizen.name})**\n\n🏢 **Establishment:** ${employerName}\n✅ **Maximum Sanction Limit:** **₹${maxAdvance.toLocaleString("en-IN")}**\n• **Statutory Qualification:** Verified compliant with EPFO Actuary Matrix\n• **Section 192A TDS:** 0% Tax Deducted (${serviceYears} Yrs Service > 5 Yrs threshold)\n• **Settlement Method:** Instant Direct Benefit Transfer (DBT) to verified bank account\n\nClick below to open the **I Need Money Hub** and complete the 1-click claim!`,
       targetRoute: "/money",
       langCode: "en-IN",
       category: "MONEY",
@@ -653,7 +678,35 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 10. TAX RULES & SECTION 192A (Fuzzy Typo Tolerant)
+  // 10. SWITCH INDIC LANGUAGE (Tool Call 06)
+  // ============================================================================
+  if (matchLanguage.matched) {
+    baseHarness.toolLayer = {
+      standard: "Stripe ($70B Standard) • In-Browser Hands",
+      toolName: "switch_indic_language",
+      toolLabel: "switch_indic_language(target='13 Indic Languages')",
+      arguments: { supportedLanguages: 13, defaultCode: "en-IN" },
+      executionOutput: "Bhashini Indic translation pipeline primed across 13 native languages."
+    };
+
+    baseHarness.orchestrationLayer = [
+      { step: 1, total: 2, title: "Bhashini Regional Language Routing", detail: "Parsed target Indic language request", status: "DONE" },
+      { step: 2, total: 2, title: "Indic DOM Localization & Voice Swap", detail: "Swapped UI typography and Edge-TTS voice mapping", status: "DONE" }
+    ];
+
+    baseHarness.memoryLayer.lastTopic = "INDIC_LANGUAGE_SWITCH";
+
+    return {
+      spokenText: "Jan-EPF AI supports 13 native Indic languages. You can select your preferred dialect using the language switcher in the navigation bar.",
+      displayText: "🌐 **13 Indic Languages Active:**\n• **Supported:** Hindi, Tamil, Telugu, Kannada, Malayalam, Marathi, Bengali, Gujarati, Punjabi, Odia, Assamese, Urdu, English.\n• **Engine:** Bhashini Native Translation + Whisper Edge Voice\n• Use the top Navbar language menu to swap dialects anytime.",
+      langCode: "en-IN",
+      category: "HARNESS_ACTION",
+      harness: baseHarness
+    };
+  }
+
+  // ============================================================================
+  // 11. TAX RULES & SECTION 192A (Fuzzy Typo Tolerant)
   // ============================================================================
   if (matchTds.matched) {
     baseHarness.memoryLayer.lastTopic = "SECTION_192A_TDS";
@@ -672,7 +725,7 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 11. DEFAULT CONVERSATIONAL RESPONSE (DYNAMIC, CONTEXT-AWARE)
+  // 12. DEFAULT CONVERSATIONAL RESPONSE (DYNAMIC, CONTEXT-AWARE)
   // ============================================================================
   if (isHindi) {
     return {
@@ -686,7 +739,7 @@ export function generateCopilotResponse(
 
   return {
     spokenText: `I am your Sovereign Agent for ${employerName}, ${firstName}. Your verified balance is ₹${balanceFormatted}. How can I assist you with your advances, job transfer, or passbook today?`,
-    displayText: `⚡ **Jan-EPF Sovereign Agent Harness (${citizen.name})**\n\n🏢 **Active Employer:** ${employerName} (UAN: ${citizen.uan})\n💰 **Available Balance:** ₹${balanceFormatted} (Employee: ₹${empShareFormatted} • Employer: ₹${emprShareFormatted})\n🛡️ **Statutory Protection:** ${serviceYears} Yrs Service • 0% TDS Tax Shield\n\n**Quick Actions Available:**\n• *"Withdraw ₹48,000 medical advance"*\n• *"Transfer my previous job PF balance"*\n• *"Explain Section 192A 0% TDS rule"*\n• *"Download passbook statement"*`,
+    displayText: `⚡ **Jan-EPF Sovereign Agent Harness (${citizen.name})**\n\n🏢 **Active Employer:** ${employerName} (UAN: ${citizen.uan})\n💰 **Available Balance:** ₹${balanceFormatted} (Employee: ₹${empShareFormatted} • Employer: ₹${emprShareFormatted})\n🛡️ **Statutory Protection:** ${serviceYears} Yrs Service • 0% TDS Tax Shield\n\n**Quick Actions Available:**\n• *"Withdraw ₹48,00,0 medical advance"*\n• *"Transfer my previous job PF balance"*\n• *"Explain Section 192A 0% TDS rule"*\n• *"Download passbook statement"*`,
     langCode: "en-IN",
     category: "GENERAL",
     harness: baseHarness

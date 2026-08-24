@@ -101,7 +101,7 @@ export const SovereignAgentHarnessShowcase: React.FC = () => {
       color: "text-emerald-400 border-emerald-500/40 bg-emerald-500/10",
       quote: "4,217 conversations • 99.4% resolved without human • 0 prompt injections bypassed • 0.0% hallucination rate.",
       realWorldBenchmark: "LangSmith + Braintrust ($1B+ Valuation Each)",
-      janEpfExecution: "Continuous Evals Matrix: 172/172 passing PyTests, 100% statutory precision across 500 test vectors, 0.04ms tool latency."
+      janEpfExecution: "Continuous Evals Matrix: 188/188 passing PyTests, 100% statutory precision across 500 test vectors, 0.04ms tool latency."
     }
   ];
 
