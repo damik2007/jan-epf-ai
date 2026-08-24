@@ -9,6 +9,7 @@ import { AudienceSegmentReport } from "@/components/AudienceSegmentReport";
 import { CitizenFeatureMatrix } from "@/components/CitizenFeatureMatrix";
 import { SovereignDpiPillars } from "@/components/SovereignDpiPillars";
 import { SreTelemetryPanel } from "@/components/SreTelemetryPanel";
+import { TechStackMatrix } from "@/components/TechStackMatrix";
 import {
   Landmark,
   Layers,
@@ -32,10 +33,10 @@ export default function ArchitectureResearchPage() {
   const { language } = useCitizen();
   const t = getTranslation(language);
 
-  const [activeTab, setActiveTab] = useState<"personas" | "forms" | "pillars" | "sre" | "grievances" | "legal">("grievances");
+  const [activeTab, setActiveTab] = useState<"personas" | "forms" | "pillars" | "sre" | "grievances" | "legal" | "stack">("grievances");
 
   const tabs: Array<{
-    id: "personas" | "forms" | "pillars" | "sre" | "grievances" | "legal";
+    id: "personas" | "forms" | "pillars" | "sre" | "grievances" | "legal" | "stack";
     label: string;
     icon: any;
     badge: string;
@@ -45,7 +46,8 @@ export default function ArchitectureResearchPage() {
     { id: "personas", label: "👥 Demographic Personas (70M Workers)", icon: Users, badge: "4 Cohorts" },
     { id: "forms", label: "🏛️ 18 Archaic Forms vs 4 Hubs", icon: Layers, badge: "Zero Forms" },
     { id: "pillars", label: "🇮🇳 80/20 Sovereign Core Blueprint", icon: Server, badge: "Presidio + Edge" },
-    { id: "sre", label: "⚡ SRE Resilience & Circuit Breakers", icon: Activity, badge: "Zero Fallback" }
+    { id: "sre", label: "⚡ SRE Resilience & Circuit Breakers", icon: Activity, badge: "Zero Fallback" },
+    { id: "stack", label: "🛠️ Tools & Tech Stack Matrix", icon: Cpu, badge: "18 Tools" }
   ];
 
   return (
@@ -314,6 +316,13 @@ export default function ArchitectureResearchPage() {
         </div>
       )}
    
+            {/* TAB 7: TOOLS, TECH STACK & ENGINEERING TOOLCHAIN */}
+      {activeTab === "stack" && (
+        <div className="space-y-4 animate-in fade-in duration-200">
+          <TechStackMatrix />
+        </div>
+      )}
+
       {/* Formal Statutory & Legal Disclaimers Card */}
       <div className="w-full bg-slate-900/90 text-slate-300 rounded-3xl p-6 sm:p-7 border border-slate-800 space-y-4 font-sans text-xs shadow-xl">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
