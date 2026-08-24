@@ -105,7 +105,7 @@ export function SettlementReceiptModal({
           </div>
 
           {/* Citizen & Establishment Details Grid */}
-          <div className="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs bg-slate-50 p-4 rounded-2xl border border-slate-200">
             <div>
               <span className="text-[10px] uppercase font-bold text-slate-500 block">Member Name</span>
               <strong className="text-sm text-sovereign-navy">{activeCitizen.full_name}</strong>

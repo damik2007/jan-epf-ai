@@ -308,7 +308,7 @@ export default function NeedMoneyHub() {
             </div>
 
             {/* Quick Percentage Chips */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Quick Presets:</span>
               {[0.25, 0.5, 0.75, 1.0].map((fraction) => {
                 const presetAmt = Math.max(5000, Math.round((eligibility.maxAdvanceAmount * fraction) / 1000) * 1000);

@@ -295,7 +295,7 @@ export default function LoginPage() {
 
       {/* MODE C: 10-MIN RESILIENT AADHAAR OTP */}
       {authMode === "AADHAAR_OTP" && (
-        <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl max-w-lg mx-auto space-y-6 text-center animate-in zoom-in-95">
+        <div className="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl max-w-lg mx-auto space-y-6 text-center animate-in zoom-in-95">
           <div className="w-16 h-16 rounded-2xl bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto">
             <Smartphone className="w-8 h-8" />
           </div>
@@ -311,7 +311,7 @@ export default function LoginPage() {
 
           {/* 6 Large 60px OTP Boxes */}
           <form onSubmit={handleVerifyOtp} className="space-y-4">
-            <div className="flex justify-center gap-2.5">
+            <div className="flex justify-center gap-1.5 sm:gap-2.5">
               {otpDigits.map((digit, idx) => (
                 <input
                   key={idx}
@@ -323,7 +323,7 @@ export default function LoginPage() {
                   value={digit}
                   onChange={(e) => handleOtpChange(idx, e.target.value)}
                   onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                  className="w-12 h-14 text-center text-xl font-black font-mono rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sovereign-navy dark:text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-all shadow-inner"
+                  className="w-9 h-12 sm:w-12 sm:h-14 text-center text-lg sm:text-xl font-black font-mono rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sovereign-navy dark:text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-all shadow-inner"
                   autoFocus={idx === 0}
                 />
               ))}

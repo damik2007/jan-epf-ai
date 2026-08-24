@@ -78,6 +78,13 @@ export function SpeedRunTour() {
   const [isMinimized, setIsMinimized] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
 
+  // Auto-minimize on mobile viewports on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsMinimized(window.innerWidth < 640);
+    }
+  }, []);
+
   const currentStep = SPEED_RUN_STEPS[currentStepIndex];
 
   // Auto-play timer
@@ -107,7 +114,7 @@ export function SpeedRunTour() {
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[95%] max-w-xl transition-all duration-300">
+    <div className="fixed bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-40 w-[94%] sm:w-[95%] max-w-xl transition-all duration-300">
       <div className="bg-sovereign-darkest/95 text-white border border-saffron/40 shadow-2xl rounded-2xl p-3 sm:p-4 backdrop-blur-lg">
         {isMinimized ? (
           <div className="flex justify-between items-center">

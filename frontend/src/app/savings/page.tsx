@@ -217,7 +217,7 @@ export default function MySavingsHub() {
               title={t.pensionFundShare}
             />
           </div>
-          <div className="flex justify-between text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+          <div className="flex flex-col sm:flex-row justify-between gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" /> {t.employeeShare}: ₹{empShare.toLocaleString("en-IN")}
             </span>

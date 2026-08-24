@@ -457,7 +457,7 @@ export default function FixDetailsHub() {
 
           <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs space-y-2">
             <div className="font-bold text-slate-800 dark:text-slate-200">{t.jointDecConsent}</div>
-            <div className="grid grid-cols-3 gap-2 text-center text-[11px]">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-[11px]">
               <div className="bg-white dark:bg-slate-900 p-2 rounded-lg border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-semibold">
                 1. Citizen e-Sign ✓
               </div>

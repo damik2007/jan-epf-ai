@@ -355,9 +355,15 @@ export const VoiceAssistant: React.FC = () => {
   ];
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 max-w-md w-full sm:w-[420px] px-3">
+    <div
+      className={`fixed z-50 transition-all duration-300 ${
+        isOpen
+          ? "bottom-4 right-2 left-2 sm:left-auto sm:right-4 max-w-md w-auto sm:w-[420px] px-1 sm:px-3"
+          : "bottom-20 right-3.5 sm:bottom-4 sm:right-4"
+      }`}
+    >
       {isOpen && (
-        <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-sovereign-navy dark:border-slate-700 p-4 mb-3 transition-all animate-in slide-in-from-bottom-5 space-y-3 flex flex-col max-h-[560px]">
+        <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl shadow-2xl border-2 border-sovereign-navy dark:border-slate-700 p-4 mb-3 transition-all animate-in slide-in-from-bottom-5 space-y-3 flex flex-col max-h-[75vh]">
           {/* Header */}
           <div className="flex justify-between items-center pb-2.5 border-b border-slate-100 dark:border-slate-800 shrink-0">
             <div className="flex items-center gap-2.5">
@@ -613,18 +619,29 @@ export const VoiceAssistant: React.FC = () => {
               startListening();
             }
           }}
-          className={`flex items-center gap-2.5 px-4 py-3 rounded-full shadow-2xl font-bold text-sm transition-all transform hover:scale-105 border-2 ${
+          className={`flex items-center shadow-2xl font-bold transition-all transform hover:scale-105 border-2 ${
             isListening
               ? "bg-red-500 text-white border-white animate-pulse"
               : "bg-sovereign-navy text-white border-saffron hover:bg-sovereign-light dark:bg-slate-900 dark:border-amber-400"
+          } ${
+            isOpen
+              ? "px-4 py-2.5 rounded-full text-xs sm:text-sm gap-2"
+              : "p-3.5 sm:px-4 sm:py-3 rounded-full text-sm gap-2.5"
           }`}
+          title="Speak to Jan-EPF Voice Copilot"
         >
-          {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5 text-saffron" />}
-          <span>{isListening ? "Listening... Tap to Stop" : t.speakToVoice}</span>
-          {isOpen ? (
-            <ChevronDown className="w-4 h-4 text-slate-300" />
+          {isListening ? (
+            <MicOff className="w-5 h-5" />
           ) : (
-            <ChevronUp className="w-4 h-4 text-slate-300" />
+            <Mic className="w-5 h-5 text-saffron shrink-0" />
+          )}
+          <span className={isOpen ? "inline" : "hidden sm:inline font-bold"}>
+            {isListening ? "Listening..." : t.speakToVoice}
+          </span>
+          {isOpen ? (
+            <ChevronDown className="w-4 h-4 text-slate-300 shrink-0" />
+          ) : (
+            <ChevronUp className="hidden sm:inline w-4 h-4 text-slate-300 shrink-0" />
           )}
         </button>
       </div>

@@ -97,21 +97,21 @@ export const Navbar: React.FC = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-sovereign-navy text-white shadow-lg border-b border-sovereign-light">
       {/* Top Sovereign Bar */}
-      <div className="bg-sovereign-darkest border-b border-sovereign-navy/50 px-4 py-1.5 text-xs flex flex-wrap justify-between items-center text-slate-300">
+      <div className="bg-sovereign-darkest border-b border-sovereign-navy/50 px-2 sm:px-4 py-1 text-xs flex flex-wrap gap-1.5 justify-between items-center text-slate-300">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setArchitectureModalOpen(true)}
-            className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 text-[10px] sm:text-[11px] font-bold transition-all shadow-sm max-w-[220px] sm:max-w-none truncate"
             title="Inspect 80/20 Sovereign Core & Open-Source AI Token Economics"
           >
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Azure Central India (Gemma 4 / Llama 3.2) • 80/20 Core ($0 Bill)</span>
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="truncate"><span className="hidden sm:inline">Azure Central India (Gemma 4 / Llama 3.2) • </span>80/20 Core ($0 Bill)</span>
           </button>
           <span className="hidden sm:inline text-slate-400">|</span>
           <span className="hidden sm:inline text-slate-300">Build What Moves India (Varun Mayya × OpenAI)</span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           {/* Light / Dark Mode Toggle Button */}
           <button
             onClick={toggleTheme}
