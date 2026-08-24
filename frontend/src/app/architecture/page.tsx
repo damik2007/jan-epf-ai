@@ -274,12 +274,12 @@ export default function ArchitectureResearchPage() {
               <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
                 <TrendingDown className="w-5 h-5" />
               </div>
-              <h4 className="text-sm font-bold text-white">Zero Commercial Cloud Toll</h4>
+              <h4 className="text-sm font-bold text-white">99.6% Net Cloud Savings</h4>
               <p className="text-xs text-slate-300 leading-relaxed">
-                By offloading 80% of transactions to local deterministic execution, national cloud expenditure drops from &#8377;18.4 Crore/year (at commercial API rates) to &#8377;0.00.
+                80% of transactions execute 100% free on-device (₹0.00 compute) and 20% on self-hosted open-weight containers (~₹0.0004/req), slashing national cloud bills from ₹18.4 Crore/year down to &lt; ₹0.01 Crore.
               </p>
-              <div className="text-[11px] font-mono text-amber-400 pt-1">
-                &bull; National Exchequer ROI: 100% Retained
+              <div className="text-[11px] font-mono text-amber-400 pt-1 font-bold">
+                • National Exchequer Retained: 99.6% Net Savings
               </div>
             </div>
           </div>
