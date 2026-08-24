@@ -25,7 +25,7 @@ Jan-EPF AI replaces the 18 legacy bureaucratic EPFO PDF forms with **4 Human Lif
 | **Layer 03: Orchestration Loop** | **Devin ($5B)** | Multi-Step ReAct State Machine: `Plan ➔ Execute ➔ Verify ➔ Disburse` loop with real-time checkmark cards. |
 | **Layer 04: Sovereign Memory** | **Notion AI ($10B)** | Sovereign Session Memory: Cross-turn state and claim history preserved in reactive local storage across reloads. |
 | **Layer 05: Defense & Guardrails** | **NeMo / Llama Guard** | Cybersecurity Shield: Intercepts prompt injections, rule overrides, and unauthorized withdrawals (`Grade S+`). |
-| **Layer 06: Measure & Evals** | **LangSmith ($1B+)** | Continuous Ground-Truth Matrix: 99.4% auto-resolution, 0.0% hallucination rate, 178/178 passing tests. |
+| **Layer 06: Measure & Evals** | **LangSmith ($1B+)** | Continuous Ground-Truth Matrix: 99.4% auto-resolution, 0.0% hallucination rate, 187/187 passing tests. |
 
 ---
 
@@ -57,7 +57,7 @@ Jan-EPF AI replaces the 18 legacy bureaucratic EPFO PDF forms with **4 Human Lif
 13. **Tiktoken Rust BPE Tokenizer**: Prunes 73.8% of redundant legal tokens before LLM inference.
 14. **Whisper Neural Speech Engine**: Multilingual voice command recognition across 13 Indic dialects.
 15. **OpenAI GPT-4o / Gemma-2-9B Container**: Self-correcting NCDRC & CPFiGMS statutory petition generator.
-16. **PyTest 178-Suite Architecture**: 100% pass rate, 95% statutory code coverage.
+16. **PyTest 187-Suite Architecture**: 100% pass rate, 95% statutory code coverage.
 17. **Vercel Edge Network**: Sub-10ms global edge delivery via Mumbai (`bom1`) & Singapore (`sin1`).
 18. **Azure Container Apps**: Micro-cost container scaling for sovereign voice and grievance synthesis.
 
@@ -72,30 +72,35 @@ Native bi-directional translations for:
 
 ## 6. High-DPI Screenshot Gallery Inventory (`docs/screenshots/`)
 
-All 17 screenshots are captured at full scroll-down height (2880px wide retina):
+All 22 screenshots are captured at full scroll-down height (2880px wide retina):
 1. `01_login_fastpath.png`: FastPath Login Gateway (4 sandbox personas).
 2. `02_dashboard_privacy_on.png`: Citizen Dashboard (Discreet Mode Active).
 3. `03_dashboard_unmasked.png`: Citizen Dashboard (Unmasked Live Balance & Claim Readiness Island).
-4. `04_voice_copilot_glass.png`: Sovereign Agent Harness Copilot (6-layer live status & Devin plan).
-5. `05_need_money_hub.png`: I Need Money Hub (`/money`) & Pre-Flight Rejection Diff Card.
-6. `06_career_transfer_hub.png`: I Changed Jobs Hub (`/career`) & ECR Auto-Exit Timestamp.
-7. `07_savings_compounding_hub.png`: My Savings Hub (`/savings`) & Triple-Split Passbook.
-8. `08_fix_details_hub.png`: Fix Details Hub (`/fix`) & Penny Drop Bank Verification.
-9. `09_benchmarks_tab1_latency.png`: 1,000-Run Microsecond Latency Runner (`<0.05ms`).
-10. `10_benchmarks_tab2_cost.png`: Micro-Cost & Net Exchequer Economics (99.6% Savings).
-11. `11_benchmarks_tab3_evals.png`: 3-Part OpenAI Benchmark Evals & Agent Tool Calling Latency.
-12. `12_benchmarks_tab4_cpgrams.png`: 1.98M CPGRAMS Rejection Taxonomy Analysis.
-13. `13_benchmarks_tab5_sre.png`: SRE Chaos & Upstream Resilience Circuit Breakers.
-14. `14_architecture_tab1_pillars.png`: Sovereign Agent Harness Architecture Showcase (6 Layers).
-15. `15_architecture_tab2_core.png`: 80/20 Sovereign Core Mathematical Separation.
-16. `16_architecture_tab4_security.png`: Zero-Trust Security, Presidio PII Vault & PostgreSQL RLS.
-17. `17_architecture_tab7_tools.png`: Full 18-Tool Technology Matrix & Toolchain.
+4. `04_command_center_glass.png`: Command Center (⌘K) in Frosted Glass.
+5. `05_sovereign_agent_harness_glass.png`: Sovereign Agent Harness Copilot (6-layer live status & Devin plan).
+6. `06_need_money_hub.png`: I Need Money Hub (`/money`) & Pre-Flight Rejection Diff Card.
+7. `07_career_transfer_hub.png`: I Changed Jobs Hub (`/career`) & ECR Auto-Exit Timestamp.
+8. `08_savings_compounding_hub.png`: My Savings Hub (`/savings`) & Triple-Split Passbook.
+9. `09_fix_details_hub.png`: Fix Details Hub (`/fix`) & Penny Drop Bank Verification.
+10. `10_benchmarks_tab1_latency.png`: 1,000-Run Microsecond Latency Runner (`<0.05ms`).
+11. `11_benchmarks_tab2_cost.png`: Micro-Cost & Net Exchequer Economics (99.6% Savings).
+12. `12_benchmarks_tab3_evals.png`: 3-Part OpenAI Benchmark Evals & Agent Tool Calling Latency.
+13. `13_benchmarks_tab4_cpgrams.png`: 1.98M CPGRAMS Rejection Taxonomy Analysis.
+14. `14_benchmarks_tab5_sre.png`: SRE Chaos & Upstream Resilience Circuit Breakers.
+15. `15_architecture_tab0_harness.png`: Sovereign Agent Harness Architecture Showcase (6 Layers).
+16. `16_architecture_tab1_grievances.png`: Empirical CPGRAMS Analysis (1.98M Grievance Records).
+17. `17_architecture_tab2_legal.png`: DPDP Act 2023 & Legal Compliance Blueprint.
+18. `18_architecture_tab3_personas.png`: Demographic Cohort Studies (4 Worker Demographics).
+19. `19_architecture_tab4_forms.png`: 18 Archaic Forms vs 4 Hubs Matrix.
+20. `20_architecture_tab5_pillars.png`: 80/20 Sovereign Core Blueprint & Pillars.
+21. `21_architecture_tab6_sre.png`: SRE Resilience & Upstream Circuit Breakers.
+22. `22_architecture_tab7_tools.png`: Full 18-Tool Technology Matrix & Toolchain.
 
 ---
 
 ## 7. Continuous SRE & Testing Metrics
 
-- **Total PyTests Passing:** `178 / 178 (100%)`
+- **Total PyTests Passing:** `187 / 187 (100%)`
 - **Statutory Code Coverage:** `95%`
 - **Turbopack Build Speed:** `~467ms`
 - **Local Rule Latency:** `<0.05ms (0ms server roundtrip)`

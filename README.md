@@ -1,7 +1,7 @@
 # 🇮🇳 Jan-EPF AI: Sovereign Digital Public Infrastructure (DPI) for Citizen Pension & PF
 ### *Zero-Rejection Claim Architecture • 6-Layer Sovereign Agent Harness • 18-Tool Open-Weight Engine • 13 Indic Languages • 80/20 Sovereign Core*
 
-[![CI / CD & PyTest Suite](https://img.shields.io/badge/PyTest-178%20Passing%20(100%25)-emerald.svg?style=flat-square&logo=pytest)](https://github.com/damik2007/jan-epf-ai)
+[![CI / CD & PyTest Suite](https://img.shields.io/badge/PyTest-187%20Passing%20(100%25)-emerald.svg?style=flat-square&logo=pytest)](https://github.com/damik2007/jan-epf-ai)
 [![Next.js 16 + React 19](https://img.shields.io/badge/Frontend-Next.js%2016%20(Turbopack)-black.svg?style=flat-square&logo=next.js)](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007)
 [![Edge Network Mumbai bom1](https://img.shields.io/badge/Edge%20PoP-Mumbai%20(bom1)-orange.svg?style=flat-square)](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007)
 [![DPDP Act 2023 Compliant](https://img.shields.io/badge/Security-DPDP%20Act%202023%20S%2B-blue.svg?style=flat-square)](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/architecture?key=damik2007)
@@ -119,7 +119,7 @@ Jan-EPF AI pioneers the **Sovereign Agent Harness Architecture**, embodying the 
 | **13** | **Tiktoken Rust BPE Tokenizer** | Deterministic Token Pruning | Prunes 73.8% of redundant legal tokens before LLM inference |
 | **14** | **Whisper Neural Speech** | 13 Indic Spoken Dialects | Multilingual voice intake (Hindi, Telugu, Tamil, Kannada, etc.) |
 | **15** | **OpenAI GPT-4o / Gemma-2-9B** | Legal Grievance Synthesis | Self-correcting NCDRC & CPFiGMS statutory petition generator |
-| **16** | **PyTest 178-Suite Architecture** | 360-Degree Continuous CI/CD | 100% pass rate, 95% statutory coverage across Para 68 & 192A |
+| **16** | **PyTest 187-Suite Architecture** | 360-Degree Continuous CI/CD | 100% pass rate, 95% statutory coverage across Para 68 & 192A |
 | **17** | **Vercel Edge Network** | Sub-10ms Global Delivery | Mumbai (`bom1`) & Singapore (`sin1`) Edge PoPs |
 | **18** | **Azure Container Apps** | Sovereign Open-Weight Edge | Micro-cost container scaling for voice and grievance synthesis |
 
@@ -132,27 +132,32 @@ Jan-EPF AI supports full native bi-directional localization across 13 Indian lan
 
 ---
 
-## 🖼️ High-Resolution Full-Page Screenshot Gallery (Retina 2x)
+## 🖼️ High-Resolution Full-Page Screenshot Gallery (22 Retina Screenshots)
 
 | Preview | Description |
 |:---|:---|
 | ![01 FastPath Login](docs/screenshots/01_login_fastpath.png) | **01. FastPath Multi-Persona Login Gateway**: Instant 1-click authentication into Ramesh, Priya, Gurmeet, and Sunita sandbox profiles. |
-| ![02 Dashboard Privacy ON](docs/screenshots/02_dashboard_privacy_on.png) | **02. Citizen Dashboard (Discreet Mode Active)**: Masked financial identifiers (`₹ ••••••••`), localized Telugu readiness island, and life event portals. |
+| ![02 Dashboard Privacy ON](docs/screenshots/02_dashboard_privacy_on.png) | **02. Citizen Dashboard (Discreet Mode Active)**: Masked financial identifiers (`₹ ••••••••`), localized readiness island, and life event portals. |
 | ![03 Dashboard Unmasked](docs/screenshots/03_dashboard_unmasked.png) | **03. Citizen Dashboard (Unmasked)**: Live balance breakdown, Claim Readiness Score (88%), and 5 statutory verification badges. |
-| ![04 Voice Copilot Glass](docs/screenshots/04_voice_copilot_glass.png) | **04. Sovereign Agent Harness Copilot**: Frosted translucent chat interface with 6-layer live status bar, Devin multi-step orchestrator, and tool calling pills. |
-| ![05 Need Money Hub](docs/screenshots/05_need_money_hub.png) | **05. I Need Money Hub (`/money`)**: Statutory Form 31 advance with real-time Pre-Flight Rejection Prevention diagnostic diff card. |
-| ![06 Career Transfer Hub](docs/screenshots/06_career_transfer_hub.png) | **06. I Changed Jobs Hub (`/career`)**: 1-Click Form 13 transfer with automated ECR timestamp Date of Exit deduction. |
-| ![07 Savings Compounding Hub](docs/screenshots/07_savings_compounding_hub.png) | **07. My Savings Hub (`/savings`)**: Triple-split visual passbook and interactive 30-year 8.25% compound wealth trajectory. |
-| ![08 Fix Details Hub](docs/screenshots/08_fix_details_hub.png) | **08. Fix Details Hub (`/fix`)**: Levenshtein fuzzy name match, sub-200ms NPCI Penny Drop, and ₹7L EDLI nomination. |
-| ![09 Benchmarks Latency Runner](docs/screenshots/09_benchmarks_tab1_latency.png) | **09. 1,000-Run Latency Runner**: Live CPU microsecond benchmark verifying `<0.05ms` deterministic local rule execution. |
-| ![10 Cost Economics](docs/screenshots/10_benchmarks_tab2_cost.png) | **10. Micro-Cost & Net Exchequer Economics**: Mathematical proof of 99.6% cost reduction vs proprietary APIs. |
-| ![11 Evals Matrix](docs/screenshots/11_benchmarks_tab3_evals.png) | **11. 3-Part OpenAI Benchmark Evals**: 100% statutory correctness, 0.0% hallucination rate, and Agent Tool Calling Latency (<0.05ms). |
-| ![12 Grievance Taxonomy](docs/screenshots/12_benchmarks_tab4_cpgrams.png) | **12. 1.98M CPGRAMS Rejection Taxonomy**: Empirical distribution of India's top claim rejection root causes. |
-| ![13 SRE Resilience](docs/screenshots/13_benchmarks_tab5_sre.png) | **13. SRE Chaos & Circuit Breakers**: Upstream fault injection and instantaneous fallback to client Wasm engine. |
-| ![14 Architecture Pillars](docs/screenshots/14_architecture_tab1_pillars.png) | **14. Sovereign Agent Harness Showcase (6 Layers)**: Detailed architectural breakdown of Context, Tools, Orchestration, Memory, Guardrails, and Evals. |
-| ![15 80/20 Core](docs/screenshots/15_architecture_tab2_core.png) | **15. 80/20 Sovereign Core**: Mathematical separation of local client execution and sovereign container edge. |
-| ![16 Zero-Trust Security](docs/screenshots/16_architecture_tab4_security.png) | **16. Zero-Trust Security & PII Vault**: Presidio PII anonymization, AES-256-GCM tokens, and PostgreSQL RLS. |
-| ![17 18-Tool Tech Matrix](docs/screenshots/17_architecture_tab7_tools.png) | **17. Full 18-Tool Technology Matrix**: Exhaustive inventory of every library, cryptographic algorithm, and AI model. |
+| ![04 Command Center Glass](docs/screenshots/04_command_center_glass.png) | **04. Command Center (⌘K)**: Account-specific spotlight command launcher in Ultra-Luxury frosted glass. |
+| ![05 Sovereign Agent Harness](docs/screenshots/05_sovereign_agent_harness_glass.png) | **05. Sovereign Agent Harness Copilot**: Frosted translucent chat interface with 6-layer live status bar, Devin multi-step orchestrator, and tool calling pills. |
+| ![06 Need Money Hub](docs/screenshots/06_need_money_hub.png) | **06. I Need Money Hub (`/money`)**: Statutory Form 31 advance with real-time Pre-Flight Rejection Prevention diagnostic diff card. |
+| ![07 Career Transfer Hub](docs/screenshots/07_career_transfer_hub.png) | **07. I Changed Jobs Hub (`/career`)**: 1-Click Form 13 transfer with automated ECR timestamp Date of Exit deduction. |
+| ![08 Savings Compounding Hub](docs/screenshots/08_savings_compounding_hub.png) | **08. My Savings Hub (`/savings`)**: Triple-split visual passbook and interactive 30-year 8.25% compound wealth trajectory. |
+| ![09 Fix Details Hub](docs/screenshots/09_fix_details_hub.png) | **09. Fix Details Hub (`/fix`)**: Levenshtein fuzzy name match, sub-200ms NPCI Penny Drop, and ₹7L EDLI nomination. |
+| ![10 Benchmarks Latency](docs/screenshots/10_benchmarks_tab1_latency.png) | **10. 1,000-Run Latency Runner**: Live CPU microsecond benchmark verifying `<0.05ms` deterministic local rule execution. |
+| ![11 Cost Economics](docs/screenshots/11_benchmarks_tab2_cost.png) | **11. Micro-Cost & Net Exchequer Economics**: Mathematical proof of 99.6% cost reduction vs proprietary APIs. |
+| ![12 Evals Matrix](docs/screenshots/12_benchmarks_tab3_evals.png) | **12. 3-Part OpenAI Benchmark Evals**: 100% statutory correctness, 0.0% hallucination rate, and Agent Tool Calling Latency (<0.05ms). |
+| ![13 Grievance Taxonomy](docs/screenshots/13_benchmarks_tab4_cpgrams.png) | **13. 1.98M CPGRAMS Rejection Taxonomy**: Empirical distribution of India's top claim rejection root causes. |
+| ![14 SRE Resilience](docs/screenshots/14_benchmarks_tab5_sre.png) | **14. SRE Chaos & Circuit Breakers**: Upstream fault injection and instantaneous fallback to client Wasm engine. |
+| ![15 Agent Harness Architecture](docs/screenshots/15_architecture_tab0_harness.png) | **15. Sovereign Agent Harness Showcase (6 Layers)**: Detailed architectural breakdown of Context, Tools, Orchestration, Memory, Guardrails, and Evals. |
+| ![16 Grievance Root Causes](docs/screenshots/16_architecture_tab1_grievances.png) | **16. Empirical CPGRAMS Analysis**: Audit of 1.98 Million grievances and deterministic solutions. |
+| ![17 DPDP Act Legal Blueprint](docs/screenshots/17_architecture_tab2_legal.png) | **17. DPDP Act 2023 & Legal Compliance**: Zero-trust security proofs and statutory legality. |
+| ![18 Demographic Personas](docs/screenshots/18_architecture_tab3_personas.png) | **18. Demographic Cohort Studies**: 4 representative worker profiles across 70M EPFO workforce. |
+| ![19 18 Forms vs 4 Hubs](docs/screenshots/19_architecture_tab4_forms.png) | **19. 18 Archaic Forms vs 4 Hubs**: Zero-forms transformation matrix. |
+| ![20 80/20 Sovereign Core](docs/screenshots/20_architecture_tab5_pillars.png) | **20. 80/20 Sovereign Core Blueprint**: Mathematical separation of local client execution and sovereign container edge. |
+| ![21 SRE Resilience Architecture](docs/screenshots/21_architecture_tab6_sre.png) | **21. SRE Resilience & Upstream Failovers**: Circuit breaker states and sub-millisecond resilience telemetry. |
+| ![22 18-Tool Tech Matrix](docs/screenshots/22_architecture_tab7_tools.png) | **22. Full 18-Tool Technology Matrix**: Exhaustive inventory of every library, cryptographic algorithm, and AI model. |
 
 ---
 
@@ -161,18 +166,20 @@ Jan-EPF AI supports full native bi-directional localization across 13 Indian lan
 ```bash
 ============================= test session starts ==============================
 platform darwin -- Python 3.12.7, pytest-9.1.1, pluggy-1.6.0
-collected 178 items
+collected 187 items
 
-tests/test_sovereign_agent_harness_5_0.py ......                         [  3%]
-tests/test_360_degree_4_0.py .........................                   [ 17%]
-tests/test_360_degree_3_0.py ....................                        [ 28%]
-tests/test_engine.py ....................................                [ 48%]
-tests/test_security.py ..................................                [ 67%]
+tests/test_cybersecurity_2_0.py .....                                   [  2%]
+tests/test_360_degree_5_0.py ....                                       [  4%]
+tests/test_sovereign_agent_harness_5_0.py ......                         [  7%]
+tests/test_360_degree_4_0.py .........................                   [ 20%]
+tests/test_360_degree_3_0.py ....................                        [ 31%]
+tests/test_engine.py ....................................                [ 50%]
+tests/test_security.py ..................................                [ 68%]
 tests/test_api.py .......................................                [ 89%]
 tests/test_resilience.py ................................                [ 96%]
 tests/test_personas_e2e.py ......                                        [100%]
 
-============================= 178 passed in 5.13s ==============================
+============================= 187 passed in 5.11s ==============================
 TOTAL COVERAGE: 95% (1291 statements, 70 misses)
 ```
 
@@ -185,7 +192,7 @@ TOTAL COVERAGE: 95% (1291 statements, 70 misses)
 git clone https://github.com/damik2007/jan-epf-ai.git
 cd jan-epf-ai
 
-# 2. Run backend & 178-test verification suite
+# 2. Run backend & 187-test verification suite
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt

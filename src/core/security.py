@@ -131,7 +131,8 @@ class PresidioPIISanitizer:
                 sanitized[key] = cls.sanitize_dict(value)
             elif isinstance(value, list):
                 sanitized[key] = [
-                    cls.sanitize_dict(item) if isinstance(item, dict) else item
+                    cls.sanitize_dict(item) if isinstance(item, dict)
+                    else (cls.sanitize_text(item) if isinstance(item, str) else item)
                     for item in value
                 ]
             elif isinstance(value, str):
