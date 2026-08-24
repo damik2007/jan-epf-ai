@@ -9,6 +9,7 @@ import { runBenchmarkSuite, BenchmarkSuiteResult } from "@/lib/benchmarkRunner";
 import { SreTelemetryPanel } from "@/components/SreTelemetryPanel";
 import { SovereignDpiPillars } from "@/components/SovereignDpiPillars";
 import { CitizenFeatureMatrix } from "@/components/CitizenFeatureMatrix";
+import { AudienceSegmentReport } from "@/components/AudienceSegmentReport";
 import {
   calculateFuzzyNameMatch,
   calculateForm31Eligibility,
@@ -54,7 +55,7 @@ interface BenchmarkResult {
 export default function BenchmarksPage() {
   const { language } = useCitizen();
   const t = getTranslation(language);
-  const [activeTab, setActiveTab] = useState<"evals" | "latency" | "traces" | "economics" | "security">("evals");
+  const [activeTab, setActiveTab] = useState<"evals" | "latency" | "traces" | "economics" | "security" | "personas" | "feature_matrix" | "sre_telemetry" | "dpi_pillars">("evals");
   const [iterationsCount, setIterationsCount] = useState<number>(1000);
   const [isRunningBench, setIsRunningBench] = useState<boolean>(false);
   const [benchResults, setBenchResults] = useState<BenchmarkResult[] | null>(null);
@@ -555,10 +556,36 @@ export default function BenchmarksPage() {
       )}
 
       
-          {/* Live SRE Subsystems & DPI Architecture */}
-          <SreTelemetryPanel />
-          <SovereignDpiPillars />
+
+
+      
+      {/* TAB 6: DEMOGRAPHIC PERSONAS */}
+      {activeTab === "personas" && (
+        <div className="animate-in fade-in duration-200">
+          <AudienceSegmentReport />
+        </div>
+      )}
+
+      {/* TAB 7: STATUTORY FEATURE MATRIX */}
+      {activeTab === "feature_matrix" && (
+        <div className="animate-in fade-in duration-200">
           <CitizenFeatureMatrix />
+        </div>
+      )}
+
+      {/* TAB 8: SRE TELEMETRY & CIRCUIT BREAKERS */}
+      {activeTab === "sre_telemetry" && (
+        <div className="animate-in fade-in duration-200">
+          <SreTelemetryPanel />
+        </div>
+      )}
+
+      {/* TAB 9: SOVEREIGN DPI PILLARS */}
+      {activeTab === "dpi_pillars" && (
+        <div className="animate-in fade-in duration-200">
+          <SovereignDpiPillars />
+        </div>
+      )}
 
       {/* Formal Statutory & Legal Disclaimers Card */}
       <div className="bg-slate-900/90 text-slate-300 rounded-3xl p-6 sm:p-7 border border-slate-800 space-y-4 font-sans text-xs shadow-xl">

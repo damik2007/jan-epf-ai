@@ -24,6 +24,7 @@ import {
   Activity
 } from "lucide-react";
 import { ClaimReadinessScore } from "@/components/ClaimReadinessScore";
+import { BenchmarkComparison } from "@/components/BenchmarkComparison";
 import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
 
 export default function CitizenLandingPage() {
@@ -389,6 +390,9 @@ export default function CitizenLandingPage() {
           })}
         </div>
       </div>
+
+      {/* Live In-Situ Benchmark Comparison */}
+      <BenchmarkComparison />
 
       {/* 4. SOVEREIGN 80/20 BENCHMARK & PROOF ASSET GATEWAY */}
       <div className="pt-2">
