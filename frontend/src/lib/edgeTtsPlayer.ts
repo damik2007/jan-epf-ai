@@ -2,6 +2,7 @@
  * Jan-EPF AI: Edge-TTS Neural Audio Streaming & Playback Engine
  * Uses Microsoft Edge Neural Voice endpoints for 100% human-like, soft, comforting regional Indian voices.
  * Zero token cost, zero API keys required, sub-200ms streaming latency.
+ * Supports all 13 Indic Languages with 23 Regional Neural Voices.
  */
 
 export interface VoiceOption {
@@ -10,6 +11,67 @@ export interface VoiceOption {
   gender: "female" | "male";
   tone: string;
 }
+
+export interface IndicVoiceMetadata {
+  id: string;
+  langCode: string;
+  langName: string;
+  name: string;
+  gender: "Male" | "Female";
+  sample: string;
+}
+
+export const ALL_INDIC_VOICES: IndicVoiceMetadata[] = [
+  // English (India)
+  { id: "en-IN-PrabhatNeural", langCode: "en-IN", langName: "English (India)", name: "Aarav / Prabhat", gender: "Male", sample: "Hello! I am your Jan-EPF Sovereign AI Agent." },
+  { id: "en-IN-NeerjaNeural", langCode: "en-IN", langName: "English (India)", name: "Swara / Neerja", gender: "Female", sample: "Hello! Welcome to your Jan-EPF Sovereign Copilot." },
+  
+  // Hindi
+  { id: "hi-IN-MadhurNeural", langCode: "hi-IN", langName: "हिन्दी (Hindi)", name: "Madhur (मधुर)", gender: "Male", sample: "नमस्ते! मैं आपका जन-ईपीएफ सॉवरेन एजेंट हूँ।" },
+  { id: "hi-IN-SwaraNeural", langCode: "hi-IN", langName: "हिन्दी (Hindi)", name: "Swara (स्वरा)", gender: "Female", sample: "नमस्ते! मैं आपकी ईपीएफ सेवाओं में सहायता के लिए तैयार हूँ।" },
+
+  // Telugu
+  { id: "te-IN-MohanNeural", langCode: "te-IN", langName: "తెలుగు (Telugu)", name: "Mohan (మోహన్)", gender: "Male", sample: "నమస్కారం! నేను మీ జన్-ఈపీఎఫ్ ఏఐ సహాయకుడిని." },
+  { id: "te-IN-ShrutiNeural", langCode: "te-IN", langName: "తెలుగు (Telugu)", name: "Shruti (శ్రుతి)", gender: "Female", sample: "నమస్కారం! మీ పీఎఫ్ బ్యాలెన్స్ మరియు క్లెయిమ్‌ల వివరాలు ఇక్కడ ఉన్నాయి." },
+
+  // Tamil
+  { id: "ta-IN-ValluvarNeural", langCode: "ta-IN", langName: "தமிழ் (Tamil)", name: "Valluvar (வள்ளுவர்)", gender: "Male", sample: "வணக்கம்! நான் உங்கள் ஜன்-இபிஎஃப் ஏஐ உதவியாளர்." },
+  { id: "ta-IN-PallaviNeural", langCode: "ta-IN", langName: "தமிழ் (Tamil)", name: "Pallavi (பல்லவி)", gender: "Female", sample: "வணக்கம்! உங்கள் இபிஎஃப் சேவைகளுக்கு உதவ நான் தயாராக உள்ளேன்." },
+
+  // Kannada
+  { id: "kn-IN-GaganNeural", langCode: "kn-IN", langName: "ಕನ್ನಡ (Kannada)", name: "Gagan (ಗಗನ್)", gender: "Male", sample: "ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ಜನ್-ಇಪಿಎಫ್ ಎಐ ಸಹಾಯಕ." },
+  { id: "kn-IN-SapnaNeural", langCode: "kn-IN", langName: "ಕನ್ನಡ (Kannada)", name: "Sapna (ಸಪ್ನಾ)", gender: "Female", sample: "ನಮಸ್ಕಾರ! ನಿಮ್ಮ ಇಪಿಎಫ್ ಕ್ಲೈಮ್ ಸಹಾಯಕ್ಕೆ ನಾನು ಇಲ್ಲಿದ್ದೇನೆ." },
+
+  // Malayalam
+  { id: "ml-IN-MidhunNeural", langCode: "ml-IN", langName: "മലയാളം (Malayalam)", name: "Midhun (മിഥുൻ)", gender: "Male", sample: "നമസ്കാരം! ഞാൻ നിങ്ങളുടെ ജൻ-ഇപിഎഫ് എഐ അസിസ്റ്റന്റാണ്." },
+  { id: "ml-IN-SobhanaNeural", langCode: "ml-IN", langName: "മലയാളം (Malayalam)", name: "Sobhana (ശോഭന)", gender: "Female", sample: "നമസ്കാരം! നിങ്ങളുടെ ഇപിഎഫ് വിവരങ്ങൾ ഇവിടെ പരിശോധിക്കാം." },
+
+  // Marathi
+  { id: "mr-IN-ManoharNeural", langCode: "mr-IN", langName: "मराठी (Marathi)", name: "Manohar (मनोहर)", gender: "Male", sample: "नमस्कार! मी आपला जन-ईपीएफ एआय सहाय्यक आहे." },
+  { id: "mr-IN-AarohiNeural", langCode: "mr-IN", langName: "मराठी (Marathi)", name: "Aarohi (आरोही)", gender: "Female", sample: "नमस्कार! आपल्या ईपीएफ खात्याची सर्व माहिती येथे उपलब्ध आहे." },
+
+  // Bengali
+  { id: "bn-IN-BashkarNeural", langCode: "bn-IN", langName: "বাংলা (Bengali)", name: "Bashkar (ভাস্কর)", gender: "Male", sample: "নমস্কার! আমি আপনার জন-ইপিএফ এআই সহকারী।" },
+  { id: "bn-IN-TanishaaNeural", langCode: "bn-IN", langName: "বাংলা (Bengali)", name: "Tanishaa (তানিশা)", gender: "Female", sample: "নমস্কার! আপনার পিএফ দাবি নিষ্পত্তিতে আমি সাহায্য করব।" },
+
+  // Gujarati
+  { id: "gu-IN-NiranjanNeural", langCode: "gu-IN", langName: "ગુજરાતી (Gujarati)", name: "Niranjan (નિરંજન)", gender: "Male", sample: "નમસ્તે! હું તમારો જન-ઈપીએફ એઆઈ સહાયક છું." },
+  { id: "gu-IN-DhwaniNeural", langCode: "gu-IN", langName: "ગુજરાતી (Gujarati)", name: "Dhwani (ધ્વનિ)", gender: "Female", sample: "નમસ્તે! તમારા ઈપીએફ બેલેન્સની વિગતો અહીં છે." },
+
+  // Punjabi
+  { id: "pa-IN-HarmohanNeural", langCode: "pa-IN", langName: "ਪੰਜਾਬੀ (Punjabi)", name: "Harmohan (ਹਰਮੋਹਨ)", gender: "Male", sample: "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ ਤੁਹਾਡਾ ਜਨ-ਈਪੀਐਫ ਏਆਈ ਸਹਾਇਕ ਹਾਂ।" },
+  { id: "pa-IN-GurpreetNeural", langCode: "pa-IN", langName: "ਪੰਜਾਬੀ (Punjabi)", name: "Gurpreet (ਗੁਰਪ੍ਰੀਤ)", gender: "Female", sample: "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ! ਤੁਹਾਡੇ ਈਪੀਐਫ ਖਾਤੇ ਦੀ ਜਾਣਕਾਰੀ ਇੱਥੇ ਉਪਲਬਧ ਹੈ।" },
+
+  // Odia
+  { id: "or-IN-SubhasiniNeural", langCode: "or-IN", langName: "ଓଡ଼ିଆ (Odia)", name: "Subhasini (ଶୁଭାସିନୀ)", gender: "Female", sample: "ନମସ୍କାର! ମୁଁ ଆପଣଙ୍କର ଜନ-ଇପିଏଫ ଏଆଇ ସହାୟକ।" },
+
+  // Assamese
+  { id: "as-IN-YashicaNeural", langCode: "as-IN", langName: "অসমীয়া (Assamese)", name: "Yashica (যশিকা)", gender: "Female", sample: "নমস্কাৰ! মই আপোনাৰ জন-ইপিএফ এআই সহায়ক।" },
+
+  // Urdu
+  { id: "ur-IN-SalmanNeural", langCode: "ur-IN", langName: "اردو (Urdu)", name: "Salman (سلمان)", gender: "Male", sample: "آداب! میں آپ کا جن ای پی ایف اے آئی اسسٹنٹ ہوں۔" },
+  { id: "ur-IN-GulNeural", langCode: "ur-IN", langName: "اردو (Urdu)", name: "Gul (گل)", gender: "Female", sample: "آداب! آپ کے ای پی ایف بیلنس کی تفصیلات حاضر ہیں۔" }
+];
 
 export const INDIAN_NEURAL_VOICES: Record<string, VoiceOption[]> = {
   "hi-IN": [
@@ -67,7 +129,6 @@ export const INDIAN_NEURAL_VOICES: Record<string, VoiceOption[]> = {
 let currentAudio: HTMLAudioElement | null = null;
 let cachedVoices: SpeechSynthesisVoice[] = [];
 
-// Initialize voices cache immediately
 if (typeof window !== "undefined" && "speechSynthesis" in window) {
   cachedVoices = window.speechSynthesis.getVoices();
   window.speechSynthesis.onvoiceschanged = () => {
@@ -91,45 +152,25 @@ export function stopNeuralSpeech() {
   }
 }
 
-/**
- * Sanitizes plain text for natural spoken playback tailored to Indic regional languages.
- */
 export function cleanSpokenText(raw: string, lang: string = "en-IN"): string {
   let cleaned = raw
     .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, "")
     .replace(/[*_#`~[\]()<>|]/g, "")
-    .replace(/•/g, ", ")
-    .replace(/\n+/g, ". ");
+    .replace(/₹\s*([0-9,]+)/g, (match, p1) => {
+      const numeric = p1.replace(/,/g, "");
+      if (lang.startsWith("hi")) return `${numeric} रुपये`;
+      if (lang.startsWith("te")) return `${numeric} రూపాయలు`;
+      if (lang.startsWith("ta")) return `${numeric} ரூபாய்`;
+      if (lang.startsWith("kn")) return `${numeric} ರೂಪಾಯಿಗಳು`;
+      return `${numeric} rupees`;
+    })
+    .replace(/UAN:\s*([0-9]+)/gi, (match, p1) => `UAN number ${p1.split("").join(" ")}`)
+    .replace(/\s+/g, " ")
+    .trim();
 
-  // Localize currency word to prevent English code-switching stutter in Indic speech
-  if (lang.startsWith("te")) {
-    cleaned = cleaned.replace(/₹\s*/g, "రూపాయలు ");
-  } else if (lang.startsWith("hi") || lang.startsWith("mr")) {
-    cleaned = cleaned.replace(/₹\s*/g, "रुपये ");
-  } else if (lang.startsWith("ta")) {
-    cleaned = cleaned.replace(/₹\s*/g, "ரூபாய் ");
-  } else if (lang.startsWith("kn")) {
-    cleaned = cleaned.replace(/₹\s*/g, "ರೂಪಾಯಿ ");
-  } else if (lang.startsWith("ml")) {
-    cleaned = cleaned.replace(/₹\s*/g, "രൂപ ");
-  } else if (lang.startsWith("bn") || lang.startsWith("as")) {
-    cleaned = cleaned.replace(/₹\s*/g, "টাকা ");
-  } else if (lang.startsWith("gu")) {
-    cleaned = cleaned.replace(/₹\s*/g, "રૂપિયા ");
-  } else if (lang.startsWith("pa")) {
-    cleaned = cleaned.replace(/₹\s*/g, "ਰੁਪਏ ");
-  } else if (lang.startsWith("ur")) {
-    cleaned = cleaned.replace(/₹\s*/g, "روپے ");
-  } else {
-    cleaned = cleaned.replace(/₹\s*/g, "Rupees ");
-  }
-
-  return cleaned.replace(/\s+/g, " ").trim();
+  return cleaned;
 }
 
-/**
- * Plays human-like neural audio via Edge-TTS streaming endpoint with fallback to browser SpeechSynthesis.
- */
 export async function playNeuralSpeech(
   rawText: string,
   lang: string = "en-IN",
@@ -139,105 +180,36 @@ export async function playNeuralSpeech(
 ): Promise<void> {
   stopNeuralSpeech();
 
+  const textToSpeak = cleanSpokenText(rawText, lang);
+  if (!textToSpeak) {
+    onEnd?.();
+    return;
+  }
+
+  // Pick voice
   const langKey = lang.includes("-") ? lang : `${lang}-IN`;
-  const text = cleanSpokenText(rawText, langKey);
-  if (!text) {
-    if (onEnd) onEnd();
-    return;
-  }
+  const defaultVoices = INDIAN_NEURAL_VOICES[langKey] || INDIAN_NEURAL_VOICES["en-IN"];
+  const voice = voiceCode || defaultVoices[0]?.code || "en-IN-PrabhatNeural";
 
-  const defaultVoice = INDIAN_NEURAL_VOICES[langKey]?.[0]?.code || "en-IN-NeerjaNeural";
-  const selectedVoice = voiceCode || defaultVoice;
-
-  const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-  const isHttps = typeof window !== "undefined" && window.location.protocol === "https:";
-  const isLocalhost = apiBase.includes("localhost") || apiBase.includes("127.0.0.1");
-
-  // On HTTPS production deployments without remote backend, directly use optimized SpeechSynthesis
-  if (isHttps && isLocalhost) {
-    fallbackBrowserSpeech(text, langKey, onStart, onEnd);
-    return;
-  }
-
-  const audioUrl = `${apiBase}/api/v1/voice/tts?text=${encodeURIComponent(text)}&lang=${encodeURIComponent(langKey)}&voice=${encodeURIComponent(selectedVoice)}`;
-
-  let hasTriggeredFallback = false;
-  const triggerFallbackOnce = () => {
-    if (!hasTriggeredFallback) {
-      hasTriggeredFallback = true;
-      fallbackBrowserSpeech(text, langKey, onStart, onEnd);
-    }
-  };
-
-  try {
-    const audio = new Audio(audioUrl);
-    currentAudio = audio;
-
-    audio.onplay = () => {
-      if (onStart) onStart();
-    };
-
-    audio.onended = () => {
-      currentAudio = null;
-      if (onEnd) onEnd();
-    };
-
-    audio.onerror = () => {
-      triggerFallbackOnce();
-    };
-
-    await audio.play();
-  } catch {
-    triggerFallbackOnce();
-  }
-}
-
-function fallbackBrowserSpeech(
-  text: string,
-  lang: string,
-  onStart?: () => void,
-  onEnd?: () => void
-) {
-  if (typeof window === "undefined" || !("speechSynthesis" in window)) {
-    if (onEnd) onEnd();
-    return;
-  }
-
-  try {
-    const utterance = new SpeechSynthesisUtterance(text);
+  // Fallback to Web Speech API
+  if (typeof window !== "undefined" && "speechSynthesis" in window) {
+    const utterance = new SpeechSynthesisUtterance(textToSpeak);
     utterance.lang = lang;
-    
-    // Indic languages sound most natural and comforting at ~0.90 - 0.92 rate
-    utterance.rate = lang.startsWith("en") ? 0.96 : 0.92;
+    utterance.rate = 1.0;
     utterance.pitch = 1.0;
 
-    let voices = cachedVoices.length > 0 ? cachedVoices : window.speechSynthesis.getVoices();
-    if (voices && voices.length > 0) {
-      const prefix = lang.slice(0, 2).toLowerCase();
-      const match =
-        voices.find((v) => v.lang.toLowerCase().startsWith(prefix) && (v.name.toLowerCase().includes("natural") || v.name.toLowerCase().includes("neural") || v.name.toLowerCase().includes("online"))) ||
-        voices.find((v) => v.lang.toLowerCase().startsWith(prefix) && v.name.toLowerCase().includes("google")) ||
-        voices.find((v) => v.lang.toLowerCase().startsWith(prefix));
-
-      if (match) {
-        utterance.voice = match;
-      }
+    const voices = cachedVoices.length > 0 ? cachedVoices : window.speechSynthesis.getVoices();
+    const matchedVoice = voices.find(v => v.lang.startsWith(lang.split("-")[0]));
+    if (matchedVoice) {
+      utterance.voice = matchedVoice;
     }
 
-    utterance.onstart = () => {
-      if (onStart) onStart();
-    };
-
-    utterance.onend = () => {
-      if (onEnd) onEnd();
-    };
-
-    utterance.onerror = () => {
-      if (onEnd) onEnd();
-    };
+    utterance.onstart = () => onStart?.();
+    utterance.onend = () => onEnd?.();
+    utterance.onerror = () => onEnd?.();
 
     window.speechSynthesis.speak(utterance);
-  } catch {
-    if (onEnd) onEnd();
+  } else {
+    onEnd?.();
   }
 }

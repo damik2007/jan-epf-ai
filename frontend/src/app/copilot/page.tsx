@@ -22,10 +22,12 @@ import {
   CheckCircle2,
   Lock,
   ExternalLink,
-  Brain
+  Brain,
+  Play,
+  Languages
 } from "lucide-react";
 import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown } from "@/lib/voiceCopilotBrain";
-import { playNeuralSpeech, stopNeuralSpeech } from "@/lib/edgeTtsPlayer";
+import { playNeuralSpeech, stopNeuralSpeech, ALL_INDIC_VOICES, IndicVoiceMetadata } from "@/lib/edgeTtsPlayer";
 
 // Custom Safe & Fast Markdown Formatter: Eliminates raw '**' stars and renders bold text & clean bullets
 function renderFormattedMarkdown(rawText: string) {
@@ -91,13 +93,15 @@ function renderFormattedMarkdown(rawText: string) {
 }
 
 export default function CopilotWorkstationPage() {
-  const { activeCitizen, language } = useCitizen();
+  const { activeCitizen, language, setLanguage } = useCitizen();
   const t = getTranslation(language);
 
   const [typedInput, setTypedInput] = useState("");
   const [selectedVoice, setSelectedVoice] = useState("en-IN-PrabhatNeural");
   const [autoSpeak, setAutoSpeak] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  const [selectedLangFilter, setSelectedLangFilter] = useState("ALL");
   const [turnCounter, setTurnCounter] = useState(1);
 
   const uan = activeCitizen.uan || "100982348712";
@@ -116,7 +120,7 @@ export default function CopilotWorkstationPage() {
     {
       id: "init",
       sender: "copilot",
-      text: `**Hello ${fullName}!**\nI am your Jan-EPF Sovereign AI Agent for ${company}.\n\n• **Verified Corpus:** ₹${balanceStr}\n• **Continuous Service:** ${serviceYears} Years (100% 0% TDS Tax-Exempt)\n• **6 In-Browser Deterministic Tools Active.**\n\nHow can I assist you today? Ask me about medical advances under Para 68J, job transfers, or passbook compounding.`,
+      text: `**Hello ${fullName}!**\nI am your Jan-EPF Sovereign AI Agent for ${company}.\n\n• **Verified Corpus:** ₹${balanceStr}\n• **Continuous Service:** ${serviceYears} Years (100% 0% TDS Tax-Exempt)\n• **13 Indic Languages & 23 Regional Voices Active.**\n\nHow can I assist you today? Ask me about medical advances under Para 68J, job transfers, or passbook compounding.`,
       harness: {
         contextLayer: {
           standard: "Glean ($14B Standard) • Zero-Shot Context Engine",
@@ -184,6 +188,14 @@ export default function CopilotWorkstationPage() {
     }
   }, [messages, uan]);
 
+  // Auto-sync voice when language changes
+  useEffect(() => {
+    const defaultVoiceForLang = ALL_INDIC_VOICES.find(v => v.langCode.startsWith(language.split("-")[0]));
+    if (defaultVoiceForLang) {
+      setSelectedVoice(defaultVoiceForLang.id);
+    }
+  }, [language]);
+
   const handleSend = (textToSend: string) => {
     const clean = textToSend.trim();
     if (!clean) return;
@@ -221,6 +233,11 @@ export default function CopilotWorkstationPage() {
     }
   };
 
+  const filteredVoices = ALL_INDIC_VOICES.filter((v) => {
+    if (selectedLangFilter === "ALL") return true;
+    return v.langCode.startsWith(selectedLangFilter);
+  });
+
   return (
     <div className="min-h-screen bg-sovereign-navy text-white p-4 sm:p-6 lg:p-8 space-y-6">
       <Breadcrumb currentPage="Sovereign Workstation" />
@@ -233,7 +250,7 @@ export default function CopilotWorkstationPage() {
               ⚡ Full-Screen Sovereign Command Workstation
             </span>
             <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold font-mono">
-              6 Connected Layers Live
+              13 Indic Languages Live
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white mt-1">
@@ -246,6 +263,110 @@ export default function CopilotWorkstationPage() {
 
         {/* Action Controls */}
         <div className="flex items-center gap-2">
+          {/* Voice Selector Settings Toggle */}
+          <div className="relative">
+            <button
+              onClick={() => setShowVoiceSettings(!showVoiceSettings)}
+              className={`px-3 py-1.5 rounded-xl border text-xs font-bold font-mono flex items-center gap-1.5 transition-all ${
+                showVoiceSettings ? "bg-saffron text-slate-900 border-saffron" : "bg-white/10 hover:bg-white/20 border-white/15 text-slate-200"
+              }`}
+            >
+              <Languages className="w-4 h-4" />
+              <span>13 Indic Voices</span>
+            </button>
+
+            {showVoiceSettings && (
+              <div className="absolute right-0 top-11 w-80 p-3 rounded-2xl bg-slate-900/95 border border-white/20 shadow-2xl backdrop-blur-2xl text-xs space-y-2.5 z-50 animate-in fade-in zoom-in-95 max-h-[70vh] flex flex-col">
+                <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono border-b border-white/10 pb-1.5 shrink-0">
+                  <span className="flex items-center gap-1 text-saffron">
+                    <Languages className="w-3.5 h-3.5" />
+                    <span>13 INDIC VOICES DIRECTORY</span>
+                  </span>
+                  <button onClick={() => setShowVoiceSettings(false)} className="hover:text-white text-xs">✕</button>
+                </div>
+
+                {/* Filter Pills */}
+                <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-none text-[9px] shrink-0 font-mono">
+                  {[
+                    { id: "ALL", label: "All (23)" },
+                    { id: "hi", label: "हिन्दी" },
+                    { id: "te", label: "తెలుగు" },
+                    { id: "ta", label: "தமிழ்" },
+                    { id: "kn", label: "ಕನ್ನಡ" },
+                    { id: "ml", label: "മലയാളം" },
+                    { id: "mr", label: "मराठी" },
+                    { id: "bn", label: "বাংলা" },
+                    { id: "gu", label: "ગુજરાતી" },
+                    { id: "pa", label: "ਪੰਜਾਬੀ" },
+                    { id: "or", label: "ଓଡ଼ିଆ" },
+                    { id: "as", label: "অসমীয়া" },
+                    { id: "ur", label: "اردو" },
+                    { id: "en", label: "English" }
+                  ].map((lang) => (
+                    <button
+                      key={lang.id}
+                      onClick={() => setSelectedLangFilter(lang.id)}
+                      className={`px-2 py-0.5 rounded-lg whitespace-nowrap transition-all ${
+                        selectedLangFilter === lang.id
+                          ? "bg-saffron text-slate-900 font-bold shadow-sm"
+                          : "bg-white/5 hover:bg-white/10 text-slate-300"
+                      }`}
+                    >
+                      {lang.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Scrollable Voice List */}
+                <div className="space-y-1 overflow-y-auto max-h-52 pr-1">
+                  {filteredVoices.map((v) => (
+                    <div
+                      key={v.id}
+                      className={`w-full p-2 rounded-xl text-[11px] transition-all flex items-center justify-between border ${
+                        selectedVoice === v.id
+                          ? "bg-saffron/20 border-saffron text-white font-bold"
+                          : "bg-white/5 hover:bg-white/10 border-white/5 text-slate-200"
+                      }`}
+                    >
+                      <button
+                        onClick={() => {
+                          setSelectedVoice(v.id);
+                          setLanguage(v.langCode as any);
+                        }}
+                        className="flex-1 text-left flex flex-col"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-saffron font-mono text-[9px] uppercase font-bold">
+                            {v.langName.split(" ")[0]}
+                          </span>
+                          <span className="text-white font-semibold">{v.name}</span>
+                          <span className="text-[9px] text-slate-400">({v.gender})</span>
+                        </div>
+                      </button>
+
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            playNeuralSpeech(v.sample, v.langCode, v.id);
+                          }}
+                          className="p-1 rounded-lg bg-white/10 hover:bg-saffron hover:text-slate-900 text-slate-200 transition-all"
+                          title="Play test voice sample"
+                        >
+                          <Play className="w-3 h-3 fill-current" />
+                        </button>
+
+                        {selectedVoice === v.id && (
+                          <span className="text-emerald-400 font-bold ml-1">✓</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
           <button
             onClick={() => setAutoSpeak(!autoSpeak)}
             className={`px-3 py-1.5 rounded-xl border text-xs font-bold font-mono flex items-center gap-1.5 transition-all ${

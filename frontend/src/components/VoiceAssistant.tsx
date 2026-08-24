@@ -27,11 +27,13 @@ import {
   Sliders,
   Cpu,
   Brain,
-  Activity
+  Activity,
+  Play,
+  Languages
 } from "lucide-react";
 import { getTranslation } from "@/lib/translations";
 import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown } from "@/lib/voiceCopilotBrain";
-import { playNeuralSpeech, stopNeuralSpeech } from "@/lib/edgeTtsPlayer";
+import { playNeuralSpeech, stopNeuralSpeech, ALL_INDIC_VOICES, IndicVoiceMetadata } from "@/lib/edgeTtsPlayer";
 
 interface ChatMessage {
   id: string;
@@ -110,7 +112,7 @@ function renderFormattedMarkdown(rawText: string) {
 
 export const VoiceAssistant: React.FC = () => {
   const router = useRouter();
-  const { activeCitizen, language } = useCitizen();
+  const { activeCitizen, language, setLanguage } = useCitizen();
   const t = getTranslation(language);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -124,6 +126,7 @@ export const VoiceAssistant: React.FC = () => {
   const [autoSpeakEnabled, setAutoSpeakEnabled] = useState<boolean>(true);
   const [selectedVoice, setSelectedVoice] = useState<string>("en-IN-PrabhatNeural");
   const [showVoiceSettings, setShowVoiceSettings] = useState<boolean>(false);
+  const [selectedLangFilter, setSelectedLangFilter] = useState<string>("ALL");
   const [turnCounter, setTurnCounter] = useState<number>(1);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -173,9 +176,18 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, [messages, uan]);
 
-  // Synchronize persona and language changes dynamically
+  // Auto-sync voice when language changes
   useEffect(() => {
     setActiveSpeechLang(language || "en-IN");
+    const langKey = language?.includes("-") ? language : `${language}-IN`;
+    const defaultVoiceForLang = ALL_INDIC_VOICES.find(v => v.langCode.startsWith(language.split("-")[0]));
+    if (defaultVoiceForLang) {
+      setSelectedVoice(defaultVoiceForLang.id);
+    }
+  }, [language]);
+
+  // Synchronize persona greeting dynamically
+  useEffect(() => {
     stopNeuralSpeech();
     setIsSpeaking(false);
 
@@ -195,20 +207,20 @@ export const VoiceAssistant: React.FC = () => {
     let greeting = "";
     if (isGurmeet) {
       greeting = language.startsWith("hi")
-        ? `नमस्ते सरदार गुरमीत सिंह जी! आपके ${company} ईपीएस-95 खाते में मासिक पेंशन ₹3,250 सक्रिय है। जीवन प्रमाण पत्र (DLC) या पासबुक के बारे में पूछें।`
-        : `Sat Sri Akaal Sardar Gurmeet Singh Ji! I am your Sovereign Pension Copilot. Your monthly EPS-95 pension of ₹3,250 is active under PPO-DL-2024-99881 at ${company}. How can I assist with your Jeevan Pramaan life certificate today?`;
+        ? `**नमस्ते सरदार गुरमीत सिंह जी!**\nआपके ${company} ईपीएस-95 खाते में मासिक पेंशन ₹3,250 सक्रिय है। जीवन प्रमाण पत्र (DLC) या पासबुक के बारे में पूछें।`
+        : `**Sat Sri Akaal Sardar Gurmeet Singh Ji!**\nI am your Sovereign Pension Copilot. Your monthly EPS-95 pension of ₹3,250 is active under PPO-DL-2024-99881 at ${company}. How can I assist with your Jeevan Pramaan life certificate today?`;
     } else if (isPriya) {
       greeting = language.startsWith("hi")
-        ? `नमस्ते प्रिया जी! आपके ${company} खाते में कुल ₹${balanceStr} हैं। पिछली नौकरी की एग्जिट डेट ऑटो-डिड्यूस करने या खाता ट्रांसफर करने के लिए कहें।`
-        : `Hello Priya! Your total corpus is ₹${balanceStr} at ${company}. I can execute 1-Click Form 13 transfer, auto-deduce your missing Infosys exit date, or verify TDS exemptions.`;
+        ? `**नमस्ते प्रिया जी!**\nआपके ${company} खाते में कुल ₹${balanceStr} हैं। पिछली नौकरी की एग्जिट डेट ऑटो-डिड्यूस करने या खाता ट्रांसफर करने के लिए कहें।`
+        : `**Hello Priya!**\nYour total corpus is ₹${balanceStr} at ${company}. I can execute 1-Click Form 13 transfer, auto-deduce your missing Infosys exit date, or verify TDS exemptions.`;
     } else if (isSunita) {
       greeting = language.startsWith("hi")
-        ? `नमस्ते सुनीता जी! आपके ${company} खाते में ₹${balanceStr} जमा हैं। ₹7 लाख ईडीएलआई नॉमिनेशन भरने या 1-क्लिक बैंक पेनी ड्रॉप सत्यापन के बारे में पूछें।`
-        : `Namaste Sunita Devi! Your active balance at ${company} is ₹${balanceStr}. I can run 1-Click Sub-200ms NPCI Penny Drop Bank KYC and file your ₹7 Lakh free EDLI nomination.`;
+        ? `**नमस्ते सुनीता जी!**\nआपके ${company} खाते में ₹${balanceStr} जमा हैं। ₹7 लाख ईडीएलआई नॉमिनेशन भरने या 1-क्लिक बैंक पेनी ड्रॉप सत्यापन के बारे में पूछें।`
+        : `**Namaste Sunita Devi!**\nYour active balance at ${company} is ₹${balanceStr}. I can run 1-Click Sub-200ms NPCI Penny Drop Bank KYC and file your ₹7 Lakh free EDLI nomination.`;
     } else {
       greeting = language.startsWith("hi")
-        ? `नमस्ते रमेश कुमार जी! आपके ${company} पीएफ खाते में ₹${balanceStr} जमा हैं। आप ₹48,000 मेडिकल एडवांस या 0% टीडीएस नियम के बारे में पूछ सकते हैं।`
-        : `Hello Ramesh Kumar! Your ${company} EPF balance is ₹${balanceStr} (14.5 yrs service, 0% TDS). I can autonomously sanction your Para 68J emergency advance or explain passbook interest.`;
+        ? `**नमस्ते रमेश कुमार जी!**\nआपके ${company} पीएफ खाते में ₹${balanceStr} जमा हैं। आप ₹48,000 मेडिकल एडवांस या 0% टीडीएस नियम के बारे में पूछ सकते हैं।`
+        : `**Hello Ramesh Kumar!**\nYour ${company} EPF balance is ₹${balanceStr} (14.5 yrs service, 0% TDS). I can autonomously sanction your Para 68J emergency advance or explain passbook interest.`;
     }
 
     const defaultHarness: HarnessLayerBreakdown = {
@@ -465,6 +477,12 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, [activeSpeechLang, handleProcessUserMessage, stopListening, stopSpeaking]);
 
+  // Filter voices based on selected category
+  const filteredVoices = ALL_INDIC_VOICES.filter((v) => {
+    if (selectedLangFilter === "ALL") return true;
+    return v.langCode.startsWith(selectedLangFilter);
+  });
+
   return (
     <div
       className={`fixed z-50 transition-all duration-300 ${
@@ -492,7 +510,7 @@ export const VoiceAssistant: React.FC = () => {
                 <h3 className="font-bold text-xs sm:text-sm tracking-tight text-white flex items-center gap-1.5">
                   <span>Jan-EPF AI Agent</span>
                   <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
-                    6-Layers Live
+                    13 Indic Languages Live
                   </span>
                 </h3>
                 <p className="text-[10px] text-slate-300 truncate max-w-[200px] sm:max-w-[260px]">
@@ -503,7 +521,7 @@ export const VoiceAssistant: React.FC = () => {
 
             {/* Controls Bar */}
             <div className="flex items-center gap-1.5">
-              {/* Voice Persona Selector */}
+              {/* Voice Persona Selector (Supports All 13 Indic Languages) */}
               <div className="relative">
                 <button
                   onClick={() => setShowVoiceSettings(!showVoiceSettings)}
@@ -512,45 +530,104 @@ export const VoiceAssistant: React.FC = () => {
                       ? "bg-saffron text-slate-900 border-saffron"
                       : "bg-white/10 hover:bg-white/20 border-white/15 text-slate-200"
                   }`}
-                  title="Voice & Speech Settings"
+                  title="Voice & Indic Dialect Settings (13 Languages)"
                 >
                   <Sliders className="w-4 h-4" />
                 </button>
 
                 {showVoiceSettings && (
-                  <div className="absolute right-0 top-10 w-60 p-3 rounded-2xl bg-slate-900/95 border border-white/20 shadow-2xl backdrop-blur-2xl text-xs space-y-2 z-50 animate-in fade-in zoom-in-95">
-                    <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono border-b border-white/10 pb-1.5">
-                      <span>VOICE & HARNESS AUDIO</span>
-                      <button onClick={() => setShowVoiceSettings(false)} className="hover:text-white">✕</button>
+                  <div className="absolute right-0 top-10 w-72 sm:w-80 p-3 rounded-2xl bg-slate-900/95 border border-white/20 shadow-2xl backdrop-blur-2xl text-xs space-y-2.5 z-50 animate-in fade-in zoom-in-95 max-h-[70vh] flex flex-col">
+                    <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono border-b border-white/10 pb-1.5 shrink-0">
+                      <span className="flex items-center gap-1 text-saffron">
+                        <Languages className="w-3.5 h-3.5" />
+                        <span>13 INDIC VOICES DIRECTORY (23 VOICES)</span>
+                      </span>
+                      <button onClick={() => setShowVoiceSettings(false)} className="hover:text-white text-xs">✕</button>
                     </div>
 
-                    <div className="space-y-1">
+                    {/* Language Filter Pills */}
+                    <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-none text-[9px] shrink-0 font-mono">
                       {[
-                        { id: "en-IN-PrabhatNeural", label: "🇮🇳 Aarav (Deep Neural Male)" },
-                        { id: "en-IN-NeerjaNeural", label: "🇮🇳 Swara (Natural Neural Female)" },
-                        { id: "hi-IN-MadhurNeural", label: "🇮🇳 Madhur (Hindi Male)" },
-                        { id: "hi-IN-SwaraNeural", label: "🇮🇳 Swara (Hindi Female)" }
-                      ].map((v) => (
+                        { id: "ALL", label: "All (23)" },
+                        { id: "hi", label: "हिन्दी" },
+                        { id: "te", label: "తెలుగు" },
+                        { id: "ta", label: "தமிழ்" },
+                        { id: "kn", label: "ಕನ್ನಡ" },
+                        { id: "ml", label: "മലയാളം" },
+                        { id: "mr", label: "मराठी" },
+                        { id: "bn", label: "বাংলা" },
+                        { id: "gu", label: "ગુજરાતી" },
+                        { id: "pa", label: "ਪੰਜਾਬੀ" },
+                        { id: "or", label: "ଓଡ଼ିଆ" },
+                        { id: "as", label: "অসমীয়া" },
+                        { id: "ur", label: "اردو" },
+                        { id: "en", label: "English" }
+                      ].map((lang) => (
                         <button
-                          key={v.id}
-                          onClick={() => {
-                            setSelectedVoice(v.id);
-                            setShowVoiceSettings(false);
-                          }}
-                          className={`w-full text-left p-1.5 rounded-lg text-[11px] transition-all flex items-center justify-between ${
-                            selectedVoice === v.id
-                              ? "bg-saffron text-slate-900 font-bold"
-                              : "hover:bg-white/10 text-slate-200"
+                          key={lang.id}
+                          onClick={() => setSelectedLangFilter(lang.id)}
+                          className={`px-2 py-0.5 rounded-lg whitespace-nowrap transition-all ${
+                            selectedLangFilter === lang.id
+                              ? "bg-saffron text-slate-900 font-bold shadow-sm"
+                              : "bg-white/5 hover:bg-white/10 text-slate-300"
                           }`}
                         >
-                          <span>{v.label}</span>
-                          {selectedVoice === v.id && <span>✓</span>}
+                          {lang.label}
                         </button>
                       ))}
                     </div>
 
-                    <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
-                      <span className="text-slate-300">Auto-Speak:</span>
+                    {/* Scrollable Voice List */}
+                    <div className="space-y-1 overflow-y-auto max-h-48 pr-1">
+                      {filteredVoices.map((v) => (
+                        <div
+                          key={v.id}
+                          className={`w-full p-2 rounded-xl text-[11px] transition-all flex items-center justify-between border ${
+                            selectedVoice === v.id
+                              ? "bg-saffron/20 border-saffron text-white font-bold"
+                              : "bg-white/5 hover:bg-white/10 border-white/5 text-slate-200"
+                          }`}
+                        >
+                          <button
+                            onClick={() => {
+                              setSelectedVoice(v.id);
+                              setActiveSpeechLang(v.langCode);
+                            }}
+                            className="flex-1 text-left flex flex-col"
+                          >
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-saffron font-mono text-[9px] uppercase font-bold">
+                                {v.langName.split(" ")[0]}
+                              </span>
+                              <span className="text-white font-semibold">{v.name}</span>
+                              <span className="text-[9px] text-slate-400">({v.gender})</span>
+                            </div>
+                          </button>
+
+                          <div className="flex items-center gap-1">
+                            {/* Play Test Sample Button */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                playNeuralSpeech(v.sample, v.langCode, v.id);
+                              }}
+                              className="p-1 rounded-lg bg-white/10 hover:bg-saffron hover:text-slate-900 text-slate-200 transition-all"
+                              title="Play test voice sample"
+                            >
+                              <Play className="w-3 h-3 fill-current" />
+                            </button>
+
+                            {selectedVoice === v.id && (
+                              <span className="text-emerald-400 font-bold ml-1">✓</span>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Auto-Speak Toggle */}
+                    <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px] shrink-0">
+                      <span className="text-slate-300">Auto-Speak Spoken Audio:</span>
                       <button
                         onClick={() => setAutoSpeakEnabled(!autoSpeakEnabled)}
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
