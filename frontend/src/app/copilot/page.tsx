@@ -21,10 +21,74 @@ import {
   Zap,
   CheckCircle2,
   Lock,
-  ExternalLink
+  ExternalLink,
+  Brain
 } from "lucide-react";
 import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown } from "@/lib/voiceCopilotBrain";
 import { playNeuralSpeech, stopNeuralSpeech } from "@/lib/edgeTtsPlayer";
+
+// Custom Safe & Fast Markdown Formatter: Eliminates raw '**' stars and renders bold text & clean bullets
+function renderFormattedMarkdown(rawText: string) {
+  if (!rawText) return null;
+  const lines = rawText.split("\n");
+
+  return (
+    <div className="space-y-1.5 leading-relaxed">
+      {lines.map((line, lineIdx) => {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          return <div key={lineIdx} className="h-1" />;
+        }
+
+        // Bullet list detection
+        const isBullet = trimmed.startsWith("•") || trimmed.startsWith("- ") || trimmed.startsWith("* ");
+        const content = isBullet ? trimmed.replace(/^[•\-\*]\s*/, "") : line;
+
+        // Parse **bold** and *italic* tokens
+        const parts: React.ReactNode[] = [];
+        const regex = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
+        let lastIndex = 0;
+        let match: RegExpExecArray | null;
+
+        while ((match = regex.exec(content)) !== null) {
+          if (match.index > lastIndex) {
+            parts.push(content.substring(lastIndex, match.index));
+          }
+          const matchedStr = match[0];
+          if (matchedStr.startsWith("**") && matchedStr.endsWith("**")) {
+            parts.push(
+              <strong key={`${lineIdx}-${match.index}`} className="font-extrabold text-white tracking-wide">
+                {matchedStr.slice(2, -2)}
+              </strong>
+            );
+          } else if (matchedStr.startsWith("*") && matchedStr.endsWith("*")) {
+            parts.push(
+              <em key={`${lineIdx}-${match.index}`} className="italic text-slate-200">
+                {matchedStr.slice(1, -1)}
+              </em>
+            );
+          }
+          lastIndex = regex.lastIndex;
+        }
+
+        if (lastIndex < content.length) {
+          parts.push(content.substring(lastIndex));
+        }
+
+        if (isBullet) {
+          return (
+            <div key={lineIdx} className="flex items-start gap-1.5 pl-1">
+              <span className="text-saffron select-none font-black text-xs leading-5 shrink-0">•</span>
+              <div className="flex-1 text-slate-100">{parts}</div>
+            </div>
+          );
+        }
+
+        return <div key={lineIdx} className="text-slate-100">{parts}</div>;
+      })}
+    </div>
+  );
+}
 
 export default function CopilotWorkstationPage() {
   const { activeCitizen, language } = useCitizen();
@@ -52,7 +116,7 @@ export default function CopilotWorkstationPage() {
     {
       id: "init",
       sender: "copilot",
-      text: `Hello ${fullName}! I am your Jan-EPF Sovereign Agent Copilot for ${company}.\n\n• Verified Corpus: ₹${balanceStr}\n• Continuous Service: ${serviceYears} Years (100% 0% TDS Tax-Exempt)\n• 6 In-Browser Deterministic Tools Active.\n\nHow can I assist you today? Ask me about medical advances under Para 68J, job transfers, or passbook compounding.`,
+      text: `**Hello ${fullName}!**\nI am your Jan-EPF Sovereign AI Agent for ${company}.\n\n• **Verified Corpus:** ₹${balanceStr}\n• **Continuous Service:** ${serviceYears} Years (100% 0% TDS Tax-Exempt)\n• **6 In-Browser Deterministic Tools Active.**\n\nHow can I assist you today? Ask me about medical advances under Para 68J, job transfers, or passbook compounding.`,
       harness: {
         contextLayer: {
           standard: "Glean ($14B Standard) • Zero-Shot Context Engine",
@@ -173,7 +237,7 @@ export default function CopilotWorkstationPage() {
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white mt-1">
-            Jan-EPF Sovereign Agent Copilot
+            Jan-EPF AI Agent Workstation
           </h1>
           <p className="text-xs sm:text-sm text-slate-300">
             Directly executing in-browser actuary math, ECR timestamp resolution, sub-200ms NPCI penny drops, and Section 192A 0% TDS shields.
@@ -207,7 +271,12 @@ export default function CopilotWorkstationPage() {
                     ? "bg-gradient-to-r from-saffron to-amber-500 text-sovereign-darkest font-bold shadow-lg"
                     : "bg-white/10 backdrop-blur-md border border-white/15 text-slate-100 shadow-md"
                 }`}>
-                  <p className="text-xs sm:text-sm whitespace-pre-wrap leading-relaxed">{m.text}</p>
+                  {/* Rich Formatted Markdown without literal asterisks */}
+                  {m.sender === "user" ? (
+                    <p className="whitespace-pre-wrap leading-relaxed text-sovereign-darkest font-bold">{m.text}</p>
+                  ) : (
+                    renderFormattedMarkdown(m.text)
+                  )}
 
                   {/* Fuzzy typo alignment card if present */}
                   {m.harness?.fuzzyAlignment && m.sender === "copilot" && (
@@ -265,7 +334,7 @@ export default function CopilotWorkstationPage() {
                         </div>
                       )}
 
-                      {/* Telemetry Strip */}
+                      {/* Layer 04 + 05 + 06 Telemetry Strip */}
                       <div className="p-2 rounded-xl bg-white/5 border border-white/10 flex flex-wrap items-center justify-between gap-1 text-[9px] text-slate-400">
                         <span className="text-purple-300">🧠 <strong>Notion Memory:</strong> Turn #{m.harness.memoryLayer.turnsCount}</span>
                         <span className="text-emerald-300">🛡️ <strong>NeMo Guard:</strong> {m.harness.guardrailLayer.securityScore}</span>
@@ -338,12 +407,27 @@ export default function CopilotWorkstationPage() {
 
             {/* Stripe Layer */}
             <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-              <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 02 • In-Browser Hands (Stripe)</span>
+              <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 02 • In-Browser Hands (Stripe - 6 Tools)</span>
               <div className="text-slate-200">1. execute_advance_preflight</div>
               <div className="text-slate-200">2. auto_deduce_exit_date</div>
               <div className="text-slate-200">3. verify_npci_penny_drop</div>
               <div className="text-slate-200">4. toggle_discreet_privacy</div>
               <div className="text-slate-200">5. download_passbook_statement</div>
+              <div className="text-slate-200">6. switch_indic_language</div>
+            </div>
+
+            {/* Devin Layer */}
+            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+              <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 03 • Orchestration (Devin)</span>
+              <div className="text-amber-300 font-bold">Plan ➔ Execute ➔ Verify ➔ Disburse</div>
+              <div className="text-slate-300">Multi-Step ReAct State Machine</div>
+            </div>
+
+            {/* Notion Layer */}
+            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
+              <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 04 • Sovereign Memory (Notion)</span>
+              <div className="text-purple-300 font-bold">Session Context Persistence</div>
+              <div className="text-slate-300">Preserved in localStorage across turns</div>
             </div>
 
             {/* NeMo Layer */}

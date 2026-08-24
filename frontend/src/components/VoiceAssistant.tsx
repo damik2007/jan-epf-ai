@@ -45,6 +45,69 @@ interface ChatMessage {
   harness?: HarnessLayerBreakdown;
 }
 
+// Custom Safe & Fast Markdown Formatter: Eliminates raw '**' stars and renders bold text & clean bullets
+function renderFormattedMarkdown(rawText: string) {
+  if (!rawText) return null;
+  const lines = rawText.split("\n");
+
+  return (
+    <div className="space-y-1.5 leading-relaxed">
+      {lines.map((line, lineIdx) => {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          return <div key={lineIdx} className="h-1" />;
+        }
+
+        // Bullet list detection
+        const isBullet = trimmed.startsWith("•") || trimmed.startsWith("- ") || trimmed.startsWith("* ");
+        const content = isBullet ? trimmed.replace(/^[•\-\*]\s*/, "") : line;
+
+        // Parse **bold** and *italic* tokens
+        const parts: React.ReactNode[] = [];
+        const regex = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
+        let lastIndex = 0;
+        let match: RegExpExecArray | null;
+
+        while ((match = regex.exec(content)) !== null) {
+          if (match.index > lastIndex) {
+            parts.push(content.substring(lastIndex, match.index));
+          }
+          const matchedStr = match[0];
+          if (matchedStr.startsWith("**") && matchedStr.endsWith("**")) {
+            parts.push(
+              <strong key={`${lineIdx}-${match.index}`} className="font-extrabold text-white tracking-wide">
+                {matchedStr.slice(2, -2)}
+              </strong>
+            );
+          } else if (matchedStr.startsWith("*") && matchedStr.endsWith("*")) {
+            parts.push(
+              <em key={`${lineIdx}-${match.index}`} className="italic text-slate-200">
+                {matchedStr.slice(1, -1)}
+              </em>
+            );
+          }
+          lastIndex = regex.lastIndex;
+        }
+
+        if (lastIndex < content.length) {
+          parts.push(content.substring(lastIndex));
+        }
+
+        if (isBullet) {
+          return (
+            <div key={lineIdx} className="flex items-start gap-1.5 pl-1">
+              <span className="text-saffron select-none font-black text-xs leading-5 shrink-0">•</span>
+              <div className="flex-1 text-slate-100">{parts}</div>
+            </div>
+          );
+        }
+
+        return <div key={lineIdx} className="text-slate-100">{parts}</div>;
+      })}
+    </div>
+  );
+}
+
 export const VoiceAssistant: React.FC = () => {
   const router = useRouter();
   const { activeCitizen, language } = useCitizen();
@@ -75,6 +138,7 @@ export const VoiceAssistant: React.FC = () => {
 
   const uan = activeCitizen.uan || "100982348712";
   const fullName = activeCitizen.full_name || "Citizen";
+  const firstName = fullName.split(" ")[0];
   const company = activeCitizen.active_employment?.establishment_name || "Active Employer";
   const balanceStr = (activeCitizen.passbook_summary?.total_balance ?? 0).toLocaleString("en-IN");
 
@@ -426,7 +490,7 @@ export const VoiceAssistant: React.FC = () => {
               </div>
               <div>
                 <h3 className="font-bold text-xs sm:text-sm tracking-tight text-white flex items-center gap-1.5">
-                  <span>Sovereign Agent Harness</span>
+                  <span>Jan-EPF AI Agent</span>
                   <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
                     6-Layers Live
                   </span>
@@ -575,8 +639,12 @@ export const VoiceAssistant: React.FC = () => {
                       ? "bg-gradient-to-r from-saffron to-amber-500 text-sovereign-darkest font-bold shadow-lg"
                       : "bg-white/10 backdrop-blur-md border border-white/15 text-slate-100 shadow-md"
                   }`}>
-                    {/* Natural Prose Text */}
-                    <p className="whitespace-pre-wrap leading-relaxed">{m.text}</p>
+                    {/* Rich Formatted Markdown without literal asterisks */}
+                    {m.sender === "user" ? (
+                      <p className="whitespace-pre-wrap leading-relaxed text-sovereign-darkest font-bold">{m.text}</p>
+                    ) : (
+                      renderFormattedMarkdown(m.text)
+                    )}
 
                     {/* ======================================================================== */}
                     {/* 🔍 WAGNER-FISCHER FUZZY TYPO-CORRECTION BADGE                            */}
@@ -845,7 +913,7 @@ export const VoiceAssistant: React.FC = () => {
         </div>
       )}
 
-      {/* 2. REBRANDED FLOATING ACTION BUTTON */}
+      {/* 2. REBRANDED SLEEK & COMPACT FLOATING TRIGGER BUTTON: ⚡ AI Agent */}
       <div className="flex justify-end">
         <button
           onClick={() => {
@@ -860,25 +928,25 @@ export const VoiceAssistant: React.FC = () => {
           }}
           className={`flex items-center font-bold transition-all duration-300 transform hover:scale-105 border ${
             isListening
-              ? "backdrop-blur-2xl bg-red-600/60 border-red-300 text-white shadow-[0_0_30px_rgba(239,68,68,0.7)] animate-pulse px-4 py-3 rounded-full text-xs sm:text-sm gap-2"
-              : "backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/95 text-white border-white/20 hover:border-saffron/70 shadow-[0_10px_35px_rgba(0,0,0,0.65)] ring-1 ring-white/10 hover:shadow-[0_0_30px_rgba(255,153,51,0.35)] px-4 py-3 rounded-full text-xs sm:text-sm gap-2.5"
+              ? "backdrop-blur-2xl bg-red-600/70 border-red-300 text-white shadow-[0_0_30px_rgba(239,68,68,0.8)] animate-pulse px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm gap-2"
+              : "backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/95 text-white border-white/20 hover:border-saffron/70 shadow-[0_10px_35px_rgba(0,0,0,0.65)] ring-1 ring-white/10 hover:shadow-[0_0_25px_rgba(255,153,51,0.4)] px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm gap-2"
           }`}
-          title="Open Jan-EPF Sovereign Agent Harness"
+          title="Open Jan-EPF AI Agent"
         >
           {isListening ? (
-            <MicOff className="w-5 h-5 text-red-200" />
+            <MicOff className="w-4 h-4 text-red-200" />
           ) : (
-            <div className="w-5 h-5 rounded-full bg-saffron text-sovereign-darkest flex items-center justify-center text-[10px] font-black shadow">
+            <div className="w-5 h-5 rounded-lg bg-saffron text-sovereign-darkest flex items-center justify-center text-[10px] font-black shadow">
               ⚡
             </div>
           )}
-          <span className="font-black text-white tracking-tight drop-shadow-sm">
-            {isListening ? "Listening..." : "⚡ Sovereign Agent Copilot (Voice & Tools)"}
+          <span className="font-extrabold text-white tracking-tight drop-shadow-sm">
+            {isListening ? "Listening..." : "AI Agent"}
           </span>
           {isOpen ? (
-            <ChevronDown className="w-4 h-4 text-slate-300 shrink-0" />
+            <ChevronDown className="w-3.5 h-3.5 text-slate-300 shrink-0" />
           ) : (
-            <ChevronUp className="w-4 h-4 text-slate-300 shrink-0" />
+            <ChevronUp className="w-3.5 h-3.5 text-slate-300 shrink-0" />
           )}
         </button>
       </div>
