@@ -108,13 +108,14 @@ export default function FixDetailsHub() {
         }),
         signal: AbortSignal.timeout(3000)
       });
-      if (res.ok) {
-        const data = await res.json();
-        setPennyDropResult(data);
-        if (data.success) {
-          const ifscRes = lookupIfsc(bankIfsc);
-          updateActiveCitizenKYC(ifscRes.bankName, `XXXXXX${bankAcc.slice(-4)}`, bankIfsc);
-        }
+      if (!res.ok) {
+        throw new Error(`Penny-drop API returned HTTP ${res.status}`);
+      }
+      const data = await res.json();
+      setPennyDropResult(data);
+      if (data.success) {
+        const ifscRes = lookupIfsc(bankIfsc);
+        updateActiveCitizenKYC(ifscRes.bankName, `XXXXXX${bankAcc.slice(-4)}`, bankIfsc);
       }
     } catch (e) {
       // Sovereign Fallback
@@ -156,10 +157,11 @@ export default function FixDetailsHub() {
         }),
         signal: AbortSignal.timeout(3000)
       });
-      if (res.ok) {
-        const data = await res.json();
-        setCopilotDiagnosis(data);
+      if (!res.ok) {
+        throw new Error(`Grievance API returned HTTP ${res.status}`);
       }
+      const data = await res.json();
+      setCopilotDiagnosis(data);
     } catch (e) {
       setCopilotDiagnosis({
         root_cause_identified: "Missing Date of Exit (DOE) from previous employer's monthly ECR submission.",

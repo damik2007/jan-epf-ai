@@ -243,10 +243,12 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  // Senior Mode Auto-Detection for Gurmeet Singh
+  // Senior Mode Auto-Detection for Gurmeet Singh & Auto-Reset for other citizens
   useEffect(() => {
-    if (activeCitizen.uan === "100112233445") {
+    if (activeCitizen.uan === "100112233445" || activeCitizen.uan === "101889977665") {
       setSeniorMode(true);
+    } else {
+      setSeniorMode(false);
     }
   }, [activeCitizen.uan]);
 

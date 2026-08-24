@@ -129,22 +129,23 @@ export default function NeedMoneyHub() {
         body: JSON.stringify(claimData),
         signal: AbortSignal.timeout(3000)
       });
-      if (res.ok) {
-        const data = await res.json();
-        setSubmittedResult(data);
-        addClaim({
-          claim_id: data.claim_id,
-          uan: data.uan,
-          claim_type: data.claim_type,
-          amount_requested: requestedAmount,
-          amount_sanctioned: data.amount_sanctioned,
-          status: data.status,
-          tds_deducted: data.tds_deducted_amount,
-          dbt_account: data.direct_benefit_transfer_account,
-          timestamp: new Date().toLocaleTimeString()
-        });
-        setCurrentStep(3);
+      if (!res.ok) {
+        throw new Error(`API error HTTP ${res.status}`);
       }
+      const data = await res.json();
+      setSubmittedResult(data);
+      addClaim({
+        claim_id: data.claim_id,
+        uan: data.uan,
+        claim_type: data.claim_type,
+        amount_requested: requestedAmount,
+        amount_sanctioned: data.amount_sanctioned,
+        status: data.status,
+        tds_deducted: data.tds_deducted_amount || 0,
+        dbt_account: data.direct_benefit_transfer_account,
+        timestamp: new Date().toLocaleTimeString()
+      });
+      setCurrentStep(3);
     } catch (e) {
       // In-Browser Sovereign Fallback
       const fakeClaim = {
