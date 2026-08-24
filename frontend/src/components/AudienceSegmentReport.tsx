@@ -193,7 +193,7 @@ export function AudienceSegmentReport() {
   const Icon = current.icon;
 
   return (
-    <section className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
+    <section className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy border border-slate-700/80 rounded-3xl p-6 sm:p-8 text-white shadow-2xl space-y-6 relative overflow-hidden">
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
         <div className="space-y-1">
@@ -203,17 +203,17 @@ export function AudienceSegmentReport() {
               Target Audience Problem & Feature Expectation Report
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-sovereign-navy dark:text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
             Comprehensive Target Audience Problem & Expectation Matrix
           </h2>
-          <p className="text-xs text-slate-600 dark:text-slate-400 max-w-3xl">
+          <p className="text-xs text-slate-300 max-w-3xl">
             Detailed breakdown of real-world failure points across 70 million Indian workers and how Jan-EPF AI delivers tailored sovereign solutions.
           </p>
         </div>
 
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all text-slate-700 dark:text-slate-300 shrink-0"
+          className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold flex items-center gap-1.5 transition-all text-slate-300 shrink-0"
         >
           <span>{isExpanded ? "Collapse Report" : "Expand Report"}</span>
           <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
@@ -233,11 +233,11 @@ export function AudienceSegmentReport() {
                   onClick={() => setActiveSegment(idx)}
                   className={`p-2.5 rounded-2xl border text-left transition-all flex flex-col justify-between gap-1.5 ${
                     isSelected
-                      ? "bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 border-sovereign-navy dark:border-amber-500 shadow-md ring-2 ring-saffron/40"
-                      : "bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+                      ? "bg-saffron text-sovereign-darkest font-black border-saffron shadow-lg ring-2 ring-saffron/40"
+                      : "bg-slate-50 dark:bg-slate-800 text-slate-300 border-slate-700/60 hover:bg-slate-100 dark:hover:bg-slate-700"
                   }`}
                 >
-                  <TabIcon className={`w-4 h-4 ${isSelected ? "text-saffron dark:text-slate-950" : "text-slate-600 dark:text-slate-400"}`} />
+                  <TabIcon className={`w-4 h-4 ${isSelected ? "text-saffron dark:text-slate-950" : "text-slate-300"}`} />
                   <div>
                     <span className="text-[11px] font-bold block leading-tight truncate">{seg.title}</span>
                     <span className={`text-[9px] font-mono block ${isSelected ? "text-slate-300 dark:text-slate-900" : "text-slate-500 dark:text-slate-400"}`}>
@@ -250,20 +250,20 @@ export function AudienceSegmentReport() {
           </div>
 
           {/* Active Segment Detail Card */}
-          <div className="p-6 rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900 shadow-sm space-y-5 transition-all">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-200 dark:border-slate-700">
+          <div className="p-6 rounded-2xl border border-slate-700/80 bg-slate-800/70 shadow-lg space-y-5 transition-all">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-slate-700/60">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-2xl bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 flex items-center justify-center shadow-md">
                   <Icon className="w-6 h-6 text-saffron dark:text-slate-950" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <h3 className="text-lg font-black text-white flex items-center gap-2">
                     <span>Segment #{current.id + 1}: {current.title}</span>
                     <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded-full border ${current.badgeColor}`}>
                       {current.scale}
                     </span>
                   </h3>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold">
+                  <p className="text-xs text-slate-300 font-semibold">
                     Real-World Pain Points, Feature Wishlist & Jan-EPF AI Architectural Solution
                   </p>
                 </div>
@@ -318,7 +318,7 @@ export function AudienceSegmentReport() {
                 <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <div>
                   <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 uppercase block">Engineered Solution in Jan-EPF AI</span>
-                  <p className="text-xs font-black text-slate-900 dark:text-white">{current.solution}</p>
+                  <p className="text-xs font-black text-white">{current.solution}</p>
                 </div>
               </div>
               <span className="text-[10px] font-bold px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700 rounded-full font-mono shrink-0">

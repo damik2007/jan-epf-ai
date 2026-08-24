@@ -119,7 +119,7 @@ export function CitizenFeatureMatrix() {
   ];
 
   return (
-    <section className="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-800 space-y-6">
+    <section className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy border border-slate-700/80 rounded-3xl p-6 sm:p-8 text-white shadow-2xl space-y-6 relative overflow-hidden">
       {/* Section Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
         <div className="space-y-1">
@@ -127,17 +127,17 @@ export function CitizenFeatureMatrix() {
             <Sparkles className="w-3.5 h-3.5 text-saffron" />
             <span>SOLVING REAL CITIZEN PAIN POINTS • EPFO 3.0 TRANSFORMATION</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-sovereign-navy dark:text-white tracking-tight">
+          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
             The 8 High-Demand Real-World Features Matrix
           </h2>
-          <p className="text-xs text-slate-600 dark:text-slate-400 max-w-3xl">
+          <p className="text-xs text-slate-300 max-w-3xl">
             Derived directly from public grievances and community audits. Every statutory roadblock is solved on-device with zero-trust sovereign architecture.
           </p>
         </div>
 
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all text-slate-700 dark:text-slate-300 shrink-0"
+          className="px-3.5 py-2 rounded-xl bg-slate-800/80 text-white hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all text-slate-300 shrink-0"
         >
           <span>{isOpen ? "Collapse Matrix" : "Expand Matrix"}</span>
           <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? "rotate-180" : ""}`} />
@@ -166,10 +166,10 @@ export function CitizenFeatureMatrix() {
 
                   <div>
                     <h3 className="text-sm font-black text-slate-900 dark:text-white leading-snug">{f.title}</h3>
-                    <p className="text-[11px] font-bold text-slate-700 dark:text-slate-300">{f.tagline}</p>
+                    <p className="text-[11px] font-bold text-slate-300">{f.tagline}</p>
                   </div>
 
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed">
                     {f.description}
                   </p>
                 </div>

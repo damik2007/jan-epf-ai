@@ -294,13 +294,13 @@ export default function BenchmarksPage() {
         </div>
       )}
 
-      {/* TAB 2: 1,000-RUN LATENCY BENCHMARK */}
+      {/* TAB 2: 1,000-RUN LATENCY BENCHMARK (SOVEREIGN DARK FINISH) */}
       {activeTab === "latency" && (
-        <div className="space-y-6 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-5">
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out">
+          <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <h3 className="text-base font-extrabold text-sovereign-navy dark:text-white">
+                <h3 className="text-base font-extrabold text-white">
                   Live In-Browser Microsecond Latency Benchmark
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -312,7 +312,7 @@ export default function BenchmarksPage() {
                 <select
                   value={iterationsCount}
                   onChange={(e) => setIterationsCount(Number(e.target.value))}
-                  className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold border border-slate-300 dark:border-slate-700"
+                  className="px-3 py-2 rounded-xl bg-slate-800/80 text-xs font-bold border border-slate-300 dark:border-slate-700"
                 >
                   <option value={100}>100 Iterations</option>
                   <option value={500}>500 Iterations</option>
@@ -336,7 +336,7 @@ export default function BenchmarksPage() {
               <div className="overflow-x-auto animate-in fade-in duration-300">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold">
+                    <tr className="bg-slate-800/80/80 text-slate-700 dark:text-slate-300 font-bold">
                       <th className="p-3 rounded-l-xl">Algorithm / Target</th>
                       <th className="p-3">Category</th>
                       <th className="p-3">Mean Latency</th>
@@ -365,12 +365,12 @@ export default function BenchmarksPage() {
                 </table>
               </div>
             ) : (
-              <div className="p-10 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border-2 border-dashed border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center text-center space-y-3">
+              <div className="p-10 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border-2 border-dashed border-slate-700/60 flex flex-col items-center justify-center text-center space-y-3">
                 <div className="w-12 h-12 rounded-2xl bg-saffron/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
                   <Zap className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-extrabold text-sovereign-navy dark:text-white">
+                  <h4 className="text-sm font-extrabold text-white">
                     Click "Run Live Benchmarks" to Benchmark Your Browser
                   </h4>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-md">
@@ -389,13 +389,13 @@ export default function BenchmarksPage() {
         </div>
       )}
 
-      {/* TAB 3: RAW TRACE & TOKEN RECEIPTS */}
+      {/* TAB 3: RAW TRACE & TOKEN RECEIPTS (SOVEREIGN DARK FINISH) */}
       {activeTab === "traces" && (
-        <div className="space-y-6 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out">
+          <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <h3 className="text-base font-extrabold text-sovereign-navy dark:text-white flex items-center gap-2">
+                <h3 className="text-base font-extrabold text-white flex items-center gap-2">
                   <Terminal className="w-4 h-4 text-emerald-500" />
                   <span>Microsecond Execution Trace & Token Receipt Console</span>
                 </h3>
@@ -403,7 +403,7 @@ export default function BenchmarksPage() {
                   Raw input/output traces, Presidio PII tokenization masks, and Rust Tiktoken context counts.
                 </p>
               </div>
-              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-800/80 text-slate-600 dark:text-slate-300">
                 Trace ID: TRC-EPF-99412-2026
               </span>
             </div>
@@ -424,7 +424,7 @@ export default function BenchmarksPage() {
 
             {/* Token Receipt Breakdown Card */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono">
-              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+              <div className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-200 dark:border-slate-700">
                 <span className="text-[10px] text-slate-400 font-sans uppercase block">Raw Prompt Tokens</span>
                 <span className="text-lg font-bold text-slate-800 dark:text-slate-200">412 Tokens</span>
                 <span className="text-[10px] text-slate-500 font-sans block">Unpruned verbose grievance</span>
@@ -444,13 +444,13 @@ export default function BenchmarksPage() {
         </div>
       )}
 
-      {/* TAB 4: NATIONAL EXCHEQUER ROI */}
+      {/* TAB 4: NATIONAL EXCHEQUER ROI (SOVEREIGN DARK FINISH) */}
       {activeTab === "economics" && (
-        <div className="space-y-6 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-6">
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out">
+          <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <h3 className="text-base font-extrabold text-sovereign-navy dark:text-white">
+                <h3 className="text-base font-extrabold text-white">
                   National Exchequer ROI & Cloud Economics Calculator
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -492,7 +492,7 @@ export default function BenchmarksPage() {
                 <div className="text-3xl font-black text-red-700 dark:text-red-400 font-mono">
                   ₹{commercialCostInCrores} Crore <span className="text-xs font-sans text-slate-500">/ year</span>
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-xs text-slate-300 leading-relaxed">
                   Assuming $0.03/query commercial API fee for vision OCR and legal parsing across {claimsSliderValue}M transactions.
                 </p>
               </div>
@@ -502,7 +502,7 @@ export default function BenchmarksPage() {
                 <div className="text-3xl font-black text-emerald-700 dark:text-emerald-300 font-mono">
                   ₹0.00 <span className="text-xs font-sans text-slate-500">/ $0 Cloud Bill</span>
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-xs text-slate-300 leading-relaxed">
                   80% of transactions computed on-device in &lt;0.05ms + 20% on self-hosted Azure open-weight containers (Gemma / Llama).
                 </p>
               </div>
@@ -514,10 +514,10 @@ export default function BenchmarksPage() {
       {/* TAB 5: SECURITY & SRE AUDIT */}
       {activeTab === "security" && (
         <div className="space-y-6 animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-5">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-700/60 p-6 shadow-sm space-y-5">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <h3 className="text-base font-extrabold text-sovereign-navy dark:text-white">
+                <h3 className="text-base font-extrabold text-white">
                   Security Certifications & SRE Resilience Audit
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -530,7 +530,7 @@ export default function BenchmarksPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1">
+              <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1">
                 <div className="flex items-center gap-1.5 text-emerald-600 font-bold text-xs">
                   <ShieldCheck className="w-4 h-4" />
                   <span>Bandit Security AST</span>
@@ -539,7 +539,7 @@ export default function BenchmarksPage() {
                 <p className="text-[11px] text-slate-500">Scanned 2,232 lines of core security code.</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1">
+              <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1">
                 <div className="flex items-center gap-1.5 text-blue-600 font-bold text-xs">
                   <CheckCircle2 className="w-4 h-4" />
                   <span>Playwright QA 360</span>
@@ -548,7 +548,7 @@ export default function BenchmarksPage() {
                 <p className="text-[11px] text-slate-500">Automated end-to-end browser user flows.</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1">
+              <div className="p-4 rounded-2xl bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1">
                 <div className="flex items-center gap-1.5 text-purple-600 font-bold text-xs">
                   <Lock className="w-4 h-4" />
                   <span>DPDP Act 2023</span>
