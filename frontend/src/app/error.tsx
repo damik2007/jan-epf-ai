@@ -11,7 +11,9 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[Jan-EPF AI] Runtime Error:", error);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[Jan-EPF AI] Runtime Error:", error);
+    }
   }, [error]);
 
   return (

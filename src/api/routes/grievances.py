@@ -10,7 +10,7 @@ from src.core.schemas import (
     GrievanceDiagnosisRequest,
     GrievanceDiagnosisResponse
 )
-from src.core.security import AntiHallucinationGuard
+from src.core.security import AntiHallucinationGuard, PresidioPIISanitizer
 
 router = APIRouter(prefix="/grievances", tags=["Grievances & AI Copilot"])
 
@@ -23,19 +23,22 @@ async def diagnose_grievance(req: GrievanceDiagnosisRequest):
     if not citizen:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Citizen with UAN {req.uan} not found."
+            detail=f"Citizen record not found."
         )
 
     # 1. Prune description with tiktoken to enforce strict token budget (<256 tokens)
     clean_desc, token_count = prune_context_with_tiktoken(req.complaint_description or "", max_tokens=256)
+    # 2. Zero-Trust PII Masking: Sanitize any Aadhaar, PAN, phone, or bank account before LLM egress
+    clean_desc = PresidioPIISanitizer.sanitize_text(clean_desc)
 
-    # 2. Dynamic Model Target
+    # 3. Dynamic Model Target
     target_model = req.model_override if req.model_override in settings.AVAILABLE_MODELS else settings.LLM_MODEL
     api_key = settings.LLM_API_KEY or settings.OPENAI_API_KEY
     if api_key:
         try:
+            masked_uan = PresidioPIISanitizer.mask_aadhaar(req.uan)
             prompt = (
-                f"You are Jan-EPF AI Grievance Copilot. Analyze the citizen grievance for UAN {req.uan}.\n"
+                f"You are Jan-EPF AI Grievance Copilot. Analyze the citizen grievance for UAN {masked_uan}.\n"
                 f"Category: {req.complaint_category}\n"
                 f"Description (Tokens: {token_count}): {clean_desc}\n"
                 f"Return JSON strictly conforming to: root_cause_identified (str), error_code_classification (str), "
