@@ -43,7 +43,7 @@ app.add_middleware(
 
 
 @app.middleware("http")
-async def prometheus_telemetry_middleware(request: Request, call_next):
+async def security_and_telemetry_middleware(request: Request, call_next):
     start_time = time.time()
     response = await call_next(request)
     duration = time.time() - start_time
@@ -55,6 +55,13 @@ async def prometheus_telemetry_middleware(request: Request, call_next):
         endpoint=endpoint,
         status_code=str(response.status_code)
     ).observe(duration)
+
+    # Sovereign DPI Security Headers (OWASP & DPDP Act 2023 Compliance)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
 
     return response
 

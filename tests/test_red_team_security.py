@@ -63,8 +63,8 @@ def test_red_team_jwt_forgery_and_tampering():
     with pytest.raises(Exception):
         SecurityTokenManager.verify_access_token(none_token)
 
-    # Attack 3: Forged secret key
-    forged_token = jwt.encode({"sub": "100982348712"}, key="attacker_bogus_key", algorithm="HS256")
+    # Attack 3: Forged secret key (32+ bytes compliant with RFC 7518)
+    forged_token = jwt.encode({"sub": "100982348712"}, key="attacker_bogus_key_32_bytes_long_secret!", algorithm="HS256")
     with pytest.raises(Exception):
         SecurityTokenManager.verify_access_token(forged_token)
 
