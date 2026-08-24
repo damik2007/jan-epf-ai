@@ -92,8 +92,8 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-sovereign-navy text-white shadow-lg border-b border-sovereign-light transition-all">
-      {/* 1. Top Sovereign Ticker Bar */}
-      <div className="bg-sovereign-darkest border-b border-sovereign-navy/50 px-2 sm:px-4 py-1 text-xs flex flex-wrap gap-1.5 justify-between items-center text-slate-300">
+      {/* 1. Top Sovereign Ticker Bar - Full Width with Generous Spacing */}
+      <div className="w-full bg-sovereign-darkest border-b border-sovereign-navy/50 px-4 sm:px-6 lg:px-10 py-1.5 text-xs flex flex-wrap gap-2 justify-between items-center text-slate-300">
         <div className="flex items-center gap-2">
           <span className="inline-block w-2 h-2 rounded-full bg-saffron animate-pulse shrink-0" />
           <span className="font-bold text-saffron text-[10px] sm:text-xs tracking-wider uppercase">
@@ -109,18 +109,18 @@ export const Navbar: React.FC = () => {
           {/* Light / Dark Mode Toggle */}
           <button
             onClick={toggleTheme}
-            className="flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold transition-all bg-sovereign-light hover:bg-sovereign-accent text-white"
+            className="flex items-center gap-1 min-h-[44px] sm:min-h-0 min-w-[44px] sm:min-w-0 justify-center px-2 py-1 sm:py-0.5 rounded text-xs font-bold transition-all bg-sovereign-light hover:bg-sovereign-accent text-white"
             title={`Switch to ${theme === "light" ? "Dark" : "Light"} Mode`}
           >
             {theme === "dark" ? (
               <>
-                <Sun className="w-3.5 h-3.5 text-amber-400" />
-                <span>Light</span>
+                <Sun className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-amber-400" />
+                <span className="hidden sm:inline">Light</span>
               </>
             ) : (
               <>
-                <Moon className="w-3.5 h-3.5 text-blue-300" />
-                <span>Dark</span>
+                <Moon className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-blue-300" />
+                <span className="hidden sm:inline">Dark</span>
               </>
             )}
           </button>
@@ -128,61 +128,67 @@ export const Navbar: React.FC = () => {
           {/* Senior Mode Toggle */}
           <button
             onClick={() => setSeniorMode((prev) => !prev)}
-            className={`flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-bold transition-all ${
+            className={`flex items-center gap-1 min-h-[44px] sm:min-h-0 justify-center px-2.5 py-1 sm:py-0.5 rounded text-xs font-bold transition-all ${
               seniorMode
                 ? "bg-samriddhi-bright text-black ring-2 ring-white"
                 : "bg-sovereign-light hover:bg-sovereign-accent text-white"
             }`}
             title="Toggle High-Contrast Senior Citizen Accessibility Mode"
           >
-            <Eye className="w-3.5 h-3.5" />
-            <span>{seniorMode ? t.seniorModeOn : t.seniorModeOff}</span>
+            <Eye className="w-4 h-4 sm:w-3.5 sm:h-3.5" />
+            <span className="hidden sm:inline">{seniorMode ? t.seniorModeOn : t.seniorModeOff}</span>
           </button>
 
-          {/* Language Selector */}
-          <div className="flex items-center gap-1 bg-sovereign-light rounded px-2 py-0.5">
-            <Languages className="w-3.5 h-3.5 text-saffron" />
+          {/* Language Selector with all 13 Indic Languages */}
+          <div className="flex items-center gap-1 bg-sovereign-light rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-0">
+            <Languages className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-saffron" />
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="bg-transparent text-white text-xs border-none focus:outline-none cursor-pointer font-bold"
+              className="bg-transparent text-white text-xs sm:text-[11px] md:text-xs border-none focus:outline-none cursor-pointer font-bold"
             >
               <option value="en-IN" className="bg-slate-900 text-white">English (English)</option>
               <option value="hi-IN" className="bg-slate-900 text-white">हिन्दी (Hindi)</option>
               <option value="te-IN" className="bg-slate-900 text-white">తెలుగు (Telugu)</option>
               <option value="ta-IN" className="bg-slate-900 text-white">தமிழ் (Tamil)</option>
               <option value="kn-IN" className="bg-slate-900 text-white">ಕನ್ನಡ (Kannada)</option>
+              <option value="ml-IN" className="bg-slate-900 text-white">മലയാളം (Malayalam)</option>
               <option value="mr-IN" className="bg-slate-900 text-white">मराठी (Marathi)</option>
+              <option value="bn-IN" className="bg-slate-900 text-white">বাংলা (Bengali)</option>
+              <option value="gu-IN" className="bg-slate-900 text-white">ગુજરાતી (Gujarati)</option>
               <option value="pa-IN" className="bg-slate-900 text-white">ਪੰਜਾਬੀ (Punjabi)</option>
+              <option value="or-IN" className="bg-slate-900 text-white">ଓଡ଼ିଆ (Odia)</option>
+              <option value="as-IN" className="bg-slate-900 text-white">অসমীয়া (Assamese)</option>
+              <option value="ur-IN" className="bg-slate-900 text-white">اردو (Urdu)</option>
             </select>
           </div>
         </div>
       </div>
 
-      {/* 2. Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+      {/* 2. Main Navbar - Full Width with Generous Spacing */}
+      <div className="w-full px-4 sm:px-6 lg:px-10">
+        <div className="flex justify-between items-center h-16 gap-4 lg:gap-8">
           {/* Logo & Subtitle */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-saffron via-samriddhi-gold to-emerald-500 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
-              <ShieldCheck className="w-6 h-6 text-sovereign-darkest font-bold" />
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0 min-h-[44px]">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-saffron via-samriddhi-gold to-emerald-500 flex items-center justify-center shadow-md group-hover:scale-105 transition-transform">
+              <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-sovereign-darkest font-bold" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xl font-extrabold tracking-tight text-white">Jan-EPF</span>
-                <span className="text-xl font-extrabold text-saffron">AI</span>
+              <div className="flex items-center gap-1.5 flex-wrap sm:flex-nowrap">
+                <span className="text-lg sm:text-xl font-extrabold tracking-tight text-white">Jan-EPF</span>
+                <span className="text-lg sm:text-xl font-extrabold text-saffron">AI</span>
                 <span className="text-[10px] uppercase tracking-widest px-1.5 py-0.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 rounded font-bold">
                   SOVEREIGN 2.0
                 </span>
               </div>
-              <p className="text-[11px] text-slate-300 hidden sm:block">
-                Rebuilding India\'s Provident Fund Digital Infrastructure
+              <p className="text-[10px] sm:text-[11px] text-slate-300 hidden md:block">
+                Rebuilding India's Provident Fund Digital Infrastructure
               </p>
             </div>
           </Link>
 
-          {/* 4 Topic Hub Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-1">
+          {/* 5 Topic Hub Navigation Links - Centered & Spacious */}
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-3 flex-1 justify-center">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -190,7 +196,7 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
+                  className={`flex items-center gap-2 px-3.5 lg:px-4 py-2 rounded-lg text-sm font-medium transition-all min-h-[44px] ${
                     isActive
                       ? "bg-saffron text-sovereign-darkest font-bold shadow-md"
                       : "text-slate-200 hover:bg-sovereign-light hover:text-white"
@@ -204,10 +210,10 @@ export const Navbar: React.FC = () => {
           </nav>
 
           {/* Action Cluster: Search + Single Judges Tour + Persona Switcher */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               onClick={() => setCommandCenterOpen(true)}
-              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sovereign-light/80 hover:bg-sovereign-light text-slate-300 hover:text-white border border-sovereign-accent text-xs transition-all shadow-sm"
+              className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-sovereign-light/80 hover:bg-sovereign-light text-slate-300 hover:text-white border border-sovereign-accent text-xs transition-all shadow-sm min-h-[44px]"
               title="Open Command Center (⌘K)"
               aria-label="Open Command Center"
             >
@@ -224,7 +230,7 @@ export const Navbar: React.FC = () => {
             {!isAuthenticated ? (
               <button
                 onClick={() => login("100982348712")}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold bg-saffron text-sovereign-darkest hover:bg-amber-400 shadow-md transition-all animate-pulse"
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold bg-saffron text-sovereign-darkest hover:bg-amber-400 shadow-md transition-all animate-pulse min-h-[44px]"
                 title="Log in instantly as Ramesh Kumar"
               >
                 <Zap className="w-3.5 h-3.5" />
@@ -236,7 +242,7 @@ export const Navbar: React.FC = () => {
                   type="button"
                   title={`CITIZEN REDESIGN PROTOTYPE | SIMULATED UAN: ${activeCitizen.uan}`}
                   aria-label={`CITIZEN REDESIGN PROTOTYPE | SIMULATED UAN: ${activeCitizen.uan}`}
-                  className="flex items-center gap-2 bg-sovereign-light border border-sovereign-accent px-3 py-1.5 rounded-lg hover:border-saffron transition-all text-left"
+                  className="flex items-center gap-2 bg-sovereign-light border border-sovereign-accent px-3 py-1.5 rounded-lg hover:border-saffron transition-all text-left min-h-[44px]"
                 >
                   <UserCheck className="w-4 h-4 text-emerald-400" />
                   <div>
@@ -258,7 +264,7 @@ export const Navbar: React.FC = () => {
                     </span>
                     <button
                       onClick={logout}
-                      className="text-[10px] text-rose-600 dark:text-rose-400 font-bold hover:underline flex items-center gap-1"
+                      className="text-[10px] text-rose-600 dark:text-rose-400 font-bold hover:underline flex items-center gap-1 min-h-[44px]"
                     >
                       <LogOut className="w-3 h-3" />
                       <span>Logout / Gateway</span>
@@ -281,7 +287,7 @@ export const Navbar: React.FC = () => {
                         <button
                           key={c.uan}
                           onClick={() => switchCitizen(c.uan)}
-                          className={`w-full text-left p-2.5 rounded-xl flex flex-col gap-1 transition-all ${
+                          className={`w-full text-left p-2.5 rounded-xl flex flex-col gap-1 transition-all min-h-[44px] ${
                             isSelected
                               ? "bg-sovereign-navy text-white font-bold ring-2 ring-saffron/50 shadow-sm"
                               : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200"
@@ -318,9 +324,9 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Sovereign DPI Pulse Bar */}
-      <div className="bg-sovereign-darkest/95 border-t border-sovereign-navy px-3 py-1.5 text-[11px] font-mono text-slate-300 flex items-center justify-between overflow-x-auto scrollbar-none">
-        <div className="flex items-center gap-3 whitespace-nowrap mx-auto sm:mx-0">
+      {/* 3. Sovereign DPI Pulse Bar - Full Width */}
+      <div className="w-full bg-sovereign-darkest/95 border-t border-sovereign-navy px-4 sm:px-6 lg:px-10 py-1.5 text-[11px] font-mono text-slate-300 flex items-center overflow-x-auto scrollbar-none">
+        <div className="flex items-center gap-3 whitespace-nowrap">
           <span className="flex items-center gap-1.5 font-bold text-emerald-400">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block" />
             SOVEREIGN DPI PULSE: ALL 6 NETWORKS OPERATIONAL
@@ -338,8 +344,8 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Sub-Bar */}
-      <div className="md:hidden flex overflow-x-auto px-2 py-1.5 bg-sovereign-darkest border-t border-sovereign-navy gap-1 scrollbar-none">
+      {/* Mobile Navigation Sub-Bar (Horizontal Scroll) */}
+      <div className="md:hidden flex overflow-x-auto px-4 py-2 bg-sovereign-darkest border-t border-sovereign-navy gap-2 scrollbar-none w-full">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -347,13 +353,13 @@ export const Navbar: React.FC = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs whitespace-nowrap font-medium ${
+              className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm whitespace-nowrap font-medium min-h-[44px] transition-all ${
                 isActive
-                  ? "bg-saffron text-sovereign-darkest font-bold"
-                  : "text-slate-300 bg-sovereign-light/50"
+                  ? "bg-saffron text-sovereign-darkest font-bold shadow-sm"
+                  : "text-slate-300 bg-sovereign-light/50 hover:bg-sovereign-light"
               }`}
             >
-              <Icon className="w-3.5 h-3.5" />
+              <Icon className="w-4 h-4" />
               <span>{item.label}</span>
             </Link>
           );

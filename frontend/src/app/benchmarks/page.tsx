@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useCitizen } from "@/context/CitizenContext";
+import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import {
   calculateFuzzyNameMatch,
@@ -46,6 +48,8 @@ interface BenchmarkResult {
 }
 
 export default function BenchmarksPage() {
+  const { language } = useCitizen();
+  const t = getTranslation(language);
   const [activeTab, setActiveTab] = useState<"evals" | "latency" | "traces" | "economics" | "security">("evals");
   const [iterationsCount, setIterationsCount] = useState<number>(1000);
   const [isRunningBench, setIsRunningBench] = useState<boolean>(false);
@@ -221,7 +225,7 @@ export default function BenchmarksPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-300">
-      <Breadcrumb currentPage="Evals & Proof Benchmarks" />
+      <Breadcrumb currentPage={t.benchmarksTitle || "Evals & Proof Benchmarks"} />
 
       {/* Hero Proof Header */}
       <div className="bg-gradient-to-br from-sovereign-darkest via-sovereign-navy to-sovereign-light text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-sovereign-accent relative overflow-hidden">
@@ -236,12 +240,8 @@ export default function BenchmarksPage() {
                 VARUN MAYYA × OPENAI 3-PART PROOF STANDARD
               </span>
             </div>
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-              Evals, Evidence & Benchmarks
-            </h1>
-            <p className="text-sm text-slate-300 leading-relaxed">
-              Transparent, quantitative, and reproducible proof assets evaluating our 80/20 Sovereign Core against legacy EPFO baselines and vanilla LLM wrappers.
-            </p>
+            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">{t.benchmarksTitle || "Evals, Evidence & Benchmarks"}</h1>
+            <p className="text-sm text-slate-300 leading-relaxed">{t.benchmarksSubtitle}</p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full lg:w-auto shrink-0">
@@ -265,22 +265,22 @@ export default function BenchmarksPage() {
         {/* 4 Sovereign Metrics Ticker */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-white/10 mt-6 font-mono">
           <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
-            <span className="text-[10px] text-slate-300 font-sans block uppercase">Form 31 Math Latency</span>
+            <span className="text-[10px] text-slate-300 font-sans block uppercase">{t.mathLatencyLabel || "Form 31 Math Latency"}</span>
             <span className="text-xl font-extrabold text-emerald-400">0.0005 ms</span>
             <span className="text-[10px] text-slate-400 block font-sans">4,000x faster than cloud</span>
           </div>
           <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
-            <span className="text-[10px] text-slate-300 font-sans block uppercase">PyTest Compliance Suite</span>
+            <span className="text-[10px] text-slate-300 font-sans block uppercase">{t.complianceSuiteLabel || "PyTest Compliance Suite"}</span>
             <span className="text-xl font-extrabold text-amber-300">139 / 139 PASS</span>
             <span className="text-[10px] text-slate-400 block font-sans">95% statutory code coverage</span>
           </div>
           <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
-            <span className="text-[10px] text-slate-300 font-sans block uppercase">Tiktoken Context Pruning</span>
+            <span className="text-[10px] text-slate-300 font-sans block uppercase">{t.tokenContextSavedLabel || "Tiktoken Context Pruning"}</span>
             <span className="text-xl font-extrabold text-blue-300">76.4% SAVED</span>
             <span className="text-[10px] text-slate-400 block font-sans">&lt;256 token payload guard</span>
           </div>
           <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
-            <span className="text-[10px] text-slate-300 font-sans block uppercase">National Cloud Bill</span>
+            <span className="text-[10px] text-slate-300 font-sans block uppercase">{t.cloudBillLabel || "National Cloud Bill"}</span>
             <span className="text-xl font-extrabold text-emerald-300">₹0.00 / Request</span>
             <span className="text-[10px] text-slate-400 block font-sans">80% on-device execution</span>
           </div>
@@ -290,11 +290,11 @@ export default function BenchmarksPage() {
       {/* Navigation Tabs */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-slate-200 dark:bg-slate-800/80 rounded-2xl border border-slate-300 dark:border-slate-700 text-xs font-bold">
         {[
-          { id: "evals", label: "🧪 3-Way Evals Matrix" },
-          { id: "latency", label: "⚡ 1,000-Run Latency Benchmark" },
-          { id: "traces", label: "📜 Raw Trace & Token Receipts" },
-          { id: "economics", label: "💰 National Exchequer ROI" },
-          { id: "security", label: "🛡️ Security & SRE Audit" }
+          { id: "evals", label: t.tab3WayEvals || "🧪 3-Way Evals Matrix" },
+          { id: "latency", label: t.tab1000RunLatency || "⚡ 1,000-Run Latency Benchmark" },
+          { id: "traces", label: t.tabRawTraces || "📜 Raw Trace & Token Receipts" },
+          { id: "economics", label: t.tabExchequerRoi || "💰 National Exchequer ROI" },
+          { id: "security", label: t.tabSecurityAudit || "🛡️ Security & SRE Audit" }
         ].map((tab) => (
           <button
             key={tab.id}
@@ -676,18 +676,14 @@ export default function BenchmarksPage() {
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2 text-white font-extrabold text-sm">
             <ShieldCheck className="w-5 h-5 text-emerald-400" />
-            <span>Statutory, Legal & Algorithmic Compliance Certification</span>
+            <span>{t.statutoryComplianceTitle || "Statutory, Legal & Algorithmic Compliance Certification"}</span>
           </div>
           <div className="flex flex-wrap items-center gap-2 font-mono text-[10px]">
-            <span className="px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800">
-              DPDP ACT 2023 COMPLIANT
-            </span>
+            <span className="px-2 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-800">{t.dpdpComplianceText || "DPDP ACT 2023 COMPLIANT"}</span>
             <span className="px-2 py-0.5 rounded-md bg-blue-950 text-blue-300 border border-blue-800">
               AADHAAR ACT SEC 29 VERIFIED
             </span>
-            <span className="px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-800">
-              PUBLIC DOMAIN STATUTORY RULES
-            </span>
+            <span className="px-2 py-0.5 rounded-md bg-amber-950 text-amber-300 border border-amber-800">{t.statutoryPublicLawText || "PUBLIC DOMAIN STATUTORY RULES"}</span>
           </div>
         </div>
 
