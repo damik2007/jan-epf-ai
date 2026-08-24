@@ -19,7 +19,8 @@ import {
   Coins,
   HeartHandshake,
   Shield,
-  LogOut
+  LogOut,
+  ChevronDown
 } from "lucide-react";
 import { BenchmarkComparison } from "@/components/BenchmarkComparison";
 import { CitizenFeatureMatrix } from "@/components/CitizenFeatureMatrix";
@@ -40,6 +41,7 @@ export default function CitizenLandingPage() {
   const totalBalance = activeCitizen.passbook_summary?.total_balance || 0;
   const [displayBalance, setDisplayBalance] = useState(0);
   const [chaosSimulatorOpen, setChaosSimulatorOpen] = useState(false);
+  const [showArchitectureMatrix, setShowArchitectureMatrix] = useState(false);
 
   React.useEffect(() => {
     const duration = 800;
@@ -400,92 +402,118 @@ export default function CitizenLandingPage() {
         </div>
       </div>
 
-      {/* Architectural Intelligence & Evaluator Showcase Tabs */}
-      <div className="space-y-4 pt-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
-          <div>
-            <h3 className="text-base font-extrabold text-sovereign-navy dark:text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              <span>Architectural Intelligence & Evaluator Showcase</span>
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Explore breakthroughs, audience journeys, transformation metrics, live SRE telemetry, and engineering pillars.
-            </p>
+      {/* Architectural Intelligence & Evaluator Showcase Tabs (Collapsible) */}
+      <div className="pt-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm transition-all">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-saffron/20 dark:bg-amber-400/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-extrabold text-sovereign-navy dark:text-white">
+                  Architectural Intelligence & Benchmark Matrix
+                </h3>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold border border-slate-200 dark:border-slate-700">
+                  5 Subsystems
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Inspect 80/20 Sovereign Core, 500-iteration in-browser benchmark runner, audience journeys, and SRE health telemetry.
+              </p>
+            </div>
           </div>
 
-          {/* Tab Selection Chips */}
-          <div role="tablist" className="flex flex-wrap gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/80">
-            <button
-              role="tab"
-              aria-selected={activeSectionTab === "features"}
-              onClick={() => setActiveSectionTab("features")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeSectionTab === "features"
-                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              🌟 Breakthroughs
-            </button>
-            <button
-              role="tab"
-              aria-selected={activeSectionTab === "audience"}
-              onClick={() => setActiveSectionTab("audience")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeSectionTab === "audience"
-                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              👥 Audience Journeys
-            </button>
-            <button
-              role="tab"
-              aria-selected={activeSectionTab === "benchmark"}
-              onClick={() => setActiveSectionTab("benchmark")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeSectionTab === "benchmark"
-                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              📊 Impact Benchmark
-            </button>
-            <button
-              role="tab"
-              aria-selected={activeSectionTab === "sre"}
-              onClick={() => setActiveSectionTab("sre")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeSectionTab === "sre"
-                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              ⚡ SRE Telemetry
-            </button>
-            <button
-              role="tab"
-              aria-selected={activeSectionTab === "pillars"}
-              onClick={() => setActiveSectionTab("pillars")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                activeSectionTab === "pillars"
-                  ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
-                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-              }`}
-            >
-              🏛️ Engineering Pillars
-            </button>
-          </div>
+          <button
+            onClick={() => setShowArchitectureMatrix(!showArchitectureMatrix)}
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-sovereign-navy dark:text-white transition-all flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 shrink-0"
+          >
+            <span>{showArchitectureMatrix ? "Collapse Architecture Matrix" : "Inspect Architecture & Live Benchmarks"}</span>
+            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showArchitectureMatrix ? "rotate-180" : ""}`} />
+          </button>
         </div>
 
-        {/* Tab Content Display */}
-        <div className="transition-all duration-200">
-          {activeSectionTab === "features" && <CitizenFeatureMatrix />}
-          {activeSectionTab === "audience" && <AudienceSegmentReport />}
-          {activeSectionTab === "benchmark" && <BenchmarkComparison />}
-          {activeSectionTab === "sre" && <SreTelemetryPanel />}
-          {activeSectionTab === "pillars" && <SovereignDpiPillars />}
-        </div>
+        {showArchitectureMatrix && (
+          <div className="mt-4 space-y-4 animate-in fade-in duration-200">
+            {/* Tab Selection Chips */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+              <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                Select Subsystem Inspection Tab:
+              </span>
+              <div role="tablist" className="flex flex-wrap gap-1.5 p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700/80">
+                <button
+                  role="tab"
+                  aria-selected={activeSectionTab === "features"}
+                  onClick={() => setActiveSectionTab("features")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    activeSectionTab === "features"
+                      ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  🌟 Breakthroughs
+                </button>
+                <button
+                  role="tab"
+                  aria-selected={activeSectionTab === "audience"}
+                  onClick={() => setActiveSectionTab("audience")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    activeSectionTab === "audience"
+                      ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  👥 Audience Journeys
+                </button>
+                <button
+                  role="tab"
+                  aria-selected={activeSectionTab === "benchmark"}
+                  onClick={() => setActiveSectionTab("benchmark")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    activeSectionTab === "benchmark"
+                      ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  📊 Impact Benchmark
+                </button>
+                <button
+                  role="tab"
+                  aria-selected={activeSectionTab === "sre"}
+                  onClick={() => setActiveSectionTab("sre")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    activeSectionTab === "sre"
+                      ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  ⚡ SRE Telemetry
+                </button>
+                <button
+                  role="tab"
+                  aria-selected={activeSectionTab === "pillars"}
+                  onClick={() => setActiveSectionTab("pillars")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    activeSectionTab === "pillars"
+                      ? "bg-white dark:bg-slate-900 text-sovereign-navy dark:text-white shadow-sm border border-slate-200 dark:border-slate-700"
+                      : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                >
+                  🏛️ Engineering Pillars
+                </button>
+              </div>
+            </div>
+
+            {/* Tab Content Display */}
+            <div className="transition-all duration-200">
+              {activeSectionTab === "features" && <CitizenFeatureMatrix />}
+              {activeSectionTab === "audience" && <AudienceSegmentReport />}
+              {activeSectionTab === "benchmark" && <BenchmarkComparison />}
+              {activeSectionTab === "sre" && <SreTelemetryPanel />}
+              {activeSectionTab === "pillars" && <SovereignDpiPillars />}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Live Zero-Rejection Chaos Simulator Sandbox Modal */}

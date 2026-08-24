@@ -161,8 +161,8 @@ export const ChequeOCRScanner: React.FC<ChequeOCRScannerProps> = ({
             </p>
           </div>
         </div>
-        <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 rounded-full flex items-center gap-1">
-          <Zap className="w-3 h-3" /> Sub-5ms Local
+        <span className="text-[10px] font-bold px-2.5 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 rounded-full flex items-center gap-1">
+          <Zap className="w-3 h-3" /> Instant On-Device Scan
         </span>
       </div>
 
