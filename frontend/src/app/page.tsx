@@ -23,11 +23,6 @@ import {
   ChevronDown,
   Activity
 } from "lucide-react";
-import { BenchmarkComparison } from "@/components/BenchmarkComparison";
-import { CitizenFeatureMatrix } from "@/components/CitizenFeatureMatrix";
-import { AudienceSegmentReport } from "@/components/AudienceSegmentReport";
-import { SreTelemetryPanel } from "@/components/SreTelemetryPanel";
-import { SovereignDpiPillars } from "@/components/SovereignDpiPillars";
 import { ClaimReadinessScore } from "@/components/ClaimReadinessScore";
 import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
 
@@ -35,8 +30,6 @@ export default function CitizenLandingPage() {
   const { activeCitizen, isAuthenticated, login, logout, language } = useCitizen();
   const t = getTranslation(language);
 
-  const [activeSectionTab, setActiveSectionTab] = useState<"benchmark" | "features" | "audience" | "sre" | "pillars">("benchmark");
-  const [showArchitectureMatrix, setShowArchitectureMatrix] = useState(false);
   const [chaosSimulatorOpen, setChaosSimulatorOpen] = useState(false);
 
   const totalBalance = activeCitizen.passbook_summary?.total_balance || 0;
@@ -397,103 +390,41 @@ export default function CitizenLandingPage() {
         </div>
       </div>
 
-      {/* 4. COLLAPSIBLE ARCHITECTURAL INTELLIGENCE & BENCHMARK MATRIX */}
+      {/* 4. SOVEREIGN 80/20 BENCHMARK & PROOF ASSET GATEWAY */}
       <div className="pt-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm transition-all">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-saffron/20 dark:bg-amber-400/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold shrink-0">
-              <Sparkles className="w-5 h-5" />
+        <Link
+          href="/benchmarks"
+          className="group flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5 sm:p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-sovereign-darkest to-sovereign-navy border border-slate-700/80 hover:border-saffron/80 text-white shadow-xl hover:shadow-2xl transition-all duration-300 relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-saffron/10 rounded-full blur-3xl group-hover:bg-saffron/20 transition-all pointer-events-none" />
+
+          <div className="flex items-center gap-4 relative z-10">
+            <div className="w-12 h-12 rounded-2xl bg-saffron/20 text-saffron flex items-center justify-center font-bold shrink-0 group-hover:scale-110 transition-transform">
+              <Sparkles className="w-6 h-6" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm font-extrabold text-sovereign-navy dark:text-white">
-                  Architectural Intelligence & Benchmark Matrix
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-base font-extrabold text-white group-hover:text-saffron transition-colors">
+                  Sovereign 80/20 Core Benchmark & Evidence Laboratory
                 </h3>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold border border-slate-200 dark:border-slate-700">
-                  5 Subsystems
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 font-mono font-bold border border-emerald-800">
+                  &lt;0.05ms Latency
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-950 text-blue-300 font-mono font-bold border border-blue-800">
+                  3-Way Evals Active
                 </span>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Inspect 80/20 Sovereign Core, 1,000-run live latency runner, audience journeys, and SRE health telemetry.
+              <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                Inspect the 1,000-run live in-browser latency runner, raw execution traces, 76.4% token pruning receipts, and DPDP Act 2023 compliance audit.
               </p>
             </div>
           </div>
 
-          <button
-            onClick={() => setShowArchitectureMatrix(!showArchitectureMatrix)}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-sovereign-navy dark:text-white transition-all flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 shrink-0"
-          >
-            <span>{showArchitectureMatrix ? "Collapse Architecture Matrix" : "Inspect Architecture & Live Benchmarks"}</span>
-            <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showArchitectureMatrix ? "rotate-180" : ""}`} />
-          </button>
-        </div>
-
-        {showArchitectureMatrix && (
-          <div className="mt-4 space-y-4 animate-in fade-in duration-200">
-            {/* Tab Selection Chips */}
-            <div className="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-              <button
-                onClick={() => setActiveSectionTab("benchmark")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  activeSectionTab === "benchmark"
-                    ? "bg-saffron text-sovereign-darkest shadow-sm"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200"
-                }`}
-              >
-                📊 1,000-Run Live Latency Runner
-              </button>
-              <button
-                onClick={() => setActiveSectionTab("features")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  activeSectionTab === "features"
-                    ? "bg-saffron text-sovereign-darkest shadow-sm"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200"
-                }`}
-              >
-                🏛️ Statutory Feature Matrix
-              </button>
-              <button
-                onClick={() => setActiveSectionTab("audience")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  activeSectionTab === "audience"
-                    ? "bg-saffron text-sovereign-darkest shadow-sm"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200"
-                }`}
-              >
-                👥 Demographic Personas
-              </button>
-              <button
-                onClick={() => setActiveSectionTab("sre")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  activeSectionTab === "sre"
-                    ? "bg-saffron text-sovereign-darkest shadow-sm"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200"
-                }`}
-              >
-                🛡️ SRE Telemetry & Circuit Breakers
-              </button>
-              <button
-                onClick={() => setActiveSectionTab("pillars")}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  activeSectionTab === "pillars"
-                    ? "bg-saffron text-sovereign-darkest shadow-sm"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200"
-                }`}
-              >
-                🇮🇳 Sovereign DPI Pillars
-              </button>
-            </div>
-
-            {/* Subsystem Render */}
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
-              {activeSectionTab === "benchmark" && <BenchmarkComparison />}
-              {activeSectionTab === "features" && <CitizenFeatureMatrix />}
-              {activeSectionTab === "audience" && <AudienceSegmentReport />}
-              {activeSectionTab === "sre" && <SreTelemetryPanel />}
-              {activeSectionTab === "pillars" && <SovereignDpiPillars />}
-            </div>
+          <div className="w-full sm:w-auto px-5 py-3 rounded-2xl text-xs font-bold bg-saffron text-sovereign-darkest group-hover:bg-amber-400 flex items-center justify-center gap-2 transition-all shadow-md shrink-0 relative z-10">
+            <span>Explore Proof Assets Hub</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </div>
-        )}
+        </Link>
       </div>
 
       {/* Chaos Simulator Sandbox Modal */}

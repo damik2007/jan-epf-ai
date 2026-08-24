@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useCitizen } from "@/context/CitizenContext";
 import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { runBenchmarkSuite, BenchmarkSuiteResult } from "@/lib/benchmarkRunner";
+import { SreTelemetryPanel } from "@/components/SreTelemetryPanel";
+import { SovereignDpiPillars } from "@/components/SovereignDpiPillars";
+import { CitizenFeatureMatrix } from "@/components/CitizenFeatureMatrix";
 import {
   calculateFuzzyNameMatch,
   calculateForm31Eligibility,
@@ -58,135 +62,14 @@ export default function BenchmarksPage() {
   const [copiedCli, setCopiedCli] = useState<boolean>(false);
 
   // Live in-browser 1,000-iteration execution runner
+  // Live in-browser execution runner using shared deterministic benchmark engine
   const runInBrowserBenchmarks = () => {
     setIsRunningBench(true);
     setBenchResults(null);
 
     setTimeout(() => {
-      const results: BenchmarkResult[] = [];
-      const N = iterationsCount;
-
-      // 1. Levenshtein Fuzzy Match
-      const t0 = performance.now();
-      for (let i = 0; i < N; i++) {
-        calculateFuzzyNameMatch("Ramesh Kumar", "Shri Ramesh Kumar");
-      }
-      const t1 = performance.now();
-      const levMean = (t1 - t0) / N;
-
-      results.push({
-        name: "Levenshtein Unicode Fuzzy Matcher",
-        category: "KYC Reconciliation",
-        iterations: N,
-        meanMs: Number(levMean.toFixed(4)),
-        p50Ms: Number((levMean * 0.95).toFixed(4)),
-        p99Ms: Number((levMean * 1.35).toFixed(4)),
-        targetSlaMs: 5.0,
-        speedupVsCloud: `${Math.round(5.0 / Math.max(levMean, 0.0001))}x faster`,
-        status: levMean < 5.0 ? "PASS" : "WARN"
-      });
-
-      // 2. Form 31 Para 68 Eligibility
-      const t2 = performance.now();
-      for (let i = 0; i < N; i++) {
-        calculateForm31Eligibility(156000, 186500, 45000, 8.2, "MEDICAL");
-      }
-      const t3 = performance.now();
-      const f31Mean = (t3 - t2) / N;
-
-      results.push({
-        name: "Form 31 Para 68 Advance Actuary",
-        category: "Statutory Sanction",
-        iterations: N,
-        meanMs: Number(f31Mean.toFixed(5)),
-        p50Ms: Number((f31Mean * 0.9).toFixed(5)),
-        p99Ms: Number((f31Mean * 1.25).toFixed(5)),
-        targetSlaMs: 2.0,
-        speedupVsCloud: `${Math.round(2.0 / Math.max(f31Mean, 0.00001))}x faster`,
-        status: f31Mean < 2.0 ? "PASS" : "WARN"
-      });
-
-      // 3. Section 192A TDS Tax Shield
-      const t4 = performance.now();
-      for (let i = 0; i < N; i++) {
-        calculateTdsDeduction(3.5, 85000, true, true);
-      }
-      const t5 = performance.now();
-      const tdsMean = (t5 - t4) / N;
-
-      results.push({
-        name: "Section 192A Income Tax TDS Shield",
-        category: "Tax Protection",
-        iterations: N,
-        meanMs: Number(tdsMean.toFixed(5)),
-        p50Ms: Number((tdsMean * 0.9).toFixed(5)),
-        p99Ms: Number((tdsMean * 1.2).toFixed(5)),
-        targetSlaMs: 2.0,
-        speedupVsCloud: `${Math.round(2.0 / Math.max(tdsMean, 0.00001))}x faster`,
-        status: tdsMean < 2.0 ? "PASS" : "WARN"
-      });
-
-      // 4. ECR Missing Date of Exit Deduction
-      const t6 = performance.now();
-      for (let i = 0; i < N; i++) {
-        deduceMissingDateOfExit("2023-08");
-      }
-      const t7 = performance.now();
-      const doeMean = (t7 - t6) / N;
-
-      results.push({
-        name: "ECR Timestamp Exit Date Deducer",
-        category: "Career Transfer",
-        iterations: N,
-        meanMs: Number(doeMean.toFixed(5)),
-        p50Ms: Number((doeMean * 0.9).toFixed(5)),
-        p99Ms: Number((doeMean * 1.2).toFixed(5)),
-        targetSlaMs: 2.0,
-        speedupVsCloud: `${Math.round(2.0 / Math.max(doeMean, 0.00001))}x faster`,
-        status: doeMean < 2.0 ? "PASS" : "WARN"
-      });
-
-      // 5. 30-Year Compounding Forecaster
-      const t8 = performance.now();
-      for (let i = 0; i < N; i++) {
-        calculatePassbookCompounding(342500, 45000, 10, 8.25);
-      }
-      const t9 = performance.now();
-      const compMean = (t9 - t8) / N;
-
-      results.push({
-        name: "30-Year 8.25% Wealth Forecaster",
-        category: "Actuarial Ledgers",
-        iterations: N,
-        meanMs: Number(compMean.toFixed(4)),
-        p50Ms: Number((compMean * 0.95).toFixed(4)),
-        p99Ms: Number((compMean * 1.3).toFixed(4)),
-        targetSlaMs: 2.0,
-        speedupVsCloud: `${Math.round(2.0 / Math.max(compMean, 0.0001))}x faster`,
-        status: compMean < 2.0 ? "PASS" : "WARN"
-      });
-
-      // 6. IFSC Bank Merger Resolver
-      const t10 = performance.now();
-      for (let i = 0; i < N; i++) {
-        lookupIfsc("SYNB0009001");
-      }
-      const t11 = performance.now();
-      const ifscMean = (t11 - t10) / N;
-
-      results.push({
-        name: "NPCI / Bank Merger IFSC Resolver",
-        category: "Banking KYC",
-        iterations: N,
-        meanMs: Number(ifscMean.toFixed(5)),
-        p50Ms: Number((ifscMean * 0.9).toFixed(5)),
-        p99Ms: Number((ifscMean * 1.2).toFixed(5)),
-        targetSlaMs: 2.0,
-        speedupVsCloud: `${Math.round(2.0 / Math.max(ifscMean, 0.00001))}x faster`,
-        status: ifscMean < 2.0 ? "PASS" : "WARN"
-      });
-
-      setBenchResults(results);
+      const results = runBenchmarkSuite(iterationsCount);
+      setBenchResults(results as any);
       setIsRunningBench(false);
     }, 250);
   };
@@ -670,6 +553,12 @@ export default function BenchmarksPage() {
           </div>
         </div>
       )}
+
+      
+          {/* Live SRE Subsystems & DPI Architecture */}
+          <SreTelemetryPanel />
+          <SovereignDpiPillars />
+          <CitizenFeatureMatrix />
 
       {/* Formal Statutory & Legal Disclaimers Card */}
       <div className="bg-slate-900/90 text-slate-300 rounded-3xl p-6 sm:p-7 border border-slate-800 space-y-4 font-sans text-xs shadow-xl">
