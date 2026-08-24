@@ -23,8 +23,8 @@ export function SreTelemetryPanel() {
   const metrics = [
     {
       label: "80/20 Sovereign Engine",
-      value: "82.4% On-Device",
-      sub: "$0 API Cloud Bill • Sub-5ms Execution",
+      value: "99.6% Savings",
+      sub: "₹0.00 Local Compute • ₹0.0004 Edge AI",
       status: "OPTIMAL",
       icon: Cpu,
       color: "text-emerald-300 border-emerald-800/60 bg-emerald-950/60"
