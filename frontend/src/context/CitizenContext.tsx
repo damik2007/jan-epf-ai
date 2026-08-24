@@ -243,14 +243,20 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  // Senior Mode Auto-Detection for Gurmeet Singh & Auto-Reset for other citizens
+  // Senior Mode is OFF by default on page load.
+  // Sync Dark Theme when Senior Mode is Activated/Deactivated
   useEffect(() => {
-    if (activeCitizen.uan === "100112233445" || activeCitizen.uan === "101889977665") {
-      setSeniorMode(true);
-    } else {
-      setSeniorMode(false);
+    if (typeof window !== "undefined") {
+      if (seniorMode) {
+        document.documentElement.classList.add("dark");
+      } else {
+        const savedTheme = localStorage.getItem("jan_epf_theme") as "light" | "dark" | null;
+        if (savedTheme !== "dark") {
+          document.documentElement.classList.remove("dark");
+        }
+      }
     }
-  }, [activeCitizen.uan]);
+  }, [seniorMode]);
 
   // Audio Cue when Senior Mode is Activated
   useEffect(() => {

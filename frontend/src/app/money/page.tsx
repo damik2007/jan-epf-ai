@@ -207,17 +207,17 @@ export default function NeedMoneyHub() {
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
       <Breadcrumb currentPage="Need Money" />
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-700/70">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
               <Wallet className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl font-black text-white">
+            <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.moneyTitle}
             </h1>
           </div>
-          <p className="text-xs text-slate-300 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.moneySubtitle}
           </p>
         </div>
@@ -237,7 +237,7 @@ export default function NeedMoneyHub() {
               >
                 {currentStep > step ? "✓" : step}
               </div>
-              <span className={`text-xs font-semibold hidden md:inline ${currentStep === step ? "text-white" : "text-slate-400"}`}>
+              <span className={`text-xs font-semibold hidden md:inline ${currentStep === step ? "text-sovereign-navy dark:text-white" : "text-slate-400"}`}>
                 {step === 1 ? t.step1 : step === 2 ? t.step2 : t.step3}
               </span>
               {step < 3 && <span className="text-slate-300 dark:text-slate-600 hidden md:inline">→</span>}
@@ -270,7 +270,7 @@ export default function NeedMoneyHub() {
                   className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                     isSelected
                       ? "border-amber-500 ring-2 ring-amber-500/20 shadow-md bg-amber-50/20 dark:bg-slate-900"
-                      : "border-slate-700/70 bg-slate-900/90 hover:border-slate-300 dark:hover:border-slate-700"
+                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700"
                   }`}
                 >
                   <div className="flex justify-between items-start mb-3">
@@ -283,24 +283,24 @@ export default function NeedMoneyHub() {
                       </span>
                     </StatutoryTooltip>
                   </div>
-                  <h3 className="font-bold text-sm text-white">{r.label}</h3>
-                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">{r.desc}</p>
+                  <h3 className="font-bold text-sm text-sovereign-navy dark:text-white">{r.label}</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">{r.desc}</p>
                 </div>
               );
             })}
           </div>
 
           {/* Amount Calculation Card */}
-          <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-6 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 pb-3 border-b border-slate-100 dark:border-slate-800">
               <div>
-                <h3 className="text-sm font-bold text-white">
+                <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                   {t.eligibilityTitle}
                 </h3>
-                <p className="text-xs text-slate-300">{getReasonNote()}</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{getReasonNote()}</p>
               </div>
               <div className="text-left sm:text-right">
-                <span className="text-xs text-slate-300">{t.maxSanctionable}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400">{t.maxSanctionable}</span>
                 <div className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
                   ₹{eligibility.maxAdvanceAmount.toLocaleString("en-IN")}
                 </div>
@@ -309,7 +309,7 @@ export default function NeedMoneyHub() {
 
             {/* Quick Percentage Chips */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-semibold text-slate-300">Quick Presets:</span>
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Quick Presets:</span>
               {[0.25, 0.5, 0.75, 1.0].map((fraction) => {
                 const presetAmt = Math.max(5000, Math.round((eligibility.maxAdvanceAmount * fraction) / 1000) * 1000);
                 const isCurrent = requestedAmount === presetAmt;
@@ -334,7 +334,7 @@ export default function NeedMoneyHub() {
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-semibold text-slate-700 dark:text-slate-300">
                 <span>{t.selectAdvanceAmount}</span>
-                <span className="text-base font-extrabold text-white font-mono">
+                <span className="text-base font-extrabold text-sovereign-navy dark:text-white font-mono">
                   ₹{requestedAmount.toLocaleString("en-IN")}
                 </span>
               </div>
@@ -393,7 +393,7 @@ export default function NeedMoneyHub() {
               <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60 flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <div>
-                  <span className="text-[10px] text-slate-300 block">Name Match Score</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Name Match Score</span>
                   <strong className="text-slate-800 dark:text-slate-200 font-bold">98% (Aadhaar Verified)</strong>
                 </div>
               </div>
@@ -401,7 +401,7 @@ export default function NeedMoneyHub() {
               <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60 flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <div>
-                  <span className="text-[10px] text-slate-300 block">Bank KYC Status</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Bank KYC Status</span>
                   <strong className="text-slate-800 dark:text-slate-200 font-bold">Active (IFSC Verified)</strong>
                 </div>
               </div>
@@ -409,7 +409,7 @@ export default function NeedMoneyHub() {
               <div className="bg-white/80 dark:bg-slate-900/80 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60 flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <div>
-                  <span className="text-[10px] text-slate-300 block">Canvas Cheque Clarity</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 block">Canvas Cheque Clarity</span>
                   <strong className="text-slate-800 dark:text-slate-200 font-bold">100% (Zero-Blur OCR)</strong>
                 </div>
               </div>
@@ -427,7 +427,7 @@ export default function NeedMoneyHub() {
                   <div className="font-bold text-xs text-amber-950 dark:text-amber-300">
                     5-Second Undo Grace Period Active
                   </div>
-                  <div className="text-[11px] text-slate-300">
+                  <div className="text-[11px] text-slate-600 dark:text-slate-400">
                     Direct Benefit Transfer will commit to your verified bank account in {undoSecondsLeft}s.
                   </div>
                 </div>
@@ -446,7 +446,7 @@ export default function NeedMoneyHub() {
           <div className="flex justify-between items-center pt-2">
             <button
               onClick={() => setCurrentStep(1)}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-sovereign-navy dark:hover:text-white px-4 py-2"
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-sovereign-navy dark:hover:text-white px-4 py-2"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>{t.backToReason}</span>
@@ -472,7 +472,7 @@ export default function NeedMoneyHub() {
 
       {/* STEP 3: INSTANT SETTLEMENT SUCCESS CONFIRMATION */}
       {currentStep === 3 && submittedResult && (
-        <div className="bg-slate-900/90 rounded-3xl border-2 border-emerald-500 p-8 shadow-xl text-center space-y-6 animate-celebrate animate-in zoom-in-95">
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border-2 border-emerald-500 p-8 shadow-xl text-center space-y-6 animate-celebrate animate-in zoom-in-95">
           <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-inner">
             <CheckCircle2 className="w-10 h-10" />
           </div>
@@ -481,32 +481,32 @@ export default function NeedMoneyHub() {
             <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/60 px-3 py-1 rounded-full">
               {t.approved}
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-white">
+            <h2 className="text-2xl sm:text-3xl font-black text-sovereign-navy dark:text-white">
               ₹{(submittedResult.amount_sanctioned ?? requestedAmount).toLocaleString("en-IN")} {t.approved}
             </h2>
-            <p className="text-xs text-slate-300 max-w-md mx-auto">
+            <p className="text-xs text-slate-600 dark:text-slate-400 max-w-md mx-auto">
               {t.sanctionConfirmedDesc}
             </p>
           </div>
 
           {/* Audit & DBT Details */}
-          <div className="max-w-md mx-auto bg-slate-800/70 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 text-xs space-y-2 text-left">
+          <div className="max-w-md mx-auto bg-slate-50 dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 text-xs space-y-2 text-left">
             <div className="flex justify-between py-1 border-b border-slate-200 dark:border-slate-700">
-              <span className="text-slate-300">{t.claimIdLabel}</span>
-              <span className="font-mono font-bold text-white">{submittedResult.claim_id}</span>
+              <span className="text-slate-500 dark:text-slate-400">{t.claimIdLabel}</span>
+              <span className="font-mono font-bold text-slate-900 dark:text-white">{submittedResult.claim_id}</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-200 dark:border-slate-700">
-              <span className="text-slate-300">{t.disbursedToLabel}</span>
-              <span className="font-semibold text-white">{submittedResult.direct_benefit_transfer_account}</span>
+              <span className="text-slate-500 dark:text-slate-400">{t.disbursedToLabel}</span>
+              <span className="font-semibold text-slate-900 dark:text-white">{submittedResult.direct_benefit_transfer_account}</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-200 dark:border-slate-700">
-              <span className="text-slate-300">Status:</span>
+              <span className="text-slate-500 dark:text-slate-400">Status:</span>
               <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5" /> Within 24 Hours (DBT Direct)
               </span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-300">{t.auditHashLabel}</span>
+              <span className="text-slate-500 dark:text-slate-400">{t.auditHashLabel}</span>
               <span className="font-mono text-[10px] text-slate-400 truncate max-w-[180px]">
                 {submittedResult.audit_trace_token}
               </span>

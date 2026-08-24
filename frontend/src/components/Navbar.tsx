@@ -195,7 +195,7 @@ export const Navbar: React.FC = () => {
           </Link>
 
           {/* 5 Topic Hub Navigation Links - Centered & Spacious */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-3 flex-1 justify-center">
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2 flex-1 justify-center">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -203,13 +203,13 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-2 px-3.5 lg:px-4 py-2 rounded-lg text-sm font-medium transition-all min-h-[44px] ${
+                  className={`flex items-center gap-1.5 px-3 lg:px-3.5 py-2 rounded-lg text-xs lg:text-sm font-medium transition-all min-h-[44px] whitespace-nowrap shrink-0 ${
                     isActive
                       ? "bg-saffron text-sovereign-darkest font-bold shadow-md"
                       : "text-slate-200 hover:bg-sovereign-light hover:text-white"
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4 shrink-0" />
                   <span>{item.label}</span>
                 </Link>
               );

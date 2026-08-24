@@ -122,17 +122,17 @@ export default function ChangedJobsHub() {
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
       <Breadcrumb currentPage="Changed Jobs" />
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-700/70">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center">
               <Briefcase className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl font-black text-white">
+            <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.careerTitle}
             </h1>
           </div>
-          <p className="text-xs text-slate-300 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.careerSubtitle}
           </p>
         </div>
@@ -144,7 +144,7 @@ export default function ChangedJobsHub() {
             className={`px-3 py-1.5 rounded-lg transition-all ${
               activeTab === "TRANSFER"
                 ? "bg-white dark:bg-amber-500 text-sovereign-navy dark:text-slate-950 shadow-sm"
-                : "text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             🔄 {t.mergeTransferButton}
@@ -154,7 +154,7 @@ export default function ChangedJobsHub() {
             className={`px-3 py-1.5 rounded-lg transition-all ${
               activeTab === "SETTLEMENT"
                 ? "bg-white dark:bg-amber-500 text-sovereign-navy dark:text-slate-950 shadow-sm"
-                : "text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             📋 {t.finalSettlementTitle}
@@ -176,9 +176,9 @@ export default function ChangedJobsHub() {
       {activeTab === "TRANSFER" && (
         <div className="space-y-6">
           {/* Member ID Timeline */}
-          <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-6 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
             <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="text-sm font-bold text-white">
+              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                 {t.jobTimelineTitle}
               </h3>
               <span className="text-[10px] font-bold px-2 py-0.5 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 rounded-full">
@@ -200,7 +200,7 @@ export default function ChangedJobsHub() {
                 <div className="font-bold text-sm text-slate-800 dark:text-slate-100">
                   {previousJob.establishment_name}
                 </div>
-                <div className="text-xs text-slate-300 font-mono">
+                <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                   Member ID: {previousJob.member_id}
                 </div>
 
@@ -211,7 +211,7 @@ export default function ChangedJobsHub() {
                     <div className="flex items-center gap-1">
                       <span className="font-semibold">{t.autoExitDateBadge}: </span>
                       <StatutoryTooltip termKey="doe">
-                        <strong className="text-white">{deducedExitDate}</strong>
+                        <strong className="text-slate-900 dark:text-white">{deducedExitDate}</strong>
                       </StatutoryTooltip>
                     </div>
                     <div className="text-[10px] text-amber-700 dark:text-amber-400 flex items-center gap-1">
@@ -235,7 +235,7 @@ export default function ChangedJobsHub() {
                 <div className="font-bold text-sm text-slate-800 dark:text-slate-100">
                   {currentJob.establishment_name}
                 </div>
-                <div className="text-xs text-slate-300 font-mono">
+                <div className="text-xs text-slate-500 dark:text-slate-400 font-mono">
                   Member ID: {currentJob.member_id}
                 </div>
                 <div className="pt-2 border-t border-emerald-200/60 dark:border-emerald-800/40 flex items-center gap-1.5 text-xs text-emerald-800 dark:text-emerald-300">
@@ -247,7 +247,7 @@ export default function ChangedJobsHub() {
 
             {/* Transfer Action Bar */}
             {!transferSuccess ? (
-              <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-800/70 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+              <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
                 <div className="text-xs text-slate-600 dark:text-slate-300">
                   {t.jobTimelineDesc} (₹{(previousJob.balance || 185000).toLocaleString("en-IN")})
                 </div>
@@ -288,13 +288,13 @@ export default function ChangedJobsHub() {
 
       {/* TAB 2: FULL & FINAL SETTLEMENT (FORM 19/10C + FORM 15G ZERO-TDS) */}
       {activeTab === "SETTLEMENT" && (
-        <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-6 shadow-sm space-y-6">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-6">
           <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h3 className="text-sm font-bold text-white">
+              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                 {t.finalSettlementTitle}
               </h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.finalSettlementDesc}
               </p>
             </div>
@@ -304,23 +304,23 @@ export default function ChangedJobsHub() {
           </div>
 
           {/* Section 192A Tax Protection Card */}
-          <div className="bg-slate-800/70 rounded-xl p-4 border border-slate-200 dark:border-slate-700 space-y-3">
+          <div className="bg-slate-50 dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 space-y-3">
             <div className="flex items-center justify-between text-xs">
               <span className="font-bold text-slate-700 dark:text-slate-300">{t.finalSettlementTitle}:</span>
-              <span className="font-mono font-extrabold text-white">
+              <span className="font-mono font-extrabold text-slate-900 dark:text-white">
                 ₹{(activeCitizen.passbook_summary?.total_balance || 150000).toLocaleString("en-IN")}
               </span>
             </div>
 
             <div className="flex items-center justify-between text-xs">
-              <span className="text-slate-300">{t.serviceDuration}</span>
+              <span className="text-slate-600 dark:text-slate-400">{t.serviceDuration}</span>
               <span className="font-semibold text-slate-800 dark:text-slate-200">
                 {activeCitizen.active_employment?.total_service_years || 3.0} Years
               </span>
             </div>
 
             {/* Form 15G Auto-Check Toggle */}
-            <div className="p-3 bg-slate-900/90 rounded-lg border border-slate-200 dark:border-slate-700 flex items-start gap-3">
+            <div className="p-3 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 flex items-start gap-3">
               <input
                 type="checkbox"
                 id="form15g"
@@ -330,13 +330,13 @@ export default function ChangedJobsHub() {
               />
               <label htmlFor="form15g" className="text-xs cursor-pointer">
                 <div className="flex items-center gap-1">
-                  <strong className="text-white font-semibold">
+                  <strong className="text-slate-900 dark:text-white font-semibold">
                     {t.zeroTdsShieldTitle}
                   </strong>
                   <StatutoryTooltip termKey="form15g" />
                   <StatutoryTooltip termKey="section192a" />
                 </div>
-                <span className="text-slate-300 text-[11px]">
+                <span className="text-slate-500 dark:text-slate-400 text-[11px]">
                   {t.zeroTdsShieldDesc}
                 </span>
               </label>
@@ -353,8 +353,8 @@ export default function ChangedJobsHub() {
                 <span className="text-[10px]">{tdsCalc.reason}</span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] text-slate-300 block">{t.amountSanctionedLabel}</span>
-                <span className="font-mono font-extrabold text-base text-white">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block">{t.amountSanctionedLabel}</span>
+                <span className="font-mono font-extrabold text-base text-slate-900 dark:text-white">
                   ₹{tdsCalc.netDisbursement.toLocaleString("en-IN")}
                 </span>
               </div>

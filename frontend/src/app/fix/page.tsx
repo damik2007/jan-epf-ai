@@ -181,17 +181,17 @@ export default function FixDetailsHub() {
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
       <Breadcrumb currentPage="Fix My Details" />
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-700/70">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center">
               <Wrench className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl font-black text-white">
+            <h1 className="text-2xl font-black text-sovereign-navy dark:text-white">
               {t.fixTitle}
             </h1>
           </div>
-          <p className="text-xs text-slate-300 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             {t.fixSubtitle}
           </p>
         </div>
@@ -222,7 +222,7 @@ export default function FixDetailsHub() {
             className={`px-3 py-2 rounded-xl transition-all ${
               activeSection === tab.id
                 ? "bg-white dark:bg-amber-500 text-sovereign-navy dark:text-slate-950 shadow-sm font-extrabold"
-                : "text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             {tab.label}
@@ -232,16 +232,16 @@ export default function FixDetailsHub() {
 
       {/* SECTION 1: NAME / DOB PRE-VALIDATOR */}
       {activeSection === "NAME_VALIDATE" && (
-        <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-6 shadow-sm space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
           <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
               <div className="flex items-center gap-1.5">
-                <h3 className="text-sm font-bold text-white">
+                <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                   Name &amp; Aadhaar Spelling Match
                 </h3>
                 <StatutoryTooltip termKey="fuzzy" />
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.fuzzyCheckDesc}
               </p>
             </div>
@@ -251,10 +251,10 @@ export default function FixDetailsHub() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="bg-slate-800/70 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
-              <div className="text-xs text-slate-300 mb-1">{t.epfoNameLabel}</div>
-              <div className="text-base font-extrabold text-white">{activeCitizen.full_name}</div>
-              <div className="text-[11px] text-slate-300 mt-1">Father: {activeCitizen.father_name}</div>
+            <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700">
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">{t.epfoNameLabel}</div>
+              <div className="text-base font-extrabold text-slate-900 dark:text-white">{activeCitizen.full_name}</div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Father: {activeCitizen.father_name}</div>
             </div>
 
             <div className="space-y-2">
@@ -275,7 +275,7 @@ export default function FixDetailsHub() {
                 value={aadhaarInputName}
                 onChange={(e) => setAadhaarInputName(e.target.value)}
                 placeholder="e.g. Ramesh Kumar"
-                className="w-full text-sm font-semibold p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-sovereign-navy"
+                className="w-full text-sm font-semibold p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sovereign-navy"
               />
 
               {/* Real-Time Live Levenshtein Similarity Meter */}
@@ -284,7 +284,7 @@ export default function FixDetailsHub() {
                 return (
                   <div className="space-y-1 pt-1">
                     <div className="flex justify-between text-[11px] font-bold">
-                      <span className="text-slate-300">Live Match Score:</span>
+                      <span className="text-slate-500 dark:text-slate-400">Live Match Score:</span>
                       <span className={`font-mono ${liveScore >= 85 ? "text-emerald-600 dark:text-emerald-400" : liveScore >= 70 ? "text-amber-600 dark:text-amber-400" : "text-red-600 dark:text-red-400"}`}>
                         {liveScore}% {liveScore >= 85 ? "● Verified Match" : liveScore >= 70 ? "▲ Minor Variance" : "✖ Severe Typo"}
                       </span>
@@ -333,16 +333,16 @@ export default function FixDetailsHub() {
 
       {/* SECTION 2: 1-CLICK PENNY DROP */}
       {activeSection === "PENNY_DROP" && (
-        <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-6 shadow-sm space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
           <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
               <div className="flex items-center gap-1.5">
-                <h3 className="text-sm font-bold text-white">
+                <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                   {t.pennyDropTitle}
                 </h3>
                 <StatutoryTooltip termKey="pennydrop" />
               </div>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.pennyDropDesc}
               </p>
             </div>
@@ -358,7 +358,7 @@ export default function FixDetailsHub() {
                 type="text"
                 value={bankAcc}
                 onChange={(e) => setBankAcc(e.target.value)}
-                className="w-full text-sm font-mono p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-white mt-1"
+                className="w-full text-sm font-mono p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white mt-1"
               />
             </div>
             <div>
@@ -367,7 +367,7 @@ export default function FixDetailsHub() {
                 type="text"
                 value={bankIfsc}
                 onChange={(e) => setBankIfsc(e.target.value.toUpperCase())}
-                className="w-full text-sm font-mono uppercase p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-white mt-1"
+                className="w-full text-sm font-mono uppercase p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white mt-1"
               />
             </div>
             <div>
@@ -376,7 +376,7 @@ export default function FixDetailsHub() {
                 type="text"
                 value={holderName}
                 onChange={(e) => setHolderName(e.target.value)}
-                className="w-full text-sm p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-white mt-1"
+                className="w-full text-sm p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white mt-1"
               />
             </div>
           </div>
@@ -401,7 +401,7 @@ export default function FixDetailsHub() {
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   {t.pennyDropSuccess}
                 </span>
-                <span className="font-mono text-[10px] text-slate-300">{pennyDropResult.npcI_reference_id}</span>
+                <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400">{pennyDropResult.npcI_reference_id}</span>
               </div>
               <div className="grid grid-cols-2 gap-2 pt-1">
                 <div>Name: <strong>{pennyDropResult.registered_account_name}</strong></div>
@@ -417,13 +417,13 @@ export default function FixDetailsHub() {
 
       {/* SECTION 3: DIGITAL JOINT DECLARATION (3-WAY HANDSHAKE) */}
       {activeSection === "JOINT_DECLARATION" && (
-        <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-6 shadow-sm space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
           <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h3 className="text-sm font-bold text-white">
+              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                 {t.jointDecTitle}
               </h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.jointDecDesc}
               </p>
             </div>
@@ -439,7 +439,7 @@ export default function FixDetailsHub() {
                 type="text"
                 value={correctedName}
                 onChange={(e) => setCorrectedName(e.target.value)}
-                className="w-full text-sm p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-white mt-1"
+                className="w-full text-sm p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white mt-1"
               />
             </div>
             <div>
@@ -447,7 +447,7 @@ export default function FixDetailsHub() {
               <select
                 value={supportingDoc}
                 onChange={(e) => setSupportingDoc(e.target.value)}
-                className="w-full text-sm p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-white mt-1"
+                className="w-full text-sm p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white mt-1"
               >
                 <option value="Aadhaar Card">Aadhaar Card (Instant DigiLocker e-Sign)</option>
                 <option value="Passport">Passport</option>
@@ -457,16 +457,16 @@ export default function FixDetailsHub() {
             </div>
           </div>
 
-          <div className="bg-slate-800/70 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs space-y-2">
+          <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs space-y-2">
             <div className="font-bold text-slate-800 dark:text-slate-200">{t.jointDecConsent}</div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-center text-[11px]">
-              <div className="bg-slate-900/90 p-2 rounded-lg border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-semibold">
+              <div className="bg-white dark:bg-slate-900 p-2 rounded-lg border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-semibold">
                 1. Citizen e-Sign ✓
               </div>
-              <div className="bg-slate-900/90 p-2 rounded-lg border border-blue-300 dark:border-blue-800 text-blue-800 dark:text-blue-300 font-semibold">
+              <div className="bg-white dark:bg-slate-900 p-2 rounded-lg border border-blue-300 dark:border-blue-800 text-blue-800 dark:text-blue-300 font-semibold">
                 2. Employer Consent ✓
               </div>
-              <div className="bg-slate-900/90 p-2 rounded-lg border border-purple-300 dark:border-purple-800 text-purple-800 dark:text-purple-300 font-semibold">
+              <div className="bg-white dark:bg-slate-900 p-2 rounded-lg border border-purple-300 dark:border-purple-800 text-purple-800 dark:text-purple-300 font-semibold">
                 3. EPFO Approval ✓
               </div>
             </div>
@@ -495,13 +495,13 @@ export default function FixDetailsHub() {
 
       {/* SECTION 4: E-NOMINATION */}
       {activeSection === "NOMINATION" && (
-        <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-6 shadow-sm space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
           <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h3 className="text-sm font-bold text-white">
+              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                 {t.nominationTitle}
               </h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.nominationDesc}
               </p>
             </div>
@@ -517,7 +517,7 @@ export default function FixDetailsHub() {
                 type="text"
                 value={nomineeName}
                 onChange={(e) => setNomineeName(e.target.value)}
-                className="w-full text-sm p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-white mt-1"
+                className="w-full text-sm p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white mt-1"
               />
             </div>
             <div>
@@ -526,7 +526,7 @@ export default function FixDetailsHub() {
                 type="text"
                 value={nomineeRelation}
                 onChange={(e) => setNomineeRelation(e.target.value)}
-                className="w-full text-sm p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-white mt-1"
+                className="w-full text-sm p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white mt-1"
               />
             </div>
             <div>
@@ -564,13 +564,13 @@ export default function FixDetailsHub() {
 
       {/* SECTION 5: AI GRIEVANCE COPILOT (EPFIGMS) */}
       {activeSection === "GRIEVANCE" && (
-        <div className="bg-slate-900/90 rounded-2xl border-2 border-slate-700/70 p-6 shadow-sm space-y-4">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border-2 border-slate-200 dark:border-slate-800 p-6 shadow-sm space-y-4">
           <div className="flex justify-between items-center pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
-              <h3 className="text-sm font-bold text-white">
+              <h3 className="text-sm font-bold text-sovereign-navy dark:text-white">
                 {t.grievanceTitle}
               </h3>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 {t.grievanceDesc}
               </p>
             </div>
@@ -587,7 +587,7 @@ export default function FixDetailsHub() {
               rows={3}
               value={complaintText}
               onChange={(e) => setComplaintText(e.target.value)}
-              className="w-full text-xs p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-sovereign-navy leading-relaxed"
+              className="w-full text-xs p-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-sovereign-navy leading-relaxed"
             />
             <button
               onClick={handleLodgeGrievanceDiagnosis}
@@ -600,7 +600,7 @@ export default function FixDetailsHub() {
           </div>
 
           {copilotDiagnosis && (
-            <div className="p-4 bg-slate-800/70 border-2 border-amber-300 dark:border-amber-700 rounded-2xl text-xs space-y-2 text-slate-900 dark:text-slate-100 animate-celebrate">
+            <div className="p-4 bg-slate-50 dark:bg-slate-800 border-2 border-amber-300 dark:border-amber-700 rounded-2xl text-xs space-y-2 text-slate-900 dark:text-slate-100 animate-celebrate">
               <div className="flex justify-between items-center">
                 <span className="font-extrabold text-amber-900 dark:text-amber-300 flex items-center gap-1.5 text-sm">
                   <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
@@ -611,13 +611,13 @@ export default function FixDetailsHub() {
                 </span>
               </div>
 
-              <p className="font-semibold text-slate-800 dark:text-slate-200 bg-slate-900/90 p-2.5 rounded-lg border border-slate-200 dark:border-slate-700">
+              <p className="font-semibold text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-900 p-2.5 rounded-lg border border-slate-200 dark:border-slate-700">
                 {copilotDiagnosis.root_cause_identified}
               </p>
 
               <div className="pt-2 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between sm:items-center gap-2">
                 <div>
-                  <span className="text-slate-300 block text-[10px]">{t.remedyAvailable}</span>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[10px]">{t.remedyAvailable}</span>
                   <span className="font-bold text-emerald-700 dark:text-emerald-400">{copilotDiagnosis.recommended_action}</span>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">

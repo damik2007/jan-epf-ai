@@ -134,10 +134,10 @@ export default function LoginPage() {
           <Zap className="w-3.5 h-3.5" />
           <span>HACKATHON DUAL-MODE AUTHENTICATION GATEWAY</span>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-sovereign-navy dark:text-white tracking-tight">
           Sovereign DPI Authentication Gateway
         </h1>
-        <p className="text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
           Evaluators can test with <strong>1-Click Instant Persona Ingestion</strong> (zero SMS delay) or experience the production-grade <strong>FIDO2 Biometric Passkey / 10-Min Resilient OTP</strong> flow.
         </p>
       </div>
@@ -150,7 +150,7 @@ export default function LoginPage() {
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
               authMode === "EVALUATOR_FASTPATH"
                 ? "bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 shadow-md"
-                : "text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             <Zap className="w-3.5 h-3.5 text-saffron" />
@@ -162,7 +162,7 @@ export default function LoginPage() {
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
               authMode === "PRODUCTION_PASSKEY"
                 ? "bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 shadow-md"
-                : "text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             <Fingerprint className="w-3.5 h-3.5 text-emerald-500" />
@@ -177,7 +177,7 @@ export default function LoginPage() {
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
               authMode === "AADHAAR_OTP"
                 ? "bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 shadow-md"
-                : "text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
             }`}
           >
             <Smartphone className="w-3.5 h-3.5 text-blue-500" />
@@ -200,7 +200,7 @@ export default function LoginPage() {
                   className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative flex flex-col justify-between card-hover-lift ${
                     isCurrent
                       ? "border-saffron bg-amber-50/50 dark:bg-amber-950/20 shadow-md ring-2 ring-saffron/30"
-                      : "border-slate-700/70 bg-slate-900/90 hover:border-slate-400 dark:hover:border-slate-700"
+                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-400 dark:hover:border-slate-700"
                   }`}
                 >
                   <div className="space-y-3">
@@ -210,11 +210,11 @@ export default function LoginPage() {
                           <Icon className="w-5 h-5 text-saffron" />
                         </div>
                         <div>
-                          <h2 className="text-base font-bold text-white flex items-center gap-1.5">
+                          <h2 className="text-base font-bold text-sovereign-navy dark:text-white flex items-center gap-1.5">
                             <span>{persona.name}</span>
                             {isCurrent && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
                           </h2>
-                          <p className="text-xs text-slate-300">{persona.role}</p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">{persona.role}</p>
                         </div>
                       </div>
                       <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${persona.badgeColor}`}>
@@ -222,22 +222,22 @@ export default function LoginPage() {
                       </span>
                     </div>
 
-                    <div className="bg-slate-800/70/80 p-2.5 rounded-xl text-xs space-y-1 border border-slate-100 dark:border-slate-700">
-                      <div className="flex justify-between text-slate-300">
+                    <div className="bg-slate-50 dark:bg-slate-800/80 p-2.5 rounded-xl text-xs space-y-1 border border-slate-100 dark:border-slate-700">
+                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
                         <span>Establishment:</span>
                         <strong className="text-slate-800 dark:text-slate-200 truncate max-w-[180px]">{persona.org}</strong>
                       </div>
-                      <div className="flex justify-between text-slate-300">
+                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
                         <span>Simulated UAN:</span>
                         <strong className="font-mono text-slate-900 dark:text-slate-100">{persona.uan}</strong>
                       </div>
-                      <div className="flex justify-between text-slate-300">
+                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
                         <span>Current Corpus:</span>
                         <strong className="font-mono text-emerald-700 dark:text-emerald-400 font-bold tabular-nums">{persona.balance}</strong>
                       </div>
                     </div>
 
-                    <p className="text-xs text-slate-300 italic bg-blue-50/50 dark:bg-blue-950/20 p-2 rounded-lg border border-blue-100/50 dark:border-blue-900/30">
+                    <p className="text-xs text-slate-600 dark:text-slate-400 italic bg-blue-50/50 dark:bg-blue-950/20 p-2 rounded-lg border border-blue-100/50 dark:border-blue-900/30">
                       💡 {persona.testScenario}
                     </p>
                   </div>
@@ -258,23 +258,23 @@ export default function LoginPage() {
 
       {/* MODE B: FIDO2 BIOMETRIC PASSKEY */}
       {authMode === "PRODUCTION_PASSKEY" && (
-        <div className="bg-slate-900/90 p-8 rounded-3xl border border-slate-700/70 shadow-xl max-w-lg mx-auto space-y-6 text-center animate-in zoom-in-95">
+        <div className="bg-white dark:bg-slate-900 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl max-w-lg mx-auto space-y-6 text-center animate-in zoom-in-95">
           <div className="w-20 h-20 rounded-3xl bg-emerald-500/10 dark:bg-emerald-500/20 border-2 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-inner">
             <Fingerprint className="w-10 h-10 animate-pulse" />
           </div>
 
           <div className="space-y-1.5">
-            <h2 className="text-xl font-black text-white">
+            <h2 className="text-xl font-black text-sovereign-navy dark:text-white">
               FIDO2 Device Biometric Passkey
             </h2>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Sign in with Touch ID, Face ID, or Windows Hello for instant &lt;50ms cryptographic authentication.
             </p>
           </div>
 
-          <div className="p-3 bg-slate-800/70 rounded-2xl border border-slate-200 dark:border-slate-700 text-left text-xs space-y-1 font-mono">
+          <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-left text-xs space-y-1 font-mono">
             <div className="text-slate-500">Universal Account Number (UAN):</div>
-            <div className="font-bold text-white">{uanInput} (Ramesh Kumar)</div>
+            <div className="font-bold text-slate-900 dark:text-white">{uanInput} (Ramesh Kumar)</div>
           </div>
 
           <button
@@ -286,7 +286,7 @@ export default function LoginPage() {
             <span>{passkeyActive ? "Verifying Biometrics..." : "1-Tap Touch ID / Face ID Login"}</span>
           </button>
 
-          <div className="flex items-center justify-center gap-2 text-[11px] text-slate-300">
+          <div className="flex items-center justify-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
             <Shield className="w-3.5 h-3.5 text-emerald-600" />
             <span>Zero Passwords • Zero Squiggly Captchas • Sub-50ms Response</span>
           </div>
@@ -295,16 +295,16 @@ export default function LoginPage() {
 
       {/* MODE C: 10-MIN RESILIENT AADHAAR OTP */}
       {authMode === "AADHAAR_OTP" && (
-        <div className="bg-slate-900/90 p-5 sm:p-8 rounded-3xl border border-slate-700/70 shadow-xl max-w-lg mx-auto space-y-6 text-center animate-in zoom-in-95">
+        <div className="bg-white dark:bg-slate-900 p-5 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl max-w-lg mx-auto space-y-6 text-center animate-in zoom-in-95">
           <div className="w-16 h-16 rounded-2xl bg-blue-500/10 dark:bg-blue-500/20 border border-blue-500/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto">
             <Smartphone className="w-8 h-8" />
           </div>
 
           <div className="space-y-1">
-            <h2 className="text-xl font-black text-white">
+            <h2 className="text-xl font-black text-sovereign-navy dark:text-white">
               Resilient 6-Digit Aadhaar OTP
             </h2>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Sent to Aadhaar-linked mobile ending in <strong>XXXX-4819</strong>.
             </p>
           </div>
@@ -323,13 +323,13 @@ export default function LoginPage() {
                   value={digit}
                   onChange={(e) => handleOtpChange(idx, e.target.value)}
                   onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                  className="w-9 h-12 sm:w-12 sm:h-14 text-center text-lg sm:text-xl font-black font-mono rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-slate-800/70 text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-all shadow-inner"
+                  className="w-9 h-12 sm:w-12 sm:h-14 text-center text-lg sm:text-xl font-black font-mono rounded-xl border-2 border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sovereign-navy dark:text-white focus:border-amber-500 focus:ring-2 focus:ring-amber-500/30 outline-none transition-all shadow-inner"
                   autoFocus={idx === 0}
                 />
               ))}
             </div>
 
-            <div className="flex items-center justify-between text-xs text-slate-300 px-2">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-2">
               <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">
                 ● 10:00 Min Validity (Zero 30s Timeout)
               </span>
@@ -342,8 +342,8 @@ export default function LoginPage() {
               </button>
             </div>
 
-            <div className="p-3 bg-slate-800/70/80 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
-              <span className="text-slate-300 font-medium">WhatsApp Backup Delivery:</span>
+            <div className="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
+              <span className="text-slate-600 dark:text-slate-400 font-medium">WhatsApp Backup Delivery:</span>
               <button
                 type="button"
                 onClick={() => setWhatsappDelivery((prev) => !prev)}
