@@ -34,13 +34,13 @@ export default function CitizenLandingPage() {
   const t = getTranslation(language);
 
   const [chaosSimulatorOpen, setChaosSimulatorOpen] = useState(false);
-  const [privacyMode, setPrivacyMode] = useState<boolean>(false);
+  const [privacyMode, setPrivacyMode] = useState<boolean>(true);
   const [uanCopied, setUanCopied] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("jan_epf_privacy_mode");
-      if (saved !== null) setPrivacyMode(saved === "true");
+      if (saved !== null) { setPrivacyMode(saved === "true"); } else { setPrivacyMode(true); }
     }
   }, []);
 
