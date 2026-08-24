@@ -164,9 +164,9 @@ export default function BenchmarksPage() {
             <span className="text-[10px] text-slate-400 block font-sans">&lt;256 token payload guard</span>
           </div>
           <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
-            <span className="text-[10px] text-slate-300 font-sans block uppercase">{t.cloudBillLabel || "National Cloud Bill"}</span>
-            <span className="text-xl font-extrabold text-emerald-300">₹0.00 / Request</span>
-            <span className="text-[10px] text-slate-400 block font-sans">80% on-device execution</span>
+            <span className="text-[10px] text-slate-300 font-sans block uppercase">{t.cloudBillLabel || "Exchequer Cloud Cost"}</span>
+            <span className="text-xl font-extrabold text-emerald-300">99.6% SAVED</span>
+            <span className="text-[10px] text-slate-400 block font-sans">₹0.00 Core &bull; &lt;₹0.001 AI</span>
           </div>
         </div>
       </div>
