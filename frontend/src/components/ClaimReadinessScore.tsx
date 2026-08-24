@@ -8,26 +8,36 @@ export function ClaimReadinessScore() {
 
   const checks = [
     {
-      label: "Bank KYC Verified",
+      label: "Bank KYC",
+      labelPassed: "Bank KYC Verified (Active)",
+      labelFailed: "Bank KYC Pending",
       passed: Boolean(
         activeCitizen.bank_kyc?.kyc_status &&
         ["APPROVED", "VERIFIED_ACTIVE", "APPROVED_BY_EMPLOYER", "SENIOR_PENSION_ACTIVE"].includes(activeCitizen.bank_kyc.kyc_status)
       ),
     },
     {
-      label: "Aadhaar Seeded",
+      label: "Aadhaar",
+      labelPassed: "Aadhaar Seeded",
+      labelFailed: "Aadhaar Not Seeded",
       passed: Boolean(activeCitizen.aadhaar_masked && activeCitizen.aadhaar_masked !== "Not Available"),
     },
     {
-      label: "PAN Linked",
+      label: "PAN",
+      labelPassed: "PAN Linked",
+      labelFailed: "PAN Not Linked",
       passed: Boolean(activeCitizen.pan_masked && activeCitizen.pan_masked !== "Not Available"),
     },
     {
-      label: "Active Employment",
+      label: "Employment",
+      labelPassed: "Active Employment Verified",
+      labelFailed: "Employment Record Pending",
       passed: Boolean(activeCitizen.active_employment) || Boolean(activeCitizen.pension_details),
     },
     {
-      label: "e-Nomination Filed",
+      label: "e-Nomination",
+      labelPassed: "e-Nomination Active (₹7L EDLI)",
+      labelFailed: "e-Nomination Pending (₹7L EDLI)",
       passed: Boolean(activeCitizen.nomination_details?.nomination_filed),
     },
   ];
@@ -70,31 +80,31 @@ export function ClaimReadinessScore() {
         />
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
         {checks.map((check) => (
           <div key={check.label} className="flex items-center gap-1.5 text-xs">
             {check.passed ? (
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
             ) : (
-              <XCircle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+              <XCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
             )}
-            <span className={check.passed ? "text-slate-600 dark:text-slate-400" : "text-red-600 dark:text-red-400 font-semibold"}>
-              {check.label}
+            <span className={check.passed ? "text-slate-700 dark:text-slate-300 font-medium" : "text-amber-700 dark:text-amber-300 font-semibold"}>
+              {check.passed ? check.labelPassed : check.labelFailed}
             </span>
           </div>
         ))}
       </div>
 
       {isReady && (
-        <p className="mt-2 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1">
-          <CheckCircle2 className="w-3 h-3" />
-          Ready to file — estimated 98% approval probability
+        <p className="mt-2.5 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1">
+          <CheckCircle2 className="w-3.5 h-3.5" />
+          Ready to file — estimated 98% instant statutory approval probability
         </p>
       )}
       {!isReady && (
-        <p className="mt-2 text-[11px] text-amber-700 dark:text-amber-400 font-semibold flex items-center gap-1">
-          <AlertTriangle className="w-3 h-3" />
-          Complete missing items above before filing to avoid rejection
+        <p className="mt-2.5 text-[11px] text-amber-700 dark:text-amber-400 font-semibold flex items-center gap-1">
+          <AlertTriangle className="w-3.5 h-3.5" />
+          Complete missing items above before filing to guarantee zero rejection
         </p>
       )}
     </div>

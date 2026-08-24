@@ -18,7 +18,8 @@ import {
   Command,
   X,
   ArrowRight,
-  Zap
+  Zap,
+  Download
 } from "lucide-react";
 
 interface CommandCenterProps {
@@ -32,6 +33,7 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
   const {
     citizens,
     activeCitizen,
+    isAuthenticated,
     switchCitizen,
     seniorMode,
     setSeniorMode,
@@ -44,57 +46,111 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Define searchable action items
+  // Dynamic values based on active citizen
+  const activeName = activeCitizen?.full_name || "Active Citizen";
+  const actionsCategory = `⚡ Active Citizen Actions (${activeName})`;
+  const maxSanction = activeCitizen?.passbook_summary?.employee_share?.toLocaleString("en-IN") || "0";
+  const establishmentName = activeCitizen?.active_employment?.establishment_name || "Current Employer";
+  const totalBalance = activeCitizen?.passbook_summary?.total_balance?.toLocaleString("en-IN") || "0";
+  const bankName = activeCitizen?.bank_kyc?.bank_name || "Bank";
+  const bankAccount = activeCitizen?.bank_kyc?.account_number_masked || "XX0000";
+
+  // Define searchable action items dynamically prioritizing ACTIVE citizen actions
   const items = [
-    // Personas
+    // ⚡ Deep, personalized actions for the ACTIVE citizen
     {
-      id: "persona-ramesh",
-      category: "Demographic Personas",
-      title: "Ramesh Kumar (Factory Worker)",
-      subtitle: "UAN: 100982348712 • Tests Medical Advance (Para 68J)",
-      icon: User,
+      id: "action-advance",
+      category: actionsCategory,
+      title: `💰 Apply for Emergency Advance (Form 31) - Up to ₹${maxSanction}`,
+      subtitle: `Instant pre-flight check & direct DBT transfer for ${activeName}`,
+      icon: Wallet,
       action: () => {
-        switchCitizen("100982348712");
+        router.push("/money");
         onClose();
       }
     },
     {
-      id: "persona-priya",
-      category: "Demographic Personas",
-      title: "Priya Sharma (Tech Worker)",
-      subtitle: "UAN: 101294817203 • Tests Job Switch & Missing Exit Date",
-      icon: User,
+      id: "action-job-switch",
+      category: actionsCategory,
+      title: `💼 Job Switch & Date of Exit Auto-Fix (${establishmentName})`,
+      subtitle: "1-Click Multi-Job Consolidation & Section 192A TDS Shield",
+      icon: Briefcase,
       action: () => {
-        switchCitizen("101294817203");
+        router.push("/career");
         onClose();
       }
     },
     {
-      id: "persona-gurmeet",
-      category: "Demographic Personas",
-      title: "Gurmeet Singh (Senior Pensioner)",
-      subtitle: "UAN: 100112233445 • Tests Senior Mode & EPS-95 Face DLC",
-      icon: User,
+      id: "action-passbook",
+      category: actionsCategory,
+      title: `📈 Inspect Passbook & Compound Growth (Current Balance: ₹${totalBalance})`,
+      subtitle: "Visual Passbook Triple-Split & 8.25% Sovereign Retirement Forecast",
+      icon: PiggyBank,
       action: () => {
-        switchCitizen("100112233445");
+        router.push("/savings");
         onClose();
       }
     },
     {
-      id: "persona-sunita",
-      category: "Demographic Personas",
-      title: "Sunita Devi (Gig Economy)",
-      subtitle: "UAN: 101889977665 • Tests e-Nomination & ₹7L EDLI",
-      icon: User,
+      id: "action-kyc",
+      category: actionsCategory,
+      title: `🛠️ Reconcile Name & Bank KYC (${bankName} - ${bankAccount})`,
+      subtitle: "Levenshtein Fuzzy Match, NPCI Penny Drop & Joint Declaration",
+      icon: Wrench,
       action: () => {
-        switchCitizen("101889977665");
+        router.push("/fix");
         onClose();
       }
     },
-    // Navigation Hubs
     {
-      id: "nav-money",
-      category: "Life-Event Hubs",
+      id: "action-enom",
+      category: actionsCategory,
+      title: "📋 Update e-Nomination & Claim ₹7 Lakh EDLI Insurance",
+      subtitle: `Digital Nominee registration for ${activeName}'s family`,
+      icon: User,
+      action: () => {
+        router.push("/fix");
+        onClose();
+      }
+    },
+    {
+      id: "action-download-passbook",
+      category: actionsCategory,
+      title: "📄 Download Official Passbook Statement PDF",
+      subtitle: `Generate verified PF statement receipt for UAN ${activeCitizen?.uan}`,
+      icon: Download,
+      action: () => {
+        router.push("/savings");
+        onClose();
+      }
+    },
+    {
+      id: "action-chaos",
+      category: actionsCategory,
+      title: `⚡ Run Zero-Rejection Chaos Test on ${activeName}'s Record`,
+      subtitle: "Inject mismatch traps & watch real-time deterministic self-healing",
+      icon: Zap,
+      action: () => {
+        onClose();
+        if (onOpenChaosSimulator) onOpenChaosSimulator();
+      }
+    },
+    {
+      id: "action-benchmarks",
+      category: actionsCategory,
+      title: "📊 View Sovereign 80/20 Benchmarks & Audit Logs",
+      subtitle: "Dedicated proof repository, microsecond runner & 3-way evals",
+      icon: Sparkles,
+      action: () => {
+        router.push("/benchmarks");
+        onClose();
+      }
+    },
+
+    // 🏛️ Human Life-Event Hubs Navigation
+    {
+      id: "hub-money",
+      category: "🏛️ Human Life-Event Hubs",
       title: "I Need Money (Advance Withdrawal)",
       subtitle: "Statutory Form 31 Advance with Instant Pre-Flight Check",
       icon: Wallet,
@@ -104,8 +160,8 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
       }
     },
     {
-      id: "nav-career",
-      category: "Life-Event Hubs",
+      id: "hub-career",
+      category: "🏛️ Human Life-Event Hubs",
       title: "I Changed Jobs (PF Transfer & DOE)",
       subtitle: "1-Click Multi-Job Consolidation & Section 192A TDS Shield",
       icon: Briefcase,
@@ -115,8 +171,8 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
       }
     },
     {
-      id: "nav-savings",
-      category: "Life-Event Hubs",
+      id: "hub-savings",
+      category: "🏛️ Human Life-Event Hubs",
       title: "My Savings & 8.25% Compounding",
       subtitle: "Visual Passbook Triple-Split & Retirement Wealth Curve",
       icon: PiggyBank,
@@ -126,9 +182,9 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
       }
     },
     {
-      id: "nav-fix",
-      category: "Life-Event Hubs",
-      title: "Fix My Details (Self-Correction)",
+      id: "hub-fix",
+      category: "🏛️ Human Life-Event Hubs",
+      title: "Fix My Details (Self-Healing KYC)",
       subtitle: "Levenshtein Fuzzy Match, NPCI Penny Drop & Joint Declaration",
       icon: Wrench,
       action: () => {
@@ -136,51 +192,8 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
         onClose();
       }
     },
+
     // System Controls
-    {
-      id: "action-benchmarks-evals",
-      category: "Evaluator Tools",
-      title: "📊 Evals, Evidence & 1,000-Run Latency Benchmarks",
-      subtitle: "Dedicated proof repository: live in-browser runner, 3-way evals matrix, raw trace console & JSON audit export",
-      icon: Zap,
-      action: () => {
-        router.push("/benchmarks");
-        onClose();
-      }
-    },
-    {
-      id: "action-chaos-sandbox",
-      category: "Evaluator Tools",
-      title: "⚡ Zero-Rejection Chaos Stress-Test Sandbox",
-      subtitle: "Inject 5 failure traps (name typos, missing DOE, merged IFSC) and watch real-time self-healing",
-      icon: Zap,
-      action: () => {
-        onClose();
-        if (onOpenChaosSimulator) onOpenChaosSimulator();
-      }
-    },
-    {
-      id: "action-presidio-playground",
-      category: "Evaluator Tools",
-      title: "🛡️ Presidio Zero-Trust PII & DPDP Act 2023 Sandbox",
-      subtitle: "Paste raw Aadhaar, PAN, phone data for live sub-0.1ms cryptographic tokenization & audit",
-      icon: Sparkles,
-      action: () => {
-        router.push("/#sre");
-        onClose();
-      }
-    },
-    {
-      id: "action-cpgrams-drafter",
-      category: "Evaluator Tools",
-      title: "📜 CPGRAMS / EPFiGMS Statutory Legal Letter Drafter",
-      subtitle: "Generate formal RPFC legal notice citing Para 72(5) 30-day statutory interest penalty",
-      icon: Wrench,
-      action: () => {
-        router.push("/fix");
-        onClose();
-      }
-    },
     {
       id: "action-senior-mode",
       category: "System Toggles",
@@ -200,6 +213,52 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
       icon: theme === "dark" ? Sun : Moon,
       action: () => {
         toggleTheme();
+        onClose();
+      }
+    },
+
+    // Personas (Sandbox) - Grouped at the bottom for testing
+    {
+      id: "persona-ramesh",
+      category: "👥 Switch Sandbox Persona (Testing)",
+      title: "Ramesh Kumar (Factory Worker)",
+      subtitle: "UAN: 100982348712 • Tests Medical Advance (Para 68J)",
+      icon: User,
+      action: () => {
+        switchCitizen("100982348712");
+        onClose();
+      }
+    },
+    {
+      id: "persona-priya",
+      category: "👥 Switch Sandbox Persona (Testing)",
+      title: "Priya Sharma (Tech Worker)",
+      subtitle: "UAN: 101294817203 • Tests Job Switch & Missing Exit Date",
+      icon: User,
+      action: () => {
+        switchCitizen("101294817203");
+        onClose();
+      }
+    },
+    {
+      id: "persona-gurmeet",
+      category: "👥 Switch Sandbox Persona (Testing)",
+      title: "Gurmeet Singh (Senior Pensioner)",
+      subtitle: "UAN: 100112233445 • Tests Senior Mode & EPS-95 Face DLC",
+      icon: User,
+      action: () => {
+        switchCitizen("100112233445");
+        onClose();
+      }
+    },
+    {
+      id: "persona-sunita",
+      category: "👥 Switch Sandbox Persona (Testing)",
+      title: "Sunita Devi (Gig Economy)",
+      subtitle: "UAN: 101889977665 • Tests e-Nomination & ₹7L EDLI",
+      icon: User,
+      action: () => {
+        switchCitizen("101889977665");
         onClose();
       }
     }
@@ -241,7 +300,6 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
-  // Reset selected index when query changes
   useEffect(() => {
     setSelectedIndex(0);
   }, [query]);
@@ -260,7 +318,7 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
           <input
             type="text"
             autoFocus
-            placeholder="Type a command, citizen persona, or hub... (e.g. 'Priya', 'Money', 'Senior')"
+            placeholder={`Search actions for ${activeName}... (e.g. Advance, Passbook, Transfer, KYC)`}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="flex-1 bg-transparent text-sm font-medium text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none"
@@ -295,7 +353,7 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
                   onMouseEnter={() => setSelectedIndex(index)}
                   className={`flex items-center justify-between p-3 rounded-2xl cursor-pointer transition-all ${
                     isSelected
-                      ? "bg-saffron/10 dark:bg-amber-500/10 text-sovereign-navy dark:text-white border border-saffron/30 dark:border-amber-500/30"
+                      ? "bg-saffron/10 dark:bg-amber-500/10 text-sovereign-navy dark:text-white border border-saffron/30 dark:border-amber-500/30 shadow-xs"
                       : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50 border border-transparent"
                   }`}
                 >
@@ -303,7 +361,7 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
                     <div
                       className={`w-9 h-9 rounded-xl flex items-center justify-center ${
                         isSelected
-                          ? "bg-saffron text-sovereign-darkest font-bold"
+                          ? "bg-saffron text-sovereign-darkest font-bold shadow-xs"
                           : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                       }`}
                     >
@@ -312,7 +370,7 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
                     <div>
                       <div className="text-xs font-bold flex items-center gap-2">
                         <span>{item.title}</span>
-                        <span className="text-[10px] font-normal px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
+                        <span className="text-[9px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500">
                           {item.category}
                         </span>
                       </div>
@@ -337,7 +395,7 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
             <span>Select: <kbd className="font-mono font-bold">↵</kbd></span>
             <span>Close: <kbd className="font-mono font-bold">esc</kbd></span>
           </div>
-          <span className="font-semibold text-saffron">Jan-EPF AI Command Center</span>
+          <span className="font-semibold text-saffron">Jan-EPF AI • {activeName}</span>
         </div>
       </div>
     </div>

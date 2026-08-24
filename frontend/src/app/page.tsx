@@ -225,7 +225,7 @@ export default function CitizenLandingPage() {
       icon: Briefcase,
       tag: "Form 13",
       tagColor: "bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800",
-      stat: "Auto-Exit Deducer"
+      stat: "Auto-Exit Deduction"
     },
     {
       title: t.navSavings,

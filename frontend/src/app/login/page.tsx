@@ -56,9 +56,9 @@ export default function LoginPage() {
     {
       uan: "100112233445",
       name: "Gurmeet Singh (Age 66)",
-      role: "Senior Pensioner (Age ≥ 60)",
+      role: "Senior Pensioner",
       org: "Retired (EPS-95 Pensioner)",
-      balance: "₹4,250 / mo",
+      balance: "₹4,250 / mo (Pension)",
       badge: "Senior Pensioner",
       badgeColor: "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800",
       testScenario: "Auto-activates Senior Citizen Mode (125%–130% Elder Comfort Scaling, warm gold palette) and EPS-95 monthly pension ledgers.",

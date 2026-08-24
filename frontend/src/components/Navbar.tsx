@@ -27,6 +27,7 @@ import { EvaluatorTourModal } from "@/components/EvaluatorTourModal";
 import { CommandCenter } from "@/components/CommandCenter";
 import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
 import { ArchitectureInspectorModal } from "@/components/ArchitectureInspectorModal";
+import { LiveSovereignPulse } from "@/components/LiveSovereignPulse";
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
@@ -324,25 +325,8 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Sovereign DPI Pulse Bar - Full Width */}
-      <div className="w-full bg-sovereign-darkest/95 border-t border-sovereign-navy px-4 sm:px-6 lg:px-10 py-1.5 text-[11px] font-mono text-slate-300 flex items-center overflow-x-auto scrollbar-none">
-        <div className="flex items-center gap-3 whitespace-nowrap">
-          <span className="flex items-center gap-1.5 font-bold text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse inline-block" />
-            SOVEREIGN DPI PULSE: ALL 6 NETWORKS OPERATIONAL
-          </span>
-          <span className="text-slate-600">•</span>
-          <span>NPCI Instant DBT (100%)</span>
-          <span className="text-slate-600">•</span>
-          <span>UIDAI Face RD (&lt;50ms)</span>
-          <span className="text-slate-600">•</span>
-          <span>NSDL PAN API (Live)</span>
-          <span className="text-slate-600">•</span>
-          <span>Bank Penny Drop (Sub-200ms)</span>
-          <span className="text-slate-600">•</span>
-          <span className="text-amber-400 font-bold">🔒 Presidio PII Shield Active</span>
-        </div>
-      </div>
+      {/* 3. Live Sovereign DPI Pulse Ticker */}
+      <LiveSovereignPulse />
 
       {/* Mobile Navigation Sub-Bar (Horizontal Scroll) */}
       <div className="md:hidden flex overflow-x-auto px-4 py-2 bg-sovereign-darkest border-t border-sovereign-navy gap-2 scrollbar-none w-full">
