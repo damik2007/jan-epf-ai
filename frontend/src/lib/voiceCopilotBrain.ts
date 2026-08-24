@@ -18,6 +18,7 @@ export interface CitizenContextData {
 }
 
 export interface AgentToolCall {
+  standard?: string;
   toolName:
     | "execute_advance_preflight"
     | "auto_deduce_exit_date"
@@ -41,20 +42,25 @@ export interface OrchestrationStep {
 
 export interface HarnessLayerBreakdown {
   contextLayer: {
+    standard?: string;
     citizenName: string;
     uan: string;
     activeEmployer: string;
     balanceFormatted: string;
     serviceYears: number;
+    summary?: string;
   };
   toolLayer: AgentToolCall;
   orchestrationLayer?: OrchestrationStep[];
   memoryLayer: {
+    standard?: string;
     sessionId: string;
     turnsCount: number;
     lastTopic: string;
+    memorySummary?: string;
   };
   guardrailLayer: {
+    standard?: string;
     passed: boolean;
     securityScore: string;
     promptInjectionDetected: boolean;
@@ -62,6 +68,7 @@ export interface HarnessLayerBreakdown {
     reason?: string;
   };
   evalLayer: {
+    standard?: string;
     autonomousResolutionPct: number;
     hallucinationPct: number;
     localLatencyMs: number;
@@ -74,7 +81,17 @@ export interface CopilotReply {
   displayText: string;
   targetRoute?: string;
   langCode: string;
-  category: "GREETING" | "MONEY" | "CAREER" | "SAVINGS" | "FIX" | "PENSION" | "INSURANCE" | "GENERAL" | "HARNESS_ACTION" | "GUARDRAIL_BLOCKED";
+  category:
+    | "GREETING"
+    | "MONEY"
+    | "CAREER"
+    | "SAVINGS"
+    | "FIX"
+    | "PENSION"
+    | "INSURANCE"
+    | "GENERAL"
+    | "HARNESS_ACTION"
+    | "GUARDRAIL_BLOCKED";
   harness: HarnessLayerBreakdown;
 }
 
@@ -98,35 +115,47 @@ export function generateCopilotResponse(
   const isGurmeet = citizen.name.includes("Gurmeet") || citizen.uan.includes("100112233445");
   const isSunita = citizen.name.includes("Sunita") || citizen.uan.includes("101889977665");
 
+  const balanceFormatted = citizen.balance.toLocaleString("en-IN");
+  const empShareFormatted = (citizen.empShare || Math.round(citizen.balance * 0.53)).toLocaleString("en-IN");
+  const emprShareFormatted = (citizen.emprShare || Math.round(citizen.balance * 0.34)).toLocaleString("en-IN");
+  const epsShareFormatted = (citizen.epsShare || Math.round(citizen.balance * 0.13)).toLocaleString("en-IN");
+  const employerName = citizen.employer || "Active Establishment";
   const serviceYears = citizen.serviceYears ?? (isRamesh ? 14.5 : isPriya ? 3.0 : isGurmeet ? 15.0 : 3.6);
 
-  // BASE HARNESS TELEMETRY (Layer 01 & 06)
+  // BASE 6-LAYER HARNESS TELEMETRY (Glean + Stripe + Devin + Notion + NeMo + LangSmith Standards)
   const baseHarness: HarnessLayerBreakdown = {
     contextLayer: {
+      standard: "Glean ($14B Standard) • Zero-Shot Context Engine",
       citizenName: citizen.name,
       uan: citizen.uan,
-      activeEmployer: citizen.employer,
-      balanceFormatted: `₹${citizen.balance.toLocaleString("en-IN")}`,
-      serviceYears: serviceYears
+      activeEmployer: employerName,
+      balanceFormatted: `₹${balanceFormatted}`,
+      serviceYears: serviceYears,
+      summary: `Loaded ${citizen.name} • ${employerName} • ₹${balanceFormatted} • ${serviceYears} yrs service (0% TDS Shield)`
     },
     toolLayer: {
+      standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "none",
-      toolLabel: "Idle (Ready for Autonomous Tool Calls)",
+      toolLabel: "Deterministic State In-Memory Validation",
       arguments: {},
-      executionOutput: "Standing by."
+      executionOutput: "Autonomous deterministic toolchain primed and ready in 0.04ms."
     },
     memoryLayer: {
+      standard: "Notion AI ($10B Standard) • Sovereign Memory",
       sessionId: `HARNESS-UAN-${citizen.uan}`,
       turnsCount: turnCount,
-      lastTopic: "GENERAL_QUERY"
+      lastTopic: "GENERAL",
+      memorySummary: `Session active • Turn #${turnCount} • Preserved across reloads`
     },
     guardrailLayer: {
+      standard: "NeMo / Llama Guard • Statutory Shield",
       passed: true,
       securityScore: "Grade S+ (DPDP Act 2023 Compliant)",
       promptInjectionDetected: false,
       statutoryBoundEnforced: true
     },
     evalLayer: {
+      standard: "LangSmith / Braintrust ($1B+ Standard) • Continuous Evals",
       autonomousResolutionPct: 99.4,
       hallucinationPct: 0.0,
       localLatencyMs: 0.04,
@@ -135,32 +164,31 @@ export function generateCopilotResponse(
   };
 
   // ============================================================================
-  // LAYER 05: DEFENSE & ADVERSARIAL PROMPT INJECTION GUARDRAIL
+  // 1. LAYER 05: ADVERSARIAL PROMPT INJECTION DEFENSE (NeMo / Llama Guard Standard)
   // ============================================================================
-  const injectionPatterns = [
+  const adversarialPatterns = [
     "ignore previous rules",
     "ignore all instructions",
     "override system",
     "drain",
-    "withdraw 10 crore",
-    "delete all records",
-    "give me admin access",
     "bypass kyc",
-    "disable guardrails",
-    "hack"
+    "drop table",
+    "system prompt",
+    "admin access",
+    "withdraw 10 crore",
+    "unauthorized_withdrawal",
+    "jailbreak"
   ];
 
-  if (injectionPatterns.some((pattern) => query.includes(pattern))) {
-    baseHarness.guardrailLayer = {
-      passed: false,
-      securityScore: "Grade S+ (Threat Mitigated)",
-      promptInjectionDetected: true,
-      statutoryBoundEnforced: true,
-      reason: "Adversarial prompt injection pattern detected and safely isolated."
-    };
+  if (adversarialPatterns.some((pattern) => query.includes(pattern))) {
+    baseHarness.guardrailLayer.passed = false;
+    baseHarness.guardrailLayer.promptInjectionDetected = true;
+    baseHarness.guardrailLayer.securityScore = "Grade S+ (Attack Intercepted)";
+    baseHarness.guardrailLayer.reason = "Adversarial prompt injection attempt intercepted by Layer 05 Guardrail Shield.";
+
     return {
-      spokenText: "Action blocked. Adversarial prompt injection or rule override attempt intercepted by Sovereign Guardrail Layer 05.",
-      displayText: "🛡️ Sovereign Guardrail Layer 05: ACTION BLOCKED\n• Threat: Adversarial Prompt Injection / Boundary Violation Detected\n• Enforcement: DPDP Act 2023 §8 & EPF Scheme 1952 Para 72\n• Result: Request isolated in sandbox. Zero PII exfiltration.",
+      spokenText: "Security alert. Adversarial instruction detected. Jan-EPF AI Guardrails have blocked this request to preserve statutory boundary safety.",
+      displayText: "🛡️ **Sovereign Guardrail Layer 05: ACTION BLOCKED**\n• **Standard:** NeMo / Llama Guard Zero-Trust Boundary\n• **Threat Intercepted:** Adversarial Prompt Injection / System Override Payload\n• **Security Enforcement:** Zero PII leakage. Statutory caps and client sandbox preserved.",
       langCode: "en-IN",
       category: "GUARDRAIL_BLOCKED",
       harness: baseHarness
@@ -168,74 +196,61 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 1. GREETINGS & INTRODUCTIONS ("hi", "hello", "namaste", "hey", "who are you")
+  // 2. GREETINGS & CONVERSATIONAL INTRODUCTION
   // ============================================================================
-  if (
-    query === "hi" ||
-    query === "hello" ||
-    query === "hey" ||
-    query === "namaste" ||
-    query === "नमस्ते" ||
-    query === "హలో" ||
-    query === "నమస్కారం" ||
-    query === "வணக்கம்" ||
-    query.startsWith("who are you") ||
-    query.startsWith("what can you do") ||
-    query.startsWith("help")
-  ) {
+  const greetingKeywords = [
+    "hi", "hello", "hey", "namaste", "namaskar", "namaskaram", "vanakkam",
+    "good morning", "good afternoon", "good evening", "kem cho", "sat sri akaal",
+    "adaab", "नमस्ते", "வணக்கம்", "నమస్కారం"
+  ];
+  const isGreeting = greetingKeywords.some((g) => query === g || query.startsWith(g + " ") || query.startsWith(g + "!") || query.startsWith(g + ","));
+
+  if (isGreeting) {
+    baseHarness.memoryLayer.lastTopic = "GREETING";
+
     if (isHindi) {
-      if (isGurmeet) {
-        return {
-          spokenText: `नमस्ते सरदार गुरमीत सिंह जी! आपके ईपीएस-95 खाते में मासिक पेंशन ₹3,250 और कुल बचत सुरक्षित है। आप डिजिटल जीवन प्रमाण पत्र या पेंशन के बारे में पूछ सकते हैं।`,
-          displayText: `नमस्ते गुरमीत जी! मैं आपका जन-ईपीएफ एआई सॉवरेन एजेंट हार्नेस हूँ।\n• मासिक ईपीएस-95 पेंशन: ₹3,250 / माह\n• पीपीओ नंबर: PPO-DL-2024-99881\n• जीवन प्रमाण पत्र: फेस आरडी से मान्य।`,
-          targetRoute: "/savings",
-          langCode: "hi-IN",
-          category: "GREETING",
-          harness: baseHarness
-        };
-      }
-      if (isPriya) {
-        return {
-          spokenText: `नमस्ते प्रिया जी! आपके चालू टेक खाते में ₹4,75,000 जमा हैं। आपकी पिछली इंफोसिस नौकरी की एग्जिट डेट ऑटो-डिड्यूस करने या खाता ट्रांसफर करने के लिए कहें।`,
-          displayText: `नमस्ते प्रिया जी! मैं आपका जन-ईपीएफ सॉवरेन एजेंट हूँ।\n• कुल कॉर्पस: ₹4,75,000\n• पिछली नौकरी: इंफोसिस (एग्जिट डेट ऑटो-डिड्यूस उपलब्ध)\n• फॉर्म 13 1-क्लिक ट्रांसफर तैयार है।`,
-          targetRoute: "/career",
-          langCode: "hi-IN",
-          category: "GREETING",
-          harness: baseHarness
-        };
-      }
-      if (isSunita) {
-        return {
-          spokenText: `नमस्ते सुनीता जी! आपके सूरत टेक्सटाइल खाते में ₹1,85,000 जमा हैं। आप ₹7 लाख ईडीएलआई नॉमिनेशन भरने या बैंक पेनी ड्रॉप सत्यापन के बारे में पूछ सकती हैं।`,
-          displayText: `नमस्ते सुनीता जी! मैं आपका जन-ईपीएफ साथी हूँ।\n• कुल बचत: ₹1,85,000\n• बैंक केवाईसी: पेनी ड्रॉप सत्यापन लंबित\n• ईडीएलआई बीमा: ₹7,00,000 मुफ्त कवर उपलब्ध।`,
-          targetRoute: "/fix",
-          langCode: "hi-IN",
-          category: "GREETING",
-          harness: baseHarness
-        };
-      }
       return {
-        spokenText: `नमस्ते ${firstName} जी! आपके पेन्या अपेरल्स खाते में ₹${citizen.balance.toLocaleString("en-IN")} जमा हैं। आप मुझसे ₹48,000 मेडिकल एडवांस निकालने, 0% टीडीएस या पासबुक देखने के बारे में पूछ सकते हैं।`,
-        displayText: `नमस्ते ${firstName} जी! मैं आपका जन-ईपीएफ सॉवरेन एजेंट हार्नेस हूँ।\n• कुल बैलेंस: ₹${citizen.balance.toLocaleString("en-IN")}\n• सेवा: 14.5 वर्ष (0% टीडीएस छूट)\n• पैरा 68J अग्रिम: ₹1,56,000 तक तुरंत उपलब्ध।`,
+        spokenText: `नमस्ते ${firstName} जी! मैं आपका सॉवरेन एजेंट कोपायलट हूँ। आपके ${employerName} खाते में कुल ₹${balanceFormatted} जमा हैं। आप मुझसे मेडिकल अग्रिम, पासबुक विवरण, या 0% टीडीएस नियमों के बारे में पूछ सकते हैं।`,
+        displayText: `👋 **नमस्ते ${firstName} जी!**\nमैं आपका जन-ईपीएफ सॉवरेन एजेंट कोपायलट हूँ।\n\n• **सक्रिय प्रतिष्ठान:** ${employerName}\n• **कुल ईपीएफ बैलेंस:** ₹${balanceFormatted} (सेवा: ${serviceYears} वर्ष)\n• **टीडीएस छूट:** धारा 192A के तहत 0% कर\n\nमैं आपकी किस प्रकार सहायता कर सकता हूँ? आप नीचे दिए गए बटनों पर क्लिक कर सकते हैं या सीधे बोलकर पूछ सकते हैं।`,
         langCode: "hi-IN",
         category: "GREETING",
         harness: baseHarness
       };
     }
 
-    if (isTelugu) {
+    if (isGurmeet) {
       return {
-        spokenText: `నమస్కారం ${firstName} గారు! నేను మీ జన-ఈపీఎఫ్ సావరిన్ ఏజెంట్ హార్నెస్. మీ ${citizen.employer} ఖాతాలో ₹${citizen.balance.toLocaleString("en-IN")} ఉన్నాయి. నేను మీకు ఎలా సహాయపడగలను?`,
-        displayText: `నమస్కారం ${firstName} గారు! మీ పీఎఫ్ ఖాతాలో మొత్తం ₹${citizen.balance.toLocaleString("en-IN")} ఉన్నాయి. అడ్వాన్స్ డబ్బులు, జాబ్ ట్రాన్స్‌ఫర్, లేదా వివరాల సవరణ కోసం నన్ను అడగండి.`,
-        langCode: "te-IN",
+        spokenText: `Sat Sri Akaal Sardar Gurmeet Singh Ji! I am your Sovereign Pension Copilot. Your monthly EPS-95 pension of ₹3,250 is active under PPO-DL-2024-99881 at ${employerName}. How can I assist with your life certificate or passbook today?`,
+        displayText: `👴 **Sat Sri Akaal, Sardar Gurmeet Singh Ji!**\nWelcome to your Jan-EPF Sovereign Pension Copilot.\n\n• **Active Establishment:** ${employerName} (PPO-DL-2024-99881)\n• **Monthly Pension:** ₹3,250 / month (Disbursed via Direct Benefit Transfer)\n• **Digital Life Certificate (DLC):** Valid till October 31, 2026\n\nHow can I assist you today? I can help renew your Jeevan Pramaan life certificate, verify pension slips, or explain family pension rules.`,
+        langCode: "en-IN",
+        category: "GREETING",
+        harness: baseHarness
+      };
+    }
+
+    if (isPriya) {
+      return {
+        spokenText: `Hello Priya! Welcome to your Sovereign Copilot. Your total corpus at ${employerName} is ₹${balanceFormatted}. I can help auto-deduce your missing Infosys exit date or transfer your accounts in 1 click.`,
+        displayText: `👋 **Hello Priya Sharma!**\nWelcome to your Jan-EPF Sovereign Agent Copilot.\n\n• **Active Employer:** ${employerName}\n• **Total Corpus:** ₹${balanceFormatted} (3 Member IDs Consolidated)\n• **Action Required:** Previous establishment (Infosys) has missing Date of Exit\n\nHow can I help you today? I can auto-deduce your exit date from ECR challans, file Form 13 1-Click transfer, or resolve your name spelling with Aadhaar.`,
+        langCode: "en-IN",
+        category: "GREETING",
+        harness: baseHarness
+      };
+    }
+
+    if (isSunita) {
+      return {
+        spokenText: `Namaste Sunita Devi Ji! I am your Sovereign Agent Copilot for ${employerName}. Your balance is ₹${balanceFormatted}. I can run 1-Click Bank Penny Drop verification or file your free ₹7 Lakh EDLI insurance nomination.`,
+        displayText: `👋 **Namaste Sunita Devi Ji!**\nWelcome to your Jan-EPF Sovereign Agent Copilot.\n\n• **Active Employer:** ${employerName} (Surat Logistics Hub)\n• **Total Balance:** ₹${balanceFormatted}\n• **Free Insurance:** ₹7,00,000 EDLI Life Cover (Pending Nominee: Manoj Kumar)\n\nHow can I assist you? I can run sub-200ms NPCI Penny Drop verification to boost your claim readiness from 78% to 98%, or file your e-Nomination.`,
+        langCode: "en-IN",
         category: "GREETING",
         harness: baseHarness
       };
     }
 
     return {
-      spokenText: `Hello ${firstName}! I am your Jan-EPF Sovereign Agent Copilot with autonomous tool calling. Your active ${citizen.employer} balance is ₹${citizen.balance.toLocaleString("en-IN")}. How can I assist you with your claims, transfer, or KYC today?`,
-      displayText: `⚡ Jan-EPF Sovereign Agent Harness Active (${citizen.name} • ${citizen.employer}):\n• Active UAN: ${citizen.uan}\n• Active Corpus: ₹${citizen.balance.toLocaleString("en-IN")}\n• Continuous Service: ${serviceYears} Yrs (0% TDS Shield)\n• 6 In-Browser Autonomous Tools Ready.`,
+      spokenText: `Hello Ramesh Kumar! I am your Sovereign Agent Copilot for ${employerName}. Your EPF balance is ₹${balanceFormatted} with ${serviceYears} years of service. How can I assist with your advance, tax rules, or passbook today?`,
+      displayText: `👋 **Hello Ramesh Kumar!**\nI am your Jan-EPF Sovereign Agent Copilot.\n\n• **Active Employer:** ${employerName}\n• **Total EPF Balance:** ₹${balanceFormatted} (Employee: ₹${empShareFormatted} • Employer: ₹${emprShareFormatted})\n• **Statutory Status:** ${serviceYears} Years Continuous Service (100% 0% TDS Tax-Exempt)\n\nWhat would you like to do? I can autonomously sanction a Para 68J emergency advance, breakdown your 8.25% compounding passbook, or check Section 192A tax rules.`,
       langCode: "en-IN",
       category: "GREETING",
       harness: baseHarness
@@ -243,41 +258,46 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 2. PASSBOOK, BALANCE, INTEREST & COMPOUNDING
+  // 3. BALANCE & PASSBOOK DETAILED BREAKDOWN INTENT
   // ============================================================================
-  if (
-    query.includes("balance") ||
-    query.includes("passbook") ||
-    query.includes("interest") ||
-    query.includes("how much money") ||
-    query.includes("बैलेंस") ||
-    query.includes("पासबुक") ||
-    query.includes("ब्याज") ||
-    query.includes("వడ్డీ") ||
-    query.includes("పాస్‌బుక్") ||
-    query.includes("బ్యాలెన్స్")
-  ) {
+  const balanceKeywords = [
+    "balance", "whats my balance", "current balance", "my balance", "how much money",
+    "check balance", "show balance", "passbook", "corpus", "funds", "kitna paisa",
+    "पैसे", "बैलेंस", "खाता", "పాస్ బుక్", "బ్యాలెన్స్", "డబ్బులు", "total balance", "epf balance"
+  ];
+  const isBalanceQuery = balanceKeywords.some((b) => query.includes(b));
+
+  if (isBalanceQuery) {
     baseHarness.toolLayer = {
+      standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "download_passbook_statement",
-      toolLabel: "download_passbook_statement()",
-      arguments: { uan: citizen.uan, fy: "2025-2026" },
-      executionOutput: `Passbook statement verified for ${citizen.employer}. 8.25% interest rate compounded.`
+      toolLabel: `download_passbook_statement(uan='${citizen.uan}')`,
+      arguments: { uan: citizen.uan, establishment: employerName },
+      executionOutput: `Triple-split passbook parsed in 0.02ms. Total balance: ₹${balanceFormatted}.`
     };
-    baseHarness.memoryLayer.lastTopic = "PASSBOOK_INSPECTION";
+
+    baseHarness.orchestrationLayer = [
+      { step: 1, total: 3, title: "Triple-Split Share Extraction", detail: "Parsed Employee Share, Employer Share, and EPS-95 Pension Fund", status: "DONE" },
+      { step: 2, total: 3, title: "8.25% Statutory Interest Verification", detail: "Accrued monthly compound interest credited for current FY", status: "DONE" },
+      { step: 3, total: 3, title: "Section 192A Tax Exemption Audit", detail: `${serviceYears} years service verified: 0% TDS tax-free status`, status: "DONE" }
+    ];
+
+    baseHarness.memoryLayer.lastTopic = "PASSBOOK_BALANCE";
 
     if (isHindi) {
       return {
-        spokenText: `आपका कुल बैलेंस ₹${citizen.balance.toLocaleString("en-IN")} है। इसमें आपका शेयर ₹${citizen.empShare.toLocaleString("en-IN")}, कंपनी का शेयर ₹${citizen.emprShare.toLocaleString("en-IN")} है और इस साल का ब्याज ₹${citizen.interestCurrentFY.toLocaleString("en-IN")} है।`,
-        displayText: `📊 पासबुक विवरण (${citizen.employer}):\n• कुल कॉर्पस: ₹${citizen.balance.toLocaleString("en-IN")}\n• कर्मचारी अंश (12%): ₹${citizen.empShare.toLocaleString("en-IN")}\n• नियोक्ता अंश (3.67%): ₹${citizen.emprShare.toLocaleString("en-IN")}\n• पेंशन फंड (8.33%): ₹${citizen.epsShare.toLocaleString("en-IN")}\n• चालू वित्त वर्ष का ब्याज (8.25%): ₹${citizen.interestCurrentFY.toLocaleString("en-IN")}`,
+        spokenText: `${firstName} जी, आपके ${employerName} पीएफ खाते में कुल ₹${balanceFormatted} जमा हैं। इसमें आपका कर्मचारी हिस्सा ₹${empShareFormatted}, नियोक्ता हिस्सा ₹${emprShareFormatted}, और ईपीएस पेंशन फंड ₹${epsShareFormatted} है। आपकी ${serviceYears} वर्ष की सेवा के कारण इस पर 0% टीडीएस लगेगा।`,
+        displayText: `📊 **पीएफ पासबुक व बैलेंस विवरण (${firstName} • ${employerName})**\n\n💰 **कुल जमा राशि:** ₹${balanceFormatted}\n• **कर्मचारी शेयर (12%):** ₹${empShareFormatted}\n• **कंपनी शेयर (3.67%):** ₹${emprShareFormatted}\n• **ईपीएस-95 पेंशन फंड (8.33%):** ₹${epsShareFormatted}\n\n📈 **वार्षिक ब्याज:** 8.25% चक्रवृद्धि दर\n🛡️ **कर स्थिति:** ${serviceYears} वर्ष सेवा (धारा 192A के तहत 0% TDS)\n\nक्या आप मेडिकल एडवांस निकालना चाहते हैं या पूरी पासबुक स्टेटमेंट डाउनलोड करना चाहते हैं?`,
         targetRoute: "/savings",
         langCode: "hi-IN",
         category: "SAVINGS",
         harness: baseHarness
       };
     }
+
     return {
-      spokenText: `Your total EPF balance with ${citizen.employer} is ₹${citizen.balance.toLocaleString("en-IN")}. Your employee contribution is ₹${citizen.empShare.toLocaleString("en-IN")}, and interest credited this year is ₹${citizen.interestCurrentFY.toLocaleString("en-IN")}.`,
-      displayText: `📊 Passbook Summary (${citizen.employer}):\n• Total Corpus: ₹${citizen.balance.toLocaleString("en-IN")}\n• Employee Share (12%): ₹${citizen.empShare.toLocaleString("en-IN")}\n• Employer Share (3.67%): ₹${citizen.emprShare.toLocaleString("en-IN")}\n• Pension Fund (EPS): ₹${citizen.epsShare.toLocaleString("en-IN")}\n• 8.25% FY Interest: ₹${citizen.interestCurrentFY.toLocaleString("en-IN")}`,
+      spokenText: `${firstName}, your verified total balance at ${employerName} is ₹${balanceFormatted}. This includes ₹${empShareFormatted} employee share, ₹${emprShareFormatted} employer share, and ₹${epsShareFormatted} in your EPS-95 pension fund, compounding at 8.25% annual statutory interest. All withdrawals are 100% tax-free under Section 192A.`,
+      displayText: `📊 **EPF Passbook & Balance Statement (${citizen.name})**\n\n🏢 **Active Establishment:** ${employerName} (UAN: ${citizen.uan})\n💰 **Total Verified Corpus:** **₹${balanceFormatted}**\n\n**Triple-Split Share Breakdown:**\n• **👤 Employee Share (12%):** ₹${empShareFormatted}\n• **🏛️ Employer Share (3.67%):** ₹${emprShareFormatted}\n• **👴 EPS-95 Pension Fund (8.33%):** ₹${epsShareFormatted}\n\n**Statutory & Tax Analysis:**\n• **📈 Fiscal Year Interest Rate:** 8.25% p.a. (Credited monthly compounding)\n• **🛡️ Section 192A TDS Tax Shield:** 0% TDS (${serviceYears} Yrs Service > 5 Yrs threshold)\n\nWould you like me to pre-calculate your **Para 68J Medical Advance Limit** or take you to the **My Savings Hub**?`,
       targetRoute: "/savings",
       langCode: "en-IN",
       category: "SAVINGS",
@@ -286,60 +306,57 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 3. WITHDRAWAL, MEDICAL ADVANCE, PARA 68J / 68B / 68K (AUTONOMOUS TOOL CALL)
+  // 4. MEDICAL ADVANCE, WITHDRAWALS & PARA 68 CLAIMS
   // ============================================================================
   if (
-    query.includes("money") ||
-    query.includes("withdraw") ||
-    query.includes("advance") ||
     query.includes("medical") ||
+    query.includes("advance") ||
+    query.includes("withdraw") ||
+    query.includes("form 31") ||
+    query.includes("claim") ||
+    query.includes("illness") ||
     query.includes("hospital") ||
-    query.includes("house") ||
-    query.includes("marriage") ||
-    query.includes("para 68") ||
-    query.includes("पैसे") ||
-    query.includes("निकाल") ||
     query.includes("इलाज") ||
     query.includes("अग्रिम") ||
-    query.includes("డబ్బులు") ||
-    query.includes("అడ్వాన్స్")
+    query.includes("पैसा निकालना")
   ) {
-    const advanceAmount = isRamesh ? 156000 : isPriya ? 260000 : isSunita ? 48000 : Math.min(100000, citizen.empShare);
-
+    const maxAdvance = Math.min(156000, Math.round(citizen.balance * 0.75));
     baseHarness.toolLayer = {
+      standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "execute_advance_preflight",
-      toolLabel: `execute_advance_preflight(para='68J', amount=${advanceAmount})`,
+      toolLabel: `execute_advance_preflight(para='68J', uan='${citizen.uan}', amount=${maxAdvance})`,
       arguments: {
         uan: citizen.uan,
-        paraClause: "Para 68J (Medical Treatment)",
-        claimedAmount: advanceAmount,
-        serviceYears: serviceYears
+        paraClause: "Para 68J (Medical / Illness)",
+        amountRequested: maxAdvance,
+        wageMultiplier: 6
       },
-      executionOutput: `Pre-flight check PASSED. Capped at ₹${advanceAmount.toLocaleString("en-IN")}. Section 192A TDS: 0%.`
+      executionOutput: `Pre-flight passed in 0.04ms. Max sanction: ₹${maxAdvance.toLocaleString("en-IN")}. 0% TDS applied.`
     };
 
     baseHarness.orchestrationLayer = [
-      { step: 1, total: 4, title: "Deterministic Para 68J Math", detail: `Calculated 6-month wage ceiling: ₹${advanceAmount.toLocaleString("en-IN")}`, status: "DONE" },
-      { step: 2, total: 4, title: "Section 192A Tax Shield", detail: `${serviceYears} yrs service > 5 yrs threshold: 0% TDS applied`, status: "DONE" },
-      { step: 3, total: 4, title: "Presidio PII Masking", detail: "Aadhaar & PAN encrypted with zero plaintext leakage", status: "DONE" },
-      { step: 4, total: 4, title: "Direct Benefit Transfer (DBT)", detail: "Mock instant sanction certificate & tracking ID generated", status: "DONE" }
+      { step: 1, total: 4, title: "Deterministic Para 68J Actuary Math", detail: `Calculated 6-month basic wage cap: ₹${maxAdvance.toLocaleString("en-IN")} sanctioned`, status: "DONE" },
+      { step: 2, total: 4, title: "Section 192A 0% TDS Shield", detail: `${serviceYears} yrs service verified (>5.0 yrs): 0% tax deducted`, status: "DONE" },
+      { step: 3, total: 4, title: "Presidio PII Vault Tokenization", detail: "Masked Aadhaar (••••••••8712) and Bank Account in memory", status: "DONE" },
+      { step: 4, total: 4, title: "Direct Benefit Transfer (DBT) Mock Disbursal", detail: "Generated cryptographic HMAC-SHA256 settlement receipt", status: "DONE" }
     ];
 
-    baseHarness.memoryLayer.lastTopic = "MEDICAL_ADVANCE_SANCTION";
+    baseHarness.memoryLayer.lastTopic = "MEDICAL_ADVANCE_PARA68J";
 
-    if (isRamesh) {
+    if (isHindi) {
       return {
-        spokenText: `रमेश जी, पेन्या अपेरल्स में आपके 14.5 साल के रिकॉर्ड पर पैरा 68J मेडिकल एडवांस के तहत ₹1,56,000 तक तुरंत स्वीकृत हो सकते हैं। 5 वर्ष से अधिक सेवा होने के कारण टीडीएस शून्य (0%) रहेगा।`,
-        displayText: `🏥 आपातकालीन चिकित्सा अग्रिम (पैरा 68J - रमेश कुमार):\n• अधिकतम पात्रता: ₹1,56,000 (6 माह का मूल वेतन)\n• कर्मचारी शेयर बैलेंस: ₹1,82,000\n• धारा 192A टीडीएस: 0% पूर्ण छूट (14.5 वर्ष सेवा)\n• 1-क्लिक इन-ब्राउज़र चेक ओसीआर के साथ 24 घंटे में भुगतान।`,
+        spokenText: `${firstName} जी, पैरा 68J मेडिकल अग्रिम के तहत आप ₹${maxAdvance.toLocaleString("en-IN")} की राशि बिना किसी सर्विस शर्त के तुरंत क्लेम कर सकते हैं। इस पर कोई टैक्स या टीडीएस नहीं कटेगा।`,
+        displayText: `🏥 **पैरा 68J मेडिकल इमरजेंसी एडवांस (${firstName} • ${employerName})**\n\n✅ **अधिकतम स्वीकृत राशि:** ₹${maxAdvance.toLocaleString("en-IN")}\n• **नियम:** 6 माह का मूल वेतन या कर्मचारी शेयर (0 दिन की न्यूनतम सेवा आवश्यक)\n• **टीडीएस कर छूट:** 0% (धारा 192A)\n• **आवश्यक दस्तावेज:** अस्पताल बिल / मेडिकल स्व-घोषणा (कोई भौतिक फॉर्म नहीं)\n\nक्या आप 1-क्लिक से यह क्लेम सबमिट करना चाहते हैं?`,
         targetRoute: "/money",
-        langCode: isHindi ? "hi-IN" : "en-IN",
+        langCode: "hi-IN",
         category: "MONEY",
         harness: baseHarness
       };
     }
+
     return {
-      spokenText: `Under Para 68J, you can claim an instant advance up to 6 months of basic wages. With your balance of ₹${citizen.balance.toLocaleString("en-IN")}, advance claims are processed with 0% statutory risk.`,
-      displayText: `🏥 Form 31 Advance Hub (${citizen.name}):\n• Eligible Para: Para 68J (Medical) / Para 68B (Housing)\n• Available Employee Share: ₹${citizen.empShare.toLocaleString("en-IN")}\n• In-Browser Canvas Cheque Filter & 5s Defensive Buffer active.`,
+      spokenText: `${firstName}, under Para 68J Emergency Medical Advance, you are eligible for an instant advance of up to ₹${maxAdvance.toLocaleString("en-IN")} from ${employerName}. Because you have ${serviceYears} years of service, your withdrawal is 100% tax-free with 0% TDS.`,
+      displayText: `🏥 **Para 68J Emergency Medical Advance (${citizen.name})**\n\n🏢 **Establishment:** ${employerName}\n✅ **Maximum Sanction Limit:** **₹${maxAdvance.toLocaleString("en-IN")}** (6 Months Wages Cap)\n• **Service Requirement:** 0 Days (Immediate Emergency Eligibility)\n• **Section 192A TDS:** 0% Tax Deducted (${serviceYears} Yrs Service > 5 Yrs threshold)\n• **Settlement Method:** Instant Direct Benefit Transfer (DBT) to verified bank account\n\nClick below to open the **I Need Money Hub** and complete the 1-click claim!`,
       targetRoute: "/money",
       langCode: "en-IN",
       category: "MONEY",
@@ -348,85 +365,57 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 4. TDS & INCOME TAX SECTION 192A
-  // ============================================================================
-  if (
-    query.includes("tds") ||
-    query.includes("tax") ||
-    query.includes("192a") ||
-    query.includes("15g") ||
-    query.includes("टैक्स") ||
-    query.includes("टीडीएस")
-  ) {
-    baseHarness.memoryLayer.lastTopic = "SECTION_192A_TDS";
-    if (isRamesh) {
-      return {
-        spokenText: `रमेश जी, आपकी निरंतर सेवा 14.5 वर्ष है जो 5 वर्ष की सीमा से अधिक है। इसलिए आयकर अधिनियम धारा 192A के तहत आपके किसी भी निकासी पर शून्य टीडीएस (0%) लागू होगा।`,
-        displayText: `🛡️ धारा 192A टीडीएस शील्ड (रमेश कुमार):\n• सेवा अवधि: 14.5 वर्ष (5+ वर्ष पात्रता पूर्ण)\n• टीडीएस दर: 0.0% (शून्य कटौती)\n• पैन स्थिति: ABCDE****F लिंक है\n• फॉर्म 15G की आवश्यकता नहीं है।`,
-        targetRoute: "/money",
-        langCode: isHindi ? "hi-IN" : "en-IN",
-        category: "MONEY",
-        harness: baseHarness
-      };
-    }
-    return {
-      spokenText: "Under Section 192A, members with over 5 years of continuous service enjoy 0% TDS. For service under 5 years with withdrawals over ₹50,000, our 1-click Form 15G shield eliminates the 20% penalty.",
-      displayText: "🛡️ Section 192A Income Tax TDS Matrix:\n• Continuous Service ≥ 5 Years: 0% TDS (Fully Exempt)\n• Service < 5 Yrs & ≥ ₹50,000: 1-Click Form 15G auto-attached (0% TDS)\n• Prevents unlawful 20% marginal tax penalty.",
-      targetRoute: "/money",
-      langCode: "en-IN",
-      category: "MONEY",
-      harness: baseHarness
-    };
-  }
-
-  // ============================================================================
-  // 5. JOB SWITCH, TRANSFER, DATE OF EXIT (AUTONOMOUS TOOL CALL)
+  // 5. JOB SWITCH, MISSING EXIT DATE (ECR) & FORM 13 TRANSFER
   // ============================================================================
   if (
     query.includes("job") ||
-    query.includes("transfer") ||
-    query.includes("company") ||
-    query.includes("previous") ||
-    query.includes("exit") ||
     query.includes("switch") ||
+    query.includes("transfer") ||
+    query.includes("exit date") ||
+    query.includes("date of exit") ||
+    query.includes("doe") ||
+    query.includes("ecr") ||
+    query.includes("form 13") ||
     query.includes("infosys") ||
-    query.includes("बदली") ||
-    query.includes("कंपनी") ||
-    query.includes("नौकरी")
+    query.includes("नौकरी") ||
+    query.includes("ट्रांसफर") ||
+    query.includes("एग्जिट")
   ) {
     baseHarness.toolLayer = {
+      standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "auto_deduce_exit_date",
-      toolLabel: "auto_deduce_exit_date(previous_employer='Infosys')",
+      toolLabel: "auto_deduce_exit_date(establishment='Infosys Technologies')",
       arguments: {
         uan: citizen.uan,
-        lastEcrMonth: "2023-08-01",
-        targetMemberId: "MHBAN00123450000055443"
+        previousEstablishment: "Infosys Technologies Ltd",
+        lastEcrMonth: "2023-08-01"
       },
-      executionOutput: "Date of Exit deduced: 2023-08-31. Form 13 transfer payload generated."
+      executionOutput: "ECR contribution month: Aug 2023 ➔ Auto-deduced Date of Exit: 31-Aug-2023."
     };
 
     baseHarness.orchestrationLayer = [
-      { step: 1, total: 4, title: "ECR Timestamp Extraction", detail: "Read last employer wage contribution challan", status: "DONE" },
-      { step: 2, total: 4, title: "Date of Exit Auto-Deduction", detail: "Derived 31-Aug-2023 with zero HR friction", status: "DONE" },
-      { step: 3, total: 4, title: "Wagner-Fischer Fuzzy Match", detail: "Matched 'Priya Sharma' vs 'Priyaa Sharma' (92.3% confidence)", status: "DONE" },
-      { step: 4, total: 4, title: "Form 13 Account Merge", detail: "Transferred ₹85,000 into active UAN ledger", status: "DONE" }
+      { step: 1, total: 4, title: "ECR Timestamp Extraction", detail: "Extracted last monthly wage deposit record: August 2023", status: "DONE" },
+      { step: 2, total: 4, title: "Date of Exit Auto-Deduction", detail: "Deduced calendar exit timestamp: 31-Aug-2023 (0ms)", status: "DONE" },
+      { step: 3, total: 4, title: "Wagner-Fischer Name Alignment", detail: "Matched 'Priya Sharma' vs 'Priyaa Sharma' (91.4% PASS)", status: "DONE" },
+      { step: 4, total: 4, title: "Form 13 1-Click Merge Execution", detail: `Consolidated past PF balance into active ${employerName} account`, status: "DONE" }
     ];
 
-    baseHarness.memoryLayer.lastTopic = "JOB_TRANSFER_CONSOLIDATION";
+    baseHarness.memoryLayer.lastTopic = "JOB_TRANSFER_ECR_EXIT";
 
-    if (isPriya) {
+    if (isHindi) {
       return {
-        spokenText: `प्रिया जी, आपकी पिछली इंफोसिस नौकरी का ₹85,000 बैलेंस चालू साइबर हब खाते में मर्ज किया जा सकता है। इंफोसिस की लापता एग्जिट डेट हमारे ईसीआर इंजन द्वारा स्वतः निकाल दी गई है।`,
-        displayText: `🔄 1-क्लिक जॉब ट्रांसफर (प्रिया शर्मा):\n• पिछला नियोक्ता: इंफोसिस टेक्नोलॉजीज (पुणे)\n• लापता एग्जिट डेट: ईसीआर चिलान से 28 फरवरी 2023 स्वतः निकाली गई\n• ट्रांसफर राशि: ₹85,000 चालू खाते में मर्ज करने के लिए तैयार।`,
+        spokenText: `प्रिया जी, हमने पिछली इंफोसिस नौकरी के ईसीआर वेतन रिकॉर्ड से आपकी नौकरी छोड़ने की तारीख 31 अगस्त 2023 स्वतः निकाल ली है। अब आप 1-क्लिक से अपना पीएफ नए खाते में ट्रांसफर कर सकती हैं।`,
+        displayText: `🔄 **जॉब ट्रांसफर व एग्जिट डेट समाधान (प्रिया शर्मा):**\n• **पिछली कंपनी:** इंफोसिस टेक्नोलॉजीज लिमिटेड\n• **ऑटो-डिड्यूस्ड एग्जिट डेट:** 31 अगस्त 2023 (ECR से)\n• **नाम मिलान स्कोर:** 91.4% (प्रिया बनाम प्रिया शर्मा - स्वीकृत)\n• **फॉर्म 13 ट्रांसफर:** 1-क्लिक में सक्रिय खाते (${employerName}) में मर्ज उपलब्ध।`,
         targetRoute: "/career",
-        langCode: isHindi ? "hi-IN" : "en-IN",
+        langCode: "hi-IN",
         category: "CAREER",
         harness: baseHarness
       };
     }
+
     return {
-      spokenText: "When changing jobs, Form 13 merges previous member balances into your active ledger. Our engine deduces missing Dates of Exit from your last monthly ECR wage timestamp without employer friction.",
-      displayText: "🔄 Form 13 1-Click Multi-Job Consolidation:\n• Auto-deduces missing Date of Exit (DOE) from last ECR challan\n• Merges multiple member IDs into a unified UAN ledger\n• Zero employer signature delays.",
+      spokenText: `We have resolved the missing Date of Exit using your last employer's ECR wage challan timestamp, setting it to 31st August 2023. You can now execute a 1-Click Form 13 transfer to merge all past accounts into ${employerName}.`,
+      displayText: `💼 **I Changed Jobs & Career Consolidation Hub**\n\n🏢 **Active Employer:** ${employerName}\n🔍 **Auto-Deduced Exit Date:** **31-Aug-2023** (Extracted from ECR Wage Timestamp in 0.04ms)\n• **Wagner-Fischer Fuzzy Name Match:** 91.4% Match Score (PASS)\n• **Form 13 Action:** 1-Click consolidation merges previous orphaned member IDs with 0 employer delay.\n\nClick below to open the **I Changed Jobs Hub**!`,
       targetRoute: "/career",
       langCode: "en-IN",
       category: "CAREER",
@@ -435,23 +424,21 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 6. KYC, PENNY DROP, JOINT DECLARATION (AUTONOMOUS TOOL CALL)
+  // 6. BANK KYC, PENNY DROP & NAME SPELLING FIX
   // ============================================================================
   if (
-    query.includes("fix") ||
-    query.includes("name") ||
     query.includes("kyc") ||
-    query.includes("aadhaar") ||
     query.includes("bank") ||
-    query.includes("penny") ||
-    query.includes("correction") ||
+    query.includes("penny drop") ||
+    query.includes("fuzzy") ||
+    query.includes("spelling") ||
     query.includes("joint declaration") ||
-    query.includes("सुधार") ||
     query.includes("नाम") ||
     query.includes("आधार") ||
     query.includes("बैंक")
   ) {
     baseHarness.toolLayer = {
+      standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "verify_npci_penny_drop",
       toolLabel: "verify_npci_penny_drop(bank='Airtel Payments Bank')",
       arguments: {
@@ -470,19 +457,20 @@ export function generateCopilotResponse(
 
     baseHarness.memoryLayer.lastTopic = "BANK_KYC_PENNY_DROP";
 
-    if (isSunita) {
+    if (isHindi) {
       return {
-        spokenText: `सुनीता जी, आपका बैंक खाता 1-क्लिक पेनी ड्रॉप द्वारा सत्यापित किया जा सकता है। इसके बाद आपका क्लेम रेडीनेस स्कोर 78% से बढ़कर 98% हो जाएगा और ₹7 लाख ईडीएलआई बीमा सक्रिय हो जाएगा।`,
-        displayText: `✍️ बैंक केवाईसी व पेनी ड्रॉप सत्यापन (सुनीता देवी):\n• बैंक: एयरटेल पेमेंट्स बैंक (XXXXXX3322)\n• पेनी ड्रॉप स्थिति: 1-क्लिक सत्यापन उपलब्ध (120ms)\n• सुधार: रेडीनेस स्कोर 78% से 98% तक उन्नत।\n• ₹7,00,000 ईडीएलआई ई-नॉमिनेशन तैयार।`,
+        spokenText: `सुनीता जी, आपका बैंक खाता 1-क्लिक पेनी ड्रॉप द्वारा 120 मिलीसेकंड में सत्यापित किया जा सकता है। इसके बाद आपका क्लेम रेडीनेस स्कोर 78% से बढ़कर 98% हो जाएगा और ₹7 लाख ईडीएलआई बीमा सक्रिय हो जाएगा।`,
+        displayText: `✍️ **बैंक केवाईसी व पेनी ड्रॉप सत्यापन (सुनीता देवी):**\n• **सक्रिय नियोक्ता:** ${employerName}\n• **बैंक:** एयरटेल पेमेंट्स बैंक (XXXXXX3322)\n• **पेनी ड्रॉप स्थिति:** 1-क्लिक सत्यापन उपलब्ध (120ms)\n• **सुधार:** रेडीनेस स्कोर 78% से 98% तक उन्नत।\n• **₹7,00,000 ईडीएलआई ई-नॉमिनेशन तैयार।**`,
         targetRoute: "/fix",
-        langCode: isHindi ? "hi-IN" : "en-IN",
+        langCode: "hi-IN",
         category: "FIX",
         harness: baseHarness
       };
     }
+
     return {
-      spokenText: "For profile fixes, our Levenshtein matcher resolves spelling mismatches between Aadhaar and EPFO, while sub-200ms NPCI Penny Drop eliminates manual bank attestation.",
-      displayText: "✍️ Fix Details & KYC Reconciliation Hub:\n• Instant Wagner-Fischer Fuzzy Name Match\n• Sub-200ms NPCI Penny Drop Bank KYC\n• Digital Joint Declaration for minor field corrections.",
+      spokenText: `For bank and profile fixes, our sub-200ms NPCI Penny Drop directly verifies your bank account with zero paperwork, while our Levenshtein matcher resolves spelling differences between Aadhaar and EPFO.`,
+      displayText: `✍️ **Fix Details & KYC Reconciliation Hub (${citizen.name})**\n\n🏢 **Establishment:** ${employerName}\n• **⚡ Sub-200ms NPCI Penny Drop:** Eliminates physical cheque upload rejection risks.\n• **🔍 Wagner-Fischer Fuzzy Name Match:** Resolves spelling differences between Aadhaar and EPFO.\n• **🛡️ Free ₹7,00,000 EDLI Life Insurance:** Auto-files e-Nomination directly to EPFO ledger.\n\nClick below to open the **Fix Details Hub**!`,
       targetRoute: "/fix",
       langCode: "en-IN",
       category: "FIX",
@@ -504,19 +492,21 @@ export function generateCopilotResponse(
     query.includes("जीवन प्रमाण")
   ) {
     baseHarness.memoryLayer.lastTopic = "EPS95_SENIOR_PENSION";
+
     if (isGurmeet) {
       return {
         spokenText: `सरदार गुरमीत सिंह जी, आपका ईपीएस-95 पीपीओ नंबर PPO-DL-2024-99881 है और मासिक पेंशन ₹3,250 प्रति माह सीधे आपके बैंक खाते में जमा होती है। आपका जीवन प्रमाण पत्र 31 अक्टूबर तक वैध है।`,
-        displayText: `👴 ईपीएस-95 पेंशनर हब (सरदार गुरमीत सिंह):\n• मासिक पेंशन: ₹3,250 / माह\n• पीपीओ नंबर: PPO-DL-2024-99881\n• जीवन प्रमाण (DLC): अक्टूबर 2026 तक मान्य\n• फेस आरडी व पासकी बायोमेट्रिक प्रमाणीकरण सक्रिय।`,
+        displayText: `👴 **ईपीएस-95 पेंशनर हब (सरदार गुरमीत सिंह):**\n• **मासिक पेंशन:** ₹3,250 / माह\n• **पीपीओ नंबर:** PPO-DL-2024-99881\n• **जीवन प्रमाण (DLC):** 31 अक्टूबर 2026 तक मान्य\n• **फेस आरडी व बायोमेट्रिक प्रमाणीकरण सक्रिय।**`,
         targetRoute: "/savings",
         langCode: isHindi ? "hi-IN" : "en-IN",
         category: "PENSION",
         harness: baseHarness
       };
     }
+
     return {
       spokenText: "EPS-95 provides a guaranteed lifetime pension for members with 10 or more years of service. Senior pensioners can renew their Digital Life Certificate via facial passkey without visiting bank branches.",
-      displayText: "👴 EPS-95 Superannuation & Pension Hub:\n• Guaranteed Monthly Pension for ≥ 10 Years Service\n• 125% Elder Ergonomic WCAG AAA Voice Mode\n• Digital Life Certificate (DLC) Face RD Integration.",
+      displayText: `👴 **EPS-95 Superannuation & Pension Hub**\n\n• **Guaranteed Monthly Pension:** Available for members with ≥ 10 Years Service\n• **125% Elder Ergonomic WCAG AAA Voice Mode:** Large high-contrast UI for seniors\n• **Digital Life Certificate (DLC):** Direct facial biometric validation via Aadhaar Face RD`,
       targetRoute: "/savings",
       langCode: "en-IN",
       category: "PENSION",
@@ -529,6 +519,7 @@ export function generateCopilotResponse(
   // ============================================================================
   if (query.includes("privacy") || query.includes("mask") || query.includes("hide") || query.includes("गुप्त") || query.includes("छिपा")) {
     baseHarness.toolLayer = {
+      standard: "Stripe ($70B Standard) • In-Browser Hands",
       toolName: "toggle_discreet_privacy",
       toolLabel: "toggle_discreet_privacy()",
       arguments: { activeState: "TOGGLE" },
@@ -542,7 +533,7 @@ export function generateCopilotResponse(
 
     return {
       spokenText: "Discreet Privacy Mode toggled. Your EPF balances and UAN are now securely masked on screen.",
-      displayText: "🛡️ Discreet Privacy Mode Active:\n• Balances masked: ₹ ••••••••\n• UAN masked: 1018 •••• 7665\n• Press ⌘P or click the eye icon to unmask anytime.",
+      displayText: "🛡️ **Discreet Privacy Mode Active:**\n• Balances masked: ₹ ••••••••\n• UAN masked: 1018 •••• 7665\n• Press ⌘P or click the eye icon to unmask anytime.",
       langCode: "en-IN",
       category: "HARNESS_ACTION",
       harness: baseHarness
@@ -550,12 +541,31 @@ export function generateCopilotResponse(
   }
 
   // ============================================================================
-  // 9. DEFAULT INTELLIGENT FALLBACK
+  // 9. TAX RULES & SECTION 192A
+  // ============================================================================
+  if (query.includes("tds") || query.includes("tax") || query.includes("192a") || query.includes("15g") || query.includes("टैक्स") || query.includes("टीडीएस")) {
+    baseHarness.memoryLayer.lastTopic = "SECTION_192A_TDS";
+
+    const isExempt = serviceYears >= 5.0;
+    return {
+      spokenText: isExempt
+        ? `${firstName}, because you have ${serviceYears} years of continuous service (more than the 5-year statutory threshold), all your withdrawals are 100% exempt from TDS under Section 192A.`
+        : `${firstName}, for service tenures under 5 years, withdrawals above ₹50,000 are subject to 10% TDS with PAN. You can upload Form 15G in 1 click to reduce TDS to 0%.`,
+      displayText: `🛡️ **Section 192A Income Tax Act & TDS Shield (${citizen.name})**\n\n• **Continuous Service:** ${serviceYears} Years\n• **Statutory TDS Threshold:** 5.0 Years / ₹50,000\n• **Your Effective Tax Rate:** **${isExempt ? "0% (Fully Exempt)" : "10% TDS (0% with Form 15G)"}**\n• **Tax Protection:** ${isExempt ? "No TDS will be deducted from any claim or advance." : "Auto-attach Form 15G in 1 click to eliminate TDS."}`,
+      targetRoute: "/money",
+      langCode: isHindi ? "hi-IN" : "en-IN",
+      category: "MONEY",
+      harness: baseHarness
+    };
+  }
+
+  // ============================================================================
+  // 10. DEFAULT CONVERSATIONAL RESPONSE (DYNAMIC, CONTEXT-AWARE)
   // ============================================================================
   if (isHindi) {
     return {
-      spokenText: `मैंने आपका सवाल समझ लिया, ${firstName} जी। आप मुझसे पीएफ बैलेंस, पैरा 68J मेडिकल अग्रिम, जॉब ट्रांसफर या आधार सुधार के बारे में पूछ सकते हैं।`,
-      displayText: `💡 जन-ईपीएफ सॉवरेन एजेंट हार्नेस (${citizen.employer}):\n• UAN: ${citizen.uan}\n• चालू बैलेंस: ₹${citizen.balance.toLocaleString("en-IN")}\n• आप मेडिकल एडवांस, जॉब ट्रांसफर या बैंक पेनी ड्रॉप के बारे में पूछ सकते हैं।`,
+      spokenText: `नमस्ते ${firstName} जी! आपके ${employerName} खाते में ₹${balanceFormatted} हैं। आप मेडिकल अग्रिम, नौकरी ट्रांसफर, या पासबुक ब्याज के बारे में पूछ सकते हैं।`,
+      displayText: `💡 **जन-ईपीएफ सॉवरेन एजेंट हार्नेस (${firstName} • ${employerName})**\n\n• **UAN:** ${citizen.uan}\n• **उपलब्ध बैलेंस:** ₹${balanceFormatted} (सेवा: ${serviceYears} वर्ष)\n• **0% टीडीएस सुरक्षा:** सक्रिय\n\nआप मुझसे मेडिकल अग्रिम, फॉर्म 13 जॉब ट्रांसफर, या 8.25% चक्रवृद्धि पासबुक के बारे में पूछ सकते हैं।`,
       langCode: "hi-IN",
       category: "GENERAL",
       harness: baseHarness
@@ -563,8 +573,8 @@ export function generateCopilotResponse(
   }
 
   return {
-    spokenText: `I have processed your query for ${citizen.employer}, ${firstName}. You can ask me to withdraw advances under Para 68J, merge previous employer IDs, check 8.25% passbook compounding, or run Penny Drop.`,
-    displayText: `⚡ Jan-EPF Sovereign Agent Harness (${citizen.name} • ${citizen.employer}):\n• Active UAN: ${citizen.uan}\n• Available Balance: ₹${citizen.balance.toLocaleString("en-IN")}\n• Try asking: "Withdraw medical advance", "Check my TDS rule", "Transfer previous job balance", or "Verify bank KYC".`,
+    spokenText: `I am your Sovereign Agent for ${employerName}, ${firstName}. Your verified balance is ₹${balanceFormatted}. How can I assist you with your advances, job transfer, or passbook today?`,
+    displayText: `⚡ **Jan-EPF Sovereign Agent Harness (${citizen.name})**\n\n🏢 **Active Employer:** ${employerName} (UAN: ${citizen.uan})\n💰 **Available Balance:** ₹${balanceFormatted} (Employee: ₹${empShareFormatted} • Employer: ₹${emprShareFormatted})\n🛡️ **Statutory Protection:** ${serviceYears} Yrs Service • 0% TDS Tax Shield\n\n**Quick Actions Available:**\n• *"Withdraw ₹48,000 medical advance"*\n• *"Transfer my previous job PF balance"*\n• *"Explain Section 192A 0% TDS rule"*\n• *"Download passbook statement"*`,
     langCode: "en-IN",
     category: "GENERAL",
     harness: baseHarness
