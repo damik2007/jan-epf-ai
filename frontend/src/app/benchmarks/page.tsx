@@ -298,93 +298,82 @@ export default function BenchmarksPage() {
       {activeTab === "latency" && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300 ease-out">
           <div className="w-full bg-gradient-to-br from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl text-white space-y-6 relative overflow-hidden">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-slate-700/80 gap-4 relative z-10">
               <div>
-                <h3 className="text-base font-extrabold text-white">
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800 font-mono">
+                    NATIVE W3C PERFORMANCE API
+                  </span>
+                  <span className="text-xs text-slate-400 font-mono">1,000–10,000 Iterations</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-extrabold text-white mt-1">
                   Live In-Browser Microsecond Latency Benchmark
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Executes real algorithmic iterations directly inside your browser memory using `performance.now()`.
+                <p className="text-xs text-slate-300 mt-1 max-w-2xl">
+                  Executes real algorithmic iterations directly inside your browser memory using <code className="text-amber-300 bg-black/40 px-1 py-0.5 rounded">performance.now()</code>.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 w-full sm:w-auto">
+              <div className="flex items-center gap-3 relative z-10">
                 <select
                   value={iterationsCount}
                   onChange={(e) => setIterationsCount(Number(e.target.value))}
-                  className="px-3 py-2 rounded-xl bg-slate-800/80 text-xs font-bold border border-slate-300 dark:border-slate-700"
+                  disabled={isRunningBench}
+                  className="px-3 py-2 rounded-xl bg-slate-800 text-white text-xs font-bold border border-slate-700 focus:outline-none cursor-pointer"
                 >
                   <option value={100}>100 Iterations</option>
-                  <option value={500}>500 Iterations</option>
                   <option value={1000}>1,000 Iterations</option>
                   <option value={5000}>5,000 Iterations</option>
+                  <option value={10000}>10,000 Iterations</option>
                 </select>
 
                 <button
                   onClick={runInBrowserBenchmarks}
                   disabled={isRunningBench}
-                  className="px-4 py-2 rounded-xl bg-saffron hover:bg-amber-400 text-sovereign-darkest text-xs font-black flex items-center gap-1.5 shadow transition-all disabled:opacity-50"
+                  className="px-4 py-2 rounded-xl bg-saffron hover:bg-amber-400 text-sovereign-darkest font-extrabold text-xs flex items-center gap-1.5 transition-all shadow-md cursor-pointer disabled:opacity-50"
                 >
-                  <Play className="w-3.5 h-3.5" />
-                  <span>{isRunningBench ? "Benchmarking..." : "Run Live Benchmarks"}</span>
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>{isRunningBench ? "Running Suite..." : "Run Live Benchmarks"}</span>
                 </button>
               </div>
             </div>
 
-            {/* Results Display */}
-            {benchResults ? (
-              <div className="overflow-x-auto animate-in fade-in duration-300">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead>
-                    <tr className="bg-slate-800/80/80 text-slate-700 dark:text-slate-300 font-bold">
-                      <th className="p-3 rounded-l-xl">Algorithm / Target</th>
-                      <th className="p-3">Category</th>
-                      <th className="p-3">Mean Latency</th>
-                      <th className="p-3">Median (P50)</th>
-                      <th className="p-3">P99 Latency</th>
-                      <th className="p-3">Target SLA</th>
-                      <th className="p-3 rounded-r-xl">Speedup</th>
+            <div className="overflow-x-auto relative z-10">
+              <table className="w-full text-left text-xs border-collapse font-mono">
+                <thead>
+                  <tr className="bg-slate-800/90 text-slate-200 border-b border-slate-700 font-sans font-bold">
+                    <th className="p-3.5 rounded-l-xl">Algorithm / Target</th>
+                    <th className="p-3.5">Category</th>
+                    <th className="p-3.5">Mean Latency</th>
+                    <th className="p-3.5">Median (P50)</th>
+                    <th className="p-3.5">P99 Latency</th>
+                    <th className="p-3.5">Target SLA</th>
+                    <th className="p-3.5 rounded-r-xl">Speedup vs Cloud</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/80 text-slate-300">
+                  {(benchResults || runBenchmarkSuite(1000)).map((res: any) => (
+                    <tr
+                      key={res.name}
+                      className="hover:bg-slate-800/50 transition-colors"
+                    >
+                      <td className="p-3.5 font-bold font-sans text-white flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                        <span>{res.name}</span>
+                      </td>
+                      <td className="p-3.5 text-slate-400 font-sans">{res.category}</td>
+                      <td className="p-3.5 text-emerald-400 font-black">{res.meanMs.toFixed(4)} ms</td>
+                      <td className="p-3.5 text-emerald-300">{res.p50Ms.toFixed(4)} ms</td>
+                      <td className="p-3.5 text-amber-300">{res.p99Ms.toFixed(3)} ms</td>
+                      <td className="p-3.5 text-slate-400">&lt; {res.targetSlaMs} ms</td>
+                      <td className="p-3.5 text-blue-400 font-bold">{res.speedupVsCloud}</td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-mono">
-                    {benchResults.map((r) => (
-                      <tr key={r.name} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                        <td className="p-3 font-sans font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                          <span>{r.name}</span>
-                        </td>
-                        <td className="p-3 font-sans text-slate-500 dark:text-slate-400">{r.category}</td>
-                        <td className="p-3 font-bold text-emerald-600 dark:text-emerald-400">{r.meanMs} ms</td>
-                        <td className="p-3 text-slate-600 dark:text-slate-300">{r.p50Ms} ms</td>
-                        <td className="p-3 text-amber-600 dark:text-amber-400">{r.p99Ms} ms</td>
-                        <td className="p-3 text-slate-400">&lt; {r.targetSlaMs} ms</td>
-                        <td className="p-3 font-bold text-blue-600 dark:text-blue-400">{r.speedupVsCloud}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <div className="p-10 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border-2 border-dashed border-slate-700/60 flex flex-col items-center justify-center text-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-saffron/20 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-                  <Zap className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-extrabold text-white">
-                    Click "Run Live Benchmarks" to Benchmark Your Browser
-                  </h4>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-md">
-                    Measures real CPU execution time for Levenshtein matching, Form 31 statutory actuary, and 30-year compounding.
-                  </p>
-                </div>
-                <button
-                  onClick={runInBrowserBenchmarks}
-                  className="px-5 py-2 rounded-xl bg-saffron hover:bg-amber-400 text-sovereign-darkest text-xs font-black shadow transition-all"
-                >
-                  Start 1,000-Run Live Benchmark
-                </button>
-              </div>
-            )}
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

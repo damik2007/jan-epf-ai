@@ -46,6 +46,7 @@ export default function FixDetailsHub() {
     activeCitizen,
     updateActiveCitizenKYC,
     updateActiveCitizenName,
+    updateActiveCitizenNomination,
     language,
     apiUrl
   } = useCitizen();
@@ -541,7 +542,10 @@ export default function FixDetailsHub() {
           </div>
 
           <button
-            onClick={() => setNominationSuccess(true)}
+            onClick={() => {
+              setNominationSuccess(true);
+              updateActiveCitizenNomination(nomineeName, nomineeRelation);
+            }}
             className="w-full bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 hover:bg-sovereign-light text-white py-3 rounded-xl font-bold text-xs shadow transition-all flex items-center justify-center gap-2"
           >
             <FileSignature className="w-4 h-4 text-saffron dark:text-slate-950" />

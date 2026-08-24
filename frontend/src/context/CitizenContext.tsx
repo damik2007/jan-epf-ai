@@ -107,6 +107,7 @@ interface CitizenContextType {
   renewDLC: () => void;
   updateActiveCitizenKYC: (bankName: string, accountMasked: string, ifsc: string) => void;
   updateActiveCitizenName: (newName: string) => void;
+  updateActiveCitizenNomination: (nomineeName: string, relationship: string) => void;
   apiUrl: string;
 }
 
@@ -404,7 +405,29 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const updateActiveCitizenName = useCallback((newName: string) => {
     setActiveCitizen((prev) => {
-      const updated = { ...prev, full_name: newName };
+      const updated: Citizen = { ...prev, full_name: newName };
+      setCitizens((all) => {
+        const newAll = all.map((c) => (c.uan === updated.uan ? updated : c));
+        broadcastStateChange(newAll, updated);
+        return newAll;
+      });
+      return updated;
+    });
+  }, []);
+
+  const updateActiveCitizenNomination = useCallback((nomineeName: string, relationship: string) => {
+    setActiveCitizen((prev) => {
+      const updated: Citizen = {
+        ...prev,
+        nomination_details: {
+          nomination_filed: true,
+          suggested_nominee: {
+            name: nomineeName,
+            relationship: relationship,
+            share_percent: 100
+          }
+        }
+      };
       setCitizens((all) => {
         const newAll = all.map((c) => (c.uan === updated.uan ? updated : c));
         broadcastStateChange(newAll, updated);
@@ -436,6 +459,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
         renewDLC,
         updateActiveCitizenKYC,
         updateActiveCitizenName,
+        updateActiveCitizenNomination,
         apiUrl
       }}
     >
