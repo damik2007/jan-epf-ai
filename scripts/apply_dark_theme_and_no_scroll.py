@@ -1,4 +1,6 @@
-"use client";
+# Update frontend/src/app/architecture/page.tsx with dark theme and zero scroll
+
+arch_content = '''"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -316,3 +318,9 @@ export default function ArchitectureResearchPage() {
     </div>
   );
 }
+'''
+
+with open("/Users/damikreddy/Desktop/Hackaton/frontend/src/app/architecture/page.tsx", "w", encoding="utf-8") as f:
+    f.write(arch_content)
+
+print("Updated architecture/page.tsx with Sovereign Dark theme and zero scroll!")

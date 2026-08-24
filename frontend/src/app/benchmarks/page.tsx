@@ -171,8 +171,8 @@ export default function BenchmarksPage() {
         </div>
       </div>
 
-            {/* Island Tab Switcher Capsule */}
-      <div className="flex overflow-x-auto p-1.5 bg-slate-200/80 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-300/80 dark:border-slate-700/80 text-xs font-bold shadow-sm scrollbar-none gap-1.5">
+      {/* Island Tab Switcher Capsule (No Side Scrollbar - Responsive Flex Wrap) */}
+      <div className="w-full flex flex-wrap items-center justify-center gap-1.5 p-1.5 bg-slate-200/80 dark:bg-slate-800/90 backdrop-blur-md rounded-2xl border border-slate-300/80 dark:border-slate-700/80 text-xs font-bold shadow-sm">
         {[
           { id: "evals", label: t.tab3WayEvals || "🧪 3-Way Evals Matrix" },
           { id: "latency", label: t.tab1000RunLatency || "⚡ 1,000-Run Latency Benchmark" },
@@ -183,10 +183,10 @@ export default function BenchmarksPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`px-4 py-2.5 rounded-xl transition-all whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl transition-all ${
               activeTab === tab.id
-                ? "bg-white dark:bg-amber-500 text-sovereign-navy dark:text-slate-950 shadow-sm font-black border border-slate-200 dark:border-amber-400 scale-100"
-                : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-white/40 dark:hover:bg-slate-700/50"
+                ? "bg-sovereign-navy dark:bg-amber-500 text-white dark:text-slate-950 shadow-md font-black ring-2 ring-saffron/40 scale-100"
+                : "text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-700/60"
             }`}
           >
             {tab.label}
