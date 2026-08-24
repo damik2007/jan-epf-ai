@@ -138,6 +138,17 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
     },
     // System Controls
     {
+      id: "action-benchmarks-evals",
+      category: "Evaluator Tools",
+      title: "📊 Evals, Evidence & 1,000-Run Latency Benchmarks",
+      subtitle: "Dedicated proof repository: live in-browser runner, 3-way evals matrix, raw trace console & JSON audit export",
+      icon: Zap,
+      action: () => {
+        router.push("/benchmarks");
+        onClose();
+      }
+    },
+    {
       id: "action-chaos-sandbox",
       category: "Evaluator Tools",
       title: "⚡ Zero-Rejection Chaos Stress-Test Sandbox",

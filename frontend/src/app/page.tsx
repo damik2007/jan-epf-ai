@@ -20,7 +20,8 @@ import {
   HeartHandshake,
   Shield,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  Activity
 } from "lucide-react";
 import { BenchmarkComparison } from "@/components/BenchmarkComparison";
 import { CitizenFeatureMatrix } from "@/components/CitizenFeatureMatrix";
@@ -346,6 +347,14 @@ export default function CitizenLandingPage() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <Link
+              href="/benchmarks"
+              className="text-xs font-bold px-3 py-1.5 bg-emerald-500/15 hover:bg-emerald-600 text-emerald-800 hover:text-white dark:text-emerald-300 dark:hover:text-white border border-emerald-500/40 rounded-xl flex items-center gap-1.5 transition-all shadow-sm"
+              title="Inspect 1,000-run live microsecond benchmarks and 3-way evals"
+            >
+              <Activity className="w-3.5 h-3.5 text-emerald-500" />
+              <span>⚡ Live Benchmarks (&lt;0.05ms)</span>
+            </Link>
             <button
               onClick={() => setChaosSimulatorOpen(true)}
               className="text-xs font-bold px-3 py-1.5 bg-saffron/15 hover:bg-saffron text-sovereign-darkest dark:text-amber-300 dark:hover:text-slate-950 border border-saffron/40 rounded-xl flex items-center gap-1.5 transition-all shadow-sm"

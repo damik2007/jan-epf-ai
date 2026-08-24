@@ -17,7 +17,8 @@ import {
   Zap,
   Sun,
   Moon,
-  Search
+  Search,
+  Activity
 } from "lucide-react";
 
 import { getTranslation } from "@/lib/translations";
@@ -84,6 +85,12 @@ export const Navbar: React.FC = () => {
       href: "/fix",
       icon: Wrench,
       badge: "Penny Drop"
+    },
+    {
+      label: "Benchmarks",
+      href: "/benchmarks",
+      icon: Activity,
+      badge: "<0.05ms"
     }
   ];
 
