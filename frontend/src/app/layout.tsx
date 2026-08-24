@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { VoiceAssistant } from "@/components/VoiceAssistant";
 import { EvaluatorGate } from "@/components/EvaluatorGate";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { SpeedRunTour } from "@/components/SpeedRunTour";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -37,6 +38,7 @@ export default function RootLayout({
               {children}
             </main>
             <VoiceAssistant />
+            <SpeedRunTour />
             <footer className="bg-sovereign-darkest text-slate-400 text-xs border-t border-sovereign-navy py-6 mt-12">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4">

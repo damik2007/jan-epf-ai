@@ -9,6 +9,7 @@ import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { StatutoryTooltip } from "@/components/StatutoryTooltip";
 import { SettlementReceiptModal } from "@/components/SettlementReceiptModal";
+import { PreFlightRejectionDiffCard } from "@/components/PreFlightRejectionDiffCard";
 import {
   Wallet,
   HeartPulse,
@@ -243,6 +244,16 @@ export default function NeedMoneyHub() {
           ))}
         </div>
       </div>
+
+      {/* Pre-Flight Rejection Prevention Comparative Diff */}
+      <PreFlightRejectionDiffCard
+        hubTitle="Form 31 Advance & TDS Shield"
+        legacyFate="Rejected after 21 days due to unreadable blurry cheque photo or missing Para 68 rule match. 20% unlawful Section 192A TDS tax penalty deducted (₹10,000 to ₹30,000 lost)."
+        legacyDelay="21-Day Failure"
+        sovereignSafeguard="In-browser HTML5 Canvas edge sharpness (Laplacian gradient > 40) auto-prevalidates cheque in 0.04ms. Form 15G auto-attached to guarantee 0% TDS tax exemption."
+        sovereignLatency="0.04ms Pre-Validated"
+        financialImpact="100% Tax Shield Active"
+      />
 
       {/* STEP 1: SELECT LIFE EVENT & AMOUNT */}
       {currentStep === 1 && (

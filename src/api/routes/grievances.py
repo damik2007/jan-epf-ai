@@ -17,6 +17,8 @@ router = APIRouter(prefix="/grievances", tags=["Grievances & AI Copilot"])
 
 @router.post("/diagnose", response_model=GrievanceDiagnosisResponse)
 async def diagnose_grievance(req: GrievanceDiagnosisRequest):
+    import time
+    start_ts = time.perf_counter()
     citizen = mock_store.get_citizen(req.uan)
     if not citizen:
         raise HTTPException(
@@ -27,7 +29,8 @@ async def diagnose_grievance(req: GrievanceDiagnosisRequest):
     # 1. Prune description with tiktoken to enforce strict token budget (<256 tokens)
     clean_desc, token_count = prune_context_with_tiktoken(req.complaint_description or "", max_tokens=256)
 
-    # 2. Check if LLM API Key is configured for deep generative triage
+    # 2. Dynamic Model Target
+    target_model = req.model_override if req.model_override in settings.AVAILABLE_MODELS else settings.LLM_MODEL
     api_key = settings.LLM_API_KEY or settings.OPENAI_API_KEY
     if api_key:
         try:
@@ -38,7 +41,7 @@ async def diagnose_grievance(req: GrievanceDiagnosisRequest):
                 f"Return JSON strictly conforming to: root_cause_identified (str), error_code_classification (str), "
                 f"automated_fix_available (bool), recommended_action (str), predicted_resolution_days (int)."
             )
-            async with httpx.AsyncClient(timeout=2.5) as client:
+            async with httpx.AsyncClient(timeout=settings.LLM_REQUEST_TIMEOUT_SEC) as client:
                 llm_resp = await client.post(
                     f"{settings.LLM_API_BASE_URL}/chat/completions",
                     headers={
@@ -46,7 +49,7 @@ async def diagnose_grievance(req: GrievanceDiagnosisRequest):
                         "Content-Type": "application/json"
                     },
                     json={
-                        "model": settings.LLM_MODEL,
+                        "model": target_model,
                         "messages": [
                             {"role": "system", "content": "You are an expert EPFO compliance and claims arbitrator."},
                             {"role": "user", "content": prompt}
@@ -56,16 +59,22 @@ async def diagnose_grievance(req: GrievanceDiagnosisRequest):
                     }
                 )
                 if llm_resp.status_code == 200:
+                    latency = round((time.perf_counter() - start_ts) * 1000, 2)
                     data = llm_resp.json()
                     content = data["choices"][0]["message"]["content"]
                     parsed = json.loads(content)
                     parsed["uan"] = req.uan
-                    return AntiHallucinationGuard.validate_or_correct(GrievanceDiagnosisResponse, parsed)
+                    validated = AntiHallucinationGuard.validate_or_correct(GrievanceDiagnosisResponse, parsed)
+                    validated.model_served = target_model
+                    validated.tokens_ingested = token_count
+                    validated.inference_latency_ms = latency
+                    return validated
         except Exception:
             # Fall back safely to deterministic sovereign engine
             pass
 
-    # 2. Deterministic Sovereign Engine Fallback (Sub-5ms, $0 cost)
+    # 3. Deterministic Sovereign Engine Fallback (Sub-5ms, $0 cost)
+    latency = round((time.perf_counter() - start_ts) * 1000, 2)
     diagnosis = triage_grievance_root_cause(
         uan=req.uan,
         complaint_category=req.complaint_category,
@@ -80,7 +89,10 @@ async def diagnose_grievance(req: GrievanceDiagnosisRequest):
         automated_fix_available=diagnosis["automated_fix_available"],
         recommended_action=diagnosis["recommended_action"],
         auto_remediation_status="READY_TO_TRIGGER",
-        predicted_resolution_days=diagnosis["predicted_resolution_days"]
+        predicted_resolution_days=diagnosis["predicted_resolution_days"],
+        model_served="DETERMINISTIC_SOVEREIGN_CORE (Levenshtein + Rule Matrix)",
+        tokens_ingested=token_count,
+        inference_latency_ms=latency
     )
 
 

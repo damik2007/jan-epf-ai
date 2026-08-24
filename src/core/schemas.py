@@ -248,6 +248,7 @@ class GrievanceDiagnosisRequest(BaseModel):
     uan: str
     complaint_category: str
     complaint_description: str
+    model_override: Optional[str] = None
 
 
 class GrievanceDiagnosisResponse(BaseModel):
@@ -258,6 +259,9 @@ class GrievanceDiagnosisResponse(BaseModel):
     recommended_action: str
     auto_remediation_status: Optional[str] = None
     predicted_resolution_days: int = 1
+    model_served: Optional[str] = "DETERMINISTIC_SOVEREIGN_CORE"
+    tokens_ingested: Optional[int] = 0
+    inference_latency_ms: Optional[float] = 0.0
 
 
 # ==============================================================================

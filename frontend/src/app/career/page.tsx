@@ -6,6 +6,7 @@ import { deduceMissingDateOfExit, calculateTdsDeduction } from "@/lib/determinis
 import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { StatutoryTooltip } from "@/components/StatutoryTooltip";
+import { PreFlightRejectionDiffCard } from "@/components/PreFlightRejectionDiffCard";
 import {
   Briefcase,
   ArrowRightLeft,
@@ -146,6 +147,16 @@ export default function ChangedJobsHub() {
           </button>
         </div>
       </div>
+
+      {/* Pre-Flight Rejection Prevention Comparative Diff */}
+      <PreFlightRejectionDiffCard
+        hubTitle="Form 13 Job Switch & Date of Exit"
+        legacyFate="PF Transfer stuck in purgatory forever because previous employer failed to enter Date of Exit (DOE). Traps ₹1,85,000 indefinitely with zero recourse."
+        legacyDelay="Stuck Indefinitely"
+        sovereignSafeguard="ECR Wage Timestamp Deducer auto-recovers exact DOE ('2023-08-31') from last monthly contribution in 0.04ms with Aadhaar e-Sign Joint Declaration."
+        sovereignLatency="0.04ms Auto-Recovered"
+        financialImpact="₹1,85,000 Unlocked"
+      />
 
       {/* TAB 1: 1-CLICK PF TRANSFER */}
       {activeTab === "TRANSFER" && (

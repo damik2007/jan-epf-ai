@@ -511,6 +511,44 @@ export const VoiceAssistant: React.FC = () => {
             </div>
           )}
 
+          {/* 1-Tap Vernacular Voice Test Pills for Evaluators */}
+          <div className="space-y-1 pt-1 border-t border-slate-200 dark:border-slate-800">
+            <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 font-bold">
+              <span>⚡ 1-Tap Indic Voice Test Prompts:</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-mono">Whisper ASR • ₹0 Bill</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                onClick={() => handleProcessUserMessage("मुझे अस्पताल के लिए ₹50,000 एडवांस चाहिए")}
+                className="px-2 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-[10px] font-bold hover:bg-amber-100 transition-all text-left"
+              >
+                🇮🇳 [हिंदी] ₹50k मेडिकल एडवांस
+              </button>
+              <button
+                type="button"
+                onClick={() => handleProcessUserMessage("నా పాత కంపెనీ PF బ్యాలెన్స్ బదిలీ చేయండి")}
+                className="px-2 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-900 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-[10px] font-bold hover:bg-blue-100 transition-all text-left"
+              >
+                🇮🇳 [తెలుగు] PF ఖాతా బదిలీ
+              </button>
+              <button
+                type="button"
+                onClick={() => handleProcessUserMessage("எனது மொத்த சேமிப்பு மற்றும் வட்டி விவரங்கள்")}
+                className="px-2 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/40 text-purple-900 dark:text-purple-300 border border-purple-200 dark:border-purple-800 text-[10px] font-bold hover:bg-purple-100 transition-all text-left"
+              >
+                🇮🇳 [தமிழ்] 8.25% வட்டி பாஸ்புக்
+              </button>
+              <button
+                type="button"
+                onClick={() => handleProcessUserMessage("Fix 1-letter name typo from Aadhaar")}
+                className="px-2 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold hover:bg-emerald-100 transition-all text-left"
+              >
+                🇬🇧 [English] Fix Aadhaar Typo
+              </button>
+            </div>
+          </div>
+
           {/* Input Form */}
           <form
             onSubmit={(e) => {

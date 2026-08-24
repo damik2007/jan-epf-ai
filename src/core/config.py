@@ -27,6 +27,8 @@ class Settings(BaseSettings):
     LLM_API_KEY: str = "sec_epf_internal_98a7b6c5d4e3f2a1"
     LLM_MODEL: str = "llama3.2:3b"
     LLM_API_BASE_URL: str = "http://jan-epf-llm.internal.whitesea-6aaf591b.centralindia.azurecontainerapps.io:11434/v1"
+    AVAILABLE_MODELS: list[str] = ["llama3.2:3b", "gemma2:2b", "gemma4:e2b", "qwen2.5:3b"]
+    LLM_REQUEST_TIMEOUT_SEC: float = 2.5
 
     # Integration & Deployment Tokens
     GITHUB_TOKEN: Optional[str] = None

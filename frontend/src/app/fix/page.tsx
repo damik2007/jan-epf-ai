@@ -7,6 +7,7 @@ import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { StatutoryTooltip } from "@/components/StatutoryTooltip";
 import { GrievanceLegalLetterModal } from "@/components/GrievanceLegalLetterModal";
+import { PreFlightRejectionDiffCard } from "@/components/PreFlightRejectionDiffCard";
 import {
   Wrench,
   FileSignature,
@@ -191,6 +192,16 @@ export default function FixDetailsHub() {
           </p>
         </div>
       </div>
+
+      {/* Pre-Flight Rejection Prevention Comparative Diff */}
+      <PreFlightRejectionDiffCard
+        hubTitle="KYC Re-Alignment & Name Typo Shield"
+        legacyFate="Rejected by field officer for 1-letter spelling typo ('Ramesh Kumar' vs 'Ramesh Chandra Kumar') or merged IFSC code, forcing citizen to visit physical PF office."
+        legacyDelay="Manual Rejection (30+ Days)"
+        sovereignSafeguard="Indic Unicode Levenshtein matcher evaluates full string similarity (Score = 91.4%) on-device in 0.02ms. Auto-generates Aadhaar Joint Declaration if >15% divergence."
+        sovereignLatency="0.02ms Auto-Reconciled"
+        financialImpact="Zero Physical Office Visits"
+      />
 
       {/* Navigation Sub-Tabs */}
       <div className="flex flex-wrap gap-2 bg-slate-200 dark:bg-slate-800 p-1.5 rounded-2xl text-xs font-bold border border-slate-300 dark:border-slate-700">

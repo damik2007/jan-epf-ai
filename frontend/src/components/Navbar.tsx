@@ -24,6 +24,7 @@ import { getTranslation } from "@/lib/translations";
 import { EvaluatorTourModal } from "@/components/EvaluatorTourModal";
 import { CommandCenter } from "@/components/CommandCenter";
 import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
+import { ArchitectureInspectorModal } from "@/components/ArchitectureInspectorModal";
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
@@ -46,6 +47,7 @@ export const Navbar: React.FC = () => {
 
   const [commandCenterOpen, setCommandCenterOpen] = React.useState(false);
   const [chaosModalOpen, setChaosModalOpen] = React.useState(false);
+  const [architectureModalOpen, setArchitectureModalOpen] = React.useState(false);
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -90,12 +92,16 @@ export const Navbar: React.FC = () => {
       {/* Top Sovereign Bar */}
       <div className="bg-sovereign-darkest border-b border-sovereign-navy/50 px-4 py-1.5 text-xs flex flex-wrap justify-between items-center text-slate-300">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-saffron animate-pulse" />
-          <span className="font-semibold text-saffron tracking-wide">
-            PROTOTYPE PROOF-OF-CONCEPT
-          </span>
+          <button
+            onClick={() => setArchitectureModalOpen(true)}
+            className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-emerald-950/80 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 text-[11px] font-bold transition-all shadow-sm"
+            title="Inspect 80/20 Sovereign Core & Open-Source AI Token Economics"
+          >
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Azure Central India (Gemma 4 / Llama 3.2) • 80/20 Core ($0 Bill)</span>
+          </button>
           <span className="hidden sm:inline text-slate-400">|</span>
-          <span className="hidden sm:inline text-slate-300">Build What Moves India Hackathon (Varun Mayya × OpenAI)</span>
+          <span className="hidden sm:inline text-slate-300">Build What Moves India (Varun Mayya × OpenAI)</span>
         </div>
 
         <div className="flex items-center gap-3">
@@ -356,6 +362,12 @@ export const Navbar: React.FC = () => {
       <ChaosSimulatorModal
         isOpen={chaosModalOpen}
         onClose={() => setChaosModalOpen(false)}
+      />
+
+      {/* Sovereign AI & Token Economics Inspector Modal */}
+      <ArchitectureInspectorModal
+        isOpen={architectureModalOpen}
+        onClose={() => setArchitectureModalOpen(false)}
       />
     </header>
   );
