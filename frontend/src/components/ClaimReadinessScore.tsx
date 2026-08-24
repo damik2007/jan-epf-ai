@@ -74,15 +74,15 @@ export function ClaimReadinessScore() {
           </div>
           <div>
             <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-              <span>Claim Readiness Score</span>
+              <span>{t.claimReadinessTitle || "Claim Readiness Score"}</span>
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                {activeCitizen.full_name.split(" ")[0]}&apos;s Live Record
+                {activeCitizen.full_name.split(" ")[0]} ({t.claimReadinessLiveRecord || "Live Record"})
               </span>
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
               {score >= 95
-                ? "All critical statutory criteria verified. 99% instant automated DBT approval probability."
-                : "A few non-critical items pending. High probability of fast clearance."}
+                ? (t.claimReadinessHighDesc || "All critical statutory criteria verified. 99% instant automated DBT approval probability.")
+                : (t.claimReadinessPendingDesc || "A few non-critical items pending. High probability of fast clearance.")}
             </p>
           </div>
         </div>
@@ -107,28 +107,36 @@ export function ClaimReadinessScore() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 pt-2 text-xs font-medium">
         <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-          <span className="text-slate-700 dark:text-slate-300 truncate">Bank KYC ({activeCitizen.bank_kyc?.bank_name || "Active"})</span>
+          <span className="text-slate-700 dark:text-slate-300 truncate">
+            {t.readinessBankKYC || "Bank KYC"} ({activeCitizen.bank_kyc?.bank_name || "Active"})
+          </span>
         </div>
 
         <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-          <span className="text-slate-700 dark:text-slate-300 truncate">Aadhaar Seeded</span>
+          <span className="text-slate-700 dark:text-slate-300 truncate">
+            {t.readinessAadhaarSeeded || "Aadhaar Seeded"}
+          </span>
         </div>
 
         <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-          <span className="text-slate-700 dark:text-slate-300 truncate">PAN Linked</span>
+          <span className="text-slate-700 dark:text-slate-300 truncate">
+            {t.readinessPanLinked || "PAN Linked"}
+          </span>
         </div>
 
         <div className="flex items-center gap-1.5 p-2 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
           <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-          <span className="text-slate-700 dark:text-slate-300 truncate">Employment Active</span>
+          <span className="text-slate-700 dark:text-slate-300 truncate">
+            {t.readinessEmploymentActive || "Employment Active"}
+          </span>
         </div>
 
         {isNominationFiled ? (
           <div className="flex items-center gap-1.5 p-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-bold">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-            <span className="truncate">e-Nomination (₹7L Active)</span>
+            <span className="truncate">{t.readinessNominationActive || "e-Nomination (₹7L Active)"}</span>
           </div>
         ) : (
           <Link
@@ -137,7 +145,7 @@ export function ClaimReadinessScore() {
             title="Click to file e-Nomination & activate ₹7L free life insurance"
           >
             <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-            <span className="truncate font-bold">e-Nomination (Pending) ↗</span>
+            <span className="truncate font-bold">{t.readinessNominationPending || "e-Nomination (Pending) ↗"}</span>
           </Link>
         )}
       </div>

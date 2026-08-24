@@ -290,10 +290,10 @@ export default function CitizenLandingPage() {
           <div className="space-y-3 max-w-2xl">
             <div className="flex flex-wrap items-center gap-3">
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-saffron text-sovereign-darkest">
-                CITIZEN REDESIGN PROTOTYPE
+                {t.citizenRedesignBadge || "CITIZEN REDESIGN PROTOTYPE"}
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-medium bg-emerald-950/60 text-emerald-300 border border-emerald-800/50 flex items-center gap-1.5 shadow-sm">
-                🛡️ DPDP Protected Account ID
+                {t.dpdpProtectedBadge || "🛡️ DPDP Protected Account ID"}
               </span>
             </div>
 
@@ -344,7 +344,7 @@ export default function CitizenLandingPage() {
                 title="Switch persona or logout"
               >
                 <LogOut className="w-3 h-3 text-saffron" />
-                <span>Switch Profile</span>
+                <span>{t.switchProfileBtn || "Switch Profile"}</span>
               </button>
             </div>
 
@@ -363,7 +363,7 @@ export default function CitizenLandingPage() {
               </div>
               <div className="flex items-center gap-1.5 text-xs bg-white/10 px-3 py-1 rounded-lg backdrop-blur-sm border border-white/10 text-amber-300 font-bold">
                 <Zap className="w-3.5 h-3.5 text-amber-300" />
-                <span>8.25% Sovereign Rate Active</span>
+                <span>{t.sovereignRateBadge || "8.25% Sovereign Rate Active"}</span>
               </div>
             </div>
           </div>
@@ -393,13 +393,13 @@ export default function CitizenLandingPage() {
             </div>
             <div className="space-y-2 pt-2 border-t border-white/10 text-xs text-slate-200 font-mono">
               <div className="flex justify-between items-center">
-                <span className="text-slate-300">Employee Share (12%):</span>
+                <span className="text-slate-300">{t.employeeShareLabel || "Employee Share (12%):"}</span>
                 <span className="font-bold text-white">
                   {privacyMode ? "₹ ••••••" : `₹${employeeShare.toLocaleString("en-IN")}`}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-slate-300">FY Interest (8.25%):</span>
+                <span className="text-slate-300">{t.fyInterestLabel || "FY Interest (8.25%):"}</span>
                 <span className="font-bold text-amber-300">
                   {privacyMode ? "₹ •••••" : `₹${interestEarned.toLocaleString("en-IN")}`}
                 </span>
