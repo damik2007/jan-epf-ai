@@ -80,6 +80,9 @@ export default function LoginPage() {
   const handle1ClickLogin = (uan: string) => {
     setLoggingIn(true);
     switchCitizen(uan);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("jan_epf_just_logged_in", "true");
+    }
     if (uan === "100112233445") {
       setSeniorMode(true);
     }

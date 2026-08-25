@@ -42,12 +42,13 @@ export default function CitizenLandingPage() {
   const [privacyMode, setPrivacyMode] = useState<boolean>(true);
   const [uanCopied, setUanCopied] = useState<boolean>(false);
 
-  // Automatically show the Citizen Onboarding Guide on persona entry/switch in new session
+  // Automatically show the Citizen Onboarding Guide ONLY on fresh login or persona switch into account home page
   useEffect(() => {
     if (isAuthenticated && activeCitizen && activeCitizen.uan) {
       if (typeof window !== "undefined") {
-        const viewed = sessionStorage.getItem(`jan_epf_session_onboarded_${activeCitizen.uan}`);
-        if (!viewed) {
+        const justLoggedIn = sessionStorage.getItem("jan_epf_just_logged_in");
+        if (justLoggedIn === "true") {
+          sessionStorage.removeItem("jan_epf_just_logged_in"); // Consume it so future visits to / don't pop up!
           const timer = setTimeout(() => {
             setOnboardingModalOpen(true);
           }, 200);
@@ -59,8 +60,8 @@ export default function CitizenLandingPage() {
 
   const handleCloseOnboarding = () => {
     setOnboardingModalOpen(false);
-    if (typeof window !== "undefined" && activeCitizen?.uan) {
-      sessionStorage.setItem(`jan_epf_session_onboarded_${activeCitizen.uan}`, "true");
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("jan_epf_just_logged_in");
     }
   };
 

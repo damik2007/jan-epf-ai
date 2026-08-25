@@ -277,6 +277,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       try {
         sessionStorage.setItem("jan_epf_auth", "true");
         sessionStorage.setItem("jan_epf_uan", uan);
+        sessionStorage.setItem("jan_epf_just_logged_in", "true");
         localStorage.setItem(STORAGE_KEY_ACTIVE_UAN, uan);
       } catch {}
     }
@@ -287,6 +288,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     try {
       sessionStorage.removeItem("jan_epf_auth");
       sessionStorage.removeItem("jan_epf_uan");
+      sessionStorage.removeItem("jan_epf_just_logged_in");
       localStorage.removeItem(STORAGE_KEY_ACTIVE_UAN);
     } catch {}
   }, []);
@@ -299,6 +301,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
       try {
         sessionStorage.setItem("jan_epf_auth", "true");
         sessionStorage.setItem("jan_epf_uan", uan);
+        sessionStorage.setItem("jan_epf_just_logged_in", "true");
         localStorage.setItem(STORAGE_KEY_ACTIVE_UAN, uan);
       } catch {}
     }
