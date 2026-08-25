@@ -547,8 +547,15 @@ export const VoiceAssistant: React.FC = () => {
     prevUanRef.current = uan;
 
     if (typeof window !== "undefined" && !isLoginPage) {
+      // Clean legacy chat history across all accounts
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("jan_epf_harness_history_") && !key.startsWith("jan_epf_chat_v4_clean_")) {
+          localStorage.removeItem(key);
+        }
+      });
+
       try {
-        const storageKey = `jan_epf_harness_history_${uan}`;
+        const storageKey = `jan_epf_chat_v4_clean_${uan}`;
         const saved = localStorage.getItem(storageKey);
         if (saved) {
           const parsed = JSON.parse(saved);
@@ -573,21 +580,26 @@ export const VoiceAssistant: React.FC = () => {
   useEffect(() => {
     if (typeof window !== "undefined" && uan && messages.length > 0 && prevUanRef.current === uan && !isLoginPage) {
       try {
-        localStorage.setItem(`jan_epf_harness_history_${uan}`, JSON.stringify(messages));
+        localStorage.setItem(`jan_epf_chat_v4_clean_${uan}`, JSON.stringify(messages));
       } catch {}
     }
   }, [messages, uan, isLoginPage]);
 
   const handleClearHistory = useCallback(() => {
-    if (typeof window !== "undefined" && uan && !isLoginPage) {
-      localStorage.removeItem(`jan_epf_harness_history_${uan}`);
+    if (typeof window !== "undefined") {
+      // Purge all chat histories across all persona accounts
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("jan_epf_harness_history_") || key.startsWith("jan_epf_chat_v4_clean_")) {
+          localStorage.removeItem(key);
+        }
+      });
     }
     stopNeuralSpeech();
     setIsSpeaking(false);
     const initial = generateInitialGreeting();
     setMessages([initial]);
     setTurnCounter(1);
-  }, [uan, isLoginPage, generateInitialGreeting]);
+  }, [generateInitialGreeting]);
 
   useEffect(() => {
     setActiveSpeechLang(language || "en-IN");

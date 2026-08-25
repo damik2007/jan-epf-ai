@@ -99,6 +99,7 @@ export interface CopilotReply {
     | "PENSION"
     | "INSURANCE"
     | "GENERAL"
+    | "CAPABILITIES"
     | "HARNESS_ACTION"
     | "GUARDRAIL_BLOCKED";
   harness: HarnessLayerBreakdown;
@@ -132,8 +133,23 @@ function computeLevenshtein(a: string, b: string): number {
   return d[m][n];
 }
 
+const STOP_WORDS = new Set([
+  "a", "an", "the", "in", "on", "at", "by", "for", "with", "about", "against",
+  "between", "into", "through", "during", "before", "after", "above", "below",
+  "to", "from", "up", "down", "out", "off", "over", "under", "again",
+  "further", "then", "once", "here", "there", "when", "where", "why", "how",
+  "all", "any", "both", "each", "few", "more", "most", "other", "some", "such",
+  "no", "nor", "not", "only", "own", "same", "so", "than", "too", "very",
+  "can", "will", "just", "don", "should", "now", "do", "does", "did", "doing",
+  "u", "you", "your", "yours", "me", "my", "myself", "we", "our", "ours", "he", "him", "his", "what"
+]);
+
 function wordSimilarity(word: string, target: string): number {
   if (word === target) return 1.0;
+  // Guard against short-word false positives (e.g. "do" matching "doe")
+  if (word.length <= 3 || target.length <= 3) {
+    return word === target ? 1.0 : 0.0;
+  }
   if (word.includes(target) || target.includes(word)) return 0.92;
   const maxLen = Math.max(word.length, target.length);
   if (maxLen === 0) return 1.0;
@@ -154,7 +170,8 @@ function matchFuzzyKeywords(words: string[], targetKeywords: string[], threshold
   let matchedTarget = "";
 
   for (const word of words) {
-    if (word.length < 2) continue;
+    if (word.length < 3) continue;
+    if (STOP_WORDS.has(word)) continue;
     for (const target of targetKeywords) {
       const score = wordSimilarity(word, target);
       if (score > bestScore) {
@@ -326,6 +343,39 @@ export function generateCopilotResponse(
       displayText: "🛡️ **Sovereign Guardrail Layer 05: ACTION BLOCKED**\n• **Standard:** NeMo / Llama Guard Zero-Trust Boundary\n• **Threat Intercepted:** Adversarial Prompt Injection / System Override Payload\n• **Security Enforcement:** Zero PII leakage. Statutory caps and client sandbox preserved.",
       langCode: "en-IN",
       category: "GUARDRAIL_BLOCKED",
+      harness: baseHarness
+    };
+  }
+
+  // ============================================================================
+  // 1.5 CAPABILITIES & FEATURE DISCOVERY INTENT (High-Priority Bypass)
+  // ============================================================================
+  const isCapabilitiesQuery =
+    /what\s+(all\s+)?(can\s+(you|u)\s+do|are\s+your\s+(features|capabilities)|features|can\s+we\s+do)/i.test(rawClean) ||
+    /\b(help|capabilities|features|superpowers|guide|options|commands|all\s+features)\b/i.test(rawClean) ||
+    /kya\s+(kar\s+sakte\s+ho|kya\s+kar\s+sakte\s+ho|features\s+hai)/i.test(rawClean) ||
+    tokens.includes("help") ||
+    tokens.includes("features") ||
+    tokens.includes("capabilities");
+
+  if (isCapabilitiesQuery) {
+    baseHarness.memoryLayer.lastTopic = "CAPABILITIES_GUIDE";
+
+    if (isHindi) {
+      return {
+        spokenText: `जन-ईपीएफ एआई एक सॉवरेन कोपायलट है। मैं आपातकालीन मेडिकल अग्रिम, नौकरी बदलने पर खाता ट्रांसफर, बैंक पेनी ड्रॉप सत्यापन, और 8.25% चक्रवृद्धि पासबुक की सुविधा प्रदान करता हूँ।`,
+        displayText: `⚡ **जन-ईपीएफ एआई सॉवरेन कोपायलट क्या कर सकता है:**\n\n1. 🏥 **1-क्लिक मेडिकल अग्रिम (पैरा 68J)**: ₹1.56 लाख तक 0.04 मिलीसेकंड में बिना किसी नियोक्ता हस्तक्षेप के।\n2. 🔄 **स्वचालित फॉर्म 13 नौकरी ट्रांसफर**: ईसीआर वेतन चालान से एग्जिट डेट स्वतः निकालना।\n3. 🏦 **200ms एनपीसीआई पेनी ड्रॉप**: बैंक खाता सत्यापन और ₹7 लाख मुफ्त ईडीएलआई बीमा।\n4. 📊 **ट्रिपल-स्प्लिट पासबुक (8.25%)**: 12% + 3.67% + 8.33% पेंशन ट्रैकिंग।\n5. 🛡️ **0% टीडीएस सुरक्षा**: धारा 192A के तहत कर छूट फॉर्म 15G।\n6. 🌐 **13 भारतीय भाषाएं**: 23 क्षेत्रीय आवाजों में रीयल-टाइम वॉयस।`,
+        langCode: "hi-IN",
+        category: "CAPABILITIES",
+        harness: baseHarness
+      };
+    }
+
+    return {
+      spokenText: `Jan-EPF AI is India's sovereign EPF copilot with 6 superpowers: 1-Click emergency medical advances under Para 68J, autonomous Form 13 job transfers with exit date deduction, sub-200ms NPCI penny drop bank KYC, triple-split passbook with 8.25% compounding, zero PII leakage privacy mode, and 13 native Indic languages.`,
+      displayText: `⚡ **What Jan-EPF AI Can Do (Sovereign Superpowers)**\n\nI am India's first 80/20 Sovereign Copilot for EPF & Pension. Here is what I can do for **${citizen.name}**:\n\n1. 🏥 **1-Click Emergency Medical Advance (Para 68J)**\n   • 0.04ms mathematical sanction limit (₹1.56L eligible).\n   • Section 192A 0% TDS Form 15G auto-attached.\n   • *Try:* "Withdraw ₹48,000 emergency medical advance"\n\n2. 🔄 **Autonomous Form 13 Job Transfer & ECR Deduction**\n   • Auto-deduces missing exit dates from monthly ECR wage timestamps.\n   • 1-Click consolidation of prior trapped balances.\n   • *Try:* "Transfer my previous job PF balance"\n\n3. 🏦 **Sub-200ms NPCI Bank Penny Drop & KYC**\n   • Wagner-Fischer fuzzy name reconciler (>85% phonetic match).\n   • Claim Readiness Score jumps from 78% ➔ 98%.\n   • Activates free ₹7 Lakh statutory EDLI life insurance.\n   • *Try:* "Run 1-Click NPCI Penny Drop Bank KYC"\n\n4. 📊 **Triple-Split Passbook & 8.25% Compounding**\n   • Employee (12%) + Employer (3.67%) + EPS-95 (8.33%).\n   • 8.25% annual interest on monthly running balance.\n   • *Try:* "What is my current passbook balance breakdown?"\n\n5. 🛡️ **Zero PII Leakage & Discreet Privacy (DPDP Act 2023)**\n   • Presidio PII tokenization & on-screen animated masking (Cmd/Ctrl + P).\n   • *Try:* "Toggle discreet privacy mode"\n\n6. 🌐 **13 Native Indic Regional Languages**\n   • Real-time Whisper + Bhashini neural voice synthesis in 23 dialects.\n   • *Try:* "Switch to Hindi language"`,
+      langCode: "en-IN",
+      category: "CAPABILITIES",
       harness: baseHarness
     };
   }

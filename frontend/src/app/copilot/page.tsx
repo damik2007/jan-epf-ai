@@ -389,8 +389,15 @@ export default function CopilotWorkstationPage() {
     prevUanRef.current = uan;
 
     if (typeof window !== "undefined") {
+      // Clear legacy chat history across all accounts
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("jan_epf_harness_history_") && !key.startsWith("jan_epf_chat_v4_clean_")) {
+          localStorage.removeItem(key);
+        }
+      });
+
       try {
-        const storageKey = `jan_epf_harness_history_${uan}`;
+        const storageKey = `jan_epf_chat_v4_clean_${uan}`;
         const saved = localStorage.getItem(storageKey);
         if (saved) {
           const parsed = JSON.parse(saved);
@@ -416,15 +423,20 @@ export default function CopilotWorkstationPage() {
   useEffect(() => {
     if (typeof window !== "undefined" && uan && messages.length > 0 && prevUanRef.current === uan) {
       try {
-        localStorage.setItem(`jan_epf_harness_history_${uan}`, JSON.stringify(messages));
+        localStorage.setItem(`jan_epf_chat_v4_clean_${uan}`, JSON.stringify(messages));
       } catch {}
     }
   }, [messages, uan]);
 
   // Clear History
   const handleClearHistory = () => {
-    if (typeof window !== "undefined" && uan) {
-      localStorage.removeItem(`jan_epf_harness_history_${uan}`);
+    if (typeof window !== "undefined") {
+      // Purge all chat histories across all persona accounts
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("jan_epf_harness_history_") || key.startsWith("jan_epf_chat_v4_clean_")) {
+          localStorage.removeItem(key);
+        }
+      });
     }
     stopNeuralSpeech();
     setIsSpeaking(false);
