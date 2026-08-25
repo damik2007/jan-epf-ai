@@ -42,13 +42,16 @@ export default function CitizenLandingPage() {
   const [privacyMode, setPrivacyMode] = useState<boolean>(true);
   const [uanCopied, setUanCopied] = useState<boolean>(false);
 
-  // Automatically show the Citizen Onboarding Guide on persona entry/switch if not already viewed for this persona
+  // Automatically show the Citizen Onboarding Guide on persona entry/switch in new session
   useEffect(() => {
     if (isAuthenticated && activeCitizen && activeCitizen.uan) {
       if (typeof window !== "undefined") {
-        const viewed = localStorage.getItem(`jan_epf_onboarded_v2_${activeCitizen.uan}`);
+        const viewed = sessionStorage.getItem(`jan_epf_session_onboarded_${activeCitizen.uan}`);
         if (!viewed) {
-          setOnboardingModalOpen(true);
+          const timer = setTimeout(() => {
+            setOnboardingModalOpen(true);
+          }, 200);
+          return () => clearTimeout(timer);
         }
       }
     }
@@ -57,7 +60,7 @@ export default function CitizenLandingPage() {
   const handleCloseOnboarding = () => {
     setOnboardingModalOpen(false);
     if (typeof window !== "undefined" && activeCitizen?.uan) {
-      localStorage.setItem(`jan_epf_onboarded_v2_${activeCitizen.uan}`, "true");
+      sessionStorage.setItem(`jan_epf_session_onboarded_${activeCitizen.uan}`, "true");
     }
   };
 
