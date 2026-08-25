@@ -124,9 +124,9 @@ export function CitizenAccountOnboardingModal({
     },
     {
       step: 4,
-      badge: "Step 4 of 4 • Sovereign AI Copilot",
+      badge: "Step 4 of 4 • Sovereign AI Agent",
       badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40",
-      title: "⚡ 24/7 Sovereign AI Copilot & Autonomous Problem Solver",
+      title: "⚡ 24/7 Sovereign AI Agent & Autonomous Problem Solver",
       subtitle: "80/20 Deterministic Engine • 13 Indic Regional Languages",
       icon: Bot,
       accentColor: "from-amber-500 to-saffron",
@@ -137,7 +137,7 @@ export function CitizenAccountOnboardingModal({
         `Instant Answers: Ask anything about your PF balance, pension slips, tax exemptions, or claim pre-flights.`
       ],
       highlightBox: {
-        label: "AI Copilot Response Time",
+        label: "AI Agent Response Time",
         val: "<0.05ms (0ms / ₹0.00)",
         sub: "6-Layer Sovereign Harness • 100% Statutory Precision"
       }
