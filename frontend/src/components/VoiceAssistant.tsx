@@ -37,11 +37,14 @@ import {
   HelpCircle,
   BookOpen,
   ArrowRight,
-  LogIn
+  LogIn,
+  Coins,
+  HeartHandshake
 } from "lucide-react";
 import { getTranslation } from "@/lib/translations";
 import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown, CitizenContextData } from "@/lib/voiceCopilotBrain";
 import { playNeuralSpeech, stopNeuralSpeech, ALL_INDIC_VOICES, IndicVoiceMetadata } from "@/lib/edgeTtsPlayer";
+import { AIAgentProductGuideModal } from "./AIAgentProductGuideModal";
 
 interface ChatMessage {
   id: string;
@@ -56,7 +59,6 @@ interface ChatMessage {
   source?: string;
 }
 
-// Hoisted Static Regexes & Constants (Rule: js-hoist-regexp, rendering-hoist-jsx)
 const BULLET_PREFIX_REGEX = /^[•\-\*]\s*/;
 const MARKDOWN_TOKEN_REGEX = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
 
@@ -77,67 +79,74 @@ const INDIC_LANG_FILTERS = [
   { id: "en", label: "English" }
 ] as const;
 
-// 8 Interactive Capabilities for the Big-Tech Discovery Guide
-const AGENT_CAPABILITIES = [
+// 8 Master Capabilities for the Big-Tech Discovery Guide
+const ALL_MASTER_CAPABILITIES = [
   {
     title: "1-Click Medical Advance (Para 68J)",
     desc: "Calculates 6-month basic wage limit with Section 192A 0% TDS Form 15G auto-attachment in <0.05ms.",
     prompt: "Withdraw ₹48,000 emergency medical advance under Para 68J",
     badge: "0% TDS Shield",
-    badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+    badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+    icon: Coins
   },
   {
     title: "Autonomous Job Transfer (Form 13)",
     desc: "Derives missing Date of Exit (DOE) from last monthly ECR wage deposit without HR paperwork.",
     prompt: "Transfer my previous job PF balance and deduce exit date",
     badge: "ECR Timestamp",
-    badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/40"
+    badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/40",
+    icon: Building2
   },
   {
     title: "Sub-200ms NPCI Penny Drop & KYC",
     desc: "Validates bank account holders and reconciles spelling differences via Wagner-Fischer distance.",
     prompt: "Run 1-Click NPCI Penny Drop Bank KYC verification",
     badge: "Wagner-Fischer",
-    badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
+    badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+    icon: ShieldCheck
   },
   {
     title: "Triple-Split Passbook & Compounding",
     desc: "Splits corpus into Employee (12%), Employer (3.67%), and EPS-95 (8.33%) with 8.25% FY growth.",
     prompt: "What is my current passbook balance breakdown?",
     badge: "8.25% FY Growth",
-    badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40"
+    badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40",
+    icon: Activity
   },
   {
     title: "Section 192A TDS Tax Exemption",
     desc: "Enforces 5-year continuous service rule and auto-generates Form 15G to prevent 10% tax deduction.",
     prompt: "Explain Section 192A 0% TDS rule",
     badge: "Tax Protection",
-    badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+    badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40",
+    icon: Zap
   },
   {
     title: "EPS-95 Pension & Jeevan Pramaan",
     desc: "Tracks monthly pension disbursements and guides annual Digital Life Certificate (DLC) biometric renewal.",
     prompt: "Check my monthly EPS-95 pension and PPO status",
     badge: "Senior Care",
-    badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/40"
+    badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/40",
+    icon: HeartHandshake
   },
   {
     title: "Discreet Privacy Mode (DPDP Act)",
     desc: "Masks financial numbers and PII on DOM surfaces with animated bullets for public spaces.",
     prompt: "Toggle discreet privacy mode",
     badge: "DPDP Act 2023",
-    badgeColor: "bg-teal-500/20 text-teal-300 border-teal-500/40"
+    badgeColor: "bg-teal-500/20 text-teal-300 border-teal-500/40",
+    icon: ShieldCheck
   },
   {
     title: "13 Native Indic Languages Live",
     desc: "Seamless switching across 13 Indian languages with 23 regional neural voices.",
     prompt: "Switch to Hindi language",
     badge: "Bhashini & Whisper",
-    badgeColor: "bg-saffron/20 text-saffron border-saffron/40"
+    badgeColor: "bg-saffron/20 text-saffron border-saffron/40",
+    icon: Languages
   }
 ];
 
-// Custom Safe & Fast Markdown Formatter
 function renderFormattedMarkdown(rawText: string) {
   if (!rawText) return null;
   const lines = rawText.split("\n");
@@ -213,7 +222,6 @@ export const VoiceAssistant: React.FC = () => {
   const [typedInput, setTypedInput] = useState<string>("");
   const [activeSpeechLang, setActiveSpeechLang] = useState<string>(language || "en-IN");
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-  // CHAT-FIRST BY DEFAULT: auto-speak disabled by default
   const [autoSpeakEnabled, setAutoSpeakEnabled] = useState<boolean>(false);
   const [selectedVoice, setSelectedVoice] = useState<string>("en-IN-PrabhatNeural");
   const [showVoiceSettings, setShowVoiceSettings] = useState<boolean>(false);
@@ -232,11 +240,22 @@ export const VoiceAssistant: React.FC = () => {
   const accumulatedTranscriptRef = useRef<string>("");
   const hasDispatchedRef = useRef<boolean>(false);
 
-  // Track previous UAN to detect account switches and prevent race conditions
   const prevUanRef = useRef<string>("");
 
   useEffect(() => {
+    const handleOpenAgent = (e: any) => {
+      setIsOpen(true);
+      if (e.detail?.mode === "guide") {
+        setShowGuideModal(true);
+      }
+    };
+    if (typeof window !== "undefined") {
+      window.addEventListener("open-jan-epf-agent", handleOpenAgent as EventListener);
+    }
     return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("open-jan-epf-agent", handleOpenAgent as EventListener);
+      }
       stopNeuralSpeech();
       if (mediaStreamRef.current) mediaStreamRef.current.getTracks().forEach((t) => t.stop());
       if (audioContextRef.current) audioContextRef.current.close().catch(() => {});
@@ -255,7 +274,139 @@ export const VoiceAssistant: React.FC = () => {
   const isGurmeet = fullName.includes("Gurmeet") || uan.includes("100112233445") || uan.includes("100456789012");
   const isSunita = fullName.includes("Sunita") || uan.includes("101889977665") || uan.includes("100789012345");
 
-  // Persona Badge Styling
+  // Persona-specific 4 Hero Capability Highlights
+  const personaHeroCapabilities = useMemo(() => {
+    if (isRamesh) {
+      return [
+        {
+          title: "🏥 ₹1.56L Medical Advance (Para 68J)",
+          desc: "0.04ms mathematical pre-flight limit check with Section 192A 0% TDS Form 15G auto-attached.",
+          prompt: "Withdraw ₹48,000 emergency medical advance under Para 68J",
+          badge: "0% TDS Shield",
+          badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        },
+        {
+          title: "📊 Triple-Split Passbook (8.25% Interest)",
+          desc: "Employee ₹1.82L + Employer ₹1.15L + EPS-95 ₹45,000 with annual FY interest breakdown.",
+          prompt: "What is my current passbook balance breakdown?",
+          badge: "8.25% FY Growth",
+          badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40"
+        },
+        {
+          title: "🛡️ Section 192A 0% TDS Shield",
+          desc: "14.5 continuous service years (>5.0 yr statutory threshold) = 100% tax-free withdrawals.",
+          prompt: "Explain Section 192A 0% TDS rule",
+          badge: "100% Tax-Exempt",
+          badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+        },
+        {
+          title: "👁️ Discreet Privacy Mode (DPDP Act)",
+          desc: "Masks financial numbers and PII on DOM surfaces with animated bullets for public spaces.",
+          prompt: "Toggle discreet privacy mode",
+          badge: "DPDP Act 2023",
+          badgeColor: "bg-teal-500/20 text-teal-300 border-teal-500/40"
+        }
+      ];
+    }
+    if (isPriya) {
+      return [
+        {
+          title: "🔄 Autonomous Form 13 Job Transfer",
+          desc: "Auto-deduces missing 2023-02-28 exit date from Infosys monthly ECR wage timestamps.",
+          prompt: "Transfer my previous job PF balance and deduce exit date",
+          badge: "ECR Timestamp",
+          badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/40"
+        },
+        {
+          title: "🔍 Wagner-Fischer Fuzzy Name Reconciler",
+          desc: "Resolves 'Priya Sharma' vs 'Priyaa S' bank passbook spelling differences in <1ms without HR.",
+          prompt: "Fix fuzzy name Priya vs Priyaa",
+          badge: "Typo Engine",
+          badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
+        },
+        {
+          title: "💰 ₹4.75L Multi-Job Corpus Merge",
+          desc: "Consolidates prior unlinked establishment balance into active Apex AI account in 1 tap.",
+          prompt: "What is my current passbook balance breakdown?",
+          badge: "Corpus Merge",
+          badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40"
+        },
+        {
+          title: "⚡ 6-Layer Sovereign Harness Trace",
+          desc: "Glean Context ➔ Stripe Tools ➔ Devin ReAct ➔ Notion Memory ➔ NeMo Guardrails ➔ LangSmith.",
+          prompt: "Show 6-layer sovereign harness trace",
+          badge: "Devin Loop",
+          badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+        }
+      ];
+    }
+    if (isGurmeet) {
+      return [
+        {
+          title: "👴 EPS-95 Monthly Pension Status",
+          desc: "₹3,250 monthly pension verified active under PPO-DL-2024-99881 at Precision Auto Components.",
+          prompt: "Check my monthly EPS-95 pension and PPO status",
+          badge: "₹3,250/mo PPO",
+          badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
+        },
+        {
+          title: "🪪 Jeevan Pramaan Digital Life Certificate",
+          desc: "Spoken camera guidance for annual facial biometric renewal without visiting bank branches.",
+          prompt: "Renew Jeevan Pramaan digital life certificate",
+          badge: "Digital Life Cert",
+          badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/40"
+        },
+        {
+          title: "📈 30-Year Compounding Passbook",
+          desc: "Simulates compounding wealth growth with 8.25% sovereign EPF interest yield.",
+          prompt: "What is my current passbook balance breakdown?",
+          badge: "8.25% Yield",
+          badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40"
+        },
+        {
+          title: "👓 WCAG AAA High-Contrast Senior Mode",
+          desc: "125% scaling, 56px touch targets, Obsidian Navy/Gold contrast, and slow-rate Indic neural voice.",
+          prompt: "Toggle senior citizen accessibility mode",
+          badge: "WCAG AAA",
+          badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        }
+      ];
+    }
+    if (isSunita) {
+      return [
+        {
+          title: "🏦 Sub-200ms NPCI Bank Penny Drop",
+          desc: "Validates bank account holder instantly without cheque photo upload or physical stamp.",
+          prompt: "Run 1-Click NPCI Penny Drop Bank KYC verification",
+          badge: "Sub-200ms KYC",
+          badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
+        },
+        {
+          title: "🛡️ ₹7 Lakh Free EDLI Life Insurance",
+          desc: "Auto-activates statutory ₹7,00,000 EDLI coverage and files 1-click nominee with Aadhaar e-Sign.",
+          prompt: "File ₹7 Lakh EDLI nomination for Manoj Kumar",
+          badge: "₹7L Free Cover",
+          badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        },
+        {
+          title: "📊 Claim Readiness Score Jump (78% ➔ 98%)",
+          desc: "Real-time pre-flight readiness calculator prevents rejection before formal claim submission.",
+          prompt: "Check my claim readiness score",
+          badge: "Pre-Flight 98%",
+          badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+        },
+        {
+          title: "🌐 13 Native Indic Languages",
+          desc: "Bhashini real-time translation with Whisper voice synthesis across all Indian regional dialects.",
+          prompt: "Switch to Hindi language",
+          badge: "13 Languages",
+          badgeColor: "bg-saffron/20 text-saffron border-saffron/40"
+        }
+      ];
+    }
+    return ALL_MASTER_CAPABILITIES.slice(0, 4);
+  }, [isRamesh, isPriya, isGurmeet, isSunita]);
+
   const personaBadge = useMemo(() => {
     if (isLoginPage) return { color: "from-saffron to-amber-500", text: "text-saffron", role: "Gateway Concierge" };
     if (isGurmeet) return { color: "from-amber-500 to-yellow-600", text: "text-amber-300", role: "Pensioner (EPS-95)" };
@@ -264,7 +415,6 @@ export const VoiceAssistant: React.FC = () => {
     return { color: "from-blue-500 to-cyan-600", text: "text-cyan-300", role: "Manufacturing Lead" };
   }, [isLoginPage, isGurmeet, isPriya, isSunita]);
 
-  // Generate initial persona-specific greeting (or Login Concierge greeting)
   const generateInitialGreeting = useCallback((): ChatMessage => {
     if (isLoginPage) {
       return {
@@ -384,7 +534,6 @@ export const VoiceAssistant: React.FC = () => {
     };
   }, [isLoginPage, company, fullName, isGurmeet, isPriya, isRamesh, isSunita, language, balanceStr, uan]);
 
-  // Account switch detection & localStorage loading with validation
   useEffect(() => {
     if (!uan) return;
     const prevUan = prevUanRef.current;
@@ -421,7 +570,6 @@ export const VoiceAssistant: React.FC = () => {
     setMessages([initialGreeting]);
   }, [uan, isLoginPage, generateInitialGreeting]);
 
-  // Persist conversation turns to localStorage for current UAN only
   useEffect(() => {
     if (typeof window !== "undefined" && uan && messages.length > 0 && prevUanRef.current === uan && !isLoginPage) {
       try {
@@ -430,7 +578,6 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, [messages, uan, isLoginPage]);
 
-  // Clear Chat History Handler
   const handleClearHistory = useCallback(() => {
     if (typeof window !== "undefined" && uan && !isLoginPage) {
       localStorage.removeItem(`jan_epf_harness_history_${uan}`);
@@ -442,7 +589,6 @@ export const VoiceAssistant: React.FC = () => {
     setTurnCounter(1);
   }, [uan, isLoginPage, generateInitialGreeting]);
 
-  // Auto-sync voice when language changes
   useEffect(() => {
     setActiveSpeechLang(language || "en-IN");
     const defaultVoiceForLang = ALL_INDIC_VOICES.find((v) =>
@@ -459,7 +605,6 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, [messages, isOpen, isExpanded, isTyping]);
 
-  // Speech synthesis
   const speak = useCallback(
     (rawText: string, targetLang?: string) => {
       const voiceLang = targetLang || activeSpeechLang || "en-IN";
@@ -510,7 +655,6 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, []);
 
-  // Process user input via 80/20 Hybrid API & Conversational AI Brain
   const handleProcessUserMessage = useCallback(
     async (userText: string, forcedLang?: string, triggerVoice: boolean = false) => {
       const cleanText = userText.trim();
@@ -596,7 +740,6 @@ export const VoiceAssistant: React.FC = () => {
     [activeCitizen, company, activeSpeechLang, speak, stopListening, turnCounter, isRamesh, isPriya, isGurmeet, autoSpeakEnabled, fullName, uan, messages]
   );
 
-  // Speech Recognition listener
   const startListening = useCallback(async () => {
     stopSpeaking();
     setTranscript("");
@@ -670,6 +813,9 @@ export const VoiceAssistant: React.FC = () => {
     });
   }, [selectedLangFilter]);
 
+  // Is this fresh turn where capabilities should be showcased?
+  const showInitialCapabilitiesDeck = messages.length <= 1 && !showGuideModal;
+
   return (
     <div
       role="region"
@@ -678,14 +824,13 @@ export const VoiceAssistant: React.FC = () => {
         isOpen
           ? isExpanded
             ? "inset-2 sm:inset-6 max-w-7xl mx-auto w-[96vw] sm:w-auto h-[94vh] sm:h-[90vh]"
-            : "bottom-3 sm:bottom-4 right-2 sm:right-6 w-[95vw] sm:w-[500px] h-[85vh] sm:h-[84vh] max-h-[92vh]"
+            : "bottom-3 sm:bottom-4 right-2 sm:right-6 w-[95vw] sm:w-[520px] h-[86vh] sm:h-[85vh] max-h-[92vh]"
           : "bottom-5 right-4 sm:right-6"
       }`}
     >
-      {/* 1. HIGH-CONTRAST SOLID OBSIDIAN DARK MODAL (WCAG AAA 13.5:1 ON BOTH LIGHT & DARK MODES) */}
+      {/* 1. HIGH-CONTRAST SOLID OBSIDIAN DARK CONTAINER */}
       {isOpen && (
         <div className="bg-[#060d17] text-white border border-slate-700/90 rounded-3xl shadow-[0_30px_90px_rgba(0,0,0,0.95)] ring-1 ring-white/20 p-3.5 sm:p-5 flex flex-col h-full overflow-hidden relative animate-in zoom-in-95 duration-200">
-          {/* Subtle Ambient Glow */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-samriddhi-gold/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -711,7 +856,7 @@ export const VoiceAssistant: React.FC = () => {
 
             {/* Controls Bar */}
             <div className="flex items-center gap-1">
-              {/* 💡 Capabilities & Guide Button (Big-Tech Feature Discovery) */}
+              {/* 💡 Capabilities & Guide Button */}
               <button
                 onClick={() => setShowGuideModal(!showGuideModal)}
                 className={`p-1.5 rounded-xl border transition-all flex items-center gap-1 text-[11px] font-bold font-mono ${
@@ -726,7 +871,6 @@ export const VoiceAssistant: React.FC = () => {
                 <span className="hidden sm:inline">Guide</span>
               </button>
 
-              {/* Clear Chat Button */}
               {!isLoginPage && (
                 <button
                   onClick={handleClearHistory}
@@ -765,7 +909,6 @@ export const VoiceAssistant: React.FC = () => {
                       <button onClick={() => setShowVoiceSettings(false)} className="hover:text-white text-xs">✕</button>
                     </div>
 
-                    {/* Language Filter Pills */}
                     <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-none text-[9px] shrink-0 font-mono">
                       {INDIC_LANG_FILTERS.map((lang) => (
                         <button
@@ -782,7 +925,6 @@ export const VoiceAssistant: React.FC = () => {
                       ))}
                     </div>
 
-                    {/* Scrollable Voice List */}
                     <div className="space-y-1 overflow-y-auto max-h-48 pr-1">
                       {filteredVoices.map((v) => (
                         <div
@@ -829,7 +971,6 @@ export const VoiceAssistant: React.FC = () => {
                       ))}
                     </div>
 
-                    {/* Auto-Speak Toggle */}
                     <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] shrink-0">
                       <span className="text-slate-300">Voice Auto-Speak:</span>
                       <button
@@ -869,7 +1010,6 @@ export const VoiceAssistant: React.FC = () => {
                 </span>
               </button>
 
-              {/* Full-Screen Workstation Toggle */}
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-[#334155] text-slate-300 hover:text-white border border-slate-700 transition-all hidden sm:block"
@@ -878,7 +1018,6 @@ export const VoiceAssistant: React.FC = () => {
                 {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
               </button>
 
-              {/* Close Button */}
               <button
                 onClick={() => setIsOpen(false)}
                 className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-[#334155] text-slate-300 hover:text-white border border-slate-700 transition-all"
@@ -913,14 +1052,14 @@ export const VoiceAssistant: React.FC = () => {
           </div>
 
           {/* ========================================================================= */}
-          {/* 💡 FEATURE DISCOVERY GUIDE MODAL / OVERLAY                                */}
+          {/* 💡 FULL MASTER CAPABILITIES GUIDE MODAL VIEW                              */}
           {/* ========================================================================= */}
           {showGuideModal ? (
             <div className="flex-1 overflow-y-auto mt-2.5 space-y-3 p-1 animate-in fade-in zoom-in-95">
               <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-saffron" />
-                  <h4 className="font-extrabold text-sm text-white">AI Agent Capabilities & Quick Guide</h4>
+                  <h4 className="font-extrabold text-sm text-white">Full Product Capabilities Directory</h4>
                 </div>
                 <button
                   onClick={() => setShowGuideModal(false)}
@@ -931,7 +1070,7 @@ export const VoiceAssistant: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {AGENT_CAPABILITIES.map((cap, idx) => (
+                {ALL_MASTER_CAPABILITIES.map((cap, idx) => (
                   <div key={idx} className="p-3 rounded-2xl bg-[#0f172a] border border-slate-700/80 space-y-2 hover:border-saffron/60 transition-all">
                     <div className="flex items-center justify-between gap-1.5">
                       <h5 className="font-bold text-xs text-white">{cap.title}</h5>
@@ -957,7 +1096,7 @@ export const VoiceAssistant: React.FC = () => {
           ) : (
             /* Main Area: Split into Chat & Telemetry if Expanded */
             <div className={`flex-1 overflow-hidden mt-2.5 gap-4 ${isExpanded ? "grid grid-cols-1 lg:grid-cols-3" : "flex flex-col"}`}>
-              {/* Chat Stream */}
+              {/* Chat Stream with First-Turn Hero Capabilities Grid */}
               <div aria-live="polite" aria-relevant="additions text" className={`flex-1 overflow-y-auto space-y-3 pr-1 relative z-10 text-xs ${isExpanded ? "lg:col-span-2" : ""}`}>
                 {messages.map((m) => (
                   <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
@@ -1049,6 +1188,47 @@ export const VoiceAssistant: React.FC = () => {
                   </div>
                 ))}
 
+                {/* ========================================================================= */}
+                {/* 🚀 FIRST-TURN BIG-TECH HERO CAPABILITIES DECK (WHAT OUR PRODUCT CAN DO)    */}
+                {/* ========================================================================= */}
+                {showInitialCapabilitiesDeck && (
+                  <div className="pt-2 space-y-2.5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="flex items-center justify-between px-1">
+                      <span className="text-[10px] uppercase tracking-wider font-extrabold text-saffron flex items-center gap-1.5 font-mono">
+                        <Sparkles className="w-3 h-3" />
+                        <span>⚡ What Jan-EPF AI Can Do For You (1-Click Run)</span>
+                      </span>
+                      <span className="text-[9px] text-slate-400 font-mono">Click card to test</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {personaHeroCapabilities.map((cap, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleProcessUserMessage(cap.prompt)}
+                          className="p-3 rounded-2xl bg-[#0f172a] hover:bg-[#1e293b] border border-slate-700/80 hover:border-saffron/70 text-left space-y-1.5 transition-all group shadow-sm hover:scale-[1.01]"
+                        >
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="font-bold text-xs text-white group-hover:text-amber-300 transition-colors truncate">
+                              {cap.title}
+                            </span>
+                            <span className={`px-1.5 py-0.2 rounded text-[8px] font-mono font-bold border shrink-0 ${cap.badgeColor}`}>
+                              {cap.badge}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-slate-300 leading-snug line-clamp-2">
+                            {cap.desc}
+                          </p>
+                          <div className="flex items-center gap-1 text-[9px] text-saffron font-bold pt-0.5">
+                            <span>▶ Run prompt</span>
+                            <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {isTyping && (
                   <div className="flex justify-start animate-in fade-in duration-200">
                     <div className="p-3 rounded-2xl bg-[#0f172a] border border-slate-700 text-slate-200 flex items-center gap-2">
@@ -1113,8 +1293,7 @@ export const VoiceAssistant: React.FC = () => {
                     </div>
 
                     <div className="p-2.5 rounded-xl bg-[#0f172a] border border-slate-700/80 space-y-1">
-                      <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 05 • Guardrail Status (NeMo)</span>
-                      <div className="text-emerald-400 font-bold">Grade S+ Security</div>
+                      <span className="text-emerald-400 font-bold">Grade S+ Security</span>
                       <div className="text-slate-300">Presidio PII Vault Active</div>
                       <div className="text-slate-300">HMAC-SHA256 DBT Ledger Chaining</div>
                     </div>
@@ -1141,7 +1320,7 @@ export const VoiceAssistant: React.FC = () => {
           )}
 
           {/* Quick Action Interactive Tool Pills */}
-          {!showGuideModal && (
+          {!showGuideModal && !showInitialCapabilitiesDeck && (
             <div className="pt-2 border-t border-slate-800 mt-1.5 relative z-10">
               <div className="flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-none text-[10px]">
                 {isLoginPage ? (
@@ -1293,6 +1472,20 @@ export const VoiceAssistant: React.FC = () => {
           )}
         </button>
       </div>
+
+      {/* 3. STEP-BY-STEP INTERACTIVE PRODUCT CAPABILITIES POPUP */}
+      <AIAgentProductGuideModal
+        isOpen={showGuideModal}
+        onClose={() => setShowGuideModal(false)}
+        onRunPrompt={(prompt, route) => {
+          setShowGuideModal(false);
+          if (!isOpen) setIsOpen(true);
+          handleProcessUserMessage(prompt);
+          if (route && route !== pathname) {
+            router.push(route);
+          }
+        }}
+      />
     </div>
   );
 };

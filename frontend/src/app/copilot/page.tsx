@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown, CitizenContextData } from "@/lib/voiceCopilotBrain";
 import { playNeuralSpeech, stopNeuralSpeech, ALL_INDIC_VOICES, IndicVoiceMetadata } from "@/lib/edgeTtsPlayer";
+import { AIAgentProductGuideModal } from "@/components/AIAgentProductGuideModal";
 
 const AGENT_CAPABILITIES = [
   {
@@ -175,6 +176,138 @@ export default function CopilotWorkstationPage() {
     if (isSunita) return { color: "from-emerald-500 to-teal-600", text: "text-emerald-300", role: "Logistics Specialist" };
     return { color: "from-blue-500 to-cyan-600", text: "text-cyan-300", role: "Manufacturing Lead" };
   }, [isGurmeet, isPriya, isSunita]);
+
+  const personaHeroCapabilities = useMemo(() => {
+    if (isRamesh) {
+      return [
+        {
+          title: "🏥 ₹1.56L Medical Advance (Para 68J)",
+          desc: "0.04ms mathematical pre-flight limit check with Section 192A 0% TDS Form 15G auto-attached.",
+          prompt: "Withdraw ₹48,000 emergency medical advance under Para 68J",
+          badge: "0% TDS Shield",
+          badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        },
+        {
+          title: "📊 Triple-Split Passbook (8.25% Interest)",
+          desc: "Employee ₹1.82L + Employer ₹1.15L + EPS-95 ₹45,000 with annual FY interest breakdown.",
+          prompt: "What is my current passbook balance breakdown?",
+          badge: "8.25% FY Growth",
+          badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40"
+        },
+        {
+          title: "🛡️ Section 192A 0% TDS Shield",
+          desc: "14.5 continuous service years (>5.0 yr statutory threshold) = 100% tax-free withdrawals.",
+          prompt: "Explain Section 192A 0% TDS rule",
+          badge: "100% Tax-Exempt",
+          badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+        },
+        {
+          title: "👁️ Discreet Privacy Mode (DPDP Act)",
+          desc: "Masks financial numbers and PII on DOM surfaces with animated bullets for public spaces.",
+          prompt: "Toggle discreet privacy mode",
+          badge: "DPDP Act 2023",
+          badgeColor: "bg-teal-500/20 text-teal-300 border-teal-500/40"
+        }
+      ];
+    }
+    if (isPriya) {
+      return [
+        {
+          title: "🔄 Autonomous Form 13 Job Transfer",
+          desc: "Auto-deduces missing 2023-02-28 exit date from Infosys monthly ECR wage timestamps.",
+          prompt: "Transfer my previous job PF balance and deduce exit date",
+          badge: "ECR Timestamp",
+          badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/40"
+        },
+        {
+          title: "🔍 Wagner-Fischer Fuzzy Name Reconciler",
+          desc: "Resolves 'Priya Sharma' vs 'Priyaa S' bank passbook spelling differences in <1ms without HR.",
+          prompt: "Fix fuzzy name Priya vs Priyaa",
+          badge: "Typo Engine",
+          badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
+        },
+        {
+          title: "💰 ₹4.75L Multi-Job Corpus Merge",
+          desc: "Consolidates prior unlinked establishment balance into active Apex AI account in 1 tap.",
+          prompt: "What is my current passbook balance breakdown?",
+          badge: "Corpus Merge",
+          badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40"
+        },
+        {
+          title: "⚡ 6-Layer Sovereign Harness Trace",
+          desc: "Glean Context ➔ Stripe Tools ➔ Devin ReAct ➔ Notion Memory ➔ NeMo Guardrails ➔ LangSmith.",
+          prompt: "Show 6-layer sovereign harness trace",
+          badge: "Devin Loop",
+          badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+        }
+      ];
+    }
+    if (isGurmeet) {
+      return [
+        {
+          title: "👴 EPS-95 Monthly Pension Status",
+          desc: "₹3,250 monthly pension verified active under PPO-DL-2024-99881 at Precision Auto Components.",
+          prompt: "Check my monthly EPS-95 pension and PPO status",
+          badge: "₹3,250/mo PPO",
+          badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
+        },
+        {
+          title: "🪪 Jeevan Pramaan Digital Life Certificate",
+          desc: "Spoken camera guidance for annual facial biometric renewal without visiting bank branches.",
+          prompt: "Renew Jeevan Pramaan digital life certificate",
+          badge: "Digital Life Cert",
+          badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/40"
+        },
+        {
+          title: "📈 30-Year Compounding Passbook",
+          desc: "Simulates compounding wealth growth with 8.25% sovereign EPF interest yield.",
+          prompt: "What is my current passbook balance breakdown?",
+          badge: "8.25% Yield",
+          badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40"
+        },
+        {
+          title: "👓 WCAG AAA High-Contrast Senior Mode",
+          desc: "125% scaling, 56px touch targets, Obsidian Navy/Gold contrast, and slow-rate Indic neural voice.",
+          prompt: "Toggle senior citizen accessibility mode",
+          badge: "WCAG AAA",
+          badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        }
+      ];
+    }
+    if (isSunita) {
+      return [
+        {
+          title: "🏦 Sub-200ms NPCI Bank Penny Drop",
+          desc: "Validates bank account holder instantly without cheque photo upload or physical stamp.",
+          prompt: "Run 1-Click NPCI Penny Drop Bank KYC verification",
+          badge: "Sub-200ms KYC",
+          badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
+        },
+        {
+          title: "🛡️ ₹7 Lakh Free EDLI Life Insurance",
+          desc: "Auto-activates statutory ₹7,00,000 EDLI coverage and files 1-click nominee with Aadhaar e-Sign.",
+          prompt: "File ₹7 Lakh EDLI nomination for Manoj Kumar",
+          badge: "₹7L Free Cover",
+          badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+        },
+        {
+          title: "📊 Claim Readiness Score Jump (78% ➔ 98%)",
+          desc: "Real-time pre-flight readiness calculator prevents rejection before formal claim submission.",
+          prompt: "Check my claim readiness score",
+          badge: "Pre-Flight 98%",
+          badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+        },
+        {
+          title: "🌐 13 Native Indic Languages",
+          desc: "Bhashini real-time translation with Whisper voice synthesis across all Indian regional dialects.",
+          prompt: "Switch to Hindi language",
+          badge: "13 Languages",
+          badgeColor: "bg-saffron/20 text-saffron border-saffron/40"
+        }
+      ];
+    }
+    return AGENT_CAPABILITIES.slice(0, 4);
+  }, [isRamesh, isPriya, isGurmeet, isSunita]);
 
   const [messages, setMessages] = useState<Array<{
     id: string;
@@ -673,6 +806,19 @@ export default function CopilotWorkstationPage() {
           </div>
         </div>
       </div>
+
+      {/* STEP-BY-STEP INTERACTIVE PRODUCT CAPABILITIES POPUP */}
+      <AIAgentProductGuideModal
+        isOpen={showGuide}
+        onClose={() => setShowGuide(false)}
+        onRunPrompt={(prompt, route) => {
+          setShowGuide(false);
+          handleSend(prompt);
+          if (route && route !== "/copilot") {
+            window.location.href = route;
+          }
+        }}
+      />
     </div>
   );
 }

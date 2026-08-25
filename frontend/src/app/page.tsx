@@ -28,12 +28,15 @@ import {
 } from "lucide-react";
 import { ClaimReadinessScore } from "@/components/ClaimReadinessScore";
 import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
+import { AIAgentProductGuideModal } from "@/components/AIAgentProductGuideModal";
+import { BookOpen } from "lucide-react";
 
 export default function CitizenLandingPage() {
   const { activeCitizen, isAuthenticated, login, logout, language } = useCitizen();
   const t = getTranslation(language);
 
   const [chaosSimulatorOpen, setChaosSimulatorOpen] = useState(false);
+  const [guideModalOpen, setGuideModalOpen] = useState(false);
   const [privacyMode, setPrivacyMode] = useState<boolean>(true);
   const [uanCopied, setUanCopied] = useState<boolean>(false);
 
@@ -412,6 +415,128 @@ export default function CitizenLandingPage() {
       {/* 2. CLAIM READINESS SCORE CARD */}
       <ClaimReadinessScore />
 
+      {/* 2.5 INTERACTIVE BIG-TECH CAPABILITIES HERO (WHAT OUR PRODUCT CAN DO) */}
+      <div className="bg-gradient-to-r from-slate-900 via-sovereign-darkest to-sovereign-navy rounded-3xl p-5 sm:p-6 text-white border border-slate-700/80 shadow-2xl space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-saffron text-slate-950 font-black text-[10px] uppercase font-mono tracking-wider">
+                ⚡ Product Capabilities Deck
+              </span>
+              <span className="text-xs text-slate-400 font-mono hidden sm:inline">
+                80/20 Sovereign AI Architecture
+              </span>
+            </div>
+            <h3 className="text-lg sm:text-xl font-black text-white mt-1">
+              What Jan-EPF AI Can Do For {activeCitizen.full_name.split(" ")[0]}
+            </h3>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setGuideModalOpen(true)}
+              className="px-3.5 py-2 bg-[#1e293b] hover:bg-[#334155] text-amber-300 hover:text-amber-200 border border-slate-700 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all shadow-md"
+            >
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>📖 Step-by-Step Guide</span>
+            </button>
+            <Link
+              href="/copilot"
+              className="px-3.5 py-2 bg-saffron hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all shadow-md hover:scale-105"
+            >
+              <span>Open Sovereign Copilot</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          <Link
+            href="/money"
+            className="p-4 rounded-2xl bg-[#0f172a] hover:bg-[#1e293b] border border-slate-700/80 hover:border-emerald-500/60 transition-all space-y-2 group shadow-sm"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">
+                🏥 Para 68J Emergency Advance
+              </span>
+              <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                0% TDS
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              Mathematical pre-flight check sanctions advance limits with Section 192A Form 15G in &lt;0.05ms.
+            </p>
+            <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-bold pt-1">
+              <span>Test Advance Hub</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/career"
+            className="p-4 rounded-2xl bg-[#0f172a] hover:bg-[#1e293b] border border-slate-700/80 hover:border-blue-500/60 transition-all space-y-2 group shadow-sm"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white group-hover:text-blue-300 transition-colors">
+                🔄 Form 13 Job Transfer
+              </span>
+              <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                ECR Auto-Exit
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              Auto-deduces missing exit dates from monthly ECR wage timestamps, unlocking trapped balances.
+            </p>
+            <div className="flex items-center gap-1 text-[10px] text-blue-400 font-bold pt-1">
+              <span>Test Career Hub</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/savings"
+            className="p-4 rounded-2xl bg-[#0f172a] hover:bg-[#1e293b] border border-slate-700/80 hover:border-purple-500/60 transition-all space-y-2 group shadow-sm"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white group-hover:text-purple-300 transition-colors">
+                📊 Triple-Split Passbook
+              </span>
+              <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">
+                8.25% FY Growth
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              Splits corpus into 12% + 3.67% + 8.33% with monthly EPS-95 pension tracking &amp; compounding forecaster.
+            </p>
+            <div className="flex items-center gap-1 text-[10px] text-purple-400 font-bold pt-1">
+              <span>Test Savings Hub</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          <Link
+            href="/fix"
+            className="p-4 rounded-2xl bg-[#0f172a] hover:bg-[#1e293b] border border-slate-700/80 hover:border-amber-500/60 transition-all space-y-2 group shadow-sm"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-white group-hover:text-amber-300 transition-colors">
+                🏦 NPCI Penny Drop &amp; KYC
+              </span>
+              <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                Wagner-Fischer
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-300 leading-relaxed">
+              Sub-200ms bank KYC verification + Wagner-Fischer fuzzy name correction and ₹7L free EDLI nomination.
+            </p>
+            <div className="flex items-center gap-1 text-[10px] text-amber-400 font-bold pt-1">
+              <span>Test Fix Details Hub</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+        </div>
+      </div>
+
       {/* 3. 4 TOPIC-CENTRIC ACTION HUBS */}
       <div>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
@@ -529,6 +654,21 @@ export default function CitizenLandingPage() {
       <ChaosSimulatorModal
         isOpen={chaosSimulatorOpen}
         onClose={() => setChaosSimulatorOpen(false)}
+      />
+
+      {/* Step-by-Step Product Superpowers Guide Modal */}
+      <AIAgentProductGuideModal
+        isOpen={guideModalOpen}
+        onClose={() => setGuideModalOpen(false)}
+        onRunPrompt={(prompt, route) => {
+          setGuideModalOpen(false);
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("open-jan-epf-agent", { detail: { mode: "chat" } }));
+          }
+          if (route) {
+            window.location.href = route;
+          }
+        }}
       />
     </div>
   );
