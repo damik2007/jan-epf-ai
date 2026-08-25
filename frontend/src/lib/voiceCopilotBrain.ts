@@ -102,6 +102,7 @@ export interface CopilotReply {
     | "HARNESS_ACTION"
     | "GUARDRAIL_BLOCKED";
   harness: HarnessLayerBreakdown;
+  needsLlm?: boolean;
 }
 
 // ==============================================================================
@@ -733,15 +734,17 @@ export function generateCopilotResponse(
       displayText: `💡 **जन-ईपीएफ सॉवरेन एजेंट हार्नेस (${firstName} • ${employerName})**\n\n• **UAN:** ${citizen.uan}\n• **उपलब्ध बैलेंस:** ₹${balanceFormatted} (सेवा: ${serviceYears} वर्ष)\n• **0% टीडीएस सुरक्षा:** सक्रिय\n\nआप मुझसे मेडिकल अग्रिम, फॉर्म 13 जॉब ट्रांसफर, या 8.25% चक्रवृद्धि पासबुक के बारे में पूछ सकते हैं।`,
       langCode: "hi-IN",
       category: "GENERAL",
-      harness: baseHarness
+      harness: baseHarness,
+      needsLlm: true
     };
   }
 
   return {
     spokenText: `I am your Sovereign Agent for ${employerName}, ${firstName}. Your verified balance is ₹${balanceFormatted}. How can I assist you with your advances, job transfer, or passbook today?`,
-    displayText: `⚡ **Jan-EPF Sovereign Agent Harness (${citizen.name})**\n\n🏢 **Active Employer:** ${employerName} (UAN: ${citizen.uan})\n💰 **Available Balance:** ₹${balanceFormatted} (Employee: ₹${empShareFormatted} • Employer: ₹${emprShareFormatted})\n🛡️ **Statutory Protection:** ${serviceYears} Yrs Service • 0% TDS Tax Shield\n\n**Quick Actions Available:**\n• *"Withdraw ₹48,00,0 medical advance"*\n• *"Transfer my previous job PF balance"*\n• *"Explain Section 192A 0% TDS rule"*\n• *"Download passbook statement"*`,
+    displayText: `⚡ **Jan-EPF Sovereign Agent Harness (${citizen.name})**\n\n🏢 **Active Employer:** ${employerName} (UAN: ${citizen.uan})\n💰 **Available Balance:** ₹${balanceFormatted} (Employee: ₹${empShareFormatted} • Employer: ₹${emprShareFormatted})\n🛡️ **Statutory Protection:** ${serviceYears} Yrs Service • 0% TDS Tax Shield\n\n**Quick Actions Available:**\n• *"Withdraw ₹48,000 medical advance"*\n• *"Transfer my previous job PF balance"*\n• *"Explain Section 192A 0% TDS rule"*\n• *"Download passbook statement"*`,
     langCode: "en-IN",
     category: "GENERAL",
-    harness: baseHarness
+    harness: baseHarness,
+    needsLlm: true
   };
 }

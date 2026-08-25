@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useCitizen } from "@/context/CitizenContext";
 import { getTranslation } from "@/lib/translations";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -24,9 +24,12 @@ import {
   ExternalLink,
   Brain,
   Play,
-  Languages
+  Languages,
+  Trash2,
+  RefreshCw,
+  User
 } from "lucide-react";
-import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown } from "@/lib/voiceCopilotBrain";
+import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown, CitizenContextData } from "@/lib/voiceCopilotBrain";
 import { playNeuralSpeech, stopNeuralSpeech, ALL_INDIC_VOICES, IndicVoiceMetadata } from "@/lib/edgeTtsPlayer";
 
 // Custom Safe & Fast Markdown Formatter: Eliminates raw '**' stars and renders bold text & clean bullets
@@ -42,11 +45,9 @@ function renderFormattedMarkdown(rawText: string) {
           return <div key={lineIdx} className="h-1" />;
         }
 
-        // Bullet list detection
         const isBullet = trimmed.startsWith("•") || trimmed.startsWith("- ") || trimmed.startsWith("* ");
         const content = isBullet ? trimmed.replace(/^[•\-\*]\s*/, "") : line;
 
-        // Parse **bold** and *italic* tokens
         const parts: React.ReactNode[] = [];
         const regex = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
         let lastIndex = 0;
@@ -103,12 +104,29 @@ export default function CopilotWorkstationPage() {
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   const [selectedLangFilter, setSelectedLangFilter] = useState("ALL");
   const [turnCounter, setTurnCounter] = useState(1);
+  const [isTyping, setIsTyping] = useState(false);
 
-  const uan = activeCitizen.uan || "100982348712";
-  const fullName = activeCitizen.full_name || "Citizen";
-  const company = activeCitizen.active_employment?.establishment_name || "Active Employer";
-  const balanceStr = (activeCitizen.passbook_summary?.total_balance ?? 0).toLocaleString("en-IN");
-  const serviceYears = activeCitizen.active_employment?.total_service_years ?? 14.5;
+  const prevUanRef = useRef("");
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  const uan = activeCitizen?.uan || "100982348712";
+  const fullName = activeCitizen?.full_name || "Citizen";
+  const firstName = fullName.split(" ")[0];
+  const company = activeCitizen?.active_employment?.establishment_name || "Active Employer";
+  const balanceStr = (activeCitizen?.passbook_summary?.total_balance ?? 0).toLocaleString("en-IN");
+
+  const isRamesh = fullName.includes("Ramesh") || uan.includes("100982348712");
+  const isPriya = fullName.includes("Priya") || uan.includes("101294817203") || uan.includes("101234567890");
+  const isGurmeet = fullName.includes("Gurmeet") || uan.includes("100112233445") || uan.includes("100456789012");
+  const isSunita = fullName.includes("Sunita") || uan.includes("101889977665") || uan.includes("100789012345");
+  const serviceYears = activeCitizen?.active_employment?.total_service_years ?? (isRamesh ? 14.5 : isPriya ? 3.0 : isGurmeet ? 15.0 : 3.6);
+
+  const personaBadge = useMemo(() => {
+    if (isGurmeet) return { color: "from-amber-500 to-yellow-600", text: "text-amber-300", role: "Pensioner (EPS-95)" };
+    if (isPriya) return { color: "from-purple-500 to-indigo-600", text: "text-purple-300", role: "Software Engineer" };
+    if (isSunita) return { color: "from-emerald-500 to-teal-600", text: "text-emerald-300", role: "Logistics Specialist" };
+    return { color: "from-blue-500 to-cyan-600", text: "text-cyan-300", role: "Manufacturing Lead" };
+  }, [isGurmeet, isPriya, isSunita]);
 
   const [messages, setMessages] = useState<Array<{
     id: string;
@@ -116,11 +134,24 @@ export default function CopilotWorkstationPage() {
     text: string;
     targetRoute?: string;
     harness?: HarnessLayerBreakdown;
-  }>>([
-    {
+  }>>([]);
+
+  const generateInitialGreeting = useCallback(() => {
+    let greeting = "";
+    if (isGurmeet) {
+      greeting = `**Sat Sri Akaal Sardar Gurmeet Singh Ji!**\nI am your Sovereign Pension Copilot. Your monthly EPS-95 pension of ₹3,250 is active under PPO-DL-2024-99881 at ${company}. How can I assist with your Jeevan Pramaan life certificate today?`;
+    } else if (isPriya) {
+      greeting = `**Hello Priya!**\nYour total corpus is ₹${balanceStr} at ${company}. I can execute 1-Click Form 13 transfer, auto-deduce your missing Infosys exit date, or verify TDS exemptions.`;
+    } else if (isSunita) {
+      greeting = `**Namaste Sunita Devi!**\nYour active balance at ${company} is ₹${balanceStr}. I can run 1-Click Sub-200ms NPCI Penny Drop Bank KYC and file your ₹7 Lakh free EDLI nomination.`;
+    } else {
+      greeting = `**Hello Ramesh Kumar!**\nYour ${company} EPF balance is ₹${balanceStr} (${serviceYears} yrs service, 0% TDS). I can autonomously sanction your Para 68J emergency advance or explain passbook interest.`;
+    }
+
+    return {
       id: "init",
-      sender: "copilot",
-      text: `**Hello ${fullName}!**\nI am your Jan-EPF Sovereign AI Agent for ${company}.\n\n• **Verified Corpus:** ₹${balanceStr}\n• **Continuous Service:** ${serviceYears} Years (100% 0% TDS Tax-Exempt)\n• **13 Indic Languages & 23 Regional Voices Active.**\n\nHow can I assist you today? Ask me about medical advances under Para 68J, job transfers, or passbook compounding.`,
+      sender: "copilot" as const,
+      text: greeting,
       harness: {
         contextLayer: {
           standard: "Glean ($14B Standard) • Zero-Shot Context Engine",
@@ -133,7 +164,7 @@ export default function CopilotWorkstationPage() {
         },
         toolLayer: {
           standard: "Stripe ($70B Standard) • In-Browser Hands",
-          toolName: "none",
+          toolName: "none" as const,
           toolLabel: "Idle (Ready for Autonomous Tool Calls)",
           arguments: {},
           executionOutput: "Autonomous tool execution engine ready."
@@ -160,61 +191,128 @@ export default function CopilotWorkstationPage() {
           statutoryAccuracyPct: 100.0
         }
       }
-    }
-  ]);
+    };
+  }, [company, fullName, isGurmeet, isPriya, isSunita, balanceStr, serviceYears, uan]);
 
-  // Load past conversation turns from local storage if available (Layer 04: Notion AI Memory Standard)
+  // Account switch detection & localStorage loading with validation
   useEffect(() => {
-    if (typeof window !== "undefined" && uan) {
+    if (!uan) return;
+    const prevUan = prevUanRef.current;
+
+    if (prevUan && prevUan !== uan) {
+      stopNeuralSpeech();
+      setIsSpeaking(false);
+      setMessages([]);
+      setTurnCounter(1);
+    }
+    prevUanRef.current = uan;
+
+    if (typeof window !== "undefined") {
       try {
-        const saved = localStorage.getItem(`jan_epf_harness_history_${uan}`);
+        const storageKey = `jan_epf_harness_history_${uan}`;
+        const saved = localStorage.getItem(storageKey);
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setMessages(parsed);
-            setTurnCounter(parsed.length);
+            const savedUan = parsed[0]?.harness?.contextLayer?.uan;
+            if (!savedUan || savedUan === uan) {
+              setMessages(parsed);
+              setTurnCounter(parsed.length);
+              return;
+            } else {
+              localStorage.removeItem(storageKey);
+            }
           }
         }
       } catch {}
     }
-  }, [uan]);
 
-  // Persist conversation turns to local storage (Layer 04: Notion AI Memory Standard)
+    const initialGreeting = generateInitialGreeting();
+    setMessages([initialGreeting]);
+  }, [uan, generateInitialGreeting]);
+
+  // Persist conversation turns to localStorage for current UAN
   useEffect(() => {
-    if (typeof window !== "undefined" && uan && messages.length > 0) {
+    if (typeof window !== "undefined" && uan && messages.length > 0 && prevUanRef.current === uan) {
       try {
         localStorage.setItem(`jan_epf_harness_history_${uan}`, JSON.stringify(messages));
       } catch {}
     }
   }, [messages, uan]);
 
+  // Clear History
+  const handleClearHistory = () => {
+    if (typeof window !== "undefined" && uan) {
+      localStorage.removeItem(`jan_epf_harness_history_${uan}`);
+    }
+    stopNeuralSpeech();
+    setIsSpeaking(false);
+    const initial = generateInitialGreeting();
+    setMessages([initial]);
+    setTurnCounter(1);
+  };
+
   // Auto-sync voice when language changes
   useEffect(() => {
-    const defaultVoiceForLang = ALL_INDIC_VOICES.find(v => v.langCode.startsWith(language.split("-")[0]));
+    const defaultVoiceForLang = ALL_INDIC_VOICES.find((v) =>
+      v.langCode.startsWith((language || "en").split("-")[0])
+    );
     if (defaultVoiceForLang) {
       setSelectedVoice(defaultVoiceForLang.id);
     }
   }, [language]);
 
-  const handleSend = (textToSend: string) => {
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isTyping]);
+
+  const handleSend = async (textToSend: string) => {
     const clean = textToSend.trim();
     if (!clean) return;
 
     const userMsg = { id: `u-${Date.now()}`, sender: "user" as const, text: clean };
-    const citizenContext = {
+    setMessages((prev) => [...prev, userMsg]);
+    setIsTyping(true);
+
+    const citizenContext: CitizenContextData = {
       name: fullName,
       uan: uan,
-      balance: activeCitizen.passbook_summary?.total_balance ?? 0,
-      empShare: activeCitizen.passbook_summary?.employee_share ?? 0,
-      emprShare: activeCitizen.passbook_summary?.employer_share ?? 0,
-      epsShare: activeCitizen.passbook_summary?.pension_fund_share ?? 0,
-      interestCurrentFY: activeCitizen.passbook_summary?.interest_credited_current_fy ?? 0,
+      balance: activeCitizen?.passbook_summary?.total_balance ?? 0,
+      empShare: activeCitizen?.passbook_summary?.employee_share ?? 0,
+      emprShare: activeCitizen?.passbook_summary?.employer_share ?? 0,
+      epsShare: activeCitizen?.passbook_summary?.pension_fund_share ?? 0,
+      interestCurrentFY: activeCitizen?.passbook_summary?.interest_credited_current_fy ?? 0,
       employer: company,
       serviceYears: serviceYears
     };
 
-    const reply = generateCopilotResponse(clean, citizenContext, language || "en-IN", turnCounter + 1);
-    setTurnCounter(prev => prev + 1);
+    let reply: CopilotReply;
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: clean,
+          citizenContext,
+          chatHistory: messages.slice(-4).map((m) => ({ sender: m.sender, text: m.text })),
+          language: language || "en-IN",
+          turnCount: turnCounter + 1
+        })
+      });
+
+      if (response.ok) {
+        reply = await response.json();
+      } else {
+        reply = generateCopilotResponse(clean, citizenContext, language || "en-IN", turnCounter + 1);
+      }
+    } catch {
+      reply = generateCopilotResponse(clean, citizenContext, language || "en-IN", turnCounter + 1);
+    } finally {
+      setIsTyping(false);
+    }
+
+    setTurnCounter((prev) => prev + 1);
 
     const copilotMsg = {
       id: `c-${Date.now() + 1}`,
@@ -224,7 +322,7 @@ export default function CopilotWorkstationPage() {
       harness: reply.harness
     };
 
-    setMessages(prev => [...prev, userMsg, copilotMsg]);
+    setMessages((prev) => [...prev, copilotMsg]);
 
     if (autoSpeak) {
       setIsSpeaking(true);
@@ -239,7 +337,7 @@ export default function CopilotWorkstationPage() {
   });
 
   return (
-    <div className="min-h-screen bg-sovereign-navy text-white p-4 sm:p-6 lg:p-8 space-y-6">
+    <div className="min-h-screen bg-sovereign-navy text-white p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
       <Breadcrumb currentPage="Sovereign Workstation" />
 
       {/* Header */}
@@ -257,188 +355,84 @@ export default function CopilotWorkstationPage() {
             Jan-EPF AI Agent Workstation
           </h1>
           <p className="text-xs sm:text-sm text-slate-300">
-            Directly executing in-browser actuary math, ECR timestamp resolution, sub-200ms NPCI penny drops, and Section 192A 0% TDS shields.
+            80/20 Hybrid Sovereign AI Agent with in-browser actuary math, ECR timestamp deduction, and Section 192A 0% TDS shields.
           </p>
         </div>
 
-        {/* Action Controls */}
+        {/* Persona Indicator Badge & Clear Chat */}
         <div className="flex items-center gap-2">
-          {/* Voice Selector Settings Toggle */}
-          <div className="relative">
-            <button
-              onClick={() => setShowVoiceSettings(!showVoiceSettings)}
-              className={`px-3 py-1.5 rounded-xl border text-xs font-bold font-mono flex items-center gap-1.5 transition-all ${
-                showVoiceSettings ? "bg-saffron text-slate-900 border-saffron" : "bg-white/10 hover:bg-white/20 border-white/15 text-slate-200"
-              }`}
-            >
-              <Languages className="w-4 h-4" />
-              <span>13 Indic Voices</span>
-            </button>
-
-            {showVoiceSettings && (
-              <div className="absolute right-0 top-11 w-80 p-3 rounded-2xl bg-slate-900/95 border border-white/20 shadow-2xl backdrop-blur-2xl text-xs space-y-2.5 z-50 animate-in fade-in zoom-in-95 max-h-[70vh] flex flex-col">
-                <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono border-b border-white/10 pb-1.5 shrink-0">
-                  <span className="flex items-center gap-1 text-saffron">
-                    <Languages className="w-3.5 h-3.5" />
-                    <span>13 INDIC VOICES DIRECTORY</span>
-                  </span>
-                  <button onClick={() => setShowVoiceSettings(false)} className="hover:text-white text-xs">✕</button>
-                </div>
-
-                {/* Filter Pills */}
-                <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-none text-[9px] shrink-0 font-mono">
-                  {[
-                    { id: "ALL", label: "All (23)" },
-                    { id: "hi", label: "हिन्दी" },
-                    { id: "te", label: "తెలుగు" },
-                    { id: "ta", label: "தமிழ்" },
-                    { id: "kn", label: "ಕನ್ನಡ" },
-                    { id: "ml", label: "മലയാളം" },
-                    { id: "mr", label: "मराठी" },
-                    { id: "bn", label: "বাংলা" },
-                    { id: "gu", label: "ગુજરાતી" },
-                    { id: "pa", label: "ਪੰਜਾਬੀ" },
-                    { id: "or", label: "ଓଡ଼ିଆ" },
-                    { id: "as", label: "অসমীয়া" },
-                    { id: "ur", label: "اردو" },
-                    { id: "en", label: "English" }
-                  ].map((lang) => (
-                    <button
-                      key={lang.id}
-                      onClick={() => setSelectedLangFilter(lang.id)}
-                      className={`px-2 py-0.5 rounded-lg whitespace-nowrap transition-all ${
-                        selectedLangFilter === lang.id
-                          ? "bg-saffron text-slate-900 font-bold shadow-sm"
-                          : "bg-white/5 hover:bg-white/10 text-slate-300"
-                      }`}
-                    >
-                      {lang.label}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Scrollable Voice List */}
-                <div className="space-y-1 overflow-y-auto max-h-52 pr-1">
-                  {filteredVoices.map((v) => (
-                    <div
-                      key={v.id}
-                      className={`w-full p-2 rounded-xl text-[11px] transition-all flex items-center justify-between border ${
-                        selectedVoice === v.id
-                          ? "bg-saffron/20 border-saffron text-white font-bold"
-                          : "bg-white/5 hover:bg-white/10 border-white/5 text-slate-200"
-                      }`}
-                    >
-                      <button
-                        onClick={() => {
-                          setSelectedVoice(v.id);
-                          setLanguage(v.langCode as any);
-                        }}
-                        className="flex-1 text-left flex flex-col"
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-saffron font-mono text-[9px] uppercase font-bold">
-                            {v.langName.split(" ")[0]}
-                          </span>
-                          <span className="text-white font-semibold">{v.name}</span>
-                          <span className="text-[9px] text-slate-400">({v.gender})</span>
-                        </div>
-                      </button>
-
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            playNeuralSpeech(v.sample, v.langCode, v.id);
-                          }}
-                          className="p-1 rounded-lg bg-white/10 hover:bg-saffron hover:text-slate-900 text-slate-200 transition-all"
-                          title="Play test voice sample"
-                        >
-                          <Play className="w-3 h-3 fill-current" />
-                        </button>
-
-                        {selectedVoice === v.id && (
-                          <span className="text-emerald-400 font-bold ml-1">✓</span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+          <div className={`flex items-center gap-2 p-2 rounded-2xl bg-white/5 border border-white/15 text-xs font-mono`}>
+            <div className={`w-6 h-6 rounded-lg bg-gradient-to-br ${personaBadge.color} text-white flex items-center justify-center font-bold text-[10px]`}>
+              ⚡
+            </div>
+            <div>
+              <span className={`font-bold ${personaBadge.text}`}>{fullName}</span>
+              <span className="text-[10px] text-slate-400 block">{personaBadge.role}</span>
+            </div>
           </div>
 
           <button
-            onClick={() => setAutoSpeak(!autoSpeak)}
-            className={`px-3 py-1.5 rounded-xl border text-xs font-bold font-mono flex items-center gap-1.5 transition-all ${
-              autoSpeak ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40" : "bg-white/5 text-slate-400 border-white/15"
-            }`}
-            title={autoSpeak ? "Voice Auto-Speak Active (Click to Mute for Chat-First)" : "Chat-First Mode (Click to Enable Voice Auto-Speak)"}
+            onClick={handleClearHistory}
+            className="p-2.5 rounded-2xl bg-white/10 hover:bg-red-500/30 text-slate-300 hover:text-red-300 border border-white/10 text-xs font-mono flex items-center gap-1.5 transition-all"
+            title="Clear Workstation Chat History"
           >
-            {autoSpeak ? <Volume2 className="w-4 h-4 text-emerald-300" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
-            <span>{autoSpeak ? "🔊 Voice Mode (Auto-Speak Active)" : "💬 Chat-First Mode (Silent)"}</span>
+            <Trash2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Clear Chat</span>
           </button>
         </div>
       </div>
 
-      {/* Main Grid: Chat Stream (Left) vs Real-Time Tool Inspector (Right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Left / Main: Chat Stream */}
-        <div className="lg:col-span-8 flex flex-col h-[75vh] backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/95 rounded-3xl border border-white/20 shadow-2xl p-4 sm:p-6 overflow-hidden">
-          {/* Messages list */}
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+      {/* Main Grid: Chat Workspace & Live Inspector */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        {/* Left Column: Chat Conversation Stream */}
+        <div className="lg:col-span-2 rounded-3xl bg-slate-900/90 border border-white/15 p-4 sm:p-6 shadow-2xl backdrop-blur-xl flex flex-col h-[78vh] relative overflow-hidden">
+          {/* Ambient Lighting */}
+          <div className="absolute top-0 right-0 w-72 h-72 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Chat Stream Messages */}
+          <div className="flex-1 overflow-y-auto space-y-4 pr-2 relative z-10 text-xs sm:text-sm">
             {messages.map((m) => (
-              <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`p-4 rounded-2xl max-w-[90%] space-y-3 ${
+              <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                <div className={`p-4 sm:p-5 rounded-2xl max-w-[92%] sm:max-w-[85%] space-y-3 ${
                   m.sender === "user"
                     ? "bg-gradient-to-r from-saffron to-amber-500 text-sovereign-darkest font-bold shadow-lg"
                     : "bg-white/10 backdrop-blur-md border border-white/15 text-slate-100 shadow-md"
                 }`}>
-                  {/* Rich Formatted Markdown without literal asterisks */}
                   {m.sender === "user" ? (
                     <p className="whitespace-pre-wrap leading-relaxed text-sovereign-darkest font-bold">{m.text}</p>
                   ) : (
                     renderFormattedMarkdown(m.text)
                   )}
 
-                  {/* Fuzzy typo alignment card if present */}
-                  {m.harness?.fuzzyAlignment && m.sender === "copilot" && (
-                    <div className="px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-mono flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                      <span>
-                        <strong>🔍 Fuzzy Typo Engine:</strong> Auto-aligned &apos;{m.harness.fuzzyAlignment.originalQuery}&apos; ➔ {m.harness.fuzzyAlignment.resolvedIntent} ({m.harness.fuzzyAlignment.similarityPct}% match)
-                      </span>
-                    </div>
-                  )}
-
-                  {/* 6-Layer Harness Visual Execution Cards */}
+                  {/* Harness Telemetry Cards */}
                   {m.harness && m.sender === "copilot" && (
                     <div className="space-y-2 pt-1 font-mono text-[10px]">
-                      {/* Layer 01 Glean Card */}
+                      {/* Layer 01: Glean Context */}
                       <div className="px-2.5 py-1.5 rounded-xl bg-blue-950/40 border border-blue-500/30 text-blue-300 flex items-center gap-1.5">
                         <Database className="w-3.5 h-3.5 text-blue-400 shrink-0" />
                         <div className="truncate">
-                          <strong className="text-white">Layer 01 (Glean Standard):</strong> {m.harness.contextLayer.summary}
+                          <strong className="text-white">Layer 01 (Glean):</strong> {m.harness.contextLayer.summary}
                         </div>
                       </div>
 
-                      {/* Layer 02 Stripe Tool Card */}
+                      {/* Layer 02: Stripe Tools */}
                       {m.harness.toolLayer && m.harness.toolLayer.toolName !== "none" && (
                         <div className="px-2.5 py-1.5 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-emerald-300 flex items-center justify-between">
                           <div className="flex items-center gap-1.5 truncate">
                             <Zap className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span className="truncate"><strong className="text-white">Layer 02 (Stripe Standard):</strong> {m.harness.toolLayer.toolLabel}</span>
+                            <span className="truncate"><strong className="text-white">Layer 02 (Stripe):</strong> {m.harness.toolLayer.toolLabel}</span>
                           </div>
                           <span className="text-emerald-400 font-bold ml-1 shrink-0">✓ 0.04ms OK</span>
                         </div>
                       )}
 
-                      {/* Layer 03 Devin Orchestration Step Machine */}
+                      {/* Layer 03: Devin ReAct Loop */}
                       {m.harness.orchestrationLayer && (
                         <div className="p-3 rounded-xl bg-slate-950/85 border border-white/15 space-y-1.5">
                           <div className="flex items-center justify-between text-amber-300 font-bold border-b border-white/10 pb-1">
                             <div className="flex items-center gap-1.5">
                               <Terminal className="w-3.5 h-3.5" />
-                              <span>⚡ Layer 03 (Devin Standard): Autonomous ReAct Loop</span>
+                              <span>⚡ Layer 03 (Devin): Autonomous ReAct Loop</span>
                             </div>
                             <span className="text-[9px] text-emerald-400 font-mono">
                               {m.harness.orchestrationLayer.length}/{m.harness.orchestrationLayer.length} Done
@@ -456,150 +450,139 @@ export default function CopilotWorkstationPage() {
                         </div>
                       )}
 
-                      {/* Layer 04 + 05 + 06 Telemetry Strip */}
+                      {/* Layer 04 + 05 + 06 Telemetry Footer */}
                       <div className="p-2 rounded-xl bg-white/5 border border-white/10 flex flex-wrap items-center justify-between gap-1 text-[9px] text-slate-400">
-                        <span className="text-purple-300">🧠 <strong>Notion Memory:</strong> Turn #{m.harness.memoryLayer.turnsCount}</span>
-                        <span className="text-emerald-300">🛡️ <strong>NeMo Guard:</strong> {m.harness.guardrailLayer.securityScore}</span>
-                        <span className="text-amber-300">📊 <strong>LangSmith:</strong> 99.4% Res • 0.0% Halluc</span>
+                        <span className="text-purple-300">🧠 <strong>Memory:</strong> Turn #{m.harness.memoryLayer.turnsCount}</span>
+                        <span className="text-emerald-300">🛡️ <strong>Guard:</strong> {m.harness.guardrailLayer.securityScore}</span>
+                        <span className="text-amber-300">📊 <strong>Evals:</strong> 99.4% Res • 0% Halluc</span>
                       </div>
                     </div>
                   )}
 
                   {m.targetRoute && (
-                    <a
-                      href={`${m.targetRoute}?key=damik2007`}
-                      className="inline-flex items-center gap-1 text-xs font-bold text-amber-300 hover:text-amber-200 underline pt-1"
+                    <button
+                      onClick={() => (window.location.href = m.targetRoute!)}
+                      className="mt-1 flex items-center gap-1 text-xs font-bold text-amber-300 hover:text-amber-200 underline"
                     >
-                      <span>Open {m.targetRoute} Life-Event Hub</span>
+                      <span>Open {m.targetRoute} Hub</span>
                       <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
+                    </button>
                   )}
                 </div>
               </div>
             ))}
+
+            {isTyping && (
+              <div className="flex justify-start animate-in fade-in duration-200">
+                <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-slate-200 flex items-center gap-2">
+                  <Sparkles className="w-3.5 h-3.5 text-saffron animate-spin" />
+                  <span className="text-[11px] font-mono text-slate-300">Reasoning over 6-Layer Sovereign Harness...</span>
+                  <div className="flex items-center gap-1 ml-1">
+                    <div className="w-1.5 h-1.5 rounded-full bg-saffron animate-bounce" style={{ animationDelay: "0ms" }} />
+                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={chatEndRef} />
           </div>
 
-          {/* Prompt Input Form */}
+          {/* Chat-First Input Bar */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleSend(typedInput);
               setTypedInput("");
             }}
-            className="mt-4 flex items-center gap-2 pt-3 border-t border-white/10"
+            className="mt-3 flex items-center gap-2 relative z-10 pt-2 border-t border-white/10"
           >
             <input
               type="text"
               value={typedInput}
               onChange={(e) => setTypedInput(e.target.value)}
-              placeholder="Ask anything (e.g. 'whats my balence', 'withdraw 48000 advance', 'fix exit date')..."
+              placeholder={`Ask anything about ${firstName}'s balance, advances, or job transfers...`}
               className="flex-1 bg-white/10 border border-white/20 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-saffron/70 transition-all"
             />
             <button
               type="submit"
               disabled={!typedInput.trim()}
-              className="p-3 rounded-2xl bg-saffron hover:bg-amber-400 text-sovereign-darkest font-bold disabled:opacity-40 transition-all shadow-md"
+              className="p-3 rounded-2xl bg-saffron hover:bg-amber-400 text-sovereign-darkest font-bold disabled:opacity-40 transition-all shadow-md shrink-0"
+              title="Send Message"
             >
-              <Send className="w-5 h-5" />
+              <Send className="w-4 h-4" />
             </button>
           </form>
         </div>
 
-        {/* Right Side: Sovereign Telemetry & Tool Inspector */}
-        <div className="lg:col-span-4 space-y-4">
-          <div className="p-5 rounded-3xl backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/95 border border-white/20 shadow-2xl text-white space-y-4 font-mono text-xs">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div className="flex items-center gap-2">
-                <Terminal className="w-4 h-4 text-saffron" />
-                <h3 className="font-bold text-white uppercase text-xs">Live Telemetry Inspector</h3>
-              </div>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[9px]">
-                Active Session
+        {/* Right Column: Live Telemetry & Inspector */}
+        <div className="space-y-4">
+          {/* Active Persona Profile Card */}
+          <div className="rounded-3xl bg-slate-900/90 border border-white/15 p-5 shadow-xl space-y-3 font-mono text-xs">
+            <div className="flex items-center justify-between border-b border-white/10 pb-2">
+              <span className="text-saffron font-bold uppercase text-[11px] flex items-center gap-1.5">
+                <User className="w-4 h-4" />
+                <span>Active Citizen Context (Layer 01)</span>
+              </span>
+              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/10 ${personaBadge.text}`}>
+                {personaBadge.role}
               </span>
             </div>
-
-            {/* Glean Layer */}
-            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-              <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 01 • Zero-Shot Context (Glean)</span>
-              <div className="text-white font-bold text-sm">{fullName}</div>
-              <div className="text-slate-300">UAN: {uan}</div>
-              <div className="text-emerald-400 font-bold">Corpus: ₹{balanceStr}</div>
-              <div className="text-slate-300 truncate">Employer: {company}</div>
-            </div>
-
-            {/* Stripe Layer */}
-            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-              <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 02 • In-Browser Hands (Stripe - 6 Tools)</span>
-              <div className="text-slate-200">1. execute_advance_preflight</div>
-              <div className="text-slate-200">2. auto_deduce_exit_date</div>
-              <div className="text-slate-200">3. verify_npci_penny_drop</div>
-              <div className="text-slate-200">4. toggle_discreet_privacy</div>
-              <div className="text-slate-200">5. download_passbook_statement</div>
-              <div className="text-slate-200">6. switch_indic_language</div>
-            </div>
-
-            {/* Devin Layer */}
-            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-              <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 03 • Orchestration (Devin)</span>
-              <div className="text-amber-300 font-bold">Plan ➔ Execute ➔ Verify ➔ Disburse</div>
-              <div className="text-slate-300">Multi-Step ReAct State Machine</div>
-            </div>
-
-            {/* Notion Layer */}
-            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-              <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 04 • Sovereign Memory (Notion)</span>
-              <div className="text-purple-300 font-bold">Session Context Persistence</div>
-              <div className="text-slate-300">Preserved in localStorage across turns</div>
-            </div>
-
-            {/* NeMo Layer */}
-            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-              <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 05 • Guardrails (NeMo)</span>
-              <div className="text-emerald-400 font-bold">Grade S+ (DPDP Act 2023)</div>
-              <div className="text-slate-300">Presidio PII Tokenization Active</div>
-              <div className="text-slate-300">HMAC-SHA256 DBT Ledger Chaining</div>
-            </div>
-
-            {/* LangSmith Layer */}
-            <div className="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1">
-              <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 06 • Real-Time Evals (LangSmith)</span>
-              <div className="grid grid-cols-3 gap-2 text-center text-[10px] pt-1">
-                <div className="p-1.5 rounded bg-emerald-950/60 border border-emerald-500/40 text-emerald-300">
-                  <strong className="block text-xs font-bold text-white">99.4%</strong>
-                  Auto-Res
-                </div>
-                <div className="p-1.5 rounded bg-blue-950/60 border border-blue-500/40 text-blue-300">
-                  <strong className="block text-xs font-bold text-white">0.0%</strong>
-                  Halluc
-                </div>
-                <div className="p-1.5 rounded bg-amber-950/60 border border-amber-500/40 text-amber-300">
-                  <strong className="block text-xs font-bold text-white">&lt;0.05ms</strong>
-                  Tool Latency
-                </div>
+            <div className="space-y-1.5 text-slate-300">
+              <div className="flex justify-between">
+                <span>Citizen Name:</span>
+                <span className="text-white font-bold">{fullName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>UAN:</span>
+                <span className="text-white">{uan}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Total Corpus:</span>
+                <span className="text-emerald-400 font-bold">₹{balanceStr}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Establishment:</span>
+                <span className="text-white truncate max-w-[150px]">{company}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Service Tenure:</span>
+                <span className="text-cyan-300 font-bold">{serviceYears} Years</span>
               </div>
             </div>
           </div>
 
-          {/* Quick Hub Navigation Card */}
-          <div className="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 shadow-2xl text-white space-y-3 text-xs">
-            <h3 className="font-bold text-sm text-slate-200">Navigate to Life-Event Hubs</h3>
-            <div className="grid grid-cols-2 gap-2">
-              <a href="/money?key=damik2007" className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-between text-slate-200">
-                <span>🏥 I Need Money</span>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-              </a>
-              <a href="/career?key=damik2007" className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-between text-slate-200">
-                <span>💼 I Changed Jobs</span>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-              </a>
-              <a href="/savings?key=damik2007" className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-between text-slate-200">
-                <span>📈 My Savings</span>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-              </a>
-              <a href="/fix?key=damik2007" className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-between text-slate-200">
-                <span>✍️ Fix Details</span>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-              </a>
+          {/* 6-Layer Sovereign Harness Standards Card */}
+          <div className="rounded-3xl bg-slate-900/90 border border-white/15 p-5 shadow-xl space-y-3 font-mono text-xs">
+            <div className="text-saffron font-bold uppercase text-[11px] flex items-center gap-1.5 border-b border-white/10 pb-2">
+              <Terminal className="w-4 h-4" />
+              <span>6-Layer Sovereign Architecture</span>
+            </div>
+            <div className="space-y-2 text-[11px]">
+              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+                <span className="text-blue-300 font-bold block">01. Context Engine (Glean)</span>
+                <span className="text-slate-400 text-[10px]">Zero-shot citizen profile injection</span>
+              </div>
+              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+                <span className="text-amber-300 font-bold block">02. In-Browser Hands (Stripe)</span>
+                <span className="text-slate-400 text-[10px]">6 deterministic tools executed in &lt;0.05ms</span>
+              </div>
+              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+                <span className="text-cyan-300 font-bold block">03. Orchestration (Devin)</span>
+                <span className="text-slate-400 text-[10px]">Plan ➔ Execute ➔ Verify ➔ Disburse state machine</span>
+              </div>
+              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+                <span className="text-purple-300 font-bold block">04. Sovereign Memory (Notion)</span>
+                <span className="text-slate-400 text-[10px]">Multi-turn state isolation in localStorage</span>
+              </div>
+              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+                <span className="text-emerald-300 font-bold block">05. Guardrails (NeMo)</span>
+                <span className="text-slate-400 text-[10px]">Prompt injection defense & Presidio PII masking</span>
+              </div>
+              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+                <span className="text-rose-300 font-bold block">06. Real-Time Evals (LangSmith)</span>
+                <span className="text-slate-400 text-[10px]">99.4% resolution • 0% hallucination</span>
+              </div>
             </div>
           </div>
         </div>

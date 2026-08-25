@@ -52,6 +52,7 @@ export const Navbar: React.FC = () => {
   const [commandCenterOpen, setCommandCenterOpen] = React.useState(false);
   const [chaosModalOpen, setChaosModalOpen] = React.useState(false);
   const [architectureModalOpen, setArchitectureModalOpen] = React.useState(false);
+  const [personaDropdownOpen, setPersonaDropdownOpen] = React.useState(false);
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -245,9 +246,10 @@ export const Navbar: React.FC = () => {
                 <span>1-Click Demo Login</span>
               </button>
             ) : (
-              <div className="relative group">
+              <div className="relative">
                 <button
                   type="button"
+                  onClick={() => setPersonaDropdownOpen((prev) => !prev)}
                   title={`CITIZEN REDESIGN PROTOTYPE | SIMULATED UAN: ${activeCitizen.uan}`}
                   aria-label={`CITIZEN REDESIGN PROTOTYPE | SIMULATED UAN: ${activeCitizen.uan}`}
                   className="flex items-center gap-2 bg-sovereign-light border border-sovereign-accent px-3 py-1.5 rounded-lg hover:border-saffron transition-all text-left min-h-[44px]"
@@ -256,7 +258,7 @@ export const Navbar: React.FC = () => {
                   <div>
                     <div className="text-xs font-bold text-white flex items-center gap-1">
                       <span>{activeCitizen.full_name}</span>
-                      <ChevronDown className="w-3 h-3 text-slate-400 group-hover:rotate-180 transition-transform" />
+                      <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform ${personaDropdownOpen ? "rotate-180" : ""}`} />
                     </div>
                     <div className="text-[10px] text-slate-300 font-mono">
                       UAN: {activeCitizen.uan.slice(0, 4)}••••{activeCitizen.uan.slice(-4)}
@@ -264,20 +266,24 @@ export const Navbar: React.FC = () => {
                   </div>
                 </button>
 
-                {/* Rich Persona Dropdown Menu */}
-                <div className="absolute right-0 mt-1 w-80 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-2 hidden group-hover:block group-focus-within:block z-50 animate-in fade-in slide-in-from-top-1">
-                  <div className="px-3 py-1.5 flex justify-between items-center border-b border-slate-100 dark:border-slate-800 mb-1">
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
-                      Switch Citizen Persona
-                    </span>
-                    <button
-                      onClick={logout}
-                      className="text-[10px] text-rose-600 dark:text-rose-400 font-bold hover:underline flex items-center gap-1 min-h-[44px]"
-                    >
-                      <LogOut className="w-3 h-3" />
-                      <span>Logout / Gateway</span>
-                    </button>
-                  </div>
+                {/* Rich Persona Dropdown Menu (Touch & Click Friendly) */}
+                {personaDropdownOpen && (
+                  <div className="absolute right-0 mt-1 w-80 max-w-[90vw] bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 p-2 z-50 animate-in fade-in slide-in-from-top-1">
+                    <div className="px-3 py-1.5 flex justify-between items-center border-b border-slate-100 dark:border-slate-800 mb-1">
+                      <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                        Switch Citizen Persona
+                      </span>
+                      <button
+                        onClick={() => {
+                          setPersonaDropdownOpen(false);
+                          logout();
+                        }}
+                        className="text-[10px] text-rose-600 dark:text-rose-400 font-bold hover:underline flex items-center gap-1 min-h-[44px]"
+                      >
+                        <LogOut className="w-3 h-3" />
+                        <span>Logout / Gateway</span>
+                      </button>
+                    </div>
 
                   <div className="space-y-1">
                     {citizens.map((c) => {
@@ -294,7 +300,10 @@ export const Navbar: React.FC = () => {
                       return (
                         <button
                           key={c.uan}
-                          onClick={() => switchCitizen(c.uan)}
+                          onClick={() => {
+                            switchCitizen(c.uan);
+                            setPersonaDropdownOpen(false);
+                          }}
                           className={`w-full text-left p-2.5 rounded-xl flex flex-col gap-1 transition-all min-h-[44px] ${
                             isSelected
                               ? "bg-sovereign-navy text-white font-bold ring-2 ring-saffron/50 shadow-sm"
@@ -326,11 +335,12 @@ export const Navbar: React.FC = () => {
                     })}
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
+    </div>
 
       {/* 3. Live Sovereign DPI Pulse Ticker */}
       <LiveSovereignPulse />

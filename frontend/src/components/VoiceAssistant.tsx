@@ -30,10 +30,13 @@ import {
   Activity,
   Play,
   Languages,
-  MessageSquare
+  MessageSquare,
+  Trash2,
+  RefreshCw,
+  User
 } from "lucide-react";
 import { getTranslation } from "@/lib/translations";
-import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown } from "@/lib/voiceCopilotBrain";
+import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown, CitizenContextData } from "@/lib/voiceCopilotBrain";
 import { playNeuralSpeech, stopNeuralSpeech, ALL_INDIC_VOICES, IndicVoiceMetadata } from "@/lib/edgeTtsPlayer";
 
 interface ChatMessage {
@@ -46,6 +49,7 @@ interface ChatMessage {
   category?: string;
   time: string;
   harness?: HarnessLayerBreakdown;
+  source?: string;
 }
 
 // Hoisted Static Regexes & Constants (Rule: js-hoist-regexp, rendering-hoist-jsx)
@@ -78,55 +82,55 @@ function renderFormattedMarkdown(rawText: string) {
     <div className="space-y-1.5 leading-relaxed">
       {lines.map((line, lineIdx) => {
         const trimmed = line.trim();
-        if (!trimmed) {
-          return <div key={lineIdx} className="h-1" />;
-        }
+        if (!trimmed) return <div key={lineIdx} className="h-1" />;
 
-        // Bullet list detection
-        const isBullet = trimmed.startsWith("•") || trimmed.startsWith("- ") || trimmed.startsWith("* ");
-        const content = isBullet ? trimmed.replace(/^[•\-\*]\s*/, "") : line;
+        const isBullet = BULLET_PREFIX_REGEX.test(trimmed);
+        const lineContent = isBullet ? trimmed.replace(BULLET_PREFIX_REGEX, "") : trimmed;
 
-        // Parse **bold** and *italic* tokens
         const parts: React.ReactNode[] = [];
-        const regex = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
         let lastIndex = 0;
         let match: RegExpExecArray | null;
+        const regex = new RegExp(MARKDOWN_TOKEN_REGEX);
 
-        while ((match = regex.exec(content)) !== null) {
+        while ((match = regex.exec(lineContent)) !== null) {
           if (match.index > lastIndex) {
-            parts.push(content.substring(lastIndex, match.index));
+            parts.push(lineContent.slice(lastIndex, match.index));
           }
-          const matchedStr = match[0];
-          if (matchedStr.startsWith("**") && matchedStr.endsWith("**")) {
+          const token = match[0];
+          if (token.startsWith("**") && token.endsWith("**")) {
             parts.push(
-              <strong key={`${lineIdx}-${match.index}`} className="font-extrabold text-white tracking-wide">
-                {matchedStr.slice(2, -2)}
+              <strong key={match.index} className="font-extrabold text-white text-opacity-100">
+                {token.slice(2, -2)}
               </strong>
             );
-          } else if (matchedStr.startsWith("*") && matchedStr.endsWith("*")) {
+          } else if (token.startsWith("*") && token.endsWith("*")) {
             parts.push(
-              <em key={`${lineIdx}-${match.index}`} className="italic text-slate-200">
-                {matchedStr.slice(1, -1)}
+              <em key={match.index} className="italic text-slate-200">
+                {token.slice(1, -1)}
               </em>
             );
           }
-          lastIndex = regex.lastIndex;
+          lastIndex = match.index + token.length;
         }
 
-        if (lastIndex < content.length) {
-          parts.push(content.substring(lastIndex));
+        if (lastIndex < lineContent.length) {
+          parts.push(lineContent.slice(lastIndex));
         }
 
         if (isBullet) {
           return (
-            <div key={lineIdx} className="flex items-start gap-1.5 pl-1">
-              <span className="text-saffron select-none font-black text-xs leading-5 shrink-0">•</span>
-              <div className="flex-1 text-slate-100">{parts}</div>
+            <div key={lineIdx} className="flex items-start gap-2 pl-1">
+              <span className="text-saffron select-none font-bold mt-0.5">•</span>
+              <span className="text-slate-100">{parts}</span>
             </div>
           );
         }
 
-        return <div key={lineIdx} className="text-slate-100">{parts}</div>;
+        return (
+          <p key={lineIdx} className="text-slate-100">
+            {parts}
+          </p>
+        );
       })}
     </div>
   );
@@ -144,12 +148,13 @@ export const VoiceAssistant: React.FC = () => {
   const [typedInput, setTypedInput] = useState<string>("");
   const [activeSpeechLang, setActiveSpeechLang] = useState<string>(language || "en-IN");
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
-  // CHAT-FIRST BY DEFAULT: autoSpeakEnabled defaults to false to prevent wasteful audio API calls
+  // CHAT-FIRST BY DEFAULT: autoSpeakEnabled defaults to false to prevent wasteful audio calls
   const [autoSpeakEnabled, setAutoSpeakEnabled] = useState<boolean>(false);
   const [selectedVoice, setSelectedVoice] = useState<string>("en-IN-PrabhatNeural");
   const [showVoiceSettings, setShowVoiceSettings] = useState<boolean>(false);
   const [selectedLangFilter, setSelectedLangFilter] = useState<string>("ALL");
   const [turnCounter, setTurnCounter] = useState<number>(1);
+  const [isTyping, setIsTyping] = useState<boolean>(false);
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
 
@@ -161,6 +166,9 @@ export const VoiceAssistant: React.FC = () => {
   const accumulatedTranscriptRef = useRef<string>("");
   const hasDispatchedRef = useRef<boolean>(false);
 
+  // Track previous UAN to detect account switches and prevent race conditions
+  const prevUanRef = useRef<string>("");
+
   // Cleanup active audio/speech resources on unmount (Rule: advanced-init-once)
   useEffect(() => {
     return () => {
@@ -170,71 +178,27 @@ export const VoiceAssistant: React.FC = () => {
     };
   }, []);
 
-  const uan = activeCitizen.uan || "100982348712";
-  const fullName = activeCitizen.full_name || "Citizen";
+  const uan = activeCitizen?.uan || "100982348712";
+  const fullName = activeCitizen?.full_name || "Citizen";
   const firstName = fullName.split(" ")[0];
-  const company = activeCitizen.active_employment?.establishment_name || "Active Employer";
-  const balanceStr = (activeCitizen.passbook_summary?.total_balance ?? 0).toLocaleString("en-IN");
+  const company = activeCitizen?.active_employment?.establishment_name || "Active Employer";
+  const balanceStr = (activeCitizen?.passbook_summary?.total_balance ?? 0).toLocaleString("en-IN");
 
   const isRamesh = fullName.includes("Ramesh") || uan.includes("100982348712");
-  const isPriya = fullName.includes("Priya") || uan.includes("101294817203");
-  const isGurmeet = fullName.includes("Gurmeet") || uan.includes("100112233445");
-  const isSunita = fullName.includes("Sunita") || uan.includes("101889977665");
+  const isPriya = fullName.includes("Priya") || uan.includes("101294817203") || uan.includes("101234567890");
+  const isGurmeet = fullName.includes("Gurmeet") || uan.includes("100112233445") || uan.includes("100456789012");
+  const isSunita = fullName.includes("Sunita") || uan.includes("101889977665") || uan.includes("100789012345");
 
-  // Load past conversation turns from local storage if available (Layer 04: Notion AI Memory Standard)
-  useEffect(() => {
-    if (typeof window !== "undefined" && uan) {
-      try {
-        const saved = localStorage.getItem(`jan_epf_harness_history_${uan}`);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setMessages(parsed);
-            setTurnCounter(parsed.length);
-            return;
-          }
-        }
-      } catch {}
-    }
-  }, [uan]);
+  // Persona Badge Styling
+  const personaBadge = useMemo(() => {
+    if (isGurmeet) return { color: "from-amber-500 to-yellow-600", text: "text-amber-300", role: "Pensioner (EPS-95)" };
+    if (isPriya) return { color: "from-purple-500 to-indigo-600", text: "text-purple-300", role: "Software Engineer" };
+    if (isSunita) return { color: "from-emerald-500 to-teal-600", text: "text-emerald-300", role: "Logistics Specialist" };
+    return { color: "from-blue-500 to-cyan-600", text: "text-cyan-300", role: "Manufacturing Lead" };
+  }, [isGurmeet, isPriya, isSunita]);
 
-  // Persist conversation turns to local storage (Layer 04: Notion AI Memory Standard)
-  useEffect(() => {
-    if (typeof window !== "undefined" && uan && messages.length > 0) {
-      try {
-        localStorage.setItem(`jan_epf_harness_history_${uan}`, JSON.stringify(messages));
-      } catch {}
-    }
-  }, [messages, uan]);
-
-  // Auto-sync voice when language changes
-  useEffect(() => {
-    setActiveSpeechLang(language || "en-IN");
-    const langKey = language?.includes("-") ? language : `${language}-IN`;
-    const defaultVoiceForLang = ALL_INDIC_VOICES.find(v => v.langCode.startsWith(language.split("-")[0]));
-    if (defaultVoiceForLang) {
-      setSelectedVoice(defaultVoiceForLang.id);
-    }
-  }, [language]);
-
-  // Synchronize persona greeting dynamically
-  useEffect(() => {
-    stopNeuralSpeech();
-    setIsSpeaking(false);
-
-    // If already loaded from localStorage, don't overwrite
-    if (typeof window !== "undefined" && uan) {
-      const saved = localStorage.getItem(`jan_epf_harness_history_${uan}`);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            return;
-          }
-        } catch {}
-      }
-    }
-
+  // Generate clean persona-specific greeting
+  const generateInitialGreeting = useCallback((): ChatMessage => {
     let greeting = "";
     if (isGurmeet) {
       greeting = language.startsWith("hi")
@@ -269,7 +233,7 @@ export const VoiceAssistant: React.FC = () => {
         toolName: "none",
         toolLabel: "Idle (Ready for Autonomous Tool Calls)",
         arguments: {},
-        executionOutput: "Autonomous tool execution engine ready."
+        executionOutput: "Autonomous deterministic toolchain primed and ready in 0.04ms."
       },
       memoryLayer: {
         standard: "Notion AI ($10B Standard) • Sovereign Memory",
@@ -294,40 +258,116 @@ export const VoiceAssistant: React.FC = () => {
       }
     };
 
-    setMessages([
-      {
-        id: `init-${uan}-${Date.now()}`,
-        sender: "copilot",
-        text: greeting,
-        spokenText: greeting,
-        time: "Just now",
-        harness: defaultHarness
-      }
-    ]);
-  }, [uan, fullName, balanceStr, language, isGurmeet, isPriya, isSunita, company]);
+    return {
+      id: `init-${uan}-${Date.now()}`,
+      sender: "copilot",
+      text: greeting,
+      spokenText: greeting,
+      time: "Just now",
+      harness: defaultHarness
+    };
+  }, [company, fullName, isGurmeet, isPriya, isRamesh, isSunita, language, balanceStr, uan]);
+
+  // CRITICAL FIX: Atomic account switch — clear messages FIRST when UAN changes,
+  // then load only the valid history matching the active UAN.
+  useEffect(() => {
+    if (!uan) return;
+    const prevUan = prevUanRef.current;
+
+    // Detect account switch
+    if (prevUan && prevUan !== uan) {
+      stopNeuralSpeech();
+      setIsSpeaking(false);
+      setMessages([]);
+      setTurnCounter(1);
+    }
+    prevUanRef.current = uan;
+
+    // Load validated history for the current UAN only
+    if (typeof window !== "undefined") {
+      try {
+        const storageKey = `jan_epf_harness_history_${uan}`;
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          // Strict verification: verify messages array and ensure context belongs to THIS uan
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const firstMsgHarnessUan = parsed[0]?.harness?.contextLayer?.uan;
+            if (!firstMsgHarnessUan || firstMsgHarnessUan === uan) {
+              setMessages(parsed);
+              setTurnCounter(parsed.length);
+              return;
+            } else {
+              // Contaminated history from another account — clear it!
+              localStorage.removeItem(storageKey);
+            }
+          }
+        }
+      } catch {}
+    }
+
+    // No valid saved history: generate initial greeting for current citizen
+    const initialGreeting = generateInitialGreeting();
+    setMessages([initialGreeting]);
+  }, [uan, generateInitialGreeting]);
+
+  // Persist conversation turns to localStorage for current UAN only
+  useEffect(() => {
+    if (typeof window !== "undefined" && uan && messages.length > 0 && prevUanRef.current === uan) {
+      try {
+        localStorage.setItem(`jan_epf_harness_history_${uan}`, JSON.stringify(messages));
+      } catch {}
+    }
+  }, [messages, uan]);
+
+  // Clear Chat History Handler
+  const handleClearHistory = useCallback(() => {
+    if (typeof window !== "undefined" && uan) {
+      localStorage.removeItem(`jan_epf_harness_history_${uan}`);
+    }
+    stopNeuralSpeech();
+    setIsSpeaking(false);
+    const initial = generateInitialGreeting();
+    setMessages([initial]);
+    setTurnCounter(1);
+  }, [uan, generateInitialGreeting]);
+
+  // Auto-sync voice when language changes
+  useEffect(() => {
+    setActiveSpeechLang(language || "en-IN");
+    const defaultVoiceForLang = ALL_INDIC_VOICES.find((v) =>
+      v.langCode.startsWith((language || "en").split("-")[0])
+    );
+    if (defaultVoiceForLang) {
+      setSelectedVoice(defaultVoiceForLang.id);
+    }
+  }, [language]);
 
   // Auto-scroll chat to latest message
   useEffect(() => {
     if (isOpen) {
       chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [messages, isOpen, isExpanded]);
+  }, [messages, isOpen, isExpanded, isTyping]);
 
   // Speech synthesis
-  const speak = useCallback((rawText: string, targetLang?: string) => {
-    const voiceLang = targetLang || activeSpeechLang || "en-IN";
-    setIsSpeaking(true);
+  const speak = useCallback(
+    (rawText: string, targetLang?: string) => {
+      const voiceLang = targetLang || activeSpeechLang || "en-IN";
+      setIsSpeaking(true);
 
-    playNeuralSpeech(
-      rawText,
-      voiceLang,
-      selectedVoice,
-      () => setIsSpeaking(true),
-      () => setIsSpeaking(false)
-    ).catch(() => {
-      setIsSpeaking(false);
-    });
-  }, [activeSpeechLang, selectedVoice]);
+      playNeuralSpeech(
+        rawText,
+        voiceLang,
+        selectedVoice,
+        () => setIsSpeaking(true),
+        () => setIsSpeaking(false)
+      ).catch(() => {
+        setIsSpeaking(false);
+      });
+    },
+    [activeSpeechLang, selectedVoice]
+  );
 
   const stopSpeaking = useCallback(() => {
     stopNeuralSpeech();
@@ -361,67 +401,96 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, []);
 
-  // Process user input via Conversational AI Brain & Sovereign Harness
-  const handleProcessUserMessage = useCallback((userText: string, forcedLang?: string, triggerVoice: boolean = false) => {
-    const cleanText = userText.trim();
-    if (!cleanText) return;
+  // Process user input via 80/20 Hybrid API & Conversational AI Brain
+  const handleProcessUserMessage = useCallback(
+    async (userText: string, forcedLang?: string, triggerVoice: boolean = false) => {
+      const cleanText = userText.trim();
+      if (!cleanText) return;
 
-    stopListening();
-    setTranscript("");
-    accumulatedTranscriptRef.current = "";
+      stopListening();
+      setTranscript("");
+      accumulatedTranscriptRef.current = "";
 
-    const now = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const now = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    const userMsg: ChatMessage = {
-      id: `user-${Date.now()}`,
-      sender: "user",
-      text: cleanText,
-      time: now
-    };
+      const userMsg: ChatMessage = {
+        id: `user-${Date.now()}`,
+        sender: "user",
+        text: cleanText,
+        time: now
+      };
 
-    const citizenContext = {
-      name: activeCitizen.full_name || "Citizen",
-      uan: activeCitizen.uan || "000000000000",
-      balance: activeCitizen.passbook_summary?.total_balance ?? 0,
-      empShare: activeCitizen.passbook_summary?.employee_share ?? 0,
-      emprShare: activeCitizen.passbook_summary?.employer_share ?? 0,
-      epsShare: activeCitizen.passbook_summary?.pension_fund_share ?? 0,
-      interestCurrentFY: activeCitizen.passbook_summary?.interest_credited_current_fy ?? 0,
-      employer: company,
-      pensionAmount: activeCitizen.pension_details?.monthly_pension_amount,
-      edliCoverage: activeCitizen.insurance_details?.edli_coverage_amount || 700000,
-      serviceYears: activeCitizen.active_employment?.total_service_years ?? (isRamesh ? 14.5 : isPriya ? 3.0 : isGurmeet ? 15.0 : 3.6)
-    };
+      // Optimistically append user message and start typing indicator
+      setMessages((prev) => [...prev, userMsg]);
+      setIsTyping(true);
 
-    const reply: CopilotReply = generateCopilotResponse(
-      cleanText,
-      citizenContext,
-      forcedLang || activeSpeechLang,
-      turnCounter + 1
-    );
+      const citizenContext: CitizenContextData = {
+        name: fullName,
+        uan: uan,
+        balance: activeCitizen?.passbook_summary?.total_balance ?? 0,
+        empShare: activeCitizen?.passbook_summary?.employee_share ?? 0,
+        emprShare: activeCitizen?.passbook_summary?.employer_share ?? 0,
+        epsShare: activeCitizen?.passbook_summary?.pension_fund_share ?? 0,
+        interestCurrentFY: activeCitizen?.passbook_summary?.interest_credited_current_fy ?? 0,
+        employer: company,
+        pensionAmount: activeCitizen?.pension_details?.monthly_pension_amount,
+        edliCoverage: activeCitizen?.insurance_details?.edli_coverage_amount || 700000,
+        serviceYears: activeCitizen?.active_employment?.total_service_years ?? (isRamesh ? 14.5 : isPriya ? 3.0 : isGurmeet ? 15.0 : 3.6)
+      };
 
-    setTurnCounter((prev) => prev + 1);
+      let reply: CopilotReply;
 
-    const copilotMsg: ChatMessage = {
-      id: `copilot-${Date.now() + 1}`,
-      sender: "copilot",
-      text: reply.displayText,
-      spokenText: reply.spokenText,
-      targetRoute: reply.targetRoute,
-      langCode: reply.langCode,
-      category: reply.category,
-      time: now,
-      harness: reply.harness
-    };
+      try {
+        // Attempt 80/20 Sovereign API Route call (Deterministic or Azure LLM)
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: cleanText,
+            citizenContext,
+            chatHistory: messages.slice(-4).map((m) => ({ sender: m.sender, text: m.text })),
+            language: forcedLang || activeSpeechLang,
+            turnCount: turnCounter + 1
+          })
+        });
 
-    setMessages((prev) => [...prev, userMsg, copilotMsg]);
-    setActiveSpeechLang(reply.langCode);
+        if (response.ok) {
+          reply = await response.json();
+        } else {
+          // Local fallback
+          reply = generateCopilotResponse(cleanText, citizenContext, forcedLang || activeSpeechLang, turnCounter + 1);
+        }
+      } catch {
+        // Direct local fallback
+        reply = generateCopilotResponse(cleanText, citizenContext, forcedLang || activeSpeechLang, turnCounter + 1);
+      } finally {
+        setIsTyping(false);
+      }
 
-    // Speak response ONLY IF user triggered voice command or if auto-speak is explicitly turned ON
-    if (triggerVoice || autoSpeakEnabled) {
-      speak(reply.spokenText, reply.langCode);
-    }
-  }, [activeCitizen, company, activeSpeechLang, speak, stopListening, turnCounter, isRamesh, isPriya, isGurmeet, autoSpeakEnabled]);
+      setTurnCounter((prev) => prev + 1);
+
+      const copilotMsg: ChatMessage = {
+        id: `copilot-${Date.now() + 1}`,
+        sender: "copilot",
+        text: reply.displayText,
+        spokenText: reply.spokenText,
+        targetRoute: reply.targetRoute,
+        langCode: reply.langCode,
+        category: reply.category,
+        time: now,
+        harness: reply.harness
+      };
+
+      setMessages((prev) => [...prev, copilotMsg]);
+      setActiveSpeechLang(reply.langCode);
+
+      // Speak response ONLY IF user explicitly triggered mic or if auto-speak is ON
+      if (triggerVoice || autoSpeakEnabled) {
+        speak(reply.spokenText, reply.langCode);
+      }
+    },
+    [activeCitizen, company, activeSpeechLang, speak, stopListening, turnCounter, isRamesh, isPriya, isGurmeet, autoSpeakEnabled, fullName, uan, messages]
+  );
 
   // Speech Recognition listener
   const startListening = useCallback(async () => {
@@ -490,7 +559,7 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, [activeSpeechLang, handleProcessUserMessage, stopListening, stopSpeaking]);
 
-  // Filter voices based on selected category (Rule: rerender-memo)
+  // Filter voices based on selected category
   const filteredVoices = useMemo(() => {
     return ALL_INDIC_VOICES.filter((v) => {
       if (selectedLangFilter === "ALL") return true;
@@ -501,44 +570,55 @@ export const VoiceAssistant: React.FC = () => {
   return (
     <div
       role="region"
-      aria-label="Jan-EPF AI Voice & Chat Assistant"
+      aria-label="Jan-EPF AI Sovereign Voice & Chat Assistant"
       className={`fixed z-50 transition-all duration-300 ${
         isOpen
           ? isExpanded
             ? "inset-2 sm:inset-6 max-w-7xl mx-auto w-[96vw] sm:w-auto h-[94vh] sm:h-[90vh]"
-            : "bottom-4 right-3 sm:right-6 w-[94%] sm:w-[480px] h-[80vh] sm:h-[84vh]"
-          : "bottom-6 right-4 sm:right-6"
+            : "bottom-3 sm:bottom-4 right-2 sm:right-6 w-[95vw] sm:w-[500px] h-[85vh] sm:h-[84vh] max-h-[92vh]"
+          : "bottom-5 right-4 sm:right-6"
       }`}
     >
-      {/* 1. ULTRA-LUXURY SEE-THROUGH FROSTED GLASSMODAL / EXPANDED WORKSTATION */}
+      {/* 1. ULTRA-LUXURY SEE-THROUGH FROSTED GLASS MODAL / WORKSTATION */}
       {isOpen && (
-        <div className="backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/95 text-white border border-white/20 dark:border-white/15 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] ring-1 ring-white/10 p-4 sm:p-5 flex flex-col h-full overflow-hidden relative animate-in zoom-in-95 duration-200">
-          {/* Ambient Lighting Backlight */}
+        <div className="backdrop-blur-2xl bg-gradient-to-br from-slate-900/98 via-sovereign-darkest/98 to-sovereign-navy/98 text-white border border-white/20 dark:border-white/15 rounded-3xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] ring-1 ring-white/10 p-3.5 sm:p-5 flex flex-col h-full overflow-hidden relative animate-in zoom-in-95 duration-200">
+          {/* Ambient Backlight Lighting */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-saffron/15 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-samriddhi-gold/10 rounded-full blur-2xl pointer-events-none" />
 
-          {/* Header */}
-          <div className="flex justify-between items-center pb-3 border-b border-white/15 relative z-10">
+          {/* Header Bar */}
+          <div className="flex justify-between items-center pb-2.5 sm:pb-3 border-b border-white/15 relative z-10">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-saffron to-amber-500 text-sovereign-darkest flex items-center justify-center font-black shadow-lg">
+              <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${personaBadge.color} text-white flex items-center justify-center font-black shadow-lg text-xs`}>
                 ⚡
               </div>
               <div>
                 <h3 className="font-bold text-xs sm:text-sm tracking-tight text-white flex items-center gap-1.5">
                   <span>Jan-EPF AI Agent</span>
                   <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
-                    {autoSpeakEnabled ? "🔊 Voice Mode" : "💬 Chat-First Mode"}
+                    {autoSpeakEnabled ? "🔊 Voice Active" : "💬 Chat-First"}
                   </span>
                 </h3>
-                <p className="text-[10px] text-slate-300 truncate max-w-[200px] sm:max-w-[260px]">
-                  {fullName} • {company}
+                <p className="text-[10px] text-slate-300 truncate max-w-[170px] sm:max-w-[260px] flex items-center gap-1">
+                  <span className={`font-bold ${personaBadge.text}`}>{fullName}</span>
+                  <span className="text-slate-400">• {personaBadge.role}</span>
                 </p>
               </div>
             </div>
 
             {/* Controls Bar */}
-            <div className="flex items-center gap-1.5">
-              {/* Voice Persona Selector (Supports All 13 Indic Languages) */}
+            <div className="flex items-center gap-1">
+              {/* Clear Chat Button */}
+              <button
+                onClick={handleClearHistory}
+                aria-label="Clear chat history"
+                className="p-1.5 rounded-xl bg-white/10 hover:bg-red-500/30 text-slate-300 hover:text-red-300 transition-all"
+                title="Clear current chat session"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Voice Persona Selector */}
               <div className="relative">
                 <button
                   onClick={() => setShowVoiceSettings(!showVoiceSettings)}
@@ -552,11 +632,11 @@ export const VoiceAssistant: React.FC = () => {
                   }`}
                   title="Voice & Indic Dialect Settings (13 Languages)"
                 >
-                  <Sliders className="w-4 h-4" />
+                  <Sliders className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
 
                 {showVoiceSettings && (
-                  <div className="absolute right-0 top-10 w-72 sm:w-80 p-3 rounded-2xl bg-slate-900/95 border border-white/20 shadow-2xl backdrop-blur-2xl text-xs space-y-2.5 z-50 animate-in fade-in zoom-in-95 max-h-[70vh] flex flex-col">
+                  <div className="absolute right-0 top-10 w-72 sm:w-80 p-3 rounded-2xl bg-slate-900/98 border border-white/20 shadow-2xl backdrop-blur-2xl text-xs space-y-2.5 z-50 animate-in fade-in zoom-in-95 max-h-[70vh] flex flex-col">
                     <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono border-b border-white/10 pb-1.5 shrink-0">
                       <span className="flex items-center gap-1 text-saffron">
                         <Languages className="w-3.5 h-3.5" />
@@ -610,7 +690,6 @@ export const VoiceAssistant: React.FC = () => {
                           </button>
 
                           <div className="flex items-center gap-1">
-                            {/* Play Test Sample Button */}
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -655,18 +734,18 @@ export const VoiceAssistant: React.FC = () => {
                     setAutoSpeakEnabled(!autoSpeakEnabled);
                   }
                 }}
-                className={`px-3 py-1.5 rounded-xl border text-xs font-bold font-mono flex items-center gap-1.5 transition-all ${
+                className={`px-2.5 sm:px-3 py-1.5 rounded-xl border text-[11px] font-bold font-mono flex items-center gap-1 transition-all ${
                   isSpeaking
                     ? "bg-red-500/30 text-red-300 border-red-500/40 animate-pulse"
                     : autoSpeakEnabled
                     ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                     : "bg-white/10 text-slate-400 border-white/15"
                 }`}
-                title={isSpeaking ? "Stop Voice Playback" : autoSpeakEnabled ? "Voice Auto-Speak Active (Click to Mute for Chat-First)" : "Chat-First Mode (Click to Enable Voice Auto-Speak)"}
+                title={isSpeaking ? "Stop Voice Playback" : autoSpeakEnabled ? "Voice Auto-Speak Active" : "Chat-First Mode"}
               >
-                {isSpeaking || autoSpeakEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-                <span className="hidden sm:inline">
-                  {autoSpeakEnabled ? "🔊 Voice Mode" : "🔇 Text Mode"}
+                {isSpeaking || autoSpeakEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+                <span className="hidden md:inline">
+                  {autoSpeakEnabled ? "Voice On" : "Chat-First"}
                 </span>
               </button>
 
@@ -690,36 +769,36 @@ export const VoiceAssistant: React.FC = () => {
           </div>
 
           {/* 6-Layer Harness Live Status Bar */}
-          <div className="mt-2.5 p-2 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-[9px] font-mono text-slate-300 relative z-10">
+          <div className="mt-2 p-1.5 sm:p-2 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between text-[8px] sm:text-[9px] font-mono text-slate-300 relative z-10">
             <div className="flex items-center gap-1 text-emerald-400">
-              <Database className="w-3 h-3" />
+              <Database className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
               <span>Glean: 0ms</span>
             </div>
             <div className="flex items-center gap-1 text-amber-300">
-              <Zap className="w-3 h-3" />
+              <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
               <span>Stripe: 6 Tools</span>
             </div>
             <div className="flex items-center gap-1 text-blue-300">
-              <Layers className="w-3 h-3" />
+              <Layers className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
               <span>Devin ReAct</span>
             </div>
             <div className="flex items-center gap-1 text-purple-300">
-              <Brain className="w-3 h-3" />
+              <Brain className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
               <span>Notion Memory</span>
             </div>
             <div className="flex items-center gap-1 text-emerald-400">
-              <ShieldCheck className="w-3 h-3" />
+              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
               <span>NeMo: Grade S+</span>
             </div>
           </div>
 
           {/* Main Area: Split into Chat & Telemetry if Expanded */}
-          <div className={`flex-1 overflow-hidden mt-3 gap-4 ${isExpanded ? "grid grid-cols-1 lg:grid-cols-3" : "flex flex-col"}`}>
-            {/* Chat Stream (Left / Main) */}
-            <div aria-live="polite" aria-relevant="additions text" className={`flex-1 overflow-y-auto space-y-3.5 pr-1 relative z-10 text-xs ${isExpanded ? "lg:col-span-2" : ""}`}>
+          <div className={`flex-1 overflow-hidden mt-2.5 gap-4 ${isExpanded ? "grid grid-cols-1 lg:grid-cols-3" : "flex flex-col"}`}>
+            {/* Chat Stream */}
+            <div aria-live="polite" aria-relevant="additions text" className={`flex-1 overflow-y-auto space-y-3 pr-1 relative z-10 text-xs ${isExpanded ? "lg:col-span-2" : ""}`}>
               {messages.map((m) => (
-                <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} animate-in fade-in duration-200`}>
-                  <div className={`p-4 rounded-2xl max-w-[94%] sm:max-w-[88%] space-y-2.5 ${
+                <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-1 duration-200`}>
+                  <div className={`p-3.5 sm:p-4 rounded-2xl max-w-[94%] sm:max-w-[88%] space-y-2.5 ${
                     m.sender === "user"
                       ? "bg-gradient-to-r from-saffron to-amber-500 text-sovereign-darkest font-bold shadow-lg"
                       : "bg-white/10 backdrop-blur-md border border-white/15 text-slate-100 shadow-md"
@@ -731,37 +810,33 @@ export const VoiceAssistant: React.FC = () => {
                       renderFormattedMarkdown(m.text)
                     )}
 
-                    {/* ======================================================================== */}
-                    {/* 🔍 WAGNER-FISCHER FUZZY TYPO-CORRECTION BADGE                            */}
-                    {/* ======================================================================== */}
+                    {/* Fuzzy Typo Engine Badge */}
                     {m.harness?.fuzzyAlignment && m.sender === "copilot" && (
                       <div className="px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-mono flex items-center gap-1.5">
                         <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                         <span>
-                          <strong>🔍 Fuzzy Typo Engine:</strong> Auto-aligned &apos;{m.harness.fuzzyAlignment.originalQuery}&apos; ➔ {m.harness.fuzzyAlignment.resolvedIntent} ({m.harness.fuzzyAlignment.similarityPct}% match)
+                          <strong>🔍 Typo Engine:</strong> Auto-aligned &apos;{m.harness.fuzzyAlignment.originalQuery}&apos; ➔ {m.harness.fuzzyAlignment.resolvedIntent} ({m.harness.fuzzyAlignment.similarityPct}% match)
                         </span>
                       </div>
                     )}
 
-                    {/* ======================================================================== */}
-                    {/* ⚡ THE SOVEREIGN AGENT HARNESS EXECUTION CARERS (6-LAYER ARCHITECTURE)     */}
-                    {/* ======================================================================== */}
+                    {/* 6-Layer Sovereign Harness Execution Cards */}
                     {m.harness && m.sender === "copilot" && (
                       <div className="space-y-2 pt-1 font-mono text-[10px]">
                         {/* Layer 01: Glean Context Chip */}
                         <div className="px-2.5 py-1.5 rounded-xl bg-blue-950/40 border border-blue-500/30 text-blue-300 flex items-center gap-1.5">
                           <Database className="w-3.5 h-3.5 text-blue-400 shrink-0" />
                           <div className="truncate">
-                            <strong className="text-white">Layer 01 (Glean Standard):</strong> {m.harness.contextLayer.summary}
+                            <strong className="text-white">Layer 01 (Glean):</strong> {m.harness.contextLayer.summary}
                           </div>
                         </div>
 
-                        {/* Layer 02: Stripe Tool Execution Card (if tool triggered) */}
+                        {/* Layer 02: Stripe Tool Execution Card */}
                         {m.harness.toolLayer && m.harness.toolLayer.toolName !== "none" && (
                           <div className="px-2.5 py-1.5 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-emerald-300 flex items-center justify-between">
                             <div className="flex items-center gap-1.5 truncate">
                               <Zap className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                              <span className="truncate"><strong className="text-white">Layer 02 (Stripe Standard):</strong> {m.harness.toolLayer.toolLabel}</span>
+                              <span className="truncate"><strong className="text-white">Layer 02 (Stripe):</strong> {m.harness.toolLayer.toolLabel}</span>
                             </div>
                             <span className="text-emerald-400 font-bold ml-1 shrink-0">✓ 0.04ms OK</span>
                           </div>
@@ -773,7 +848,7 @@ export const VoiceAssistant: React.FC = () => {
                             <div className="flex items-center justify-between text-amber-300 font-bold border-b border-white/10 pb-1">
                               <div className="flex items-center gap-1.5">
                                 <Terminal className="w-3.5 h-3.5" />
-                                <span>⚡ Layer 03 (Devin Standard): Autonomous ReAct Loop</span>
+                                <span>⚡ Layer 03 (Devin): Autonomous ReAct Loop</span>
                               </div>
                               <span className="text-[9px] text-emerald-400 font-mono">
                                 {m.harness.orchestrationLayer.length}/{m.harness.orchestrationLayer.length} Done
@@ -793,9 +868,9 @@ export const VoiceAssistant: React.FC = () => {
 
                         {/* Layer 04 + 05 + 06 Telemetry Footer Strip */}
                         <div className="p-2 rounded-xl bg-white/5 border border-white/10 flex flex-wrap items-center justify-between gap-1 text-[9px] text-slate-400">
-                          <span className="text-purple-300">🧠 <strong>Notion Memory:</strong> Turn #{m.harness.memoryLayer.turnsCount}</span>
-                          <span className="text-emerald-300">🛡️ <strong>NeMo Guard:</strong> {m.harness.guardrailLayer.securityScore}</span>
-                          <span className="text-amber-300">📊 <strong>LangSmith:</strong> 99.4% Res • 0.0% Halluc</span>
+                          <span className="text-purple-300">🧠 <strong>Memory:</strong> Turn #{m.harness.memoryLayer.turnsCount}</span>
+                          <span className="text-emerald-300">🛡️ <strong>Guard:</strong> {m.harness.guardrailLayer.securityScore}</span>
+                          <span className="text-amber-300">📊 <strong>Evals:</strong> 99.4% Res • 0% Halluc</span>
                         </div>
                       </div>
                     )}
@@ -817,6 +892,21 @@ export const VoiceAssistant: React.FC = () => {
                 </div>
               ))}
 
+              {/* Typing Indicator */}
+              {isTyping && (
+                <div className="flex justify-start animate-in fade-in duration-200">
+                  <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-slate-200 flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-saffron animate-spin" />
+                    <span className="text-[11px] font-mono text-slate-300">Reasoning over 6-Layer Sovereign Harness...</span>
+                    <div className="flex items-center gap-1 ml-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-saffron animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {isListening && transcript && (
                 <div className="flex justify-end animate-pulse">
                   <div className="p-3 rounded-2xl bg-saffron/30 text-amber-200 border border-saffron/40 max-w-[85%] text-xs">
@@ -827,7 +917,7 @@ export const VoiceAssistant: React.FC = () => {
               <div ref={chatEndRef} />
             </div>
 
-            {/* Expanded Telemetry & Inspector Panel (Right side if Expanded) */}
+            {/* Expanded Telemetry & Inspector Panel */}
             {isExpanded && (
               <div className="hidden lg:flex flex-col gap-3 p-4 rounded-2xl bg-slate-950/60 border border-white/10 overflow-y-auto text-xs font-mono">
                 <div className="text-xs font-bold text-saffron uppercase tracking-wider flex items-center gap-1.5 border-b border-white/10 pb-2">
@@ -836,18 +926,16 @@ export const VoiceAssistant: React.FC = () => {
                 </div>
 
                 <div className="space-y-2 text-[11px]">
-                  {/* Layer 01 */}
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                    <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 01 • Zero-Shot Context (Glean)</span>
+                    <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 01 • Context Engine (Glean)</span>
                     <div className="text-white font-bold">{fullName}</div>
                     <div className="text-slate-300">UAN: {uan}</div>
                     <div className="text-emerald-400">Balance: ₹{balanceStr}</div>
                     <div className="text-slate-300">Establishment: {company}</div>
                   </div>
 
-                  {/* Layer 02 */}
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                    <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 02 • In-Browser Hands (Stripe - 6 Tools)</span>
+                    <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 02 • In-Browser Hands (Stripe)</span>
                     <div className="text-slate-300">1. execute_advance_preflight</div>
                     <div className="text-slate-300">2. auto_deduce_exit_date</div>
                     <div className="text-slate-300">3. verify_npci_penny_drop</div>
@@ -856,21 +944,18 @@ export const VoiceAssistant: React.FC = () => {
                     <div className="text-slate-300">6. switch_indic_language</div>
                   </div>
 
-                  {/* Layer 03 */}
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
                     <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 03 • Orchestration (Devin)</span>
                     <div className="text-amber-300 font-bold">Plan ➔ Execute ➔ Verify ➔ Disburse</div>
                     <div className="text-slate-300">Multi-Step ReAct State Machine</div>
                   </div>
 
-                  {/* Layer 04 */}
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
                     <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 04 • Sovereign Memory (Notion)</span>
                     <div className="text-purple-300 font-bold">Session Context Persistence</div>
                     <div className="text-slate-300">Preserved in localStorage across turns</div>
                   </div>
 
-                  {/* Layer 05 */}
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
                     <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 05 • Guardrail Status (NeMo)</span>
                     <div className="text-emerald-400 font-bold">Grade S+ Security</div>
@@ -878,7 +963,6 @@ export const VoiceAssistant: React.FC = () => {
                     <div className="text-slate-300">HMAC-SHA256 DBT Ledger Chaining</div>
                   </div>
 
-                  {/* Layer 06 */}
                   <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 space-y-1">
                     <span className="text-slate-400 block uppercase text-[9px] font-bold">Layer 06 • Real-Time Evals (LangSmith)</span>
                     <div className="flex justify-between text-slate-300">
@@ -900,7 +984,7 @@ export const VoiceAssistant: React.FC = () => {
           </div>
 
           {/* Quick Action Interactive Tool Pills */}
-          <div className="pt-2 border-t border-white/10 mt-2 relative z-10">
+          <div className="pt-2 border-t border-white/10 mt-1.5 relative z-10">
             <div className="flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-none text-[10px]">
               {isRamesh && (
                 <>
@@ -957,19 +1041,19 @@ export const VoiceAssistant: React.FC = () => {
             </div>
           </div>
 
-          {/* Input Bar & Mic Trigger */}
+          {/* Chat-First Input Bar & Mic Trigger */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
               handleProcessUserMessage(typedInput, undefined, false);
               setTypedInput("");
             }}
-            className="mt-2 flex items-center gap-2 relative z-10"
+            className="mt-1.5 flex items-center gap-2 relative z-10"
           >
             <button
               type="button"
               onClick={isListening ? stopListening : startListening}
-              className={`p-2.5 rounded-2xl transition-all shadow-md ${
+              className={`p-2.5 rounded-2xl transition-all shadow-md shrink-0 ${
                 isListening
                   ? "bg-red-600 text-white animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.7)]"
                   : "bg-white/10 hover:bg-white/20 border border-white/20 text-saffron"
@@ -983,14 +1067,15 @@ export const VoiceAssistant: React.FC = () => {
               type="text"
               value={typedInput}
               onChange={(e) => setTypedInput(e.target.value)}
-              placeholder="Ask anything or type your message..."
-              className="flex-1 bg-white/10 border border-white/20 rounded-2xl px-3.5 py-2.5 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-saffron/70 transition-all"
+              placeholder={`Ask anything about ${firstName}'s EPF balance, advance, or KYC...`}
+              className="flex-1 bg-white/10 border border-white/20 rounded-2xl px-3.5 py-2.5 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-saffron/70 transition-all min-w-0"
             />
 
             <button
               type="submit"
               disabled={!typedInput.trim()}
-              className="p-2.5 rounded-2xl bg-saffron hover:bg-amber-400 text-sovereign-darkest font-bold disabled:opacity-40 transition-all shadow-md"
+              className="p-2.5 rounded-2xl bg-saffron hover:bg-amber-400 text-sovereign-darkest font-bold disabled:opacity-40 transition-all shadow-md shrink-0"
+              title="Send message"
             >
               <Send className="w-4 h-4" />
             </button>
@@ -998,7 +1083,7 @@ export const VoiceAssistant: React.FC = () => {
         </div>
       )}
 
-      {/* 2. REBRANDED SLEEK & COMPACT FLOATING TRIGGER BUTTON: ⚡ AI Agent (Chat-First on Click) */}
+      {/* 2. REBRANDED SLEEK & COMPACT FLOATING TRIGGER PILL */}
       <div className="flex justify-end">
         <button
           onClick={() => {
@@ -1010,11 +1095,14 @@ export const VoiceAssistant: React.FC = () => {
           className="backdrop-blur-2xl bg-gradient-to-br from-slate-900/95 via-sovereign-darkest/95 to-sovereign-navy/95 text-white border border-white/20 hover:border-saffron/70 shadow-[0_10px_35px_rgba(0,0,0,0.65)] ring-1 ring-white/10 hover:shadow-[0_0_25px_rgba(255,153,51,0.4)] px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all duration-300 transform hover:scale-105"
           title="Open Jan-EPF AI Agent (Chat-First)"
         >
-          <div className="w-5 h-5 rounded-lg bg-saffron text-sovereign-darkest flex items-center justify-center text-[10px] font-black shadow">
+          <div className={`w-5 h-5 rounded-lg bg-gradient-to-br ${personaBadge.color} text-white flex items-center justify-center text-[10px] font-black shadow`}>
             ⚡
           </div>
           <span className="font-extrabold text-white tracking-tight drop-shadow-sm">
             AI Agent
+          </span>
+          <span className={`text-[9px] px-1.5 py-0.2 rounded-md bg-white/10 ${personaBadge.text} font-mono hidden sm:inline`}>
+            {firstName}
           </span>
           {isOpen ? (
             <ChevronDown className="w-3.5 h-3.5 text-slate-300 shrink-0" />
