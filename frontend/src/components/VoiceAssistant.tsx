@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useCitizen } from "@/context/CitizenContext";
 import {
@@ -47,6 +47,27 @@ interface ChatMessage {
   time: string;
   harness?: HarnessLayerBreakdown;
 }
+
+// Hoisted Static Regexes & Constants (Rule: js-hoist-regexp, rendering-hoist-jsx)
+const BULLET_PREFIX_REGEX = /^[•\-\*]\s*/;
+const MARKDOWN_TOKEN_REGEX = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
+
+const INDIC_LANG_FILTERS = [
+  { id: "ALL", label: "All (23)" },
+  { id: "hi", label: "हिन्दी" },
+  { id: "te", label: "తెలుగు" },
+  { id: "ta", label: "தமிழ்" },
+  { id: "kn", label: "ಕನ್ನಡ" },
+  { id: "ml", label: "മലയാളം" },
+  { id: "mr", label: "मराठी" },
+  { id: "bn", label: "বাংলা" },
+  { id: "gu", label: "ગુજરાતી" },
+  { id: "pa", label: "ਪੰਜਾਬੀ" },
+  { id: "or", label: "ଓଡ଼ିଆ" },
+  { id: "as", label: "অসমীয়া" },
+  { id: "ur", label: "اردو" },
+  { id: "en", label: "English" }
+] as const;
 
 // Custom Safe & Fast Markdown Formatter: Eliminates raw '**' stars and renders bold text & clean bullets
 function renderFormattedMarkdown(rawText: string) {
@@ -119,7 +140,6 @@ export const VoiceAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [isListening, setIsListening] = useState<boolean>(false);
-  const [micVolume, setMicVolume] = useState<number>(0);
   const [transcript, setTranscript] = useState<string>("");
   const [typedInput, setTypedInput] = useState<string>("");
   const [activeSpeechLang, setActiveSpeechLang] = useState<string>(language || "en-IN");
@@ -140,6 +160,15 @@ export const VoiceAssistant: React.FC = () => {
   const animationFrameRef = useRef<number | null>(null);
   const accumulatedTranscriptRef = useRef<string>("");
   const hasDispatchedRef = useRef<boolean>(false);
+
+  // Cleanup active audio/speech resources on unmount (Rule: advanced-init-once)
+  useEffect(() => {
+    return () => {
+      stopNeuralSpeech();
+      if (mediaStreamRef.current) mediaStreamRef.current.getTracks().forEach((t) => t.stop());
+      if (audioContextRef.current) audioContextRef.current.close().catch(() => {});
+    };
+  }, []);
 
   const uan = activeCitizen.uan || "100982348712";
   const fullName = activeCitizen.full_name || "Citizen";
@@ -307,7 +336,6 @@ export const VoiceAssistant: React.FC = () => {
 
   const stopListening = useCallback(() => {
     setIsListening(false);
-    setMicVolume(0);
 
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
@@ -415,23 +443,6 @@ export const VoiceAssistant: React.FC = () => {
           if (AudioContextClass) {
             const audioCtx = new AudioContextClass();
             audioContextRef.current = audioCtx;
-            const analyser = audioCtx.createAnalyser();
-            const source = audioCtx.createMediaStreamSource(stream);
-            analyser.fftSize = 64;
-            source.connect(analyser);
-
-            const dataArray = new Uint8Array(analyser.frequencyBinCount);
-            const updateVolume = () => {
-              analyser.getByteFrequencyData(dataArray);
-              let sum = 0;
-              for (let i = 0; i < dataArray.length; i++) {
-                sum += dataArray[i];
-              }
-              const avg = sum / dataArray.length;
-              setMicVolume(Math.min(100, Math.round((avg / 255) * 100)));
-              animationFrameRef.current = requestAnimationFrame(updateVolume);
-            };
-            updateVolume();
           }
 
           const recognition = new SpeechRecognition();
@@ -479,14 +490,18 @@ export const VoiceAssistant: React.FC = () => {
     }
   }, [activeSpeechLang, handleProcessUserMessage, stopListening, stopSpeaking]);
 
-  // Filter voices based on selected category
-  const filteredVoices = ALL_INDIC_VOICES.filter((v) => {
-    if (selectedLangFilter === "ALL") return true;
-    return v.langCode.startsWith(selectedLangFilter);
-  });
+  // Filter voices based on selected category (Rule: rerender-memo)
+  const filteredVoices = useMemo(() => {
+    return ALL_INDIC_VOICES.filter((v) => {
+      if (selectedLangFilter === "ALL") return true;
+      return v.langCode.startsWith(selectedLangFilter);
+    });
+  }, [selectedLangFilter]);
 
   return (
     <div
+      role="region"
+      aria-label="Jan-EPF AI Voice & Chat Assistant"
       className={`fixed z-50 transition-all duration-300 ${
         isOpen
           ? isExpanded
@@ -527,6 +542,9 @@ export const VoiceAssistant: React.FC = () => {
               <div className="relative">
                 <button
                   onClick={() => setShowVoiceSettings(!showVoiceSettings)}
+                  aria-expanded={showVoiceSettings}
+                  aria-haspopup="dialog"
+                  aria-label="Voice dialect settings"
                   className={`p-1.5 rounded-xl border transition-all ${
                     showVoiceSettings
                       ? "bg-saffron text-slate-900 border-saffron"
@@ -549,22 +567,7 @@ export const VoiceAssistant: React.FC = () => {
 
                     {/* Language Filter Pills */}
                     <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-none text-[9px] shrink-0 font-mono">
-                      {[
-                        { id: "ALL", label: "All (23)" },
-                        { id: "hi", label: "हिन्दी" },
-                        { id: "te", label: "తెలుగు" },
-                        { id: "ta", label: "தமிழ்" },
-                        { id: "kn", label: "ಕನ್ನಡ" },
-                        { id: "ml", label: "മലയാളം" },
-                        { id: "mr", label: "मराठी" },
-                        { id: "bn", label: "বাংলা" },
-                        { id: "gu", label: "ગુજરાતી" },
-                        { id: "pa", label: "ਪੰਜਾਬੀ" },
-                        { id: "or", label: "ଓଡ଼ିଆ" },
-                        { id: "as", label: "অসমীয়া" },
-                        { id: "ur", label: "اردو" },
-                        { id: "en", label: "English" }
-                      ].map((lang) => (
+                      {INDIC_LANG_FILTERS.map((lang) => (
                         <button
                           key={lang.id}
                           onClick={() => setSelectedLangFilter(lang.id)}
@@ -713,7 +716,7 @@ export const VoiceAssistant: React.FC = () => {
           {/* Main Area: Split into Chat & Telemetry if Expanded */}
           <div className={`flex-1 overflow-hidden mt-3 gap-4 ${isExpanded ? "grid grid-cols-1 lg:grid-cols-3" : "flex flex-col"}`}>
             {/* Chat Stream (Left / Main) */}
-            <div className={`flex-1 overflow-y-auto space-y-3.5 pr-1 relative z-10 text-xs ${isExpanded ? "lg:col-span-2" : ""}`}>
+            <div aria-live="polite" aria-relevant="additions text" className={`flex-1 overflow-y-auto space-y-3.5 pr-1 relative z-10 text-xs ${isExpanded ? "lg:col-span-2" : ""}`}>
               {messages.map((m) => (
                 <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} animate-in fade-in duration-200`}>
                   <div className={`p-4 rounded-2xl max-w-[94%] sm:max-w-[88%] space-y-2.5 ${
