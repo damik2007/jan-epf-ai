@@ -58,7 +58,7 @@ export function EvaluatorTourModal() {
     },
     {
       step: 3,
-      title: "3. Sovereign AI Agent Copilot",
+      title: "3. Sovereign AI Agent (6-Layer Harness)",
       badge: "80/20 Hybrid + 6-Layer Harness",
       badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40",
       persona: "Priya Sharma (Apex AI Systems India)",
@@ -68,7 +68,7 @@ export function EvaluatorTourModal() {
         "80% queries resolved by in-browser deterministic math at 0ms/₹0. 20% routed to Azure-hosted LLM via Vercel AI Gateway. 6-layer harness: Context ➔ Tools ➔ Orchestration ➔ Memory ➔ Guardrails ➔ Evals.",
       proof: "99.4% Autonomous Resolution • 0.0% Hallucination • 13 Indic Languages",
       route: "/copilot",
-      cta: "Interact with Sovereign Copilot",
+      cta: "Interact with Sovereign AI Agent",
       icon: Zap
     },
     {
