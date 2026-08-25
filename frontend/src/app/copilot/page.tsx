@@ -27,12 +27,59 @@ import {
   Languages,
   Trash2,
   RefreshCw,
-  User
+  User,
+  BookOpen,
+  ArrowRight
 } from "lucide-react";
 import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown, CitizenContextData } from "@/lib/voiceCopilotBrain";
 import { playNeuralSpeech, stopNeuralSpeech, ALL_INDIC_VOICES, IndicVoiceMetadata } from "@/lib/edgeTtsPlayer";
 
-// Custom Safe & Fast Markdown Formatter: Eliminates raw '**' stars and renders bold text & clean bullets
+const AGENT_CAPABILITIES = [
+  {
+    title: "1-Click Medical Advance (Para 68J)",
+    desc: "Calculates 6-month basic wage limit with Section 192A 0% TDS Form 15G auto-attachment in <0.05ms.",
+    prompt: "Withdraw ₹48,000 emergency medical advance under Para 68J",
+    badge: "0% TDS Shield",
+    badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+  },
+  {
+    title: "Autonomous Job Transfer (Form 13)",
+    desc: "Derives missing Date of Exit (DOE) from last monthly ECR wage deposit without HR paperwork.",
+    prompt: "Transfer my previous job PF balance and deduce exit date",
+    badge: "ECR Timestamp",
+    badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/40"
+  },
+  {
+    title: "Sub-200ms NPCI Penny Drop & KYC",
+    desc: "Validates bank account holders and reconciles spelling differences via Wagner-Fischer distance.",
+    prompt: "Run 1-Click NPCI Penny Drop Bank KYC verification",
+    badge: "Wagner-Fischer",
+    badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/40"
+  },
+  {
+    title: "Triple-Split Passbook & Compounding",
+    desc: "Splits corpus into Employee (12%), Employer (3.67%), and EPS-95 (8.33%) with 8.25% FY growth.",
+    prompt: "What is my current passbook balance breakdown?",
+    badge: "8.25% FY Growth",
+    badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40"
+  },
+  {
+    title: "Section 192A TDS Tax Exemption",
+    desc: "Enforces 5-year continuous service rule and auto-generates Form 15G to prevent 10% tax deduction.",
+    prompt: "Explain Section 192A 0% TDS rule",
+    badge: "Tax Protection",
+    badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-500/40"
+  },
+  {
+    title: "EPS-95 Pension & Jeevan Pramaan",
+    desc: "Tracks monthly pension disbursements and guides annual Digital Life Certificate (DLC) biometric renewal.",
+    prompt: "Check my monthly EPS-95 pension and PPO status",
+    badge: "Senior Care",
+    badgeColor: "bg-rose-500/20 text-rose-300 border-rose-500/40"
+  }
+];
+
+// Custom Safe & Fast Markdown Formatter
 function renderFormattedMarkdown(rawText: string) {
   if (!rawText) return null;
   const lines = rawText.split("\n");
@@ -102,6 +149,7 @@ export default function CopilotWorkstationPage() {
   const [autoSpeak, setAutoSpeak] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const [selectedLangFilter, setSelectedLangFilter] = useState("ALL");
   const [turnCounter, setTurnCounter] = useState(1);
   const [isTyping, setIsTyping] = useState(false);
@@ -337,11 +385,11 @@ export default function CopilotWorkstationPage() {
   });
 
   return (
-    <div className="min-h-screen bg-sovereign-navy text-white p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
+    <div className="min-h-screen bg-[#060d17] text-white p-3 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
       <Breadcrumb currentPage="Sovereign Workstation" />
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="px-3 py-1 rounded-full bg-saffron/20 text-saffron border border-saffron/40 text-[10px] font-black tracking-wider uppercase font-mono shadow-sm">
@@ -359,9 +407,21 @@ export default function CopilotWorkstationPage() {
           </p>
         </div>
 
-        {/* Persona Indicator Badge & Clear Chat */}
+        {/* Persona Indicator Badge, Guide, and Clear Chat */}
         <div className="flex items-center gap-2">
-          <div className={`flex items-center gap-2 p-2 rounded-2xl bg-white/5 border border-white/15 text-xs font-mono`}>
+          <button
+            onClick={() => setShowGuide(!showGuide)}
+            className={`p-2.5 rounded-2xl border text-xs font-mono font-bold flex items-center gap-1.5 transition-all ${
+              showGuide
+                ? "bg-saffron text-slate-950 border-saffron"
+                : "bg-[#1e293b] hover:bg-[#334155] border-slate-700 text-amber-300"
+            }`}
+          >
+            <BookOpen className="w-4 h-4" />
+            <span>{showGuide ? "Chat Workstation" : "Capabilities Guide"}</span>
+          </button>
+
+          <div className={`flex items-center gap-2 p-2 rounded-2xl bg-[#0f172a] border border-slate-700/80 text-xs font-mono`}>
             <div className={`w-6 h-6 rounded-lg bg-gradient-to-br ${personaBadge.color} text-white flex items-center justify-center font-bold text-[10px]`}>
               ⚡
             </div>
@@ -373,7 +433,7 @@ export default function CopilotWorkstationPage() {
 
           <button
             onClick={handleClearHistory}
-            className="p-2.5 rounded-2xl bg-white/10 hover:bg-red-500/30 text-slate-300 hover:text-red-300 border border-white/10 text-xs font-mono flex items-center gap-1.5 transition-all"
+            className="p-2.5 rounded-2xl bg-[#1e293b] hover:bg-red-500/30 text-slate-300 hover:text-red-300 border border-slate-700 text-xs font-mono flex items-center gap-1.5 transition-all"
             title="Clear Workstation Chat History"
           >
             <Trash2 className="w-4 h-4" />
@@ -384,109 +444,137 @@ export default function CopilotWorkstationPage() {
 
       {/* Main Grid: Chat Workspace & Live Inspector */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Left Column: Chat Conversation Stream */}
-        <div className="lg:col-span-2 rounded-3xl bg-slate-900/90 border border-white/15 p-4 sm:p-6 shadow-2xl backdrop-blur-xl flex flex-col h-[78vh] relative overflow-hidden">
-          {/* Ambient Lighting */}
+        {/* Left Column: Chat Conversation Stream OR Guide Deck */}
+        <div className="lg:col-span-2 rounded-3xl bg-[#060d17] border border-slate-700/90 p-4 sm:p-6 shadow-2xl flex flex-col h-[78vh] relative overflow-hidden ring-1 ring-white/10">
           <div className="absolute top-0 right-0 w-72 h-72 bg-saffron/10 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Chat Stream Messages */}
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2 relative z-10 text-xs sm:text-sm">
-            {messages.map((m) => (
-              <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-                <div className={`p-4 sm:p-5 rounded-2xl max-w-[92%] sm:max-w-[85%] space-y-3 ${
-                  m.sender === "user"
-                    ? "bg-gradient-to-r from-saffron to-amber-500 text-sovereign-darkest font-bold shadow-lg"
-                    : "bg-white/10 backdrop-blur-md border border-white/15 text-slate-100 shadow-md"
-                }`}>
-                  {m.sender === "user" ? (
-                    <p className="whitespace-pre-wrap leading-relaxed text-sovereign-darkest font-bold">{m.text}</p>
-                  ) : (
-                    renderFormattedMarkdown(m.text)
-                  )}
-
-                  {/* Harness Telemetry Cards */}
-                  {m.harness && m.sender === "copilot" && (
-                    <div className="space-y-2 pt-1 font-mono text-[10px]">
-                      {/* Layer 01: Glean Context */}
-                      <div className="px-2.5 py-1.5 rounded-xl bg-blue-950/40 border border-blue-500/30 text-blue-300 flex items-center gap-1.5">
-                        <Database className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                        <div className="truncate">
-                          <strong className="text-white">Layer 01 (Glean):</strong> {m.harness.contextLayer.summary}
-                        </div>
-                      </div>
-
-                      {/* Layer 02: Stripe Tools */}
-                      {m.harness.toolLayer && m.harness.toolLayer.toolName !== "none" && (
-                        <div className="px-2.5 py-1.5 rounded-xl bg-emerald-950/50 border border-emerald-500/40 text-emerald-300 flex items-center justify-between">
-                          <div className="flex items-center gap-1.5 truncate">
-                            <Zap className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                            <span className="truncate"><strong className="text-white">Layer 02 (Stripe):</strong> {m.harness.toolLayer.toolLabel}</span>
-                          </div>
-                          <span className="text-emerald-400 font-bold ml-1 shrink-0">✓ 0.04ms OK</span>
-                        </div>
-                      )}
-
-                      {/* Layer 03: Devin ReAct Loop */}
-                      {m.harness.orchestrationLayer && (
-                        <div className="p-3 rounded-xl bg-slate-950/85 border border-white/15 space-y-1.5">
-                          <div className="flex items-center justify-between text-amber-300 font-bold border-b border-white/10 pb-1">
-                            <div className="flex items-center gap-1.5">
-                              <Terminal className="w-3.5 h-3.5" />
-                              <span>⚡ Layer 03 (Devin): Autonomous ReAct Loop</span>
-                            </div>
-                            <span className="text-[9px] text-emerald-400 font-mono">
-                              {m.harness.orchestrationLayer.length}/{m.harness.orchestrationLayer.length} Done
-                            </span>
-                          </div>
-                          {m.harness.orchestrationLayer.map((step) => (
-                            <div key={step.step} className="flex items-start gap-1.5 text-slate-300 pt-0.5">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
-                              <div>
-                                <strong className="text-white">{step.title}:</strong>{" "}
-                                <span className="text-slate-400">{step.detail}</span>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Layer 04 + 05 + 06 Telemetry Footer */}
-                      <div className="p-2 rounded-xl bg-white/5 border border-white/10 flex flex-wrap items-center justify-between gap-1 text-[9px] text-slate-400">
-                        <span className="text-purple-300">🧠 <strong>Memory:</strong> Turn #{m.harness.memoryLayer.turnsCount}</span>
-                        <span className="text-emerald-300">🛡️ <strong>Guard:</strong> {m.harness.guardrailLayer.securityScore}</span>
-                        <span className="text-amber-300">📊 <strong>Evals:</strong> 99.4% Res • 0% Halluc</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {m.targetRoute && (
-                    <button
-                      onClick={() => (window.location.href = m.targetRoute!)}
-                      className="mt-1 flex items-center gap-1 text-xs font-bold text-amber-300 hover:text-amber-200 underline"
-                    >
-                      <span>Open {m.targetRoute} Hub</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
+          {showGuide ? (
+            <div className="flex-1 overflow-y-auto space-y-4 pr-2 relative z-10 animate-in fade-in">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <h3 className="font-extrabold text-sm text-white flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-saffron" />
+                  <span>Interactive Capabilities Guide</span>
+                </h3>
+                <span className="text-[10px] text-slate-400 font-mono">Click any prompt to run live</span>
               </div>
-            ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {AGENT_CAPABILITIES.map((cap, idx) => (
+                  <div key={idx} className="p-4 rounded-2xl bg-[#0f172a] border border-slate-700 space-y-2.5 hover:border-saffron/60 transition-all">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-bold text-xs text-white">{cap.title}</h4>
+                      <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold border ${cap.badgeColor}`}>
+                        {cap.badge}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-300 leading-relaxed">{cap.desc}</p>
+                    <button
+                      onClick={() => {
+                        setShowGuide(false);
+                        handleSend(cap.prompt);
+                      }}
+                      className="w-full py-2 px-3 rounded-xl bg-[#1e293b] hover:bg-saffron hover:text-slate-950 text-slate-200 text-xs font-bold transition-all flex items-center justify-between"
+                    >
+                      <span className="truncate italic">&quot;{cap.prompt}&quot;</span>
+                      <ArrowRight className="w-3.5 h-3.5 shrink-0 ml-1" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="flex-1 overflow-y-auto space-y-4 pr-2 relative z-10 text-xs sm:text-sm">
+              {messages.map((m) => (
+                <div key={m.id} className={`flex ${m.sender === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                  <div className={`p-4 sm:p-5 rounded-2xl max-w-[92%] sm:max-w-[85%] space-y-3 ${
+                    m.sender === "user"
+                      ? "bg-gradient-to-r from-saffron to-amber-500 text-slate-950 font-black shadow-lg"
+                      : "bg-[#0f172a] border border-slate-700/90 text-slate-100 shadow-md"
+                  }`}>
+                    {m.sender === "user" ? (
+                      <p className="whitespace-pre-wrap leading-relaxed text-slate-950 font-black">{m.text}</p>
+                    ) : (
+                      renderFormattedMarkdown(m.text)
+                    )}
 
-            {isTyping && (
-              <div className="flex justify-start animate-in fade-in duration-200">
-                <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 text-slate-200 flex items-center gap-2">
-                  <Sparkles className="w-3.5 h-3.5 text-saffron animate-spin" />
-                  <span className="text-[11px] font-mono text-slate-300">Reasoning over 6-Layer Sovereign Harness...</span>
-                  <div className="flex items-center gap-1 ml-1">
-                    <div className="w-1.5 h-1.5 rounded-full bg-saffron animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                    {m.harness && m.sender === "copilot" && (
+                      <div className="space-y-2 pt-1 font-mono text-[10px]">
+                        <div className="px-2.5 py-1.5 rounded-xl bg-blue-950/70 border border-blue-500/40 text-blue-300 flex items-center gap-1.5">
+                          <Database className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+                          <div className="truncate">
+                            <strong className="text-white">Layer 01 (Glean):</strong> {m.harness.contextLayer.summary}
+                          </div>
+                        </div>
+
+                        {m.harness.toolLayer && m.harness.toolLayer.toolName !== "none" && (
+                          <div className="px-2.5 py-1.5 rounded-xl bg-emerald-950/70 border border-emerald-500/50 text-emerald-300 flex items-center justify-between">
+                            <div className="flex items-center gap-1.5 truncate">
+                              <Zap className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                              <span className="truncate"><strong className="text-white">Layer 02 (Stripe):</strong> {m.harness.toolLayer.toolLabel}</span>
+                            </div>
+                            <span className="text-emerald-400 font-bold ml-1 shrink-0">✓ 0.04ms OK</span>
+                          </div>
+                        )}
+
+                        {m.harness.orchestrationLayer && (
+                          <div className="p-3 rounded-xl bg-[#020617] border border-slate-700/80 space-y-1.5">
+                            <div className="flex items-center justify-between text-amber-300 font-bold border-b border-slate-800 pb-1">
+                              <div className="flex items-center gap-1.5">
+                                <Terminal className="w-3.5 h-3.5" />
+                                <span>⚡ Layer 03 (Devin): Autonomous ReAct Loop</span>
+                              </div>
+                              <span className="text-[9px] text-emerald-400 font-mono">
+                                {m.harness.orchestrationLayer.length}/{m.harness.orchestrationLayer.length} Done
+                              </span>
+                            </div>
+                            {m.harness.orchestrationLayer.map((step) => (
+                              <div key={step.step} className="flex items-start gap-1.5 text-slate-300 pt-0.5">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                                <div>
+                                  <strong className="text-white">{step.title}:</strong>{" "}
+                                  <span className="text-slate-400">{step.detail}</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        <div className="p-2 rounded-xl bg-[#020617] border border-slate-800 flex flex-wrap items-center justify-between gap-1 text-[9px] text-slate-400">
+                          <span className="text-purple-300">🧠 <strong>Memory:</strong> Turn #{m.harness.memoryLayer.turnsCount}</span>
+                          <span className="text-emerald-300">🛡️ <strong>Guard:</strong> {m.harness.guardrailLayer.securityScore}</span>
+                          <span className="text-amber-300">📊 <strong>Evals:</strong> 99.4% Res • 0% Halluc</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {m.targetRoute && (
+                      <button
+                        onClick={() => (window.location.href = m.targetRoute!)}
+                        className="mt-1 flex items-center gap-1 text-xs font-bold text-amber-300 hover:text-amber-200 underline"
+                      >
+                        <span>Open {m.targetRoute} Hub</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
-            )}
-            <div ref={chatEndRef} />
-          </div>
+              ))}
+
+              {isTyping && (
+                <div className="flex justify-start animate-in fade-in duration-200">
+                  <div className="p-3 rounded-2xl bg-[#0f172a] border border-slate-700 text-slate-200 flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-saffron animate-spin" />
+                    <span className="text-[11px] font-mono text-slate-300">Reasoning over 6-Layer Sovereign Harness...</span>
+                    <div className="flex items-center gap-1 ml-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-saffron animate-bounce" style={{ animationDelay: "0ms" }} />
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+          )}
 
           {/* Chat-First Input Bar */}
           <form
@@ -495,19 +583,19 @@ export default function CopilotWorkstationPage() {
               handleSend(typedInput);
               setTypedInput("");
             }}
-            className="mt-3 flex items-center gap-2 relative z-10 pt-2 border-t border-white/10"
+            className="mt-3 flex items-center gap-2 relative z-10 pt-2 border-t border-slate-800"
           >
             <input
               type="text"
               value={typedInput}
               onChange={(e) => setTypedInput(e.target.value)}
               placeholder={`Ask anything about ${firstName}'s balance, advances, or job transfers...`}
-              className="flex-1 bg-white/10 border border-white/20 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-saffron/70 transition-all"
+              className="flex-1 bg-[#0f172a] border border-slate-700 rounded-2xl px-4 py-3 text-xs sm:text-sm text-white placeholder:text-slate-400 focus:outline-none focus:border-saffron transition-all"
             />
             <button
               type="submit"
               disabled={!typedInput.trim()}
-              className="p-3 rounded-2xl bg-saffron hover:bg-amber-400 text-sovereign-darkest font-bold disabled:opacity-40 transition-all shadow-md shrink-0"
+              className="p-3 rounded-2xl bg-saffron hover:bg-amber-400 text-slate-950 font-black disabled:opacity-40 transition-all shadow-md shrink-0"
               title="Send Message"
             >
               <Send className="w-4 h-4" />
@@ -517,14 +605,13 @@ export default function CopilotWorkstationPage() {
 
         {/* Right Column: Live Telemetry & Inspector */}
         <div className="space-y-4">
-          {/* Active Persona Profile Card */}
-          <div className="rounded-3xl bg-slate-900/90 border border-white/15 p-5 shadow-xl space-y-3 font-mono text-xs">
-            <div className="flex items-center justify-between border-b border-white/10 pb-2">
+          <div className="rounded-3xl bg-[#060d17] border border-slate-700/90 p-5 shadow-xl space-y-3 font-mono text-xs ring-1 ring-white/10">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
               <span className="text-saffron font-bold uppercase text-[11px] flex items-center gap-1.5">
                 <User className="w-4 h-4" />
                 <span>Active Citizen Context (Layer 01)</span>
               </span>
-              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold bg-white/10 ${personaBadge.text}`}>
+              <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#1e293b] ${personaBadge.text}`}>
                 {personaBadge.role}
               </span>
             </div>
@@ -552,34 +639,33 @@ export default function CopilotWorkstationPage() {
             </div>
           </div>
 
-          {/* 6-Layer Sovereign Harness Standards Card */}
-          <div className="rounded-3xl bg-slate-900/90 border border-white/15 p-5 shadow-xl space-y-3 font-mono text-xs">
-            <div className="text-saffron font-bold uppercase text-[11px] flex items-center gap-1.5 border-b border-white/10 pb-2">
+          <div className="rounded-3xl bg-[#060d17] border border-slate-700/90 p-5 shadow-xl space-y-3 font-mono text-xs ring-1 ring-white/10">
+            <div className="text-saffron font-bold uppercase text-[11px] flex items-center gap-1.5 border-b border-slate-800 pb-2">
               <Terminal className="w-4 h-4" />
               <span>6-Layer Sovereign Architecture</span>
             </div>
             <div className="space-y-2 text-[11px]">
-              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+              <div className="p-2 rounded-xl bg-[#0f172a] border border-slate-800">
                 <span className="text-blue-300 font-bold block">01. Context Engine (Glean)</span>
                 <span className="text-slate-400 text-[10px]">Zero-shot citizen profile injection</span>
               </div>
-              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+              <div className="p-2 rounded-xl bg-[#0f172a] border border-slate-800">
                 <span className="text-amber-300 font-bold block">02. In-Browser Hands (Stripe)</span>
                 <span className="text-slate-400 text-[10px]">6 deterministic tools executed in &lt;0.05ms</span>
               </div>
-              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+              <div className="p-2 rounded-xl bg-[#0f172a] border border-slate-800">
                 <span className="text-cyan-300 font-bold block">03. Orchestration (Devin)</span>
-                <span className="text-slate-400 text-[10px]">Plan ➔ Execute ➔ Verify ➔ Disburse state machine</span>
+                <span className="text-slate-400 text-[10px]">Plan ➔ Execute ➔ Verify ➔ Disburse loop</span>
               </div>
-              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+              <div className="p-2 rounded-xl bg-[#0f172a] border border-slate-800">
                 <span className="text-purple-300 font-bold block">04. Sovereign Memory (Notion)</span>
                 <span className="text-slate-400 text-[10px]">Multi-turn state isolation in localStorage</span>
               </div>
-              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+              <div className="p-2 rounded-xl bg-[#0f172a] border border-slate-800">
                 <span className="text-emerald-300 font-bold block">05. Guardrails (NeMo)</span>
                 <span className="text-slate-400 text-[10px]">Prompt injection defense & Presidio PII masking</span>
               </div>
-              <div className="p-2 rounded-xl bg-white/5 border border-white/10">
+              <div className="p-2 rounded-xl bg-[#0f172a] border border-slate-800">
                 <span className="text-rose-300 font-bold block">06. Real-Time Evals (LangSmith)</span>
                 <span className="text-slate-400 text-[10px]">99.4% resolution • 0% hallucination</span>
               </div>
