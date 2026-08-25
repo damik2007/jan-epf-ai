@@ -308,7 +308,7 @@ export function CitizenAccountOnboardingModal({
                 className="px-4 py-2.5 rounded-xl bg-[#1e293b] hover:bg-[#334155] text-amber-300 border border-slate-700 text-xs font-bold flex items-center gap-1.5 transition-all"
               >
                 <Bot className="w-3.5 h-3.5 text-saffron" />
-                <span>Ask AI Copilot</span>
+                <span>⚡ Open AI Agent</span>
               </button>
             )}
 

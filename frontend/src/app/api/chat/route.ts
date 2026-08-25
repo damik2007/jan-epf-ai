@@ -3,9 +3,8 @@ import { generateCopilotResponse, CitizenContextData } from "@/lib/voiceCopilotB
 import { pruneContext, ChatMessageLite } from "@/lib/tokenPruner";
 
 /**
- * In-memory response cache for Azure credit optimization.
+ * In-memory response cache for LLM credit and latency optimization.
  * Key: (uan + normalized query).
- * Stores successful LLM responses to eliminate duplicate inference costs.
  */
 const responseCache = new Map<string, { replyText: string; timestamp: number }>();
 const CACHE_TTL_MS = 1000 * 60 * 30; // 30 minutes TTL
@@ -14,7 +13,6 @@ const AZURE_LLM_URL =
   process.env.LLM_API_BASE_URL ||
   "http://jan-epf-llm.internal.whitesea-6aaf591b.centralindia.azurecontainerapps.io:11434/v1";
 const AZURE_MODEL = process.env.LLM_MODEL || "gemma4:e2b";
-const REQUEST_TIMEOUT_MS = 2500;
 
 export async function POST(req: NextRequest) {
   const startTime = performance.now();
@@ -41,7 +39,7 @@ export async function POST(req: NextRequest) {
     }
 
     // =========================================================================
-    // LAYER 1 & 2: 80% DETERMINISTIC SOVEREIGN ENGINE (0ms / ₹0.00 Cost)
+    // LAYER 1 & 2: DETERMINISTIC SOVEREIGN ACTUARY CORE (0ms / ₹0.00 Cost)
     // =========================================================================
     const deterministicReply = generateCopilotResponse(
       trimmedQuery,
@@ -50,21 +48,7 @@ export async function POST(req: NextRequest) {
       turnCount
     );
 
-    // If deterministic pattern matched (Advance, Transfer, Balance, KYC, Pension, TDS, Guardrail Block)
-    if (!deterministicReply.needsLlm) {
-      const durationMs = Number((performance.now() - startTime).toFixed(2));
-      return NextResponse.json({
-        ...deterministicReply,
-        source: "deterministic",
-        costInr: 0.0,
-        latencyMs: durationMs,
-        tokenSavingsPct: 100
-      });
-    }
-
-    // =========================================================================
-    // LAYER 3: 20% AZURE LLM ROUTING WITH CONTEXT PRUNING & CACHING
-    // =========================================================================
+    // Check Cache
     const normalizedKey = `${citizenContext.uan}:${trimmedQuery.toLowerCase().replace(/\s+/g, " ")}`;
     const cached = responseCache.get(normalizedKey);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
@@ -80,65 +64,160 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Prune context to reduce token payload by up to 84.4%
+    // Prune context for token efficiency
     const pruned = pruneContext(chatHistory, citizenContext, 3);
 
-    // Call Azure-hosted open-weight LLM container with strict timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    // Build rich, intelligent persona system prompt
+    const enrichedSystemPrompt = `You are Jan-EPF AI Agent, a sovereign conversational AI agent for Indian citizens and EPF members.
+Active Citizen Profile:
+- Name: ${citizenContext.name}
+- UAN: ${citizenContext.uan}
+- EPF Balance: ₹${citizenContext.balance?.toLocaleString("en-IN")}
+- Active Employer: ${citizenContext.employer}
+- Continuous Service: ${citizenContext.serviceYears} years
 
-    try {
-      const llmResponse = await fetch(`${AZURE_LLM_URL}/chat/completions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.LLM_API_KEY || "sec_epf_internal_98a7b6c5d4e3f2a1"}`
-        },
-        body: JSON.stringify({
-          model: AZURE_MODEL,
-          messages: [
-            ...pruned.messages,
-            { role: "user", content: trimmedQuery }
-          ],
-          max_tokens: 256,
-          temperature: 0.1
-        }),
-        signal: controller.signal
-      });
+Statutory Fact Sheet (Pre-Calculated Ground Truth):
+${deterministicReply.displayText}
 
-      clearTimeout(timeoutId);
+Guidelines:
+1. Speak warmly, intelligently, and conversationally as a true Sovereign AI Agent (not a static bot).
+2. Ground all mathematical figures and legal facts in the Fact Sheet above.
+3. If the user asks "who are you", "what can you do", or asks general questions, explain your capabilities and how you help them manage their EPF with 0ms math and zero employer friction.
+4. Keep the response crisp, concise, well-structured, and helpful (under 180 words).`;
 
-      if (llmResponse.ok) {
-        const data = await llmResponse.json();
-        const rawContent = data.choices?.[0]?.message?.content;
-        if (rawContent && typeof rawContent === "string" && rawContent.trim().length > 0) {
-          const generatedText = rawContent.trim();
-          responseCache.set(normalizedKey, { replyText: generatedText, timestamp: Date.now() });
+    let generatedText = "";
+    let modelUsed = "";
 
-          const durationMs = Number((performance.now() - startTime).toFixed(2));
-          return NextResponse.json({
-            ...deterministicReply,
-            displayText: generatedText,
-            spokenText: generatedText,
-            source: "azure_llm",
-            modelUsed: AZURE_MODEL,
-            costInr: 0.0, // Self-hosted container = zero variable API markup
-            latencyMs: durationMs,
-            tokenSavingsPct: pruned.compressionRatioPct
-          });
+    const openAiKey = process.env.OPENAI_API_KEY;
+    const groqKey = process.env.GROQ_API_KEY;
+
+    // 1. Try OpenAI API if key available
+    if (openAiKey && !generatedText) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+        const openAiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${openAiKey}`
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [
+              { role: "system", content: enrichedSystemPrompt },
+              ...pruned.messages.filter((m) => m.role !== "system"),
+              { role: "user", content: trimmedQuery }
+            ],
+            temperature: 0.4,
+            max_tokens: 300
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (openAiRes.ok) {
+          const data = await openAiRes.json();
+          const content = data.choices?.[0]?.message?.content?.trim();
+          if (content) {
+            generatedText = content;
+            modelUsed = "openai/gpt-4o-mini";
+          }
         }
-      }
-    } catch (llmErr) {
-      // Graceful fallback to deterministic response if Azure is throttled or offline
-    } finally {
-      clearTimeout(timeoutId);
+      } catch {}
     }
 
-    // Fallback to rich deterministic statutory overview
+    // 2. Try Groq API if key available
+    if (groqKey && !generatedText) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+        const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${groqKey}`
+          },
+          body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [
+              { role: "system", content: enrichedSystemPrompt },
+              ...pruned.messages.filter((m) => m.role !== "system"),
+              { role: "user", content: trimmedQuery }
+            ],
+            temperature: 0.3,
+            max_tokens: 300
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (groqRes.ok) {
+          const data = await groqRes.json();
+          const content = data.choices?.[0]?.message?.content?.trim();
+          if (content) {
+            generatedText = content;
+            modelUsed = "groq/llama-3.3-70b";
+          }
+        }
+      } catch {}
+    }
+
+    // 3. Try Azure Self-Hosted Container LLM
+    if (!generatedText && process.env.LLM_API_BASE_URL) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+        const azureRes = await fetch(`${AZURE_LLM_URL}/chat/completions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.LLM_API_KEY || "sec_epf_internal"}`
+          },
+          body: JSON.stringify({
+            model: AZURE_MODEL,
+            messages: [
+              { role: "system", content: enrichedSystemPrompt },
+              ...pruned.messages.filter((m) => m.role !== "system"),
+              { role: "user", content: trimmedQuery }
+            ],
+            temperature: 0.2,
+            max_tokens: 256
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (azureRes.ok) {
+          const data = await azureRes.json();
+          const content = data.choices?.[0]?.message?.content?.trim();
+          if (content) {
+            generatedText = content;
+            modelUsed = `azure/${AZURE_MODEL}`;
+          }
+        }
+      } catch {}
+    }
+
+    // 4. Sovereign Edge Actuary Fallback
+    if (!generatedText) {
+      generatedText = deterministicReply.displayText;
+      modelUsed = "sovereign_deterministic_core";
+    } else {
+      responseCache.set(normalizedKey, { replyText: generatedText, timestamp: Date.now() });
+    }
+
     const durationMs = Number((performance.now() - startTime).toFixed(2));
+
     return NextResponse.json({
       ...deterministicReply,
-      source: "deterministic_fallback",
+      displayText: generatedText,
+      spokenText: deterministicReply.spokenText || generatedText,
+      source: modelUsed.startsWith("sovereign") ? "deterministic" : "llm_enriched",
+      modelUsed,
       costInr: 0.0,
       latencyMs: durationMs,
       tokenSavingsPct: pruned.compressionRatioPct

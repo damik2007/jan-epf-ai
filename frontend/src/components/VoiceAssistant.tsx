@@ -885,12 +885,14 @@ export const VoiceAssistant: React.FC = () => {
 
               {!isLoginPage && (
                 <button
+                  type="button"
                   onClick={handleClearHistory}
-                  aria-label="Clear chat history"
-                  className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-red-500/30 text-slate-300 hover:text-red-300 border border-slate-700 transition-all"
-                  title="Clear current chat session"
+                  aria-label="Clear Chat History & Reset Session"
+                  className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 transition-all flex items-center gap-1 text-[11px] font-mono"
+                  title="Clear Chat History & Reset Session"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
+                  <span className="hidden xl:inline">Clear</span>
                 </button>
               )}
 

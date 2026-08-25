@@ -472,7 +472,7 @@ export default function CitizenLandingPage() {
               href="/copilot"
               className="px-3.5 py-2 bg-saffron hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all shadow-md hover:scale-105"
             >
-              <span>Open Sovereign Copilot</span>
+              <span>⚡ Open AI Agent</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

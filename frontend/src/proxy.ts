@@ -92,6 +92,11 @@ export function proxy(request: NextRequest) {
   response.headers.set("x-edge-latency-tier", edgeRoutingTier);
   response.headers.set("x-edge-execution-time-ms", (Date.now() - startTime).toString());
 
+  // Strict cache busting on page routes so new Vercel deployments are served immediately
+  response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+  response.headers.set("Pragma", "no-cache");
+  response.headers.set("Expires", "0");
+
   // Additional Security & Isolation Headers
   response.headers.set("X-Content-Type-Options", "nosniff");
   response.headers.set("X-Frame-Options", "DENY");
