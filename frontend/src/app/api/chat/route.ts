@@ -95,7 +95,96 @@ Guidelines:
     const openAiKey = process.env.OPENAI_API_KEY;
     const groqKey = process.env.GROQ_API_KEY;
 
-    // 1. Try OpenAI API if key available
+    // =========================================================================
+    // 1. PRIMARY: Groq Open-Weight Engine (OpenAI OSS 120B / Compound / Qwen 3.6)
+    // =========================================================================
+    if (groqKey && !generatedText) {
+      const groqModels = ["openai/gpt-oss-120b", "groq/compound-mini", "qwen/qwen3.6-27b"];
+      for (const groqModel of groqModels) {
+        if (generatedText) break;
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 3500);
+
+          const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${groqKey}`
+            },
+            body: JSON.stringify({
+              model: groqModel,
+              messages: [
+                { role: "system", content: enrichedSystemPrompt },
+                ...pruned.messages.filter((m) => m.role !== "system"),
+                { role: "user", content: trimmedQuery }
+              ],
+              temperature: 0.3,
+              max_tokens: 450
+            }),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+
+          if (groqRes.ok) {
+            const data = await groqRes.json();
+            const content = data.choices?.[0]?.message?.content?.trim();
+            if (content) {
+              generatedText = content.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
+              modelUsed = `groq/${groqModel}`;
+              break;
+            }
+          }
+        } catch (err) {
+          console.warn(`[LLM] Primary Groq (${groqModel}) attempt failed:`, err);
+        }
+      }
+    }
+
+    // =========================================================================
+    // 2. SECONDARY FALLBACK: Azure Container Apps LLM (Central India Sovereign Edge)
+    // =========================================================================
+    if (!generatedText && process.env.LLM_API_BASE_URL) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+        const azureRes = await fetch(`${AZURE_LLM_URL}/chat/completions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.LLM_API_KEY || "sec_epf_internal"}`
+          },
+          body: JSON.stringify({
+            model: AZURE_MODEL,
+            messages: [
+              { role: "system", content: enrichedSystemPrompt },
+              ...pruned.messages.filter((m) => m.role !== "system"),
+              { role: "user", content: trimmedQuery }
+            ],
+            temperature: 0.2,
+            max_tokens: 300
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (azureRes.ok) {
+          const data = await azureRes.json();
+          const content = data.choices?.[0]?.message?.content?.trim();
+          if (content) {
+            generatedText = content.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
+            modelUsed = `azure/${AZURE_MODEL}`;
+          }
+        }
+      } catch (err) {
+        console.warn("[LLM] Secondary Azure self-hosted fallback failed:", err);
+      }
+    }
+
+    // =========================================================================
+    // 3. TERTIARY FALLBACK: OpenAI API (if available)
+    // =========================================================================
     if (openAiKey && !generatedText) {
       try {
         const controller = new AbortController();
@@ -130,90 +219,7 @@ Guidelines:
           }
         }
       } catch (err) {
-        console.warn("[LLM] OpenAI attempt failed, proceeding to fallback:", err);
-      }
-    }
-
-    // 2. Try Groq Open-Weight Engine (OpenAI OSS 120B / Groq Compound / Qwen 3.6)
-    if (groqKey && !generatedText) {
-      const groqModels = ["openai/gpt-oss-120b", "groq/compound-mini", "qwen/qwen3.6-27b"];
-      for (const groqModel of groqModels) {
-        if (generatedText) break;
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3000);
-
-          const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${groqKey}`
-            },
-            body: JSON.stringify({
-              model: groqModel,
-              messages: [
-                { role: "system", content: enrichedSystemPrompt },
-                ...pruned.messages.filter((m) => m.role !== "system"),
-                { role: "user", content: trimmedQuery }
-              ],
-              temperature: 0.3,
-              max_tokens: 450
-            }),
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-
-          if (groqRes.ok) {
-            const data = await groqRes.json();
-            const content = data.choices?.[0]?.message?.content?.trim();
-            if (content) {
-              generatedText = content.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
-              modelUsed = `groq/${groqModel}`;
-              break;
-            }
-          }
-        } catch (err) {
-          console.warn(`[LLM] Groq (${groqModel}) attempt failed:`, err);
-        }
-      }
-    }
-
-    // 3. Try Azure Self-Hosted Container LLM (Central India Sovereign Edge)
-    if (!generatedText && process.env.LLM_API_BASE_URL) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2500);
-
-        const azureRes = await fetch(`${AZURE_LLM_URL}/chat/completions`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${process.env.LLM_API_KEY || "sec_epf_internal"}`
-          },
-          body: JSON.stringify({
-            model: AZURE_MODEL,
-            messages: [
-              { role: "system", content: enrichedSystemPrompt },
-              ...pruned.messages.filter((m) => m.role !== "system"),
-              { role: "user", content: trimmedQuery }
-            ],
-            temperature: 0.2,
-            max_tokens: 300
-          }),
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
-
-        if (azureRes.ok) {
-          const data = await azureRes.json();
-          const content = data.choices?.[0]?.message?.content?.trim();
-          if (content) {
-            generatedText = content.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
-            modelUsed = `azure/${AZURE_MODEL}`;
-          }
-        }
-      } catch (err) {
-        console.warn("[LLM] Azure self-hosted attempt failed:", err);
+        console.warn("[LLM] Tertiary OpenAI fallback failed:", err);
       }
     }
 
