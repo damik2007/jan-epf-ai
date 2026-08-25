@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { ClaimReadinessScore } from "@/components/ClaimReadinessScore";
 import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
-import { AIAgentProductGuideModal } from "@/components/AIAgentProductGuideModal";
+import { AIAgentGuideModal } from "@/components/AIAgentGuideModal";
 import { CitizenAccountOnboardingModal } from "@/components/CitizenAccountOnboardingModal";
 import { BookOpen } from "lucide-react";
 
@@ -687,17 +687,14 @@ export default function CitizenLandingPage() {
         onClose={() => setChaosSimulatorOpen(false)}
       />
 
-      {/* Step-by-Step Product Superpowers Guide Modal */}
-      <AIAgentProductGuideModal
+      {/* Step-by-Step Sovereign AI Agent User Guide Modal */}
+      <AIAgentGuideModal
         isOpen={guideModalOpen}
         onClose={() => setGuideModalOpen(false)}
-        onRunPrompt={(prompt, route) => {
+        onSelectPrompt={(prompt) => {
           setGuideModalOpen(false);
           if (typeof window !== "undefined") {
-            window.dispatchEvent(new CustomEvent("open-jan-epf-agent", { detail: { mode: "chat" } }));
-          }
-          if (route) {
-            window.location.href = route;
+            window.dispatchEvent(new CustomEvent("open-jan-epf-agent", { detail: { mode: "chat", prompt } }));
           }
         }}
       />

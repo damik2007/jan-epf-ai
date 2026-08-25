@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown, CitizenContextData } from "@/lib/voiceCopilotBrain";
 import { playNeuralSpeech, stopNeuralSpeech, ALL_INDIC_VOICES, IndicVoiceMetadata } from "@/lib/edgeTtsPlayer";
-import { AIAgentProductGuideModal } from "@/components/AIAgentProductGuideModal";
+import { AIAgentGuideModal } from "@/components/AIAgentGuideModal";
 
 const AGENT_CAPABILITIES = [
   {
@@ -558,12 +558,12 @@ export default function CopilotWorkstationPage() {
             onClick={() => setShowGuide(!showGuide)}
             className={`p-2.5 rounded-2xl border text-xs font-mono font-bold flex items-center gap-1.5 transition-all ${
               showGuide
-                ? "bg-saffron text-slate-950 border-saffron"
+                ? "bg-saffron text-slate-950 border-saffron shadow-sm"
                 : "bg-[#1e293b] hover:bg-[#334155] border-slate-700 text-amber-300"
             }`}
           >
             <BookOpen className="w-4 h-4" />
-            <span>{showGuide ? "Chat Workstation" : "Capabilities Guide"}</span>
+            <span>{showGuide ? "Chat Workstation" : "💡 AI Agent Guide"}</span>
           </button>
 
           <div className={`flex items-center gap-2 p-2 rounded-2xl bg-[#0f172a] border border-slate-700/80 text-xs font-mono`}>
@@ -819,16 +819,13 @@ export default function CopilotWorkstationPage() {
         </div>
       </div>
 
-      {/* STEP-BY-STEP INTERACTIVE PRODUCT CAPABILITIES POPUP */}
-      <AIAgentProductGuideModal
+      {/* STEP-BY-STEP INTERACTIVE AI AGENT GUIDE MODAL */}
+      <AIAgentGuideModal
         isOpen={showGuide}
         onClose={() => setShowGuide(false)}
-        onRunPrompt={(prompt, route) => {
+        onSelectPrompt={(prompt) => {
           setShowGuide(false);
           handleSend(prompt);
-          if (route && route !== "/copilot") {
-            window.location.href = route;
-          }
         }}
       />
     </div>

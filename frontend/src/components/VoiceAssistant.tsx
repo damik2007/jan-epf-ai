@@ -39,12 +39,13 @@ import {
   ArrowRight,
   LogIn,
   Coins,
+  Bot,
   HeartHandshake
 } from "lucide-react";
 import { getTranslation } from "@/lib/translations";
 import { generateCopilotResponse, CopilotReply, HarnessLayerBreakdown, CitizenContextData } from "@/lib/voiceCopilotBrain";
 import { playNeuralSpeech, stopNeuralSpeech, ALL_INDIC_VOICES, IndicVoiceMetadata } from "@/lib/edgeTtsPlayer";
-import { AIAgentProductGuideModal } from "./AIAgentProductGuideModal";
+import { AIAgentGuideModal, AI_AGENT_GUIDE_STEPS } from "@/components/AIAgentGuideModal";
 
 interface ChatMessage {
   id: string;
@@ -1091,39 +1092,66 @@ export const VoiceAssistant: React.FC = () => {
             <div className="flex-1 overflow-y-auto mt-2.5 space-y-3 p-1 animate-in fade-in zoom-in-95">
               <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                 <div className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-saffron" />
-                  <h4 className="font-extrabold text-sm text-white">Full Product Capabilities Directory</h4>
+                  <Bot className="w-4 h-4 text-saffron" />
+                  <div>
+                    <h4 className="font-extrabold text-sm text-white">⚡ Sovereign AI Agent User Guide</h4>
+                    <p className="text-[10px] text-slate-400">How to use in-browser tools, 6-layer harness & Groq 120B Open-Weight LLM</p>
+                  </div>
                 </div>
                 <button
                   onClick={() => setShowGuideModal(false)}
-                  className="px-2.5 py-1 rounded-lg bg-saffron text-slate-950 font-bold text-[10px]"
+                  className="px-3 py-1.5 rounded-xl bg-saffron text-slate-950 font-bold text-xs hover:bg-amber-400 transition-all flex items-center gap-1 shadow-md"
                 >
-                  Back to Chat ➔
+                  <span>Back to Chat</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {ALL_MASTER_CAPABILITIES.map((cap, idx) => (
-                  <div key={idx} className="p-3 rounded-2xl bg-[#0f172a] border border-slate-700/80 space-y-2 hover:border-saffron/60 transition-all">
-                    <div className="flex items-center justify-between gap-1.5">
-                      <h5 className="font-bold text-xs text-white">{cap.title}</h5>
-                      <span className={`px-1.5 py-0.5 rounded text-[8px] font-mono font-bold border ${cap.badgeColor}`}>
-                        {cap.badge}
-                      </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {AI_AGENT_GUIDE_STEPS.map((step) => {
+                  const StepIcon = step.icon;
+                  return (
+                    <div key={step.step} className="p-3.5 rounded-2xl bg-[#0f172a] border border-slate-700/80 space-y-2 hover:border-saffron/60 transition-all flex flex-col justify-between">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between gap-1.5">
+                          <div className="flex items-center gap-1.5">
+                            <StepIcon className="w-4 h-4 text-saffron shrink-0" />
+                            <h5 className="font-bold text-xs text-white truncate">{step.title}</h5>
+                          </div>
+                          <span className={`px-1.5 py-0.5 rounded text-[8px] font-mono font-bold border ${step.badgeColor} shrink-0`}>
+                            {step.badge}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-amber-300 font-mono font-medium leading-tight">{step.headline}</p>
+                        <ul className="text-[10px] text-slate-300 space-y-1 pt-1">
+                          {step.points.slice(0, 2).map((pt, pIdx) => (
+                            <li key={pIdx} className="flex items-start gap-1">
+                              <span className="text-emerald-400 font-bold">•</span>
+                              <span>{pt}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className="pt-2 border-t border-slate-800/80 space-y-1.5">
+                        <div className="flex items-center justify-between text-[9px] font-mono text-emerald-400">
+                          <span>Verified Metric:</span>
+                          <span className="font-bold">{step.proofMetric.split("•")[0]}</span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            setShowGuideModal(false);
+                            handleProcessUserMessage(step.samplePrompt);
+                          }}
+                          className="w-full py-1.5 px-2.5 rounded-xl bg-[#1e293b] hover:bg-gradient-to-r hover:from-saffron hover:to-amber-500 hover:text-slate-950 text-slate-200 text-[10px] font-bold transition-all flex items-center justify-between shadow-sm"
+                        >
+                          <span className="truncate italic font-mono">&quot;{step.samplePrompt}&quot;</span>
+                          <ArrowRight className="w-3 h-3 shrink-0 ml-1" />
+                        </button>
+                      </div>
                     </div>
-                    <p className="text-[11px] text-slate-300 leading-relaxed">{cap.desc}</p>
-                    <button
-                      onClick={() => {
-                        setShowGuideModal(false);
-                        handleProcessUserMessage(cap.prompt);
-                      }}
-                      className="w-full py-1.5 px-2.5 rounded-xl bg-[#1e293b] hover:bg-saffron hover:text-slate-950 text-slate-200 text-[10px] font-bold transition-all flex items-center justify-between"
-                    >
-                      <span className="truncate italic">&quot;{cap.prompt}&quot;</span>
-                      <ArrowRight className="w-3 h-3 shrink-0 ml-1" />
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ) : (
@@ -1506,17 +1534,14 @@ export const VoiceAssistant: React.FC = () => {
         </button>
       </div>
 
-      {/* 3. STEP-BY-STEP INTERACTIVE PRODUCT CAPABILITIES POPUP */}
-      <AIAgentProductGuideModal
+      {/* 3. STEP-BY-STEP INTERACTIVE SOVEREIGN AI AGENT GUIDE MODAL */}
+      <AIAgentGuideModal
         isOpen={showGuideModal}
         onClose={() => setShowGuideModal(false)}
-        onRunPrompt={(prompt, route) => {
+        onSelectPrompt={(prompt) => {
           setShowGuideModal(false);
           if (!isOpen) setIsOpen(true);
           handleProcessUserMessage(prompt);
-          if (route && route !== pathname) {
-            router.push(route);
-          }
         }}
       />
     </div>
