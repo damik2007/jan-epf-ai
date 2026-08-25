@@ -22,6 +22,10 @@ export interface AgentToolCall {
   standard?: string;
   toolName:
     | "execute_advance_preflight"
+    | "verify_penny_drop_kyc"
+    | "transfer_service_record"
+    | "calculate_tds_shield"
+    | "senior_pension_audit"
     | "auto_deduce_exit_date"
     | "verify_npci_penny_drop"
     | "toggle_discreet_privacy"

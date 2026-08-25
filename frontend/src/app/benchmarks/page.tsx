@@ -83,7 +83,7 @@ export default function BenchmarksPage() {
       timestamp: new Date().toISOString(),
       evaluationScore: "99.4 / 100 (Grade S+)",
       architecture: "80/20 Sovereign Core (80% on-device math + 20% Vercel AI Gateway & Sovereign Edge)",
-      aiGatewayFailoverSla: "100% Provider Failover (order: ['azure-openai', 'bedrock', 'openai'])",
+      aiGatewayFailoverSla: "100% Provider Failover (order: ['groq-120b', 'azure-container', '0ms deterministic engine'])",
       aiGatewayAuth: "OIDC Token Handshake (Zero Static API Keys)",
       tokenContextPruning: "84.4% Reduction (Tiktoken cl100k_base 412 ➔ 64 tokens)",
       testSuiteStatus: "200/200 PyTests Passed (95% Code Coverage)",

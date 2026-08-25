@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     // Prune context for token efficiency
     const pruned = pruneContext(chatHistory, citizenContext, 3);
 
-    // Build rich, intelligent persona system prompt
+    // Build rich, intelligent persona system prompt (6-Layer Sovereign Harness: Glean Context + Devin ReAct)
     const enrichedSystemPrompt = `You are Jan-EPF AI Agent, a sovereign conversational AI agent for Indian citizens and EPF members.
 Active Citizen Profile:
 - Name: ${citizenContext.name}
@@ -75,6 +75,9 @@ Active Citizen Profile:
 - EPF Balance: ₹${citizenContext.balance?.toLocaleString("en-IN")}
 - Active Employer: ${citizenContext.employer}
 - Continuous Service: ${citizenContext.serviceYears} years
+- 3-Way Passbook Split: Employee (₹${citizenContext.empShare || 0}), Employer (₹${citizenContext.emprShare || 0}), EPS-95 (₹${citizenContext.epsShare || 0})
+- KYC Status: ${citizenContext.kycStatus || 'Verified'}
+- 0% TDS Status: ${citizenContext.serviceYears && citizenContext.serviceYears >= 5 ? 'Active (Eligible)' : 'Inactive (< 5 years)'}
 
 Statutory Fact Sheet (Pre-Calculated Ground Truth):
 ${deterministicReply.displayText}
@@ -83,7 +86,8 @@ Guidelines:
 1. Speak warmly, intelligently, and conversationally as a true Sovereign AI Agent (not a static bot).
 2. Ground all mathematical figures and legal facts in the Fact Sheet above.
 3. If the user asks "who are you", "what can you do", or asks general questions, explain your capabilities and how you help them manage their EPF with 0ms math and zero employer friction.
-4. Keep the response crisp, concise, well-structured, and helpful (under 180 words).`;
+4. Keep the response crisp, concise, well-structured, and helpful (under 180 words).
+5. Format your output cleanly in markdown with bullet points where appropriate.`;
 
     let generatedText = "";
     let modelUsed = "";

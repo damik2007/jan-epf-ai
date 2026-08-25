@@ -9,6 +9,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { StatutoryTooltip } from "@/components/StatutoryTooltip";
 import { GrievanceLegalLetterModal } from "@/components/GrievanceLegalLetterModal";
 import { PreFlightRejectionDiffCard } from "@/components/PreFlightRejectionDiffCard";
+import { ChequeOCRScanner } from "@/components/ChequeOCRScanner";
 import {
   Wrench,
   FileSignature,
@@ -418,6 +419,10 @@ export default function FixDetailsHub() {
               </div>
             </div>
           )}
+
+          <div className="mt-6 border-t border-slate-200 dark:border-slate-800 pt-6">
+            <ChequeOCRScanner onVerificationComplete={(extracted) => {}} />
+          </div>
         </div>
       )}
 
