@@ -148,61 +148,137 @@ const ALL_MASTER_CAPABILITIES = [
   }
 ];
 
+function parseFormattedInline(text: string): React.ReactNode[] {
+  const parts: React.ReactNode[] = [];
+  const tokenRegex = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g;
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+
+  while ((match = tokenRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const token = match[0];
+    if (token.startsWith("**") && token.endsWith("**")) {
+      parts.push(
+        <strong key={match.index} className="font-black text-white drop-shadow-sm">
+          {token.slice(2, -2)}
+        </strong>
+      );
+    } else if (token.startsWith("`") && token.endsWith("`")) {
+      parts.push(
+        <code key={match.index} className="px-1.5 py-0.5 rounded bg-slate-800 text-saffron font-mono text-[10px] font-bold border border-slate-700">
+          {token.slice(1, -1)}
+        </code>
+      );
+    } else if (token.startsWith("*") && token.endsWith("*")) {
+      parts.push(
+        <em key={match.index} className="italic text-slate-200">
+          {token.slice(1, -1)}
+        </em>
+      );
+    }
+    lastIndex = match.index + token.length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : [text];
+}
+
 function renderFormattedMarkdown(rawText: string) {
   if (!rawText) return null;
   const lines = rawText.split("\n");
 
   return (
-    <div className="space-y-1.5 leading-relaxed">
+    <div className="space-y-2 leading-relaxed text-xs sm:text-sm">
       {lines.map((line, lineIdx) => {
         const trimmed = line.trim();
         if (!trimmed) return <div key={lineIdx} className="h-1" />;
 
-        const isBullet = BULLET_PREFIX_REGEX.test(trimmed);
-        const lineContent = isBullet ? trimmed.replace(BULLET_PREFIX_REGEX, "") : trimmed;
-
-        const parts: React.ReactNode[] = [];
-        let lastIndex = 0;
-        let match: RegExpExecArray | null;
-        const regex = new RegExp(MARKDOWN_TOKEN_REGEX);
-
-        while ((match = regex.exec(lineContent)) !== null) {
-          if (match.index > lastIndex) {
-            parts.push(lineContent.slice(lastIndex, match.index));
-          }
-          const token = match[0];
-          if (token.startsWith("**") && token.endsWith("**")) {
-            parts.push(
-              <strong key={match.index} className="font-extrabold text-white text-opacity-100">
-                {token.slice(2, -2)}
-              </strong>
-            );
-          } else if (token.startsWith("*") && token.endsWith("*")) {
-            parts.push(
-              <em key={match.index} className="italic text-slate-200">
-                {token.slice(1, -1)}
-              </em>
-            );
-          }
-          lastIndex = match.index + token.length;
+        // Horizontal divider
+        if (trimmed === "---" || trimmed === "***" || trimmed === "___") {
+          return <hr key={lineIdx} className="border-slate-800 my-2" />;
         }
 
-        if (lastIndex < lineContent.length) {
-          parts.push(lineContent.slice(lastIndex));
-        }
-
-        if (isBullet) {
+        // Headings (#, ##, ###, ####)
+        if (trimmed.startsWith("#### ")) {
+          const content = trimmed.replace(/^####\s+/, "");
           return (
-            <div key={lineIdx} className="flex items-start gap-2 pl-1">
-              <span className="text-saffron select-none font-bold mt-0.5">•</span>
-              <span className="text-slate-100">{parts}</span>
+            <h6 key={lineIdx} className="text-xs font-black text-slate-200 uppercase tracking-wide font-mono pt-1">
+              {parseFormattedInline(content)}
+            </h6>
+          );
+        }
+        if (trimmed.startsWith("### ")) {
+          const content = trimmed.replace(/^###\s+/, "");
+          return (
+            <h5 key={lineIdx} className="text-xs sm:text-sm font-black text-amber-300 uppercase tracking-wide font-mono pt-1.5 pb-0.5 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+              <span>{parseFormattedInline(content)}</span>
+            </h5>
+          );
+        }
+        if (trimmed.startsWith("## ")) {
+          const content = trimmed.replace(/^##\s+/, "");
+          return (
+            <h4 key={lineIdx} className="text-sm sm:text-base font-black text-white pt-2 pb-0.5 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded bg-saffron shrink-0 shadow-sm" />
+              <span>{parseFormattedInline(content)}</span>
+            </h4>
+          );
+        }
+        if (trimmed.startsWith("# ")) {
+          const content = trimmed.replace(/^#\s+/, "");
+          return (
+            <h3 key={lineIdx} className="text-base sm:text-lg font-black text-saffron pt-2 pb-1">
+              {parseFormattedInline(content)}
+            </h3>
+          );
+        }
+
+        // Blockquotes
+        if (trimmed.startsWith("> ")) {
+          const content = trimmed.replace(/^>\s+/, "");
+          return (
+            <div key={lineIdx} className="p-2.5 rounded-xl bg-slate-900/90 border-l-4 border-saffron text-slate-200 italic my-1 font-mono text-[11px]">
+              {parseFormattedInline(content)}
             </div>
           );
         }
 
+        // Numbered list items (e.g. "1. ", "2. ", "10. ")
+        const numberMatch = trimmed.match(/^(\d+)[\.\)]\s+(.*)/);
+        if (numberMatch) {
+          const num = numberMatch[1];
+          const content = numberMatch[2];
+          return (
+            <div key={lineIdx} className="flex items-start gap-2 pl-1.5 my-1">
+              <span className="px-1.5 py-0.2 rounded bg-slate-800 text-saffron font-mono text-[10px] font-black border border-slate-700 mt-0.5 shrink-0">
+                {num}
+              </span>
+              <div className="text-slate-100 flex-1">{parseFormattedInline(content)}</div>
+            </div>
+          );
+        }
+
+        // Bullet list items
+        if (BULLET_PREFIX_REGEX.test(trimmed)) {
+          const content = trimmed.replace(BULLET_PREFIX_REGEX, "");
+          return (
+            <div key={lineIdx} className="flex items-start gap-2 pl-1.5 my-0.5">
+              <span className="text-saffron select-none font-bold text-sm leading-none mt-1 shrink-0">•</span>
+              <div className="text-slate-100 flex-1">{parseFormattedInline(content)}</div>
+            </div>
+          );
+        }
+
+        // Regular paragraph
         return (
-          <p key={lineIdx} className="text-slate-100">
-            {parts}
+          <p key={lineIdx} className="text-slate-100 leading-relaxed">
+            {parseFormattedInline(trimmed)}
           </p>
         );
       })}
