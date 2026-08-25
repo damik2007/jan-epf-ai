@@ -29,6 +29,7 @@ import {
 import { ClaimReadinessScore } from "@/components/ClaimReadinessScore";
 import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
 import { AIAgentProductGuideModal } from "@/components/AIAgentProductGuideModal";
+import { CitizenAccountOnboardingModal } from "@/components/CitizenAccountOnboardingModal";
 import { BookOpen } from "lucide-react";
 
 export default function CitizenLandingPage() {
@@ -37,8 +38,28 @@ export default function CitizenLandingPage() {
 
   const [chaosSimulatorOpen, setChaosSimulatorOpen] = useState(false);
   const [guideModalOpen, setGuideModalOpen] = useState(false);
+  const [onboardingModalOpen, setOnboardingModalOpen] = useState(false);
   const [privacyMode, setPrivacyMode] = useState<boolean>(true);
   const [uanCopied, setUanCopied] = useState<boolean>(false);
+
+  // Automatically show the Citizen Onboarding Guide on persona entry/switch if not already viewed for this persona
+  useEffect(() => {
+    if (isAuthenticated && activeCitizen && activeCitizen.uan) {
+      if (typeof window !== "undefined") {
+        const viewed = localStorage.getItem(`jan_epf_onboarded_v2_${activeCitizen.uan}`);
+        if (!viewed) {
+          setOnboardingModalOpen(true);
+        }
+      }
+    }
+  }, [isAuthenticated, activeCitizen?.uan]);
+
+  const handleCloseOnboarding = () => {
+    setOnboardingModalOpen(false);
+    if (typeof window !== "undefined" && activeCitizen?.uan) {
+      localStorage.setItem(`jan_epf_onboarded_v2_${activeCitizen.uan}`, "true");
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -359,7 +380,7 @@ export default function CitizenLandingPage() {
                 : "Gig Platform / Unorganized Contributor"}
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2.5 pt-2">
               <div className="flex items-center gap-1.5 text-xs bg-white/10 px-3 py-1 rounded-lg backdrop-blur-sm border border-white/10 text-emerald-300">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>{t.verifiedKYCLabel}: {activeCitizen.bank_kyc.bank_name} ({t.verified})</span>
@@ -368,6 +389,13 @@ export default function CitizenLandingPage() {
                 <Zap className="w-3.5 h-3.5 text-amber-300" />
                 <span>{t.sovereignRateBadge || "8.25% Sovereign Rate Active"}</span>
               </div>
+              <button
+                type="button"
+                onClick={() => setOnboardingModalOpen(true)}
+                className="flex items-center gap-1.5 text-xs bg-saffron/20 hover:bg-saffron/30 px-3 py-1 rounded-lg backdrop-blur-sm border border-saffron/50 text-saffron font-bold transition-all shadow-sm hover:scale-105"
+              >
+                <span>💡 What You Need To Know</span>
+              </button>
             </div>
           </div>
 
@@ -670,6 +698,19 @@ export default function CitizenLandingPage() {
           }
         }}
       />
+
+      {/* Citizen Account Onboarding & Key Things to Know Modal */}
+      {isAuthenticated && (
+        <CitizenAccountOnboardingModal
+          isOpen={onboardingModalOpen}
+          onClose={handleCloseOnboarding}
+          onOpenCopilot={() => {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new CustomEvent("open-jan-epf-agent", { detail: { mode: "chat" } }));
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

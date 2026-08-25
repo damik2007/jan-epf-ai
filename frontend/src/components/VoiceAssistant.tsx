@@ -912,23 +912,30 @@ export const VoiceAssistant: React.FC = () => {
                 </button>
 
                 {showVoiceSettings && (
-                  <div className="absolute right-0 top-10 w-72 sm:w-80 p-3 rounded-2xl bg-[#0f172a] border border-slate-700 shadow-2xl text-xs space-y-2.5 z-50 animate-in fade-in zoom-in-95 max-h-[70vh] flex flex-col">
-                    <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono border-b border-slate-800 pb-1.5 shrink-0">
-                      <span className="flex items-center gap-1 text-saffron">
-                        <Languages className="w-3.5 h-3.5" />
-                        <span>13 INDIC VOICES DIRECTORY (23 VOICES)</span>
+                  <div className="absolute right-0 top-11 w-80 sm:w-96 p-4 rounded-2xl bg-slate-950 border border-slate-700/90 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-xs space-y-3 z-50 animate-in fade-in zoom-in-95 max-h-[75vh] flex flex-col">
+                    <div className="flex justify-between items-center text-[10px] font-bold text-slate-300 font-mono border-b border-slate-800 pb-2 shrink-0">
+                      <span className="flex items-center gap-1.5 text-saffron">
+                        <Languages className="w-4 h-4" />
+                        <span>13 INDIC VOICES (23 NEURAL VOICES)</span>
                       </span>
-                      <button onClick={() => setShowVoiceSettings(false)} className="hover:text-white text-xs">✕</button>
+                      <button
+                        type="button"
+                        onClick={() => setShowVoiceSettings(false)}
+                        className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-all text-xs"
+                      >
+                        ✕
+                      </button>
                     </div>
 
-                    <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-none text-[9px] shrink-0 font-mono">
+                    <div className="flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-thin text-[9px] shrink-0 font-mono">
                       {INDIC_LANG_FILTERS.map((lang) => (
                         <button
                           key={lang.id}
+                          type="button"
                           onClick={() => setSelectedLangFilter(lang.id)}
-                          className={`px-2 py-0.5 rounded-lg whitespace-nowrap transition-all ${
+                          className={`px-2.5 py-1 rounded-lg whitespace-nowrap transition-all ${
                             selectedLangFilter === lang.id
-                              ? "bg-saffron text-slate-900 font-bold shadow-sm"
+                              ? "bg-saffron text-slate-950 font-bold shadow-md"
                               : "bg-[#1e293b] hover:bg-[#334155] text-slate-200"
                           }`}
                         >
@@ -937,61 +944,67 @@ export const VoiceAssistant: React.FC = () => {
                       ))}
                     </div>
 
-                    <div className="space-y-1 overflow-y-auto max-h-48 pr-1">
+                    <div className="space-y-1.5 overflow-y-auto max-h-56 pr-1">
                       {filteredVoices.map((v) => (
                         <div
                           key={v.id}
-                          className={`w-full p-2 rounded-xl text-[11px] transition-all flex items-center justify-between border ${
+                          className={`w-full p-2.5 rounded-xl text-[11px] transition-all flex items-center justify-between border ${
                             selectedVoice === v.id
-                              ? "bg-saffron/20 border-saffron text-white font-bold"
-                              : "bg-[#1e293b] hover:bg-[#334155] border-slate-700/50 text-slate-200"
+                              ? "bg-saffron/15 border-saffron text-white font-bold"
+                              : "bg-[#0f172a] hover:bg-[#1e293b] border-slate-800 text-slate-200"
                           }`}
                         >
                           <button
+                            type="button"
                             onClick={() => {
                               setSelectedVoice(v.id);
                               setActiveSpeechLang(v.langCode);
                             }}
                             className="flex-1 text-left flex flex-col"
                           >
-                            <div className="flex items-center gap-1.5">
-                              <span className="text-saffron font-mono text-[9px] uppercase font-bold">
+                            <div className="flex items-center gap-2">
+                              <span className="px-1.5 py-0.5 rounded bg-saffron/20 text-saffron font-mono text-[9px] uppercase font-bold border border-saffron/40">
                                 {v.langName.split(" ")[0]}
                               </span>
-                              <span className="text-white font-semibold">{v.name}</span>
-                              <span className="text-[9px] text-slate-400">({v.gender})</span>
+                              <span className="text-white font-semibold text-xs">{v.name}</span>
+                              <span className="text-[10px] text-slate-400">({v.gender})</span>
                             </div>
                           </button>
 
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center gap-1.5">
                             <button
+                              type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 playNeuralSpeech(v.sample, v.langCode, v.id);
                               }}
-                              className="p-1 rounded-lg bg-[#334155] hover:bg-saffron hover:text-slate-900 text-slate-200 transition-all"
+                              className="px-2 py-1 rounded-lg bg-[#1e293b] hover:bg-saffron hover:text-slate-950 text-amber-300 border border-slate-700 text-[10px] font-bold flex items-center gap-1 transition-all"
                               title="Play test voice sample"
                             >
                               <Play className="w-3 h-3 fill-current" />
+                              <span>Test</span>
                             </button>
 
                             {selectedVoice === v.id && (
-                              <span className="text-emerald-400 font-bold ml-1">✓</span>
+                              <span className="text-emerald-400 font-bold ml-1 text-sm">✓</span>
                             )}
                           </div>
                         </div>
                       ))}
                     </div>
 
-                    <div className="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px] shrink-0">
-                      <span className="text-slate-300">Voice Auto-Speak:</span>
+                    <div className="pt-2.5 border-t border-slate-800 flex items-center justify-between text-[11px] shrink-0">
+                      <span className="text-slate-300 font-medium">Voice Auto-Speak:</span>
                       <button
+                        type="button"
                         onClick={() => setAutoSpeakEnabled(!autoSpeakEnabled)}
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold transition-all ${
-                          autoSpeakEnabled ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40" : "bg-[#1e293b] text-slate-400"
+                        className={`px-3 py-1 rounded-xl text-[10px] font-bold transition-all border ${
+                          autoSpeakEnabled
+                            ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
+                            : "bg-[#1e293b] text-slate-400 border-slate-700"
                         }`}
                       >
-                        {autoSpeakEnabled ? "ENABLED (Speaks Aloud)" : "MUTED (Chat-First)"}
+                        {autoSpeakEnabled ? "🔊 ENABLED (Speaks Aloud)" : "🔇 MUTED (Chat-First)"}
                       </button>
                     </div>
                   </div>
