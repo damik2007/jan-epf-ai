@@ -1013,77 +1013,75 @@ export const VoiceAssistant: React.FC = () => {
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-samriddhi-gold/10 rounded-full blur-2xl pointer-events-none" />
 
           {/* Header Bar */}
-          <div className="flex justify-between items-center pb-2.5 sm:pb-3 border-b border-slate-800 relative z-10">
-            <div className="flex items-center gap-2.5">
-              <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${personaBadge.color} text-white flex items-center justify-center font-black shadow-lg text-xs`}>
+          <div className="flex justify-between items-center pb-2.5 sm:pb-3 border-b border-slate-800 relative z-10 gap-1.5">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${personaBadge.color} text-white flex items-center justify-center font-black shadow-lg text-xs shrink-0`}>
                 ⚡
               </div>
-              <div>
-                <h3 className="font-bold text-xs sm:text-sm tracking-tight text-white flex items-center gap-1.5">
-                  <span>Jan-EPF AI Agent</span>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">
-                    {autoSpeakEnabled ? "🔊 Voice Active" : "💬 Chat-First"}
-                  </span>
-                </h3>
-                <p className="text-[10px] text-slate-300 truncate max-w-[150px] sm:max-w-[240px] flex items-center gap-1">
-                  <span className={`font-bold ${personaBadge.text}`}>{isLoginPage ? "Gateway Concierge" : fullName}</span>
-                  <span className="text-slate-400">• {personaBadge.role}</span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 truncate">
+                  <h3 className="font-bold text-xs sm:text-sm tracking-tight text-white truncate">
+                    Jan-EPF AI Agent
+                  </h3>
+                </div>
+                <p className="text-[10px] text-slate-300 truncate flex items-center gap-1">
+                  <span className={`font-bold ${personaBadge.text}`}>{isLoginPage ? "Gateway Concierge" : firstName}</span>
+                  <span className="text-slate-400 truncate">• {personaBadge.role}</span>
                 </p>
               </div>
             </div>
 
             {/* Controls Bar */}
-            <div className="flex items-center gap-1">
-              {/* 💡 Capabilities & Guide Button */}
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+              {/* 1. 💡 Capabilities & Guide Button */}
               <button
                 onClick={() => setShowGuideModal(!showGuideModal)}
-                className={`p-1.5 rounded-xl border transition-all flex items-center gap-1 text-[11px] font-bold font-mono ${
+                className={`p-1.5 rounded-xl border transition-all flex items-center gap-1 text-[11px] font-bold font-mono shrink-0 ${
                   showGuideModal
                     ? "bg-saffron text-slate-950 border-saffron shadow-sm"
                     : "bg-[#1e293b] hover:bg-[#334155] border-slate-700 text-amber-300"
                 }`}
-                title="View All Features & Capabilities Guide"
+                title="💡 AI Agent Interactive Guide"
                 aria-label="Capabilities Guide"
               >
                 <BookOpen className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Guide</span>
+                <span className="hidden lg:inline">Guide</span>
               </button>
 
+              {/* 2. 🗑️ Clear Chat History */}
               {!isLoginPage && (
                 <button
                   type="button"
                   onClick={handleClearHistory}
                   aria-label="Clear Chat History & Reset Session"
-                  className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 transition-all flex items-center gap-1 text-[11px] font-mono"
+                  className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-rose-500/20 text-slate-300 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 transition-all flex items-center gap-1 text-[11px] font-mono shrink-0"
                   title="Clear Chat History & Reset Session"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  <span className="hidden xl:inline">Clear</span>
+                  <span className="hidden 2xl:inline">Clear</span>
                 </button>
               )}
 
-              {/* Voice Persona Selector */}
-              <div>
-                <button
-                  onClick={() => {
-                    setShowVoiceSettings(!showVoiceSettings);
-                    if (showGuideModal) setShowGuideModal(false);
-                  }}
-                  aria-expanded={showVoiceSettings}
-                  aria-haspopup="dialog"
-                  aria-label="Voice dialect settings"
-                  className={`p-1.5 rounded-xl border transition-all ${
-                    showVoiceSettings
-                      ? "bg-saffron text-slate-900 border-saffron shadow-md"
-                      : "bg-[#1e293b] hover:bg-[#334155] border-slate-700 text-slate-200"
-                  }`}
-                  title="Voice & Indic Dialect Settings (13 Languages)"
-                >
-                  <Sliders className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </button>
-              </div>
+              {/* 3. 🎛️ 13 Indic Neural Voice Studio */}
+              <button
+                onClick={() => {
+                  setShowVoiceSettings(!showVoiceSettings);
+                  if (showGuideModal) setShowGuideModal(false);
+                }}
+                aria-expanded={showVoiceSettings}
+                aria-haspopup="dialog"
+                aria-label="Voice dialect settings"
+                className={`p-1.5 rounded-xl border transition-all shrink-0 ${
+                  showVoiceSettings
+                    ? "bg-saffron text-slate-900 border-saffron shadow-md"
+                    : "bg-[#1e293b] hover:bg-[#334155] border-slate-700 text-slate-200"
+                }`}
+                title="🎙️ Voice & Indic Dialect Settings (13 Languages)"
+              >
+                <Sliders className="w-3.5 h-3.5" />
+              </button>
 
-              {/* Chat / Voice Mode Toggle Button */}
+              {/* 4. 🔊 / 🔇 Auto-Speak Audio Toggle */}
               <button
                 onClick={() => {
                   if (isSpeaking) {
@@ -1092,34 +1090,53 @@ export const VoiceAssistant: React.FC = () => {
                     setAutoSpeakEnabled(!autoSpeakEnabled);
                   }
                 }}
-                className={`px-2.5 sm:px-3 py-1.5 rounded-xl border text-[11px] font-bold font-mono flex items-center gap-1 transition-all ${
+                className={`p-1.5 rounded-xl border text-[11px] font-bold font-mono flex items-center gap-1 transition-all shrink-0 ${
                   isSpeaking
                     ? "bg-red-500/30 text-red-300 border-red-500/40 animate-pulse"
                     : autoSpeakEnabled
-                    ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
-                    : "bg-[#1e293b] text-slate-300 border-slate-700"
+                    ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-sm"
+                    : "bg-[#1e293b] text-slate-400 hover:text-slate-200 border-slate-700"
                 }`}
-                title={isSpeaking ? "Stop Voice Playback" : autoSpeakEnabled ? "Voice Auto-Speak Active" : "Chat-First Mode"}
+                title={isSpeaking ? "Stop Voice Playback" : autoSpeakEnabled ? "Auto-Speak Audio ON" : "Chat-First (Muted)"}
               >
-                {isSpeaking || autoSpeakEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-                <span className="hidden md:inline">
+                {isSpeaking || autoSpeakEnabled ? (
+                  <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+                ) : (
+                  <VolumeX className="w-3.5 h-3.5" />
+                )}
+                <span className="hidden xl:inline">
                   {autoSpeakEnabled ? "Voice On" : "Chat-First"}
                 </span>
               </button>
 
+              {/* 5. ↗ Dedicated AI Agent Workstation Link */}
               <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-[#334155] text-slate-300 hover:text-white border border-slate-700 transition-all hidden sm:block"
-                title={isExpanded ? "Collapse to Floating Modal" : "Expand to Sovereign Command Workstation"}
+                onClick={() => {
+                  setIsOpen(false);
+                  router.push("/copilot");
+                }}
+                className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-[#334155] text-slate-300 hover:text-saffron border border-slate-700 transition-all shrink-0"
+                title="Open Fullscreen AI Agent Workstation (/copilot)"
               >
-                {isExpanded ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                <ExternalLink className="w-3.5 h-3.5" />
               </button>
 
+              {/* 6. ⛶ Expand / Collapse Modal Size */}
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-[#334155] text-slate-300 hover:text-white border border-slate-700 transition-all shrink-0"
+                title={isExpanded ? "Collapse to Floating Modal" : "Expand Modal Size"}
+              >
+                {isExpanded ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+              </button>
+
+              {/* 7. ✕ Close Modal */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-[#334155] text-slate-300 hover:text-white border border-slate-700 transition-all"
+                className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-rose-600/30 text-slate-300 hover:text-rose-200 border border-slate-700 hover:border-rose-500/40 transition-all shrink-0"
+                title="Close AI Agent"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
           </div>
