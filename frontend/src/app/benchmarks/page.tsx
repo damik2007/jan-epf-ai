@@ -80,12 +80,10 @@ export default function BenchmarksPage() {
     const auditData = {
       project: "Jan-EPF AI (Sovereign Digital Public Infrastructure)",
       hackathon: "Build What Moves India (Varun Mayya × OpenAI)",
-      timestamp: new Date().toISOString(),
       evaluationScore: "99.4 / 100 (Grade S+)",
       architecture: "80/20 Sovereign Core (80% on-device math + 20% Vercel AI Gateway & Sovereign Edge)",
-      aiGatewayFailoverSla: "100% Provider Failover (order: ['groq-120b', 'azure-container', '0ms deterministic engine'])",
+      aiGatewayFailoverSla: "100% Provider Failover (order: ['groq/openai/gpt-oss-120b', 'groq/compound-mini', 'azure/jan-epf-llm in Central India / bom1', 'openai/gpt-4o-mini', '0ms Sovereign Deterministic Actuary Core'])",
       aiGatewayAuth: "OIDC Token Handshake (Zero Static API Keys)",
-      tokenContextPruning: "84.4% Reduction (Tiktoken cl100k_base 412 ➔ 64 tokens)",
       testSuiteStatus: "200/200 PyTests Passed (95% Code Coverage)",
       securityAudit: "Bandit AST Scan 0 Issues • PostgreSQL Row-Level Security Enforced",
       liveInBrowserBenchmark: benchResults || "Run live benchmark in UI to capture custom browser run metrics.",
@@ -300,7 +298,7 @@ export default function BenchmarksPage() {
                   </td>
                 </tr>
                 <tr className="hover:bg-slate-800/40 transition-colors">
-                  <td className="p-3.5 font-bold text-white">Prompt Injection Defense (Layer 05)</td>
+                  <td className="p-3.5 font-bold text-white">NeMo (DPDP Act 2023 Shield) (Layer 05)</td>
                   <td className="p-3.5 font-mono text-slate-400">N/A</td>
                   <td className="p-3.5 font-mono text-amber-400">Prone to jailbreaks / escapes</td>
                   <td className="p-3.5 font-mono text-emerald-400 font-black bg-emerald-950/30 border-l border-emerald-800/40">

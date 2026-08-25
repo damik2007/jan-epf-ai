@@ -120,106 +120,193 @@ function parseFormattedInline(text: string): React.ReactNode[] {
   return parts.length > 0 ? parts : [text];
 }
 
-// Custom Safe & Fast Markdown Formatter with Headings, Badges, Lists
+function parseMarkdownTable(tableLines: string[]) {
+  if (tableLines.length < 2) return null;
+  const headerLine = tableLines[0];
+  const separatorLine = tableLines[1];
+  const isSeparator = /^\|?(\s*:?-+:?\s*\|)+\s*$/.test(separatorLine) || separatorLine.includes("---");
+  if (!isSeparator) return null;
+
+  const parseRow = (line: string) => {
+    const clean = line.trim().replace(/^\|/, "").replace(/\|$/, "");
+    return clean.split("|").map((cell) => cell.trim());
+  };
+
+  const headers = parseRow(headerLine);
+  const dataRows = tableLines.slice(2).map(parseRow);
+
+  return (
+    <div className="my-2.5 overflow-x-auto rounded-2xl border border-slate-700/80 bg-slate-950/90 shadow-md">
+      <table className="w-full text-left text-xs text-slate-200 border-collapse">
+        <thead className="bg-[#0f172a] text-slate-100 uppercase font-mono text-[10px] tracking-wider border-b border-slate-700">
+          <tr>
+            {headers.map((h, i) => (
+              <th key={i} className="px-3 py-2 font-extrabold text-saffron border-r border-slate-800 last:border-r-0">
+                {parseFormattedInline(h)}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-800/80">
+          {dataRows.map((row, rIdx) => (
+            <tr key={rIdx} className="hover:bg-slate-900/60 transition-colors">
+              {row.map((cell, cIdx) => (
+                <td key={cIdx} className="px-3 py-2 leading-relaxed border-r border-slate-800/60 last:border-r-0 font-medium text-[11px]">
+                  {parseFormattedInline(cell)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// Custom Safe & Fast Markdown Formatter with Headings, Badges, Tables, Lists
 function renderFormattedMarkdown(rawText: string) {
   if (!rawText) return null;
   const lines = rawText.split("\n");
+  const blocks: React.ReactNode[] = [];
 
-  return (
-    <div className="space-y-2 leading-relaxed text-xs sm:text-sm">
-      {lines.map((line, lineIdx) => {
-        const trimmed = line.trim();
-        if (!trimmed) {
-          return <div key={lineIdx} className="h-1" />;
-        }
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    const trimmed = line.trim();
 
-        // Horizontal divider
-        if (trimmed === "---" || trimmed === "***" || trimmed === "___") {
-          return <hr key={lineIdx} className="border-slate-800 my-2" />;
-        }
+    if (!trimmed) {
+      blocks.push(<div key={`empty-${i}`} className="h-1" />);
+      i++;
+      continue;
+    }
 
-        // Headings (#, ##, ###, ####)
-        if (trimmed.startsWith("#### ")) {
-          const content = trimmed.replace(/^####\s+/, "");
-          return (
-            <h6 key={lineIdx} className="text-xs font-black text-slate-200 uppercase tracking-wide font-mono pt-1">
-              {parseFormattedInline(content)}
-            </h6>
+    // Check for Markdown Table
+    if (trimmed.startsWith("|") && (i + 1 < lines.length && (lines[i + 1].trim().startsWith("|") || lines[i + 1].includes("---")))) {
+      const tableLines: string[] = [];
+      while (i < lines.length && (lines[i].trim().startsWith("|") || (tableLines.length === 1 && lines[i].includes("---")))) {
+        tableLines.push(lines[i].trim());
+        i++;
+      }
+      const tableEl = parseMarkdownTable(tableLines);
+      if (tableEl) {
+        blocks.push(<React.Fragment key={`table-${i}`}>{tableEl}</React.Fragment>);
+        continue;
+      } else {
+        tableLines.forEach((tLine, tIdx) => {
+          blocks.push(
+            <p key={`tline-${i}-${tIdx}`} className="text-slate-100 leading-relaxed">
+              {parseFormattedInline(tLine)}
+            </p>
           );
-        }
-        if (trimmed.startsWith("### ")) {
-          const content = trimmed.replace(/^###\s+/, "");
-          return (
-            <h5 key={lineIdx} className="text-xs sm:text-sm font-black text-amber-300 uppercase tracking-wide font-mono pt-1.5 pb-0.5 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-              <span>{parseFormattedInline(content)}</span>
-            </h5>
-          );
-        }
-        if (trimmed.startsWith("## ")) {
-          const content = trimmed.replace(/^##\s+/, "");
-          return (
-            <h4 key={lineIdx} className="text-sm sm:text-base font-black text-white pt-2 pb-0.5 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded bg-saffron shrink-0 shadow-sm" />
-              <span>{parseFormattedInline(content)}</span>
-            </h4>
-          );
-        }
-        if (trimmed.startsWith("# ")) {
-          const content = trimmed.replace(/^#\s+/, "");
-          return (
-            <h3 key={lineIdx} className="text-base sm:text-lg font-black text-saffron pt-2 pb-1">
-              {parseFormattedInline(content)}
-            </h3>
-          );
-        }
+        });
+        continue;
+      }
+    }
 
-        // Blockquotes
-        if (trimmed.startsWith("> ")) {
-          const content = trimmed.replace(/^>\s+/, "");
-          return (
-            <div key={lineIdx} className="p-2.5 rounded-xl bg-slate-900/90 border-l-4 border-saffron text-slate-200 italic my-1 font-mono text-[11px]">
-              {parseFormattedInline(content)}
-            </div>
-          );
-        }
+    // Horizontal divider
+    if (trimmed === "---" || trimmed === "***" || trimmed === "___") {
+      blocks.push(<hr key={`hr-${i}`} className="border-slate-800 my-2" />);
+      i++;
+      continue;
+    }
 
-        // Numbered list items (e.g. "1. ", "2. ", "10. ")
-        const numberMatch = trimmed.match(/^(\d+)[\.\)]\s+(.*)/);
-        if (numberMatch) {
-          const num = numberMatch[1];
-          const content = numberMatch[2];
-          return (
-            <div key={lineIdx} className="flex items-start gap-2 pl-1.5 my-1">
-              <span className="px-1.5 py-0.2 rounded bg-slate-800 text-saffron font-mono text-[10px] font-black border border-slate-700 mt-0.5 shrink-0">
-                {num}
-              </span>
-              <div className="text-slate-100 flex-1">{parseFormattedInline(content)}</div>
-            </div>
-          );
-        }
+    // Headings (#, ##, ###, ####)
+    if (trimmed.startsWith("#### ")) {
+      const content = trimmed.replace(/^####\s+/, "");
+      blocks.push(
+        <h6 key={`h6-${i}`} className="text-xs font-black text-slate-200 uppercase tracking-wide font-mono pt-1">
+          {parseFormattedInline(content)}
+        </h6>
+      );
+      i++;
+      continue;
+    }
+    if (trimmed.startsWith("### ")) {
+      const content = trimmed.replace(/^###\s+/, "");
+      blocks.push(
+        <h5 key={`h5-${i}`} className="text-xs sm:text-sm font-black text-amber-300 uppercase tracking-wide font-mono pt-1.5 pb-0.5 flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+          <span>{parseFormattedInline(content)}</span>
+        </h5>
+      );
+      i++;
+      continue;
+    }
+    if (trimmed.startsWith("## ")) {
+      const content = trimmed.replace(/^##\s+/, "");
+      blocks.push(
+        <h4 key={`h4-${i}`} className="text-sm sm:text-base font-black text-white pt-2 pb-0.5 flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded bg-saffron shrink-0 shadow-sm" />
+          <span>{parseFormattedInline(content)}</span>
+        </h4>
+      );
+      i++;
+      continue;
+    }
+    if (trimmed.startsWith("# ")) {
+      const content = trimmed.replace(/^#\s+/, "");
+      blocks.push(
+        <h3 key={`h3-${i}`} className="text-base sm:text-lg font-black text-saffron pt-2 pb-1">
+          {parseFormattedInline(content)}
+        </h3>
+      );
+      i++;
+      continue;
+    }
 
-        // Bullet list items
-        const isBullet = trimmed.startsWith("•") || trimmed.startsWith("- ") || trimmed.startsWith("* ");
-        if (isBullet) {
-          const content = trimmed.replace(/^[•\-\*]\s*/, "");
-          return (
-            <div key={lineIdx} className="flex items-start gap-2 pl-1.5 my-0.5">
-              <span className="text-saffron select-none font-bold text-sm leading-none mt-1 shrink-0">•</span>
-              <div className="text-slate-100 flex-1">{parseFormattedInline(content)}</div>
-            </div>
-          );
-        }
+    // Blockquotes
+    if (trimmed.startsWith("> ")) {
+      const content = trimmed.replace(/^>\s+/, "");
+      blocks.push(
+        <div key={`quote-${i}`} className="p-2.5 rounded-xl bg-slate-900/90 border-l-4 border-saffron text-slate-200 italic my-1 font-mono text-[11px]">
+          {parseFormattedInline(content)}
+        </div>
+      );
+      i++;
+      continue;
+    }
 
-        // Regular paragraph
-        return (
-          <p key={lineIdx} className="text-slate-100 leading-relaxed">
-            {parseFormattedInline(trimmed)}
-          </p>
-        );
-      })}
-    </div>
-  );
+    // Numbered list items (e.g. "1. ", "2. ", "10. ")
+    const numberMatch = trimmed.match(/^(\d+)[\.\)]\s+(.*)/);
+    if (numberMatch) {
+      const num = numberMatch[1];
+      const content = numberMatch[2];
+      blocks.push(
+        <div key={`num-${i}`} className="flex items-start gap-2 pl-1.5 my-1">
+          <span className="px-1.5 py-0.2 rounded bg-slate-800 text-saffron font-mono text-[10px] font-black border border-slate-700 mt-0.5 shrink-0">
+            {num}
+          </span>
+          <div className="text-slate-100 flex-1">{parseFormattedInline(content)}</div>
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // Bullet list items
+    const isBullet = trimmed.startsWith("•") || trimmed.startsWith("- ") || trimmed.startsWith("* ");
+    if (isBullet) {
+      const content = trimmed.replace(/^[•\-\*]\s*/, "");
+      blocks.push(
+        <div key={`bullet-${i}`} className="flex items-start gap-2 pl-1.5 my-0.5">
+          <span className="text-saffron select-none font-bold text-sm leading-none mt-1 shrink-0">•</span>
+          <div className="text-slate-100 flex-1">{parseFormattedInline(content)}</div>
+        </div>
+      );
+      i++;
+      continue;
+    }
+
+    // Regular paragraph
+    blocks.push(
+      <p key={`p-${i}`} className="text-slate-100 leading-relaxed">
+        {parseFormattedInline(trimmed)}
+      </p>
+    );
+    i++;
+  }
+
+  return <div className="space-y-2 leading-relaxed text-xs sm:text-sm">{blocks}</div>;
 }
 
 export default function CopilotWorkstationPage() {

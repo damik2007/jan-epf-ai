@@ -376,8 +376,8 @@ export function generateCopilotResponse(
     }
 
     return {
-      spokenText: `Jan-EPF AI is India's sovereign EPF copilot with 6 superpowers: 1-Click emergency medical advances under Para 68J, autonomous Form 13 job transfers with exit date deduction, sub-200ms NPCI penny drop bank KYC, triple-split passbook with 8.25% compounding, zero PII leakage privacy mode, and 13 native Indic languages.`,
-      displayText: `⚡ **What Jan-EPF AI Can Do (Sovereign Superpowers)**\n\nI am India's first 80/20 Sovereign Copilot for EPF & Pension. Here is what I can do for **${citizen.name}**:\n\n1. 🏥 **1-Click Emergency Medical Advance (Para 68J)**\n   • 0.04ms mathematical sanction limit (₹1.56L eligible).\n   • Section 192A 0% TDS Form 15G auto-attached.\n   • *Try:* "Withdraw ₹48,000 emergency medical advance"\n\n2. 🔄 **Autonomous Form 13 Job Transfer & ECR Deduction**\n   • Auto-deduces missing exit dates from monthly ECR wage timestamps.\n   • 1-Click consolidation of prior trapped balances.\n   • *Try:* "Transfer my previous job PF balance"\n\n3. 🏦 **Sub-200ms NPCI Bank Penny Drop & KYC**\n   • Wagner-Fischer fuzzy name reconciler (>85% phonetic match).\n   • Claim Readiness Score jumps from 78% ➔ 98%.\n   • Activates free ₹7 Lakh statutory EDLI life insurance.\n   • *Try:* "Run 1-Click NPCI Penny Drop Bank KYC"\n\n4. 📊 **Triple-Split Passbook & 8.25% Compounding**\n   • Employee (12%) + Employer (3.67%) + EPS-95 (8.33%).\n   • 8.25% annual interest on monthly running balance.\n   • *Try:* "What is my current passbook balance breakdown?"\n\n5. 🛡️ **Zero PII Leakage & Discreet Privacy (DPDP Act 2023)**\n   • Presidio PII tokenization & on-screen animated masking (Cmd/Ctrl + P).\n   • *Try:* "Toggle discreet privacy mode"\n\n6. 🌐 **13 Native Indic Regional Languages**\n   • Real-time Whisper + Bhashini neural voice synthesis in 23 dialects.\n   • *Try:* "Switch to Hindi language"`,
+      spokenText: `Jan-EPF AI is India's sovereign EPF AI Agent with 6 superpowers: 1-Click emergency medical advances under Para 68J, autonomous Form 13 job transfers with exit date deduction, sub-200ms NPCI penny drop bank KYC, triple-split passbook with 8.25% compounding, zero PII leakage privacy mode, and 13 native Indic languages.`,
+      displayText: `⚡ **What Jan-EPF AI Can Do (Sovereign Superpowers)**\n\nI am India's first 80/20 Sovereign AI Agent for EPF & Pension. Here is what I can do for **${citizen.name}**:\n\n| ✅ Superpower | How it helps you |\n|---|---|\n| 🏥 **1-Click Emergency Medical Advance (Para 68J)** | 0.04ms mathematical sanction limit (₹1.56L eligible) with 0% TDS Form 15G auto-attached. |\n| 🔄 **Autonomous Form 13 Job Transfer & ECR Deduction** | Auto-deduces missing exit dates from monthly ECR wage timestamps and merges balances. |\n| 🏦 **Sub-200ms NPCI Bank Penny Drop & KYC** | Wagner-Fischer fuzzy name reconciler (>85% match) + ₹7 Lakh free EDLI life cover. |\n| 📊 **Triple-Split Passbook & 8.25% Compounding** | Employee (12%) + Employer (3.67%) + EPS-95 (8.33%) at 8.25% annual interest. |\n| 🛡️ **Zero PII Leakage & Discreet Privacy (DPDP Act 2023)** | Presidio PII tokenization & on-screen animated masking (Cmd/Ctrl + P). |\n| 🌐 **13 Native Indic Regional Languages** | Real-time Whisper + Bhashini neural voice synthesis in 23 dialects. |`,
       langCode: "en-IN",
       category: "CAPABILITIES",
       harness: baseHarness
@@ -443,8 +443,8 @@ export function generateCopilotResponse(
 
     if (isHindi) {
       return {
-        spokenText: `नमस्ते ${firstName} जी! मैं आपका सॉवरेन एजेंट कोपायलट हूँ। आपके ${employerName} खाते में कुल ₹${balanceFormatted} जमा हैं। आप मुझसे मेडिकल अग्रिम, पासबुक विवरण, या 0% टीडीएस नियमों के बारे में पूछ सकते हैं।`,
-        displayText: `👋 **नमस्ते ${firstName} जी!**\nमैं आपका जन-ईपीएफ सॉवरेन एजेंट कोपायलट हूँ।\n\n• **सक्रिय प्रतिष्ठान:** ${employerName}\n• **कुल ईपीएफ बैलेंस:** ₹${balanceFormatted} (सेवा: ${serviceYears} वर्ष)\n• **टीडीएस छूट:** धारा 192A के तहत 0% कर\n\nमैं आपकी किस प्रकार सहायता कर सकता हूँ? आप नीचे दिए गए बटनों पर क्लिक कर सकते हैं या सीधे बोलकर पूछ सकते हैं।`,
+        spokenText: `नमस्ते ${firstName} जी! मैं आपका सॉवरेन एआई एजेंट हूँ। आपके ${employerName} खाते में कुल ₹${balanceFormatted} जमा हैं। आप मुझसे मेडिकल अग्रिम, पासबुक विवरण, या 0% टीडीएस नियमों के बारे में पूछ सकते हैं।`,
+        displayText: `👋 **नमस्ते ${firstName} जी!**\nमैं आपका जन-ईपीएफ सॉवरेन एआई एजेंट हूँ।\n\n• **सक्रिय प्रतिष्ठान:** ${employerName}\n• **कुल ईपीएफ बैलेंस:** ₹${balanceFormatted} (सेवा: ${serviceYears} वर्ष)\n• **टीडीएस छूट:** धारा 192A के तहत 0% कर\n\nमैं आपकी किस प्रकार सहायता कर सकता हूँ? आप नीचे दिए गए बटनों पर क्लिक कर सकते हैं या सीधे बोलकर पूछ सकते हैं।`,
         langCode: "hi-IN",
         category: "GREETING",
         harness: baseHarness
@@ -453,8 +453,8 @@ export function generateCopilotResponse(
 
     if (isGurmeet) {
       return {
-        spokenText: `Sat Sri Akaal Sardar Gurmeet Singh Ji! I am your Sovereign Pension Copilot. Your monthly EPS-95 pension of ₹3,250 is active under PPO-DL-2024-99881 at ${employerName}. How can I assist with your life certificate or passbook today?`,
-        displayText: `👴 **Sat Sri Akaal, Sardar Gurmeet Singh Ji!**\nWelcome to your Jan-EPF Sovereign Pension Copilot.\n\n• **Active Establishment:** ${employerName} (PPO-DL-2024-99881)\n• **Monthly Pension:** ₹3,250 / month (Disbursed via Direct Benefit Transfer)\n• **Digital Life Certificate (DLC):** Valid till October 31, 2026\n\nHow can I assist you today? I can help renew your Jeevan Pramaan life certificate, verify pension slips, or explain family pension rules.`,
+        spokenText: `Sat Sri Akaal Sardar Gurmeet Singh Ji! I am your Sovereign Pension AI Agent. Your monthly EPS-95 pension of ₹3,250 is active under PPO-DL-2024-99881 at ${employerName}. How can I assist with your life certificate or passbook today?`,
+        displayText: `👴 **Sat Sri Akaal, Sardar Gurmeet Singh Ji!**\nWelcome to your Jan-EPF Sovereign Pension AI Agent.\n\n• **Active Establishment:** ${employerName} (PPO-DL-2024-99881)\n• **Monthly Pension:** ₹3,250 / month (Disbursed via Direct Benefit Transfer)\n• **Digital Life Certificate (DLC):** Valid till October 31, 2026\n\nHow can I assist you today? I can help renew your Jeevan Pramaan life certificate, verify pension slips, or explain family pension rules.`,
         langCode: "en-IN",
         category: "GREETING",
         harness: baseHarness
@@ -463,8 +463,8 @@ export function generateCopilotResponse(
 
     if (isPriya) {
       return {
-        spokenText: `Hello Priya! Welcome to your Sovereign Copilot. Your total corpus at ${employerName} is ₹${balanceFormatted}. I can help auto-deduce your missing Infosys exit date or transfer your accounts in 1 click.`,
-        displayText: `👋 **Hello Priya Sharma!**\nWelcome to your Jan-EPF Sovereign Agent Copilot.\n\n• **Active Employer:** ${employerName}\n• **Total Corpus:** ₹${balanceFormatted} (3 Member IDs Consolidated)\n• **Action Required:** Previous establishment (Infosys) has missing Date of Exit\n\nHow can I help you today? I can auto-deduce your exit date from ECR challans, file Form 13 1-Click transfer, or resolve your name spelling with Aadhaar.`,
+        spokenText: `Hello Priya! Welcome to your Sovereign AI Agent. Your total corpus at ${employerName} is ₹${balanceFormatted}. I can help auto-deduce your missing Infosys exit date or transfer your accounts in 1 click.`,
+        displayText: `👋 **Hello Priya Sharma!**\nWelcome to your Jan-EPF Sovereign AI Agent.\n\n• **Active Employer:** ${employerName}\n• **Total Corpus:** ₹${balanceFormatted} (3 Member IDs Consolidated)\n• **Action Required:** Previous establishment (Infosys) has missing Date of Exit\n\nHow can I help you today? I can auto-deduce your exit date from ECR challans, file Form 13 1-Click transfer, or resolve your name spelling with Aadhaar.`,
         langCode: "en-IN",
         category: "GREETING",
         harness: baseHarness
@@ -473,8 +473,8 @@ export function generateCopilotResponse(
 
     if (isSunita) {
       return {
-        spokenText: `Namaste Sunita Devi Ji! I am your Sovereign Agent Copilot for ${employerName}. Your balance is ₹${balanceFormatted}. I can run 1-Click Bank Penny Drop verification or file your free ₹7 Lakh EDLI insurance nomination.`,
-        displayText: `👋 **Namaste Sunita Devi Ji!**\nWelcome to your Jan-EPF Sovereign Agent Copilot.\n\n• **Active Employer:** ${employerName} (Surat Logistics Hub)\n• **Total Balance:** ₹${balanceFormatted}\n• **Free Insurance:** ₹7,00,000 EDLI Life Cover (Pending Nominee: Manoj Kumar)\n\nHow can I assist you? I can run sub-200ms NPCI Penny Drop verification to boost your claim readiness from 78% to 98%, or file your e-Nomination.`,
+        spokenText: `Namaste Sunita Devi Ji! I am your Sovereign AI Agent for ${employerName}. Your balance is ₹${balanceFormatted}. I can run 1-Click Bank Penny Drop verification or file your free ₹7 Lakh EDLI insurance nomination.`,
+        displayText: `👋 **Namaste Sunita Devi Ji!**\nWelcome to your Jan-EPF Sovereign AI Agent.\n\n• **Active Employer:** ${employerName} (Surat Logistics Hub)\n• **Total Balance:** ₹${balanceFormatted}\n• **Free Insurance:** ₹7,00,000 EDLI Life Cover (Pending Nominee: Manoj Kumar)\n\nHow can I assist you? I can run sub-200ms NPCI Penny Drop verification to boost your claim readiness from 78% to 98%, or file your e-Nomination.`,
         langCode: "en-IN",
         category: "GREETING",
         harness: baseHarness
@@ -482,8 +482,8 @@ export function generateCopilotResponse(
     }
 
     return {
-      spokenText: `Hello Ramesh Kumar! I am your Sovereign Agent Copilot for ${employerName}. Your EPF balance is ₹${balanceFormatted} with ${serviceYears} years of service. How can I assist with your advance, tax rules, or passbook today?`,
-      displayText: `👋 **Hello Ramesh Kumar!**\nI am your Jan-EPF Sovereign Agent Copilot.\n\n• **Active Employer:** ${employerName}\n• **Total EPF Balance:** ₹${balanceFormatted} (Employee: ₹${empShareFormatted} • Employer: ₹${emprShareFormatted})\n• **Statutory Status:** ${serviceYears} Years Continuous Service (100% 0% TDS Tax-Exempt)\n\nWhat would you like to do? I can autonomously sanction a Para 68J emergency advance, breakdown your 8.25% compounding passbook, or check Section 192A tax rules.`,
+      spokenText: `Hello Ramesh Kumar! I am your Sovereign AI Agent for ${employerName}. Your EPF balance is ₹${balanceFormatted} with ${serviceYears} years of service. How can I assist with your advance, tax rules, or passbook today?`,
+      displayText: `👋 **Hello Ramesh Kumar!**\nI am your Jan-EPF Sovereign AI Agent.\n\n• **Active Employer:** ${employerName}\n• **Total EPF Balance:** ₹${balanceFormatted} (Employee: ₹${empShareFormatted} • Employer: ₹${emprShareFormatted})\n• **Statutory Status:** ${serviceYears} Years Continuous Service (100% 0% TDS Tax-Exempt)\n\nWhat would you like to do? I can autonomously sanction a Para 68J emergency advance, breakdown your 8.25% compounding passbook, or check Section 192A tax rules.`,
       langCode: "en-IN",
       category: "GREETING",
       harness: baseHarness

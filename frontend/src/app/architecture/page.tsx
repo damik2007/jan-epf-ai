@@ -82,7 +82,7 @@ export default function ArchitectureResearchPage() {
             <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
               <span className="text-[10px] text-slate-300 font-sans block uppercase">Agent Harness</span>
               <span className="text-lg sm:text-xl font-extrabold text-saffron">6 LAYERS</span>
-              <span className="text-[10px] text-slate-400 block font-sans">Context ➔ Tools ➔ Evals</span>
+              <span className="text-[10px] text-slate-400 block font-sans">Glean ➔ Stripe ➔ Devin ➔ Notion ➔ NeMo ➔ LangSmith</span>
             </div>
             <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
               <span className="text-[10px] text-slate-300 font-sans block uppercase">Provider Failover</span>
