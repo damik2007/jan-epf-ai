@@ -912,8 +912,10 @@ export const VoiceAssistant: React.FC = () => {
                 </button>
 
                 {showVoiceSettings && (
-                  <div className="absolute right-0 top-11 w-80 sm:w-96 p-4 rounded-2xl bg-slate-950 border border-slate-700/90 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-xs space-y-3 z-50 animate-in fade-in zoom-in-95 max-h-[75vh] flex flex-col">
-                    <div className="flex justify-between items-center text-[10px] font-bold text-slate-300 font-mono border-b border-slate-800 pb-2 shrink-0">
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setShowVoiceSettings(false)} aria-label="Close settings overlay" />
+                    <div className="absolute right-0 top-11 w-80 sm:w-96 p-4 rounded-2xl bg-slate-950 border border-slate-700/90 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-xs space-y-3 z-50 animate-in fade-in zoom-in-95 max-h-[75vh] flex flex-col">
+                      <div className="flex justify-between items-center text-[10px] font-bold text-slate-300 font-mono border-b border-slate-800 pb-2 shrink-0">
                       <span className="flex items-center gap-1.5 text-saffron">
                         <Languages className="w-4 h-4" />
                         <span>13 INDIC VOICES (23 NEURAL VOICES)</span>
@@ -1008,8 +1010,9 @@ export const VoiceAssistant: React.FC = () => {
                       </button>
                     </div>
                   </div>
-                )}
-              </div>
+                </>
+              )}
+            </div>
 
               {/* Chat / Voice Mode Toggle Button */}
               <button
