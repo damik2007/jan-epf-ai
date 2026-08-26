@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Shield, Lock, KeyRound, ArrowRight, CheckCircle2, AlertCircle, Sparkles, Zap } from "lucide-react";
 
-const VALID_PASSCODES = ["damik2007", "damik2026", "hackathon2026", "epf2026", "varun2026", "epfo3.0", "demo", "evaluator"];
+const VALID_PASSCODES = ["damikreddy", "damik2007", "damik2026", "hackathon2026", "epf2026", "varun2026", "epfo3.0", "demo", "evaluator"];
 
 export function EvaluatorGate({ children }: { children: React.ReactNode }) {
   const [isUnlocked, setIsUnlocked] = useState<boolean | null>(null);
