@@ -29,13 +29,16 @@ import {
   BarChart3,
   ShieldAlert,
   RefreshCw,
-  Zap
+  Zap,
+  Gauge
 } from "lucide-react";
+import { SovereignOpsCenterModal } from "@/components/SovereignOpsCenterModal";
 
 export default function ArchitectureResearchPage() {
   const { language } = useCitizen();
   const t = getTranslation(language);
 
+  const [opsModalOpen, setOpsModalOpen] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"harness" | "personas" | "forms" | "pillars" | "sre" | "grievances" | "legal" | "stack">("harness");
 
   const tabs: Array<{
@@ -71,9 +74,19 @@ export default function ArchitectureResearchPage() {
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-            Sovereign DPI Architecture & Citizen Research
-          </h1>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
+              Sovereign DPI Architecture & Citizen Research
+            </h1>
+            <button
+              type="button"
+              onClick={() => setOpsModalOpen(true)}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs flex items-center gap-1.5 transition-all shadow-md shrink-0"
+            >
+              <Gauge className="w-4 h-4 text-amber-300 animate-pulse" />
+              <span>⚡ Sovereign Ops Suite</span>
+            </button>
+          </div>
           <p className="text-sm text-slate-300 leading-relaxed max-w-3xl">
             Empirical research across 1.98 Million EPF grievances, demographic cohort studies of India&apos;s 70 Million EPFO workforce, and the technical specification of our 80/20 Sovereign Core Digital Public Infrastructure powered by Vercel AI Gateway.
           </p>
@@ -373,6 +386,12 @@ export default function ArchitectureResearchPage() {
           </div>
         </div>
       </div>
+
+      {/* Sovereign Ops Command Center Modal */}
+      <SovereignOpsCenterModal
+        isOpen={opsModalOpen}
+        onClose={() => setOpsModalOpen(false)}
+      />
     </div>
   );
 }

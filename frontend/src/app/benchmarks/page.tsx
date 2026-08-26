@@ -37,8 +37,10 @@ import {
   ShieldAlert,
   Copy,
   Check,
-  Lock
+  Lock,
+  Gauge
 } from "lucide-react";
+import { SovereignOpsCenterModal } from "@/components/SovereignOpsCenterModal";
 
 interface BenchmarkResult {
   name: string;
@@ -61,6 +63,7 @@ export default function BenchmarksPage() {
   const [benchResults, setBenchResults] = useState<BenchmarkResult[] | null>(null);
   const [claimsSliderValue, setClaimsSliderValue] = useState<number>(70); // 70 Million claims
   const [copiedCli, setCopiedCli] = useState<boolean>(false);
+  const [opsModalOpen, setOpsModalOpen] = useState<boolean>(false);
 
   // Live in-browser 1,000-iteration execution runner
   // Live in-browser execution runner using shared deterministic benchmark engine
@@ -129,7 +132,15 @@ export default function BenchmarksPage() {
             <p className="text-sm text-slate-300 leading-relaxed">{t.benchmarksSubtitle}</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full lg:w-auto shrink-0">
+          <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full lg:w-auto shrink-0 flex-wrap">
+            <button
+              type="button"
+              onClick={() => setOpsModalOpen(true)}
+              className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-lg"
+            >
+              <Gauge className="w-4 h-4 text-amber-300 animate-pulse" />
+              <span>⚡ Sovereign Ops Suite</span>
+            </button>
             <button
               onClick={downloadAuditBundle}
               className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition-all shadow-md"
@@ -694,6 +705,12 @@ export default function BenchmarksPage() {
           </div>
         </div>
       </div>
+
+      {/* Sovereign Ops Command Center Modal */}
+      <SovereignOpsCenterModal
+        isOpen={opsModalOpen}
+        onClose={() => setOpsModalOpen(false)}
+      />
     </div>
   );
 }
