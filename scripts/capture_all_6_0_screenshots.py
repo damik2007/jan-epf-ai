@@ -2,7 +2,7 @@ import asyncio
 import os
 from playwright.async_api import async_playwright
 
-BASE_URL = "http://localhost:3000"
+BASE_URL = "https://frontend-blue-tau-0e2bu1kwsk.vercel.app"
 OUTPUT_DIR = "/Users/damikreddy/Desktop/Hackaton/docs/screenshots"
 
 async def smooth_scroll_full_page(page):
@@ -188,27 +188,39 @@ async def capture_all_retina_views():
         await smooth_scroll_full_page(page)
         await page.screenshot(path=f"{OUTPUT_DIR}/22_architecture_tab7_tools.png", full_page=True)
 
-        # 23. Full-Screen Copilot Workstation Page
-        print("[23/24] Capturing 23_copilot_workstation.png (/copilot)...")
-        await page.goto(f"{BASE_URL}/copilot?key=damik2007", wait_until="networkidle")
-        await smooth_scroll_full_page(page)
-        await page.screenshot(path=f"{OUTPUT_DIR}/23_copilot_workstation.png", full_page=True)
+        # 23. Sovereign Ops Command Center Modal (LLMOps • AiOps • MLOps • SecOps)
+        print("[23/24] Capturing 23_sovereign_ops_suite.png (/benchmarks ➔ Ops Center)...")
+        await page.goto(f"{BASE_URL}/benchmarks?key=damik2007", wait_until="networkidle")
+        try:
+            ops_btn = await page.wait_for_selector("button:has-text('Sovereign Ops Suite')", timeout=5000)
+            if ops_btn:
+                await ops_btn.click()
+                await page.wait_for_timeout(1200)
+                await page.screenshot(path=f"{OUTPUT_DIR}/23_sovereign_ops_suite.png", full_page=True)
+                # Keep backward compatibility alias
+                await page.screenshot(path=f"{OUTPUT_DIR}/23_copilot_workstation.png", full_page=True)
+                close_btn = await page.query_selector("button:has(svg.lucide-x)")
+                if close_btn:
+                    await close_btn.click()
+                    await page.wait_for_timeout(500)
+        except Exception as e:
+            print(f"  [Note] Ops Suite screenshot: {e}")
 
-        # 24. 13 Indic Languages Directory
+        # 24. 13 Indic Languages Directory & Voice Assistant
         print("[24/24] Capturing 24_indic_voices_dropdown.png (13 Indic Languages & 23 Voices Directory)...")
         await page.goto(f"{BASE_URL}/?key=damik2007", wait_until="networkidle")
         try:
-            copilot_btn = await page.query_selector("button:has-text('AI Agent')")
-            if copilot_btn:
-                await copilot_btn.click()
+            agent_btn = await page.query_selector("button:has-text('Open AI Agent')")
+            if agent_btn:
+                await agent_btn.click()
                 await page.wait_for_timeout(1000)
-                sliders_btn = await page.query_selector("button[title*='Voice & Indic Dialect Settings']")
+                sliders_btn = await page.query_selector("button[title*='Voice'], button[title*='Speech']")
                 if sliders_btn:
                     await sliders_btn.click()
                     await page.wait_for_timeout(1000)
                 await page.screenshot(path=f"{OUTPUT_DIR}/24_indic_voices_dropdown.png", full_page=True)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"  [Note] Voice settings screenshot: {e}")
 
         await browser.close()
         print("🎉 ALL 24 FULL-HEIGHT RETINA SCREENSHOTS CAPTURED PERFECTLY!")
