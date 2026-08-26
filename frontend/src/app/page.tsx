@@ -33,8 +33,25 @@ import { CitizenAccountOnboardingModal } from "@/components/CitizenAccountOnboar
 import { BookOpen } from "lucide-react";
 
 export default function CitizenLandingPage() {
-  const { activeCitizen, isAuthenticated, login, logout, language } = useCitizen();
+  const { activeCitizen, isAuthenticated, login, logout, language, seniorMode, setSeniorMode } = useCitizen();
   const t = getTranslation(language);
+
+  // Automatically trigger Senior Citizen Mode on entering the Account Home Page if the active persona is senior
+  useEffect(() => {
+    if (activeCitizen) {
+      const isSenior = (activeCitizen.demographics?.age && activeCitizen.demographics.age >= 60) ||
+                       activeCitizen.uan === "100112233445" ||
+                       activeCitizen.full_name?.includes("Gurmeet");
+      if (isSenior && !seniorMode) {
+        setSeniorMode(true);
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("jan_epf_senior_mode", "true");
+          } catch {}
+        }
+      }
+    }
+  }, [activeCitizen, seniorMode, setSeniorMode]);
 
   const langCode = (language || "en-IN").split("-")[0];
   const firstName = activeCitizen?.full_name ? activeCitizen.full_name.split(" ")[0] : "Citizen";
@@ -100,6 +117,186 @@ export default function CitizenLandingPage() {
           kycTitle: "🏦 NPCI பென்னி டிராப் & KYC",
           kycDesc: "சப்-200ms வங்கி சரிபார்ப்பு + பெயர் திருத்தம் & ₹7L EDLI காப்பீடு.",
           kycLink: "விவர திருத்தப் பிரிவு"
+        };
+      case "kn":
+        return {
+          tag: "⚡ ಉತ್ಪನ್ನ ಸಾಮರ್ಥ್ಯಗಳು",
+          arch: "80/20 ಸಾರ್ವಭೌಮ AI ಆರ್ಕಿಟೆಕ್ಚರ್",
+          heading: `${firstName} ಗಾಗಿ ಜನ-ಇಪಿಎಫ್ AI ಏನು ಮಾಡಬಹುದು`,
+          guideBtn: "📖 ಹಂತ-ಹಂತದ ಮಾರ್ಗದರ್ಶಿ",
+          agentBtn: "⚡ ಸಾರ್ವಭೌಮ AI ಏಜೆಂಟ್",
+          advTitle: "🏥 ಪ್ಯಾರಾ 68J ತುರ್ತು ಮುಂಗಡ",
+          advDesc: "0.04ms ನಲ್ಲಿ ಸೆಕ್ಷನ್ 192A ಫಾರ್ಮ್ 15G ಯೊಂದಿಗೆ ಮುಂಗಡ ಮಂಜೂರಾತಿ.",
+          advLink: "ಮುಂಗಡ ಕೇಂದ್ರ ಪರಿಶೀಲಿಸಿ",
+          trnTitle: "🔄 ಫಾರ್ಮ್ 13 ಉದ್ಯೋಗ ವರ್ಗಾವಣೆ",
+          trnDesc: "ECR ವೇತನಗಳಿಂದ ನಿರ್ಗಮನ ದಿನಾಂಕವನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಲೆಕ್ಕಾಚಾರ ಮಾಡುತ್ತದೆ.",
+          trnLink: "ವೃತ್ತಿಪರ ಕೇಂದ್ರ ಪರಿಶೀಲಿಸಿ",
+          savTitle: "📊 3-ವಿಧದ ಪಾಸ್‌ಬುಕ್",
+          savDesc: "12% + 3.67% + 8.33% ವಿಭಜನೆ ಮತ್ತು 8.25% ಚಕ್ರಬಡ್ಡಿ ಟ್ರ್ಯಾಕರ್.",
+          savLink: "ಉಳಿತಾಯ ಕೇಂದ್ರ ಪರಿಶೀಲಿಸಿ",
+          kycTitle: "🏦 NPCI ಪೆನ್ನಿ ಡ್ರಾಪ್ & KYC",
+          kycDesc: "ಸಬ್-200ms ಬ್ಯಾಂಕ್ ಪರಿಶೀಲನೆ + ಹೆಸರು ತಿದ್ದುಪಡಿ & ₹7 ಲಕ್ಷ ಉಚಿತ EDLI.",
+          kycLink: "ವಿವರ ತಿದ್ದುಪಡಿ ಪರಿಶೀಲಿಸಿ"
+        };
+      case "ml":
+        return {
+          tag: "⚡ ഉൽപ്പന്ന സവിശേഷതകൾ",
+          arch: "80/20 പരമാധികാര AI ആർക്കിടെക്ചർ",
+          heading: `${firstName}-ന് ജൻ-ഇപിഎഫ് AI എന്തെല്ലാം നൽകാം`,
+          guideBtn: "📖 ഘട്ടം ഘട്ടമായുള്ള ഗൈഡ്",
+          agentBtn: "⚡ പരമാധികാര AI ഏജന്റ്",
+          advTitle: "🏥 പാര 68J അടിയന്തര അഡ്വാൻസ്",
+          advDesc: "0.04ms-ൽ സെക്ഷൻ 192A ഫോം 15G ഉപയോഗിച്ച് അഡ്വാൻസ് അനുമതി.",
+          advLink: "അഡ്വാൻസ് ഹബ് പരിശോധിക്കുക",
+          trnTitle: "🔄 ഫോം 13 ജോലി ട്രാൻസ്ഫർ",
+          trnDesc: "ECR വേതനത്തിൽ നിന്ന് റിലീവിംഗ് തീയതി സ്വയം കണ്ടെത്തുന്നു.",
+          trnLink: "കരിയർ ഹബ് പരിശോധിക്കുക",
+          savTitle: "📊 3-ഘടക പാസ്ബുക്ക്",
+          savDesc: "12% + 3.67% + 8.33% വിഭജനവും 8.25% കൂട്ടുപലിശ ട്രാക്കറും.",
+          savLink: "സേവിംഗ്സ് ഹബ് പരിശോധിക്കുക",
+          kycTitle: "🏦 NPCI പെന്നി ഡ്രോപ്പും KYC-യും",
+          kycDesc: "സബ്-200ms ബാങ്ക് പരിശോധന + പേര് തിരുത്തലും ₹7 ലക്ഷം EDLI ഇൻഷുറൻസും.",
+          kycLink: "വിവര തിരുത്തൽ പരിശോധിക്കുക"
+        };
+      case "mr":
+        return {
+          tag: "⚡ उत्पादन क्षमता",
+          arch: "80/20 सार्वभौम एआय आर्किटेक्चर",
+          heading: `${firstName} साठी जन-ईपीएफ एआय काय करू शकते`,
+          guideBtn: "📖 टप्प्याटप्प्याने मार्गदर्शक",
+          agentBtn: "⚡ सार्वभौम एआय एजंट",
+          advTitle: "🏥 पॅरा 68J आपत्कालीन ॲडव्हान्स",
+          advDesc: "0.04ms मध्ये कलम 192A फॉर्म 15G सह ॲडव्हान्स मंजूर.",
+          advLink: "ॲडव्हान्स हब तपासा",
+          trnTitle: "🔄 फॉर्म 13 नोकरी ट्रान्सफर",
+          trnDesc: "ECR वेतन नोंदींवरून बाहेर पडण्याची तारीख स्वयंचलितपणे काढते.",
+          trnLink: "करिअर हब तपासा",
+          savTitle: "📊 3-स्तरीय पासबुक",
+          savDesc: "12% + 3.67% + 8.33% विभाजन व 8.25% चक्रवाढ व्याज ट्रॅकर.",
+          savLink: "बचत हब तपासा",
+          kycTitle: "🏦 NPCI पेनी ड्रॉप व केवायसी",
+          kycDesc: "सब-200ms बँक पडताळणी + नाव सुधारणा व ₹7 लाख मोफत EDLI.",
+          kycLink: "तपशील सुधारणा तपासा"
+        };
+      case "bn":
+        return {
+          tag: "⚡ পণ্য সক্ষমতা",
+          arch: "80/20 সার্বভৌম এআই আর্কিটেকচার",
+          heading: `${firstName}-এর জন্য জন-ইপিএফ এআই কী করতে পারে`,
+          guideBtn: "📖 ধাপে ধাপে নির্দেশিকা",
+          agentBtn: "⚡ সার্বভৌম এআই এজেন্ট",
+          advTitle: "🏥 প্যারা 68J জরুরি অগ্রিম",
+          advDesc: "0.04ms-এ ধারা 192A ফর্ম 15G সহ অগ্রিম মঞ্জুর।",
+          advLink: "অগ্রিম হাব পরীক্ষা করুন",
+          trnTitle: "🔄 ফর্ম 13 চাকরি স্থানান্তর",
+          trnDesc: "ECR বেতন চালানের মাধ্যমে প্রস্থান তারিখ স্বয়ংক্রিয় গণনা।",
+          trnLink: "ক্যারিয়ার হাব পরীক্ষা করুন",
+          savTitle: "📊 ৩-অংশের পাসবুক",
+          savDesc: "12% + 3.67% + 8.33% বিভাজন ও 8.25% চক্রবৃদ্ধি সুদ ট্র্যাকার।",
+          savLink: "সঞ্চয় হাব পরীক্ষা করুন",
+          kycTitle: "🏦 NPCI পেনি ড্রপ ও কেওয়াইসি",
+          kycDesc: "সাব-200ms ব্যাংক যাচাইকরণ + নাম সংশোধন ও ₹7 লাখ বিনামূল্যে EDLI।",
+          kycLink: "বিবরণ সংশোধন পরীক্ষা করুন"
+        };
+      case "gu":
+        return {
+          tag: "⚡ પ્રોડક્ટ ક્ષમતાઓ",
+          arch: "80/20 સાર્વભૌમ AI આર્કિટેક્ચર",
+          heading: `${firstName} માટે જન-ઇપીએફ AI શું કરી શકે છે`,
+          guideBtn: "📖 સ્ટેપ-બાય-સ્ટેપ માર્ગદર્શિકા",
+          agentBtn: "⚡ સાર્વભૌમ AI એજન્ટ",
+          advTitle: "🏥 પેરા 68J ઇમરજન્સી એડવાન્સ",
+          advDesc: "0.04ms માં કલમ 192A ફોર્મ 15G સાથે એડવાન્સ મંજૂર.",
+          advLink: "એડવાન્સ હબ તપાસો",
+          trnTitle: "🔄 ફોર્મ 13 નોકરી ટ્રાન્સફર",
+          trnDesc: "ECR પગાર રેકોર્ડ્સ પરથી એક્ઝિટ તારીખ આપમેળે મેળવે છે.",
+          trnLink: "કારકિર્દી હબ તપાસો",
+          savTitle: "📊 3-વિભાગીય પાસબુક",
+          savDesc: "12% + 3.67% + 8.33% વિભાજન અને 8.25% ચક્રવૃદ્ધિ વ્યાજ ટ્રેકર.",
+          savLink: "બચત હબ તપાસો",
+          kycTitle: "🏦 NPCI પેની ડ્રોપ અને KYC",
+          kycDesc: "સબ-200ms બેંક વેરિફિકેશન + નામ સુધારો અને ₹7 લાખ ફ્રી EDLI.",
+          kycLink: "વિગતો સુધારો તપાસો"
+        };
+      case "pa":
+        return {
+          tag: "⚡ ਉਤਪਾਦ ਸਮਰੱਥਾਵਾਂ",
+          arch: "80/20 ਪ੍ਰਭੂਸੱਤਾ AI ਆਰਕੀਟੈਕਚਰ",
+          heading: `${firstName} ਲਈ ਜਨ-ਈਪੀਐਫ AI ਕੀ ਕਰ ਸਕਦਾ ਹੈ`,
+          guideBtn: "📖 ਕਦਮ-ਦਰ-ਕਦਮ ਗਾਈਡ",
+          agentBtn: "⚡ ਪ੍ਰਭੂਸੱਤਾ AI ਏਜੰਟ",
+          advTitle: "🏥 ਪੈਰਾ 68J ਐਮਰਜੈਂਸੀ ਪੇਸ਼ਗੀ",
+          advDesc: "0.04ms ਵਿੱਚ ਧਾਰਾ 192A ਫਾਰਮ 15G ਨਾਲ ਪੇਸ਼ਗੀ ਮਨਜ਼ੂਰ।",
+          advLink: "ਪੇਸ਼ਗੀ ਹੱਬ ਚੈੱਕ ਕਰੋ",
+          trnTitle: "🔄 ਫਾਰਮ 13 ਨੌਕਰੀ ਟ੍ਰਾਂਸਫਰ",
+          trnDesc: "ECR ਤਨਖਾਹ ਰਿਕਾਰਡਾਂ ਤੋਂ ਨਿਕਾਸ ਮਿਤੀ ਆਪਣੇ ਆਪ ਲੱਭਦਾ ਹੈ।",
+          trnLink: "ਕਰੀਅਰ ਹੱਬ ਚੈੱਕ ਕਰੋ",
+          savTitle: "📊 3-ਹਿੱਸੇ ਵਾਲੀ ਪਾਸਬੁੱਕ",
+          savDesc: "12% + 3.67% + 8.33% ਵੰਡ ਅਤੇ 8.25% ਮਿਸ਼ਰਿਤ ਵਿਆਜ ਟ੍ਰੈਕਰ।",
+          savLink: "ਬੱਚਤ ਹੱਬ ਚੈੱਕ ਕਰੋ",
+          kycTitle: "🏦 NPCI ਪੈਨੀ ਡ੍ਰੌਪ ਅਤੇ KYC",
+          kycDesc: "ਸਬ-200ms ਬੈਂਕ ਤਸਦੀਕ + ਨਾਮ ਸੁਧਾਰ ਅਤੇ ₹7 ਲੱਖ ਮੁਫ਼ਤ EDLI ਬੀਮਾ।",
+          kycLink: "ਵੇਰਵੇ ਸੁਧਾਰ ਚੈੱਕ ਕਰੋ"
+        };
+      case "or":
+        return {
+          tag: "⚡ ଉତ୍ପାଦ କ୍ଷମତା",
+          arch: "80/20 ସାର୍ବଭୌମ AI ଆର୍କିଟେକ୍ଚର",
+          heading: `${firstName} ପାଇଁ ଜନ-ଇପିଏଫ AI କଣ କରିପାରିବ`,
+          guideBtn: "📖 ପଦକ୍ଷେପ-କ୍ରମେ ଗାଇଡ୍",
+          agentBtn: "⚡ ସାର୍ବଭୌମ AI ଏଜେଣ୍ଟ",
+          advTitle: "🏥 ପାରା 68J ଜରୁରୀକାଳୀନ ଅଗ୍ରିମ",
+          advDesc: "0.04ms ରେ ଧାରା 192A ଫର୍ମ 15G ସହିତ ଅଗ୍ରିମ ମଞ୍ଜୁର।",
+          advLink: "ଅଗ୍ରିମ ହବ୍ ଯାଞ୍ଚ କରନ୍ତୁ",
+          trnTitle: "🔄 ଫର୍ମ 13 ଚାକିରି ସ୍ଥାନାନ୍ତର",
+          trnDesc: "ECR ଦରମାରୁ ପ୍ରସ୍ଥାନ ତାରିଖ ସ୍ୱୟଂଚାଳିତ ଭାବେ ଗଣନା କରେ।",
+          trnLink: "କ୍ୟାରିଅର ହବ୍ ଯାଞ୍ଚ କରନ୍ତୁ",
+          savTitle: "📊 3-ଭାଗ ପାସବୁକ୍",
+          savDesc: "12% + 3.67% + 8.33% ବିଭାଜନ ଓ 8.25% ଚକ୍ରବୃଦ୍ଧି ସୁଧ ଟ୍ରାକର୍।",
+          savLink: "ସଞ୍ଚୟ ହବ୍ ଯାଞ୍ଚ କରନ୍ତୁ",
+          kycTitle: "🏦 NPCI ପେନି ଡ୍ରପ୍ ଓ KYC",
+          kycDesc: "ସବ୍-200ms ବ୍ୟାଙ୍କ ଯାଞ୍ଚ + ନାମ ସଂଶୋଧନ ଓ ₹7 ଲକ୍ଷ ମାଗଣା EDLI।",
+          kycLink: "ବିବରଣୀ ସଂଶୋଧନ ଯାଞ୍ଚ କରନ୍ତୁ"
+        };
+      case "as":
+        return {
+          tag: "⚡ সামগ্ৰীৰ সামৰ্থ্য",
+          arch: "80/20 সাৰ্বভৌম AI আৰ্কিটেকচাৰ",
+          heading: `${firstName}ৰ বাবে জন-ইপিএফ AI এ কি কৰিব পাৰে`,
+          guideBtn: "📖 পৰ্যায়ক্ৰমে নিৰ্দেশিকা",
+          agentBtn: "⚡ সাৰ্বভৌম AI এজেন্ট",
+          advTitle: "🏥 পেৰা 68J জৰুৰীকালীন অগ্ৰিম",
+          advDesc: "0.04msত ধাৰা 192A ফৰ্ম 15G সৈতে অগ্ৰিম অনুমোদন।",
+          advLink: "অগ্ৰিম হাব পৰীক্ষা কৰক",
+          trnTitle: "🔄 ফৰ্ম 13 চাকৰি স্থানান্তৰ",
+          trnDesc: "ECR দৰমহাৰ পৰা প্ৰস্থানৰ তাৰিখ স্বয়ংক্ৰিয়ভাৱে নিৰ্ণয় কৰে।",
+          trnLink: "কেৰিয়াৰ হাব পৰীক্ষা কৰক",
+          savTitle: "📊 ৩-ভাগৰ পাছবুক",
+          savDesc: "12% + 3.67% + 8.33% বিভাজন আৰু 8.25% চক্রবৃদ্ধি সুদ ট্ৰেকাৰ।",
+          savLink: "সঞ্চয় হাব পৰীক্ষা কৰক",
+          kycTitle: "🏦 NPCI পেনি ড্ৰপ আৰু KYC",
+          kycDesc: "ছাব-200ms বেংক পৰীক্ষণ + নাম সংশোধন আৰু ₹7 লাখ বিনামূলীয়া EDLI।",
+          kycLink: "বিৱৰণ সংশোধন পৰীক্ষা কৰক"
+        };
+      case "ur":
+        return {
+          tag: "⚡ پروڈکٹ کی صلاحیتیں",
+          arch: "80/20 خود مختار AI فن تعمیر",
+          heading: `${firstName} کے لیے جن ای پی ایف اے آئی کیا کر سکتا ہے`,
+          guideBtn: "📖 مرحلہ وار گائیڈ",
+          agentBtn: "⚡ خودمختار AI ایجنٹ",
+          advTitle: "🏥 پیرا 68J ہنگامی پیشگی",
+          advDesc: "0.04ms میں سیکشن 192A فارم 15G کے ساتھ پیشگی منظوری۔",
+          advLink: "پیشگی مرکز دیکھیں",
+          trnTitle: "🔄 فارم 13 ملازمت کی منتقلی",
+          trnDesc: "ECR تنخواہ سے اخراج کی تاریخ خودکار طریقے سے معلوم ہوتی ہے۔",
+          trnLink: "کیریئر مرکز دیکھیں",
+          savTitle: "📊 3 جہتی پاس بک",
+          savDesc: "12% + 3.67% + 8.33% تقسیم اور 8.25% مرکب سود ٹریکر۔",
+          savLink: "بچت مرکز دیکھیں",
+          kycTitle: "🏦 NPCI پینی ڈراپ اور KYC",
+          kycDesc: "سب 200ms بینک تصدیق + نام کی تصحیح اور ₹7 لاکھ مفت EDLI۔",
+          kycLink: "تفصیلات کی تصحیح دیکھیں"
         };
       default:
         return {

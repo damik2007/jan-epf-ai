@@ -174,7 +174,14 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, []);
 
-  const [seniorMode, setSeniorMode] = useState<boolean>(false);
+  const [seniorMode, setSeniorMode] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        return localStorage.getItem("jan_epf_senior_mode") === "true";
+      } catch {}
+    }
+    return false;
+  });
   const [theme, setThemeState] = useState<"light" | "dark">("light");
   const [claimsHistory, setClaimsHistory] = useState<SubmittedClaim[]>(() => {
     if (typeof window !== "undefined") {
@@ -229,10 +236,30 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (found) {
           setActiveCitizen(found);
           setIsAuthenticated(true);
+          const isSenior = (found.demographics?.age && found.demographics.age >= 60) || found.uan === "100112233445" || found.full_name?.includes("Gurmeet");
+          if (isSenior) {
+            setSeniorMode(true);
+            try { localStorage.setItem("jan_epf_senior_mode", "true"); } catch {}
+          }
         }
       }
     } catch {}
   }, [citizens]);
+
+  // Auto-trigger Senior Citizen Mode whenever a senior citizen is the active persona
+  useEffect(() => {
+    if (activeCitizen) {
+      const isSenior = (activeCitizen.demographics?.age && activeCitizen.demographics.age >= 60) ||
+                       activeCitizen.uan === "100112233445" ||
+                       activeCitizen.full_name?.includes("Gurmeet");
+      if (isSenior && !seniorMode) {
+        setSeniorMode(true);
+        if (typeof window !== "undefined") {
+          try { localStorage.setItem("jan_epf_senior_mode", "true"); } catch {}
+        }
+      }
+    }
+  }, [activeCitizen, seniorMode]);
 
   const broadcastStateChange = (newCitizens: Citizen[], newActive: Citizen, newClaims?: SubmittedClaim[]) => {
     try {
@@ -267,13 +294,16 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  // Senior Mode is OFF by default on page load.
-  // Sync Dark Theme when Senior Mode is Activated/Deactivated
+  // Senior Mode: Sync High Contrast Theme, CSS Classes, and WCAG AAA Accessibility
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (seniorMode) {
         document.documentElement.classList.add("dark");
+        document.documentElement.classList.add("senior-mode");
+        document.body.classList.add("senior-mode");
       } else {
+        document.documentElement.classList.remove("senior-mode");
+        document.body.classList.remove("senior-mode");
         const savedTheme = localStorage.getItem("jan_epf_theme") as "light" | "dark" | null;
         if (savedTheme !== "dark") {
           document.documentElement.classList.remove("dark");
@@ -297,6 +327,14 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (found) {
       setActiveCitizen(found);
       setIsAuthenticated(true);
+      const isSenior = (found.demographics?.age && found.demographics.age >= 60) || found.uan === "100112233445" || found.full_name?.includes("Gurmeet");
+      if (isSenior) {
+        setSeniorMode(true);
+        try { localStorage.setItem("jan_epf_senior_mode", "true"); } catch {}
+      } else {
+        setSeniorMode(false);
+        try { localStorage.setItem("jan_epf_senior_mode", "false"); } catch {}
+      }
       try {
         sessionStorage.setItem("jan_epf_auth", "true");
         sessionStorage.setItem("jan_epf_uan", uan);
@@ -321,6 +359,14 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (found) {
       setActiveCitizen(found);
       setIsAuthenticated(true);
+      const isSenior = (found.demographics?.age && found.demographics.age >= 60) || found.uan === "100112233445" || found.full_name?.includes("Gurmeet");
+      if (isSenior) {
+        setSeniorMode(true);
+        try { localStorage.setItem("jan_epf_senior_mode", "true"); } catch {}
+      } else {
+        setSeniorMode(false);
+        try { localStorage.setItem("jan_epf_senior_mode", "false"); } catch {}
+      }
       try {
         sessionStorage.setItem("jan_epf_auth", "true");
         sessionStorage.setItem("jan_epf_uan", uan);
