@@ -48,6 +48,7 @@ export default function FixDetailsHub() {
     updateActiveCitizenKYC,
     updateActiveCitizenName,
     updateActiveCitizenNomination,
+    addClaim,
     language,
     apiUrl
   } = useCitizen();
@@ -421,7 +422,28 @@ export default function FixDetailsHub() {
           )}
 
           <div className="mt-6 border-t border-slate-200 dark:border-slate-800 pt-6">
-            <ChequeOCRScanner onVerificationComplete={(extracted) => {}} />
+            <ChequeOCRScanner
+              onVerificationComplete={(extracted) => {
+                if (extracted.accountNumber) setBankAcc(extracted.accountNumber);
+                if (extracted.ifscCode) setBankIfsc(extracted.ifscCode);
+                if (extracted.bankName) {
+                  setPennyDropResult({
+                    success: true,
+                    npcI_reference_id: `NPCI-OCR-${Date.now().toString().slice(-6)}`,
+                    fuzzy_match_score: extracted.matchScore || 96,
+                    kyc_verified: true,
+                    registered_account_name: activeCitizen.full_name,
+                    bank_response_code: "ACT_VERIFIED_SUCCESS",
+                    is_ready_for_claims: true
+                  });
+                  updateActiveCitizenKYC(
+                    extracted.bankName,
+                    `XXXXXX${extracted.accountNumber.slice(-4)}`,
+                    extracted.ifscCode
+                  );
+                }
+              }}
+            />
           </div>
         </div>
       )}
@@ -646,6 +668,17 @@ export default function FixDetailsHub() {
                   <button
                     onClick={() => {
                       setAutoFixApplied(true);
+                      addClaim({
+                        claim_id: `GRV-AUTO-${Date.now().toString().slice(-6)}`,
+                        uan: activeCitizen.uan,
+                        claim_type: "REVISED_EPFO_CPGRAMS_DISPUTE_REMEDY",
+                        amount_requested: activeCitizen.passbook_summary?.total_balance || 185000,
+                        amount_sanctioned: activeCitizen.passbook_summary?.total_balance || 185000,
+                        status: "AUTO_RECONCILED",
+                        tds_deducted: 0,
+                        dbt_account: `${activeCitizen.bank_kyc.bank_name} - ${activeCitizen.bank_kyc.account_number_masked}`,
+                        timestamp: new Date().toISOString()
+                      });
                     }}
                     className="bg-emerald-600 text-white px-4 py-2.5 min-h-[44px] rounded-xl font-bold text-xs shadow hover:bg-emerald-700 transition-all whitespace-nowrap"
                   >

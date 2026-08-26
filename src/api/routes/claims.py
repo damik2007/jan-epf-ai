@@ -46,7 +46,8 @@ async def submit_claim(req: ClaimSubmissionRequest):
     claim_id = f"CLM-{uuid.uuid4().hex[:8].upper()}"
 
     # Generate immutable cryptographic audit trace
-    audit_data = f"{claim_id}:{req.uan}:{req.claim_type.value}:{sanctioned_amount}:{datetime.utcnow().isoformat()}"
+    now_dt = datetime.utcnow()
+    audit_data = f"{claim_id}:{req.uan}:{req.claim_type.value}:{sanctioned_amount}:{now_dt.isoformat()}"
     audit_token = CryptographicSignatureManager.generate_audit_hash(audit_data)
 
     bank_kyc = citizen.get("bank_kyc", {})
@@ -65,7 +66,7 @@ async def submit_claim(req: ClaimSubmissionRequest):
         "audit_trace_token": audit_token,
         "reason_code": req.reason_code,
         "reason_description": req.reason_description,
-        "timestamp": datetime.utcnow()
+        "timestamp": now_dt
     }
 
     mock_store.add_claim(claim_record)

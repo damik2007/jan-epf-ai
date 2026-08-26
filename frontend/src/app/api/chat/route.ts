@@ -48,8 +48,8 @@ export async function POST(req: NextRequest) {
       turnCount
     );
 
-    // Check Cache
-    const normalizedKey = `${citizenContext.uan}:${trimmedQuery.toLowerCase().replace(/\s+/g, " ")}`;
+    // Check Cache (Multi-lingual & Persona-Isolated)
+    const normalizedKey = `${citizenContext.uan}:${language}:${trimmedQuery.toLowerCase().replace(/\s+/g, " ")}`;
     const cached = responseCache.get(normalizedKey);
     if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
       const durationMs = Number((performance.now() - startTime).toFixed(2));
@@ -104,7 +104,7 @@ Guidelines:
         if (generatedText) break;
         try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 3500);
+          const timeoutId = setTimeout(() => controller.abort(), 8000);
 
           const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
@@ -134,6 +134,8 @@ Guidelines:
               modelUsed = `groq/${groqModel}`;
               break;
             }
+          } else {
+            console.warn(`[LLM] Groq (${groqModel}) returned HTTP status: ${groqRes.status}`);
           }
         } catch (err) {
           console.warn(`[LLM] Primary Groq (${groqModel}) attempt failed:`, err);

@@ -240,6 +240,10 @@ export default function CitizenLandingPage() {
 
                 <button
                   type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    login(persona.uan);
+                  }}
                   className="mt-4 w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-sovereign-navy text-white hover:bg-sovereign-light flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
                   <span>1-Click Instant Login as {persona.name.split(" ")[0]}</span>

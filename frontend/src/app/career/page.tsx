@@ -363,7 +363,20 @@ export default function ChangedJobsHub() {
 
           <div className="flex justify-end">
             <button
-              onClick={() => setSettlementSuccess(true)}
+              onClick={() => {
+                setSettlementSuccess(true);
+                addClaim({
+                  claim_id: `CLM-SETTLE-${Date.now().toString().slice(-6)}`,
+                  uan: activeCitizen.uan,
+                  claim_type: "FORM_19_FINAL_SETTLEMENT",
+                  amount_requested: activeCitizen.passbook_summary?.total_balance || 260000,
+                  amount_sanctioned: tdsCalc.netDisbursement,
+                  status: "AUTO_APPROVED",
+                  tds_deducted: tdsCalc.tdsAmount,
+                  dbt_account: `${activeCitizen.bank_kyc.bank_name} - ${activeCitizen.bank_kyc.account_number_masked}`,
+                  timestamp: new Date().toISOString()
+                });
+              }}
               className="flex items-center gap-2 bg-sovereign-navy dark:bg-amber-500 dark:text-slate-950 hover:bg-sovereign-light text-white px-7 py-3 rounded-xl font-bold text-sm shadow-md transition-all"
             >
               <FileCheck2 className="w-4 h-4 text-saffron dark:text-slate-950" />

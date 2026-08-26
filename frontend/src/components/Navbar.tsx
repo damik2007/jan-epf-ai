@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   ChevronDown,
   Zap,
+  Bot,
   Sun,
   Moon,
   Search,
@@ -85,6 +86,11 @@ export const Navbar: React.FC = () => {
       label: t.navFix,
       href: "/fix",
       icon: Wrench
+    },
+    {
+      label: "AI Agent",
+      href: "/copilot",
+      icon: Bot
     },
     {
       label: "Benchmarks",

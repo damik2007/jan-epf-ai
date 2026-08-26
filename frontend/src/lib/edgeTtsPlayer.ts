@@ -154,8 +154,9 @@ export function stopNeuralSpeech() {
 
 export function cleanSpokenText(raw: string, lang: string = "en-IN"): string {
   let cleaned = raw
-    .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, "")
-    .replace(/[*_#`~[\]()<>|]/g, "")
+    .replace(/\p{Extended_Pictographic}/gu, "")
+    .replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]/gu, "")
+    .replace(/[*_#`~[\]()<>|•➔✓—]/g, " ")
     .replace(/₹\s*([0-9,]+)/g, (match, p1) => {
       const numeric = p1.replace(/,/g, "");
       if (lang.startsWith("hi")) return `${numeric} रुपये`;

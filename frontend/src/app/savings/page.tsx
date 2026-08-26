@@ -129,7 +129,13 @@ export default function MySavingsHub() {
         </div>
       </div>
 
-      <SettlementReceiptModal isOpen={receiptModalOpen} onClose={() => setReceiptModalOpen(false)} />
+      <SettlementReceiptModal
+        isOpen={receiptModalOpen}
+        onClose={() => setReceiptModalOpen(false)}
+        claimType="Annual Statutory Passbook & Triple-Split Compound Ledger"
+        claimAmount={totalBal}
+        trackingId={`PB-EPF-2026-${activeCitizen.uan.slice(-6)}`}
+      />
 
       {/* SENIOR CITIZEN EPS-95 SPECIAL CARD (IF SENIOR) */}
       {activeCitizen.pension_details && (
