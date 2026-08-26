@@ -20,8 +20,7 @@ import {
   Search,
   Activity,
   LogOut,
-  Landmark,
-  Gauge
+  Landmark
 } from "lucide-react";
 
 import { getTranslation } from "@/lib/translations";
@@ -29,7 +28,6 @@ import { EvaluatorTourModal } from "@/components/EvaluatorTourModal";
 import { CommandCenter } from "@/components/CommandCenter";
 import { ChaosSimulatorModal } from "@/components/ChaosSimulatorModal";
 import { ArchitectureInspectorModal } from "@/components/ArchitectureInspectorModal";
-import { SovereignOpsCenterModal } from "@/components/SovereignOpsCenterModal";
 import { LiveSovereignPulse } from "@/components/LiveSovereignPulse";
 
 export const Navbar: React.FC = () => {
@@ -54,7 +52,6 @@ export const Navbar: React.FC = () => {
   const [commandCenterOpen, setCommandCenterOpen] = React.useState(false);
   const [chaosModalOpen, setChaosModalOpen] = React.useState(false);
   const [architectureModalOpen, setArchitectureModalOpen] = React.useState(false);
-  const [opsCenterOpen, setOpsCenterOpen] = React.useState(false);
   const [personaDropdownOpen, setPersonaDropdownOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -239,16 +236,6 @@ export const Navbar: React.FC = () => {
             {/* Single Authoritative Judges 60s Tour Button */}
             <EvaluatorTourModal />
 
-            {/* Sovereign Ops Command Center Trigger Button */}
-            <button
-              onClick={() => setOpsCenterOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-950/80 to-cyan-950/80 hover:from-emerald-900 hover:to-cyan-900 text-emerald-300 border border-emerald-500/40 text-xs font-bold transition-all shadow-sm min-h-[44px]"
-              title="Open Sovereign Ops Command Center (LLMOps • AiOps • MLOps • SecOps)"
-            >
-              <Gauge className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-              <span className="hidden md:inline">⚡ Ops Suite</span>
-            </button>
-
             {!isAuthenticated ? (
               <button
                 onClick={() => login("100982348712")}
@@ -398,12 +385,6 @@ export const Navbar: React.FC = () => {
       <ArchitectureInspectorModal
         isOpen={architectureModalOpen}
         onClose={() => setArchitectureModalOpen(false)}
-      />
-
-      {/* Sovereign Ops Command Center (LLMOps • AiOps • MLOps • SecOps) */}
-      <SovereignOpsCenterModal
-        isOpen={opsCenterOpen}
-        onClose={() => setOpsCenterOpen(false)}
       />
     </header>
   );

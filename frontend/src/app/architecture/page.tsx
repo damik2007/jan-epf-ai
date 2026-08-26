@@ -336,6 +336,24 @@ export default function ArchitectureResearchPage() {
       {/* TAB 6: SRE RESILIENCE & CIRCUIT BREAKERS */}
       {activeTab === "sre" && (
         <div className="space-y-4 animate-in fade-in-50 slide-in-from-bottom-2 duration-300 ease-out duration-200">
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/60 via-teal-950/60 to-cyan-950/60 border border-emerald-500/40 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div>
+              <h4 className="font-extrabold text-sm text-white flex items-center gap-2">
+                <Gauge className="w-4 h-4 text-emerald-400 animate-pulse" />
+                <span>Sovereign Ops Command Center Suite</span>
+              </h4>
+              <p className="text-xs text-slate-300">
+                Live observability across LLMOps (LangSmith Evals), AiOps (Self-Healing), MLOps (0.00% Actuary Drift), and SecOps (DPDP Act 2023 Shield).
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setOpsModalOpen(true)}
+              className="px-4 py-2 bg-saffron hover:bg-amber-400 text-slate-950 text-xs font-black rounded-xl transition-all shadow-md shrink-0 cursor-pointer"
+            >
+              Launch Ops Suite ➔
+            </button>
+          </div>
           <SreTelemetryPanel />
         </div>
       )}
