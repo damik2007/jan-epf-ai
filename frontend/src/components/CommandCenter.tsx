@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useCitizen } from "@/context/CitizenContext";
 import {
@@ -45,6 +45,8 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
 
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const listRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Dynamic values strictly tailored to the active citizen
   const activeName = activeCitizen?.full_name || "Active Citizen";
@@ -239,18 +241,25 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
       item.category.toLowerCase().includes(query.toLowerCase())
   );
 
+  // Enhanced keyboard navigation with auto-scrolling
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (!isOpen) return;
 
       if (e.key === "Escape") {
         onClose();
-      } else if (e.key === "ArrowDown") {
+      } else if (e.key === "ArrowDown" || (e.key === "Tab" && !e.shiftKey)) {
         e.preventDefault();
         setSelectedIndex((prev) => (prev + 1) % Math.max(1, filteredItems.length));
-      } else if (e.key === "ArrowUp") {
+      } else if (e.key === "ArrowUp" || (e.key === "Tab" && e.shiftKey)) {
         e.preventDefault();
         setSelectedIndex((prev) => (prev - 1 + filteredItems.length) % Math.max(1, filteredItems.length));
+      } else if (e.key === "Home") {
+        e.preventDefault();
+        setSelectedIndex(0);
+      } else if (e.key === "End") {
+        e.preventDefault();
+        setSelectedIndex(Math.max(0, filteredItems.length - 1));
       } else if (e.key === "Enter") {
         e.preventDefault();
         if (filteredItems[selectedIndex]) {
@@ -266,9 +275,26 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
+  // Auto-scroll selected item into view inside the list container
+  useEffect(() => {
+    if (!isOpen) return;
+    const selectedEl = itemRefs.current[selectedIndex];
+    if (selectedEl) {
+      selectedEl.scrollIntoView({
+        block: "nearest",
+        inline: "nearest",
+        behavior: "smooth"
+      });
+    }
+  }, [selectedIndex, isOpen]);
+
+  // Reset scroll and index when query or open state changes
   useEffect(() => {
     setSelectedIndex(0);
-  }, [query]);
+    if (listRef.current) {
+      listRef.current.scrollTop = 0;
+    }
+  }, [query, isOpen]);
 
   if (!isOpen) return null;
 
@@ -307,7 +333,10 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
         </div>
 
         {/* Results List */}
-        <div className="relative z-10 max-h-96 overflow-y-auto p-3 sm:p-4 space-y-1.5 scroll-touch">
+        <div
+          ref={listRef}
+          className="relative z-10 max-h-96 overflow-y-auto p-3 sm:p-4 space-y-1.5 scroll-touch scroll-smooth"
+        >
           {filteredItems.length === 0 ? (
             <div className="py-12 text-center text-sm text-slate-400">
               No actions found for &ldquo;{query}&rdquo;
@@ -319,6 +348,12 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
               return (
                 <div
                   key={item.id}
+                  ref={(el) => {
+                    itemRefs.current[index] = el;
+                  }}
+                  id={`cmd-item-${index}`}
+                  role="option"
+                  aria-selected={isSelected}
                   onClick={item.action}
                   onMouseEnter={() => setSelectedIndex(index)}
                   className={`flex items-center justify-between p-3 sm:p-3.5 rounded-2xl cursor-pointer transition-all duration-150 ${
