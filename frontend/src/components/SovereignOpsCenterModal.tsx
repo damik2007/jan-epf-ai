@@ -25,6 +25,7 @@ import {
 import { llmOpsTelemetry, LLMOpsAggregateMetrics, LLMTraceRecord } from "@/lib/llmOpsTelemetry";
 import { aiOpsMonitor, AiOpsHealthReport, MLOpsDriftTestCase } from "@/lib/aiOpsMonitor";
 import { secOpsGuard, SecOpsSanitizationResult, AdversarialInspectionResult } from "@/lib/secOpsGuard";
+import { useCitizen } from "@/context/CitizenContext";
 
 interface SovereignOpsCenterModalProps {
   isOpen: boolean;
@@ -32,7 +33,45 @@ interface SovereignOpsCenterModalProps {
 }
 
 export function SovereignOpsCenterModal({ isOpen, onClose }: SovereignOpsCenterModalProps) {
+  const { language } = useCitizen();
   const [activeTab, setActiveTab] = useState<"LLMOPS" | "AIOPS" | "MLOPS" | "SECOPS">("LLMOPS");
+
+  const langCode = (language || "en-IN").split("-")[0];
+
+  const localizedOps = useMemo(() => {
+    switch (langCode) {
+      case "hi":
+        return {
+          title: "सॉवरेन ऑप्स कमांड सेंटर",
+          sub: "सतत मूल्यांकन (LangSmith मानक) • सेल्फ-हीलिंग सर्किट ब्रेकर्स • 0% गणितीय ड्रिफ्ट • DPDP अधिनियम 2023 शील्ड",
+          exportJson: "मूल्यांकन JSON निर्यात करें",
+          tab1: "🤖 1. LLMOps (LangSmith मूल्यांकन)",
+          tab2: "⚙️ 2. AiOps (सेल्फ-हीलिंग)",
+          tab3: "📊 3. MLOps (एक्चुअरी ड्रिफ्ट)",
+          tab4: "🛡️ 4. SecOps (DPDP शील्ड)",
+        };
+      case "te":
+        return {
+          title: "సావరిన్ ఆప్స్ కమాండ్ సెంటర్",
+          sub: "నిరంతర మూల్యాంకనం (LangSmith ప్రమాణం) • సెల్ఫ్-హీలింగ్ సర్క్యూట్ బ్రేకర్స్ • 0% మ్యాథమెటికల్ డ్రిఫ్ట్ • DPDP చట్టం 2023 షీల్డ్",
+          exportJson: "ఎవాల్యుయేషన్ JSON డౌన్‌లోడ్",
+          tab1: "🤖 1. LLMOps (LangSmith ఎవాల్స్)",
+          tab2: "⚙️ 2. AiOps (సెల్ఫ్-హీలింగ్)",
+          tab3: "📊 3. MLOps (యాక్చువరీ డ్రిఫ్ట్)",
+          tab4: "🛡️ 4. SecOps (DPDP షీల్డ్)",
+        };
+      default:
+        return {
+          title: "Sovereign Ops Command Center",
+          sub: "Continuous Evals (LangSmith Standard) • Self-Healing Circuit Breakers • 0% Mathematical Drift • DPDP Act 2023 Shield",
+          exportJson: "Export Evals JSON",
+          tab1: "🤖 1. LLMOps (LangSmith Evals)",
+          tab2: "⚙️ 2. AiOps (Self-Healing)",
+          tab3: "📊 3. MLOps (Actuary Drift)",
+          tab4: "🛡️ 4. SecOps (DPDP Shield)",
+        };
+    }
+  }, [langCode]);
 
   // LLMOps State
   const [llmMetrics, setLlmMetrics] = useState<LLMOpsAggregateMetrics>(llmOpsTelemetry.getAggregateMetrics());
@@ -103,14 +142,14 @@ export function SovereignOpsCenterModal({ isOpen, onClose }: SovereignOpsCenterM
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-base sm:text-lg font-black tracking-tight text-white">
-                  Sovereign Ops Command Center
+                  {localizedOps.title}
                 </h2>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                   LLMOps • AiOps • MLOps • SecOps
                 </span>
               </div>
               <p className="text-xs text-slate-400">
-                Continuous Evals (LangSmith Standard) • Self-Healing Circuit Breakers • 0% Mathematical Drift • DPDP Act 2023 Shield
+                {localizedOps.sub}
               </p>
             </div>
           </div>
@@ -119,16 +158,16 @@ export function SovereignOpsCenterModal({ isOpen, onClose }: SovereignOpsCenterM
             <button
               type="button"
               onClick={handleExportEvaluationJSON}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700 cursor-pointer"
               title="Download full JSON evaluation audit trace"
             >
               <Download className="w-3.5 h-3.5 text-saffron" />
-              <span>Export Evals JSON</span>
+              <span>{localizedOps.exportJson}</span>
             </button>
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all"
+              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-all cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -138,15 +177,15 @@ export function SovereignOpsCenterModal({ isOpen, onClose }: SovereignOpsCenterM
         {/* 4 Ops Navigation Tabs */}
         <div className="flex items-center gap-1 sm:gap-2 px-4 pt-3 border-b border-slate-800 bg-[#060D18] overflow-x-auto">
           {[
-            { id: "LLMOPS", label: "🤖 1. LLMOps (LangSmith Evals)", desc: "Prompt Versioning & Tokens" },
-            { id: "AIOPS", label: "⚙️ 2. AiOps (Self-Healing)", desc: "Circuit Breakers & Pulse" },
-            { id: "MLOPS", label: "📊 3. MLOps (Actuary Drift)", desc: "0.0% Statutory Drift" },
-            { id: "SECOPS", label: "🛡️ 4. SecOps (DPDP Shield)", desc: "Presidio PII & WAF" }
+            { id: "LLMOPS", label: localizedOps.tab1 },
+            { id: "AIOPS", label: localizedOps.tab2 },
+            { id: "MLOPS", label: localizedOps.tab3 },
+            { id: "SECOPS", label: localizedOps.tab4 }
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`px-3 sm:px-4 py-2.5 rounded-t-xl text-xs font-bold transition-all whitespace-nowrap border-t-2 border-x border-b-0 ${
+              className={`px-3 sm:px-4 py-2.5 rounded-t-xl text-xs font-bold transition-all whitespace-nowrap border-t-2 border-x border-b-0 cursor-pointer ${
                 activeTab === tab.id
                   ? "bg-[#0b1424] text-saffron border-saffron border-t-2 font-black"
                   : "bg-transparent text-slate-400 border-transparent hover:text-slate-200 hover:bg-slate-900/50"

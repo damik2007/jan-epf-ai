@@ -152,7 +152,28 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return false;
   });
 
-  const [language, setLanguage] = useState<string>("en-IN");
+  const [language, setLanguageState] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("jan_epf_language");
+        if (saved) return saved;
+      } catch {}
+    }
+    return "en-IN";
+  });
+
+  const setLanguage = useCallback((lang: string) => {
+    setLanguageState(lang);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("jan_epf_language", lang);
+        const channel = new BroadcastChannel("jan_epf_state_sync");
+        channel.postMessage({ type: "LANGUAGE_UPDATED", language: lang });
+        channel.close();
+      } catch {}
+    }
+  }, []);
+
   const [seniorMode, setSeniorMode] = useState<boolean>(false);
   const [theme, setThemeState] = useState<"light" | "dark">("light");
   const [claimsHistory, setClaimsHistory] = useState<SubmittedClaim[]>(() => {
@@ -178,6 +199,8 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
           if (event.data.citizens) setCitizens(event.data.citizens);
           if (event.data.activeCitizen) setActiveCitizen(event.data.activeCitizen);
           if (event.data.claimsHistory) setClaimsHistory(event.data.claimsHistory);
+        } else if (event.data?.type === "LANGUAGE_UPDATED" && event.data.language) {
+          setLanguageState(event.data.language);
         }
       };
     } catch {}

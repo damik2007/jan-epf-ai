@@ -36,6 +36,94 @@ export default function CitizenLandingPage() {
   const { activeCitizen, isAuthenticated, login, logout, language } = useCitizen();
   const t = getTranslation(language);
 
+  const langCode = (language || "en-IN").split("-")[0];
+  const firstName = activeCitizen?.full_name ? activeCitizen.full_name.split(" ")[0] : "Citizen";
+
+  const deckLabels = React.useMemo(() => {
+    switch (langCode) {
+      case "hi":
+        return {
+          tag: "⚡ उत्पाद क्षमताएं",
+          arch: "80/20 सॉवरेन एआई आर्किटेक्चर",
+          heading: `${firstName} के लिए जन-ईपीएफ एआई क्या कर सकता है`,
+          guideBtn: "📖 चरण-दर-चरण मार्गदर्शिका",
+          agentBtn: "⚡ सॉवरेन एआई एजेंट",
+          advTitle: "🏥 पैरा 68J आपातकालीन अग्रिम",
+          advDesc: "0.04ms में धारा 192A फॉर्म 15G के साथ अग्रिम सीमाएं स्वीकृत।",
+          advLink: "अग्रिम हब जांचें",
+          trnTitle: "🔄 फॉर्म 13 नौकरी ट्रांसफर",
+          trnDesc: "ECR वेतन चालान से निकास तिथि स्वतः निकालता है।",
+          trnLink: "कैरियर हब जांचें",
+          savTitle: "📊 3-तरफा पासबुक",
+          savDesc: "12% + 3.67% + 8.33% विभाजन व 8.25% चक्रवृद्धि ब्याज ट्रैकर।",
+          savLink: "बचत हब जांचें",
+          kycTitle: "🏦 NPCI पेनी ड्रॉप व केवाईसी",
+          kycDesc: "सब-200ms बैंक सत्यापन + नाम सुधार और ₹7 लाख मुफ्त EDLI।",
+          kycLink: "विवरण सुधार जांचें"
+        };
+      case "te":
+        return {
+          tag: "⚡ ఉత్పత్తి సామర్థ్యాలు",
+          arch: "80/20 సావరిన్ AI ఆర్కిటెక్చర్",
+          heading: `${firstName} కోసం జన-ఈపీఎఫ్ ఏఐ ఏమి చేయగలదు`,
+          guideBtn: "📖 దశల వారీ మార్గదర్శి",
+          agentBtn: "⚡ సావరిన్ AI ఏజెంట్",
+          advTitle: "🏥 పారా 68J అత్యవసర అడ్వాన్స్",
+          advDesc: "0.04ms లో సెక్షన్ 192A ఫారం 15G తో అడ్వాన్స్ మంజూరు.",
+          advLink: "అడ్వాన్స్ హబ్ పరిశీలించండి",
+          trnTitle: "🔄 ఫారం 13 జాబ్ బదిలీ",
+          trnDesc: "ECR వేతనాల నుండి నిష్క్రమణ తేదీని స్వయంచాలకంగా లెక్కిస్తుంది.",
+          trnLink: "కెరీర్ హబ్ పరిశీలించండి",
+          savTitle: "📊 3-విధాల పాస్‌బుక్",
+          savDesc: "12% + 3.67% + 8.33% విభజన & 8.25% చక్రవడ్డీ ట్రాకర్.",
+          savLink: "పొదుపు హబ్ పరిశీలించండి",
+          kycTitle: "🏦 NPCI పెన్నీ డ్రాప్ & KYC",
+          kycDesc: "సబ్-200ms బ్యాంక్ ధృవీకరణ + పేరు సవరణ & ₹7లక్షల ఉచిత EDLI.",
+          kycLink: "వివరాల సవరణ పరిశీలించండి"
+        };
+      case "ta":
+        return {
+          tag: "⚡ தயாரிப்பு திறன்கள்",
+          arch: "80/20 இறையாண்மை AI கட்டமைப்பு",
+          heading: `${firstName}-க்கு ஜன-இபிஎஃப் AI என்ன செய்ய முடியும்`,
+          guideBtn: "📖 படிப்படியான வழிகாட்டி",
+          agentBtn: "⚡ இறையாண்மை AI ஏஜென்ட்",
+          advTitle: "🏥 பாரா 68J அவசர முன்பணம்",
+          advDesc: "0.04ms இல் பிரிவு 192A படிவம் 15G உடன் முன்பணம் ஒப்புதல்.",
+          advLink: "முன்பணப் பிரிவு",
+          trnTitle: "🔄 படிவம் 13 பணி பரிமாற்றம்",
+          trnDesc: "ECR ஊதியத்திலிருந்து வெளியேறும் தேதியை தானாகக் கணக்கிடுகிறது.",
+          trnLink: "பணிப் பிரிவு",
+          savTitle: "📊 3-பிரிவு பாஸ்புக்",
+          savDesc: "12% + 3.67% + 8.33% பிரிவு & 8.25% கூட்டு வட்டி கண்காணிப்பு.",
+          savLink: "சேமிப்புப் பிரிவு",
+          kycTitle: "🏦 NPCI பென்னி டிராப் & KYC",
+          kycDesc: "சப்-200ms வங்கி சரிபார்ப்பு + பெயர் திருத்தம் & ₹7L EDLI காப்பீடு.",
+          kycLink: "விவர திருத்தப் பிரிவு"
+        };
+      default:
+        return {
+          tag: "⚡ Product Capabilities Deck",
+          arch: "80/20 Sovereign AI Architecture",
+          heading: `What Jan-EPF AI Can Do For ${firstName}`,
+          guideBtn: "📖 Step-by-Step Guide",
+          agentBtn: "⚡ Open AI Agent",
+          advTitle: "🏥 Para 68J Emergency Advance",
+          advDesc: "Mathematical pre-flight check sanctions advance limits with Section 192A Form 15G in <0.05ms.",
+          advLink: "Test Advance Hub",
+          trnTitle: "🔄 Form 13 Job Transfer",
+          trnDesc: "Auto-deduces missing exit dates from monthly ECR wage timestamps, unlocking trapped balances.",
+          trnLink: "Test Career Hub",
+          savTitle: "📊 Triple-Split Passbook",
+          savDesc: "Splits corpus into 12% + 3.67% + 8.33% with monthly EPS-95 pension tracking & compounding forecaster.",
+          savLink: "Test Savings Hub",
+          kycTitle: "🏦 NPCI Penny Drop & KYC",
+          kycDesc: "Sub-200ms bank KYC verification + Wagner-Fischer fuzzy name correction and ₹7L free EDLI nomination.",
+          kycLink: "Test Fix Details Hub"
+        };
+    }
+  }, [langCode, firstName]);
+
   const [chaosSimulatorOpen, setChaosSimulatorOpen] = useState(false);
   const [guideModalOpen, setGuideModalOpen] = useState(false);
   const [onboardingModalOpen, setOnboardingModalOpen] = useState(false);
@@ -457,14 +545,14 @@ export default function CitizenLandingPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-saffron text-slate-950 font-black text-[10px] uppercase font-mono tracking-wider">
-                ⚡ Product Capabilities Deck
+                {deckLabels.tag}
               </span>
               <span className="text-xs text-slate-400 font-mono hidden sm:inline">
-                80/20 Sovereign AI Architecture
+                {deckLabels.arch}
               </span>
             </div>
             <h3 className="text-lg sm:text-xl font-black text-white mt-1">
-              What Jan-EPF AI Can Do For {activeCitizen.full_name.split(" ")[0]}
+              {deckLabels.heading}
             </h3>
           </div>
           <div className="flex items-center gap-2">
@@ -474,7 +562,7 @@ export default function CitizenLandingPage() {
               className="px-3.5 py-2 bg-[#1e293b] hover:bg-[#334155] text-amber-300 hover:text-amber-200 border border-slate-700 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all shadow-md"
             >
               <BookOpen className="w-3.5 h-3.5" />
-              <span>📖 Step-by-Step Guide</span>
+              <span>{deckLabels.guideBtn}</span>
             </button>
             <button
               type="button"
@@ -483,7 +571,7 @@ export default function CitizenLandingPage() {
               }}
               className="px-3.5 py-2 bg-saffron hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all shadow-md hover:scale-105 cursor-pointer"
             >
-              <span>⚡ Open AI Agent</span>
+              <span>{deckLabels.agentBtn}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -496,17 +584,17 @@ export default function CitizenLandingPage() {
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">
-                🏥 Para 68J Emergency Advance
+                {deckLabels.advTitle}
               </span>
               <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                 0% TDS
               </span>
             </div>
             <p className="text-[11px] text-slate-300 leading-relaxed">
-              Mathematical pre-flight check sanctions advance limits with Section 192A Form 15G in &lt;0.05ms.
+              {deckLabels.advDesc}
             </p>
             <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-bold pt-1">
-              <span>Test Advance Hub</span>
+              <span>{deckLabels.advLink}</span>
               <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
@@ -517,17 +605,17 @@ export default function CitizenLandingPage() {
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-white group-hover:text-blue-300 transition-colors">
-                🔄 Form 13 Job Transfer
+                {deckLabels.trnTitle}
               </span>
               <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-blue-500/20 text-blue-300 border border-blue-500/40">
                 ECR Auto-Exit
               </span>
             </div>
             <p className="text-[11px] text-slate-300 leading-relaxed">
-              Auto-deduces missing exit dates from monthly ECR wage timestamps, unlocking trapped balances.
+              {deckLabels.trnDesc}
             </p>
             <div className="flex items-center gap-1 text-[10px] text-blue-400 font-bold pt-1">
-              <span>Test Career Hub</span>
+              <span>{deckLabels.trnLink}</span>
               <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
@@ -538,17 +626,17 @@ export default function CitizenLandingPage() {
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-white group-hover:text-purple-300 transition-colors">
-                📊 Triple-Split Passbook
+                {deckLabels.savTitle}
               </span>
               <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 border border-purple-500/40">
                 8.25% FY Growth
               </span>
             </div>
             <p className="text-[11px] text-slate-300 leading-relaxed">
-              Splits corpus into 12% + 3.67% + 8.33% with monthly EPS-95 pension tracking &amp; compounding forecaster.
+              {deckLabels.savDesc}
             </p>
             <div className="flex items-center gap-1 text-[10px] text-purple-400 font-bold pt-1">
-              <span>Test Savings Hub</span>
+              <span>{deckLabels.savLink}</span>
               <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>
@@ -559,17 +647,17 @@ export default function CitizenLandingPage() {
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-white group-hover:text-amber-300 transition-colors">
-                🏦 NPCI Penny Drop &amp; KYC
+                {deckLabels.kycTitle}
               </span>
               <span className="text-[8px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40">
                 Wagner-Fischer
               </span>
             </div>
             <p className="text-[11px] text-slate-300 leading-relaxed">
-              Sub-200ms bank KYC verification + Wagner-Fischer fuzzy name correction and ₹7L free EDLI nomination.
+              {deckLabels.kycDesc}
             </p>
             <div className="flex items-center gap-1 text-[10px] text-amber-400 font-bold pt-1">
-              <span>Test Fix Details Hub</span>
+              <span>{deckLabels.kycLink}</span>
               <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>

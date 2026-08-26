@@ -571,7 +571,7 @@ export const VoiceAssistant: React.FC = () => {
       ];
     }
     return ALL_MASTER_CAPABILITIES.slice(0, 4);
-  }, [isRamesh, isPriya, isGurmeet, isSunita]);
+  }, [isRamesh, isPriya, isGurmeet, isSunita, language]);
 
   const personaBadge = useMemo(() => {
     if (isLoginPage) return { color: "from-saffron to-amber-500", text: "text-saffron", role: "Gateway Concierge" };
