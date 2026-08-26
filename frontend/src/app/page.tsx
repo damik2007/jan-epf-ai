@@ -39,9 +39,10 @@ export default function CitizenLandingPage() {
   // Automatically trigger Senior Citizen Mode on entering the Account Home Page if the active persona is senior
   useEffect(() => {
     if (activeCitizen) {
-      const isSenior = (activeCitizen.demographics?.age && activeCitizen.demographics.age >= 60) ||
-                       activeCitizen.uan === "100112233445" ||
-                       activeCitizen.full_name?.includes("Gurmeet");
+      const isSenior = activeCitizen.uan === "100112233445" ||
+                       Boolean(activeCitizen.pension_details) ||
+                       activeCitizen.full_name?.includes("Gurmeet") ||
+                       Boolean(activeCitizen.dob && new Date().getFullYear() - new Date(activeCitizen.dob).getFullYear() >= 60);
       if (isSenior && !seniorMode) {
         setSeniorMode(true);
         if (typeof window !== "undefined") {

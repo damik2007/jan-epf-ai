@@ -236,7 +236,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
         if (found) {
           setActiveCitizen(found);
           setIsAuthenticated(true);
-          const isSenior = (found.demographics?.age && found.demographics.age >= 60) || found.uan === "100112233445" || found.full_name?.includes("Gurmeet");
+          const isSenior = found.uan === "100112233445" || Boolean(found.pension_details) || found.full_name?.includes("Gurmeet") || Boolean(found.dob && new Date().getFullYear() - new Date(found.dob).getFullYear() >= 60);
           if (isSenior) {
             setSeniorMode(true);
             try { localStorage.setItem("jan_epf_senior_mode", "true"); } catch {}
@@ -249,9 +249,10 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Auto-trigger Senior Citizen Mode whenever a senior citizen is the active persona
   useEffect(() => {
     if (activeCitizen) {
-      const isSenior = (activeCitizen.demographics?.age && activeCitizen.demographics.age >= 60) ||
-                       activeCitizen.uan === "100112233445" ||
-                       activeCitizen.full_name?.includes("Gurmeet");
+      const isSenior = activeCitizen.uan === "100112233445" ||
+                       Boolean(activeCitizen.pension_details) ||
+                       activeCitizen.full_name?.includes("Gurmeet") ||
+                       Boolean(activeCitizen.dob && new Date().getFullYear() - new Date(activeCitizen.dob).getFullYear() >= 60);
       if (isSenior && !seniorMode) {
         setSeniorMode(true);
         if (typeof window !== "undefined") {
@@ -327,7 +328,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (found) {
       setActiveCitizen(found);
       setIsAuthenticated(true);
-      const isSenior = (found.demographics?.age && found.demographics.age >= 60) || found.uan === "100112233445" || found.full_name?.includes("Gurmeet");
+      const isSenior = found.uan === "100112233445" || Boolean(found.pension_details) || found.full_name?.includes("Gurmeet") || Boolean(found.dob && new Date().getFullYear() - new Date(found.dob).getFullYear() >= 60);
       if (isSenior) {
         setSeniorMode(true);
         try { localStorage.setItem("jan_epf_senior_mode", "true"); } catch {}
@@ -359,7 +360,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (found) {
       setActiveCitizen(found);
       setIsAuthenticated(true);
-      const isSenior = (found.demographics?.age && found.demographics.age >= 60) || found.uan === "100112233445" || found.full_name?.includes("Gurmeet");
+      const isSenior = found.uan === "100112233445" || Boolean(found.pension_details) || found.full_name?.includes("Gurmeet") || Boolean(found.dob && new Date().getFullYear() - new Date(found.dob).getFullYear() >= 60);
       if (isSenior) {
         setSeniorMode(true);
         try { localStorage.setItem("jan_epf_senior_mode", "true"); } catch {}
