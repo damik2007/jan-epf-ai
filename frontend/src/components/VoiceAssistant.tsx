@@ -744,6 +744,14 @@ export const VoiceAssistant: React.FC = () => {
   }, [uan, isLoginPage, generateInitialGreeting]);
 
   useEffect(() => {
+    const handleOpenAgent = () => {
+      setIsOpen(true);
+    };
+    window.addEventListener("open-sovereign-agent", handleOpenAgent);
+    return () => window.removeEventListener("open-sovereign-agent", handleOpenAgent);
+  }, []);
+
+  useEffect(() => {
     if (typeof window !== "undefined" && uan && messages.length > 0 && prevUanRef.current === uan && !isLoginPage) {
       try {
         localStorage.setItem(`jan_epf_chat_v4_clean_${uan}`, JSON.stringify(messages));
@@ -1109,19 +1117,7 @@ export const VoiceAssistant: React.FC = () => {
                 </span>
               </button>
 
-              {/* 5. ↗ Dedicated AI Agent Workstation Link */}
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  router.push("/copilot");
-                }}
-                className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-[#334155] text-slate-300 hover:text-saffron border border-slate-700 transition-all shrink-0"
-                title="Open Fullscreen AI Agent Workstation (/copilot)"
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-              </button>
-
-              {/* 6. ⛶ Expand / Collapse Modal Size */}
+              {/* 5. ⛶ Expand / Collapse Modal Size */}
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="p-1.5 rounded-xl bg-[#1e293b] hover:bg-[#334155] text-slate-300 hover:text-white border border-slate-700 transition-all shrink-0"

@@ -121,7 +121,14 @@ export function SpeedRunTour() {
     setCurrentStepIndex(index);
     const step = SPEED_RUN_STEPS[index];
     switchCitizen(step.personaUan);
-    router.push(step.route);
+    if (step.route === "/copilot") {
+      router.push("/");
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent("open-sovereign-agent"));
+      }, 300);
+    } else {
+      router.push(step.route);
+    }
   }, [switchCitizen, router]);
 
   // Auto-play timer (10s per step for 6 steps = 60s speed run)

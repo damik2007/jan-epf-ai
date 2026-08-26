@@ -124,7 +124,14 @@ export function EvaluatorTourModal() {
   const handleLaunchStop = (uan: string, route: string) => {
     switchCitizen(uan);
     setIsOpen(false);
-    router.push(route);
+    if (route === "/copilot") {
+      router.push("/");
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent("open-sovereign-agent"));
+      }, 300);
+    } else {
+      router.push(route);
+    }
   };
 
   return (
