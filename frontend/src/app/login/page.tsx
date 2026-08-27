@@ -275,9 +275,22 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-left text-xs space-y-1 font-mono">
-            <div className="text-slate-500">Universal Account Number (UAN):</div>
-            <div className="font-bold text-slate-900 dark:text-white">{uanInput} ({personaScenarios.find((p) => p.uan === uanInput)?.name || activeCitizen.full_name})</div>
+          <div className="p-3 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-left text-xs space-y-2 font-mono">
+            <div className="text-slate-500 font-sans font-bold flex justify-between items-center">
+              <span>Select Account to Ingest:</span>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">FIDO2 Ready</span>
+            </div>
+            <select
+              value={uanInput}
+              onChange={(e) => setUanInput(e.target.value)}
+              className="w-full p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 font-bold text-xs text-slate-900 dark:text-white"
+            >
+              {personaScenarios.map((p) => (
+                <option key={p.uan} value={p.uan}>
+                  {p.name} — UAN: {p.uan} ({p.badge})
+                </option>
+              ))}
+            </select>
           </div>
 
           <button
@@ -308,8 +321,23 @@ export default function LoginPage() {
               Resilient 6-Digit Aadhaar OTP
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Sent to Aadhaar-linked mobile ending in <strong>XXXX-{activeCitizen.phone ? activeCitizen.phone.slice(-4) : "4819"}</strong>.
+              Sent to Aadhaar-linked mobile for <strong>{personaScenarios.find((p) => p.uan === uanInput)?.name || activeCitizen.full_name}</strong>.
             </p>
+          </div>
+
+          <div className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 text-left text-xs font-mono">
+            <label className="text-slate-500 font-sans font-bold block mb-1">Target Account:</label>
+            <select
+              value={uanInput}
+              onChange={(e) => setUanInput(e.target.value)}
+              className="w-full p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 font-bold text-xs text-slate-900 dark:text-white"
+            >
+              {personaScenarios.map((p) => (
+                <option key={p.uan} value={p.uan}>
+                  {p.name} — UAN: {p.uan}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* 6 Large 60px OTP Boxes */}

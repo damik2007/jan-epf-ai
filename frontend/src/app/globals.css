@@ -15,59 +15,69 @@
 }
 
 /* ELDER COMFORT MODE (Senior Citizen Friendly - WCAG AAA 7:1 Contrast, Obsidian Navy & Warm Gold) */
+html.senior-mode,
+body.senior-mode,
 .senior-mode {
-  font-size: 125% !important;
-  --background: #0b132b !important;
+  font-size: 118% !important;
+  --background: #081026 !important;
   --foreground: #fdf4dc !important;
-  --card: #111b3d !important;
+  --card: #0f1c3f !important;
   --card-foreground: #fdf4dc !important;
   --border: #d4af37 !important;
-  background-color: #0b132b !important;
+  background-color: #081026 !important;
   color: #fdf4dc !important;
 }
 
-.senior-mode * {
-  line-height: 1.75 !important;
+.senior-mode body {
+  background-color: #081026 !important;
+  color: #fdf4dc !important;
 }
 
 .senior-mode .bg-white,
 .senior-mode .bg-slate-50,
-.senior-mode .bg-slate-100 {
-  background-color: #111b3d !important;
+.senior-mode .bg-slate-100,
+.senior-mode .dark\:bg-slate-900,
+.senior-mode .dark\:bg-slate-950,
+.senior-mode .dark\:bg-slate-800,
+.senior-mode [class*="bg-white"],
+.senior-mode [class*="dark:bg-slate-900"],
+.senior-mode [class*="dark:bg-slate-950"] {
+  background-color: #0f1c3f !important;
   color: #fdf4dc !important;
-  border-color: #d4af37 !important;
-  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.1) !important;
+  border-color: rgba(212, 175, 55, 0.45) !important;
+  box-shadow: 0 4px 25px rgba(212, 175, 55, 0.08) !important;
 }
 
 .senior-mode .text-slate-500,
 .senior-mode .text-slate-600,
-.senior-mode .text-slate-700 {
+.senior-mode .text-slate-700,
+.senior-mode .dark\:text-slate-400,
+.senior-mode .dark\:text-slate-300 {
   color: #d4af37 !important;
   font-weight: 700 !important;
 }
 
 .senior-mode .text-slate-800,
 .senior-mode .text-slate-900,
-.senior-mode .text-sovereign-navy {
+.senior-mode .text-sovereign-navy,
+.senior-mode .dark\:text-white {
   color: #ffffff !important;
-  font-weight: 900 !important;
+  font-weight: 800 !important;
 }
 
 .senior-mode button,
 .senior-mode a,
-.senior-mode input {
-  min-height: 56px !important;
-  font-size: 1.05rem !important;
-  font-weight: 800 !important;
-  border-radius: 1.25rem !important;
-  margin-top: 4px !important;
-  margin-bottom: 4px !important;
+.senior-mode input,
+.senior-mode select {
+  min-height: 52px !important;
+  border-radius: 1rem !important;
 }
 
-.senior-mode .bg-sovereign-navy {
-  background-color: #111b3d !important;
+.senior-mode .bg-sovereign-navy,
+.senior-mode .bg-sovereign-darkest {
+  background-color: #050a18 !important;
   color: #ffffff !important;
-  border: 2px solid #d4af37 !important;
+  border: 2px solid rgba(212, 175, 55, 0.6) !important;
 }
 
 /* ==============================================================================

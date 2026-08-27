@@ -250,18 +250,37 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Auto-trigger Senior Citizen Mode whenever a senior citizen is the active persona
   useEffect(() => {
     if (activeCitizen) {
-      const isSenior = activeCitizen.uan === "100112233445" ||
-                       Boolean(activeCitizen.pension_details) ||
-                       activeCitizen.full_name?.includes("Gurmeet") ||
-                       Boolean(activeCitizen.dob && new Date().getFullYear() - new Date(activeCitizen.dob).getFullYear() >= 60);
-      if (isSenior && !seniorMode) {
+      const isSenior =
+        activeCitizen.uan === "100112233445" ||
+        Boolean(activeCitizen.pension_details) ||
+        activeCitizen.full_name?.toLowerCase().includes("gurmeet") ||
+        Boolean(activeCitizen.dob && new Date().getFullYear() - new Date(activeCitizen.dob).getFullYear() >= 60);
+
+      if (isSenior) {
         setSeniorMode(true);
         if (typeof window !== "undefined") {
-          try { localStorage.setItem("jan_epf_senior_mode", "true"); } catch {}
+          try {
+            localStorage.setItem("jan_epf_senior_mode", "true");
+            document.documentElement.classList.add("dark", "senior-mode");
+            document.body.classList.add("senior-mode");
+          } catch {}
+        }
+      } else {
+        setSeniorMode(false);
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("jan_epf_senior_mode", "false");
+            document.documentElement.classList.remove("senior-mode");
+            document.body.classList.remove("senior-mode");
+            const savedTheme = localStorage.getItem("jan_epf_theme") as "light" | "dark" | null;
+            if (savedTheme !== "dark") {
+              document.documentElement.classList.remove("dark");
+            }
+          } catch {}
         }
       }
     }
-  }, [activeCitizen, seniorMode]);
+  }, [activeCitizen?.uan, activeCitizen?.full_name]);
 
   const broadcastStateChange = (newCitizens: Citizen[], newActive: Citizen, newClaims?: SubmittedClaim[]) => {
     try {
