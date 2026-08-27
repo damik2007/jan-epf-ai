@@ -24,7 +24,8 @@ import {
   FileCheck,
   ShieldCheck,
   HeartPulse,
-  Award
+  Award,
+  RotateCcw
 } from "lucide-react";
 
 interface CommandCenterProps {
@@ -41,6 +42,7 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
     setSeniorMode,
     theme,
     toggleTheme,
+    resetAllData
   } = useCitizen();
 
   const [query, setQuery] = useState("");
@@ -228,6 +230,17 @@ export function CommandCenter({ isOpen, onClose, onOpenChaosSimulator }: Command
       icon: theme === "dark" ? Sun : Moon,
       action: () => {
         toggleTheme();
+        onClose();
+      }
+    },
+    {
+      id: "action-reset-demo",
+      category: "⚙️ System Preferences",
+      title: "🔄 Reset All Test Claims & Mock Accounts to Initial Clean State",
+      subtitle: "Clears submitted advances, test claims, and resets all mock balances to default",
+      icon: RotateCcw,
+      action: () => {
+        resetAllData();
         onClose();
       }
     }

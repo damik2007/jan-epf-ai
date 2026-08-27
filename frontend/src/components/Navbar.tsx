@@ -20,7 +20,8 @@ import {
   Search,
   Activity,
   LogOut,
-  Landmark
+  Landmark,
+  RotateCcw
 } from "lucide-react";
 
 import { getTranslation } from "@/lib/translations";
@@ -44,7 +45,8 @@ export const Navbar: React.FC = () => {
     seniorMode,
     setSeniorMode,
     theme,
-    toggleTheme
+    toggleTheme,
+    resetAllData
   } = useCitizen();
 
   const t = getTranslation(language);
@@ -114,6 +116,20 @@ export const Navbar: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-3">
+          {/* Reset Demo State Button */}
+          <button
+            onClick={() => {
+              if (window.confirm("Reset all test claims, balances, and mock accounts to initial clean state?")) {
+                resetAllData();
+              }
+            }}
+            className="flex items-center gap-1 min-h-[44px] sm:min-h-0 min-w-[44px] sm:min-w-0 justify-center px-2 py-1 sm:py-0.5 rounded text-xs font-bold transition-all bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/50"
+            title="Reset all test claims and balances to clean state"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Reset Demo</span>
+          </button>
+
           {/* Light / Dark Mode Toggle */}
           <button
             onClick={toggleTheme}
@@ -333,6 +349,19 @@ export const Navbar: React.FC = () => {
                         </button>
                       );
                     })}
+                  </div>
+
+                  <div className="p-2 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/80 rounded-b-2xl">
+                    <button
+                      onClick={() => {
+                        resetAllData();
+                        setPersonaDropdownOpen(false);
+                      }}
+                      className="w-full py-2 px-3 bg-rose-100 hover:bg-rose-200 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-800 dark:text-rose-300 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors border border-rose-200 dark:border-rose-800"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Reset All Demo Claims & Balances</span>
+                    </button>
                   </div>
                 </div>
               )}

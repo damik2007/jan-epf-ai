@@ -108,6 +108,7 @@ interface CitizenContextType {
   updateActiveCitizenKYC: (bankName: string, accountMasked: string, ifsc: string) => void;
   updateActiveCitizenName: (newName: string) => void;
   updateActiveCitizenNomination: (nomineeName: string, relationship: string) => void;
+  resetAllData: () => void;
   apiUrl: string;
 }
 
@@ -510,6 +511,39 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
     });
   }, []);
 
+  const resetAllData = useCallback(() => {
+    try {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(STORAGE_KEY_CITIZENS);
+        localStorage.removeItem(STORAGE_KEY_CLAIMS);
+        localStorage.removeItem(STORAGE_KEY_ACTIVE_UAN);
+        localStorage.removeItem("jan_epf_senior_mode");
+        localStorage.removeItem("jan_epf_theme");
+        sessionStorage.clear();
+      }
+
+      const defaultCitizens = JSON.parse(JSON.stringify(mockData.citizens)) as Citizen[];
+      const defaultActive = defaultCitizens[0];
+
+      setCitizens(defaultCitizens);
+      setActiveCitizen(defaultActive);
+      setClaimsHistory([]);
+      setSeniorMode(false);
+      setIsAuthenticated(true);
+
+      if (typeof window !== "undefined") {
+        const channel = new BroadcastChannel("jan_epf_state_sync");
+        channel.postMessage({
+          type: "STATE_UPDATED",
+          citizens: defaultCitizens,
+          activeCitizen: defaultActive,
+          claimsHistory: []
+        });
+        channel.close();
+      }
+    } catch {}
+  }, []);
+
   return (
     <CitizenContext.Provider
       value={{
@@ -533,6 +567,7 @@ export const CitizenProvider: React.FC<{ children: React.ReactNode }> = ({ child
         updateActiveCitizenKYC,
         updateActiveCitizenName,
         updateActiveCitizenNomination,
+        resetAllData,
         apiUrl
       }}
     >

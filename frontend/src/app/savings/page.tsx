@@ -17,11 +17,12 @@ import {
   CheckCircle2,
   Radar,
   FileCheck,
-  Wallet
+  Wallet,
+  RotateCcw
 } from "lucide-react";
 
 export default function MySavingsHub() {
-  const { activeCitizen, claimsHistory, renewDLC, language } = useCitizen();
+  const { activeCitizen, claimsHistory, renewDLC, resetAllData, language } = useCitizen();
   const t = getTranslation(language);
 
   // Determine default starting age and monthly contribution from active persona
@@ -611,13 +612,25 @@ export default function MySavingsHub() {
             </div>
           </div>
 
-          <button
-            onClick={() => window.print()}
-            className="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors border border-slate-200 dark:border-slate-700"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Download Passbook PDF</span>
-          </button>
+          <div className="flex items-center gap-2">
+            {claimsHistory.length > 0 && (
+              <button
+                onClick={resetAllData}
+                className="px-3 py-1.5 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors border border-rose-200 dark:border-rose-800"
+                title="Reset test claims back to default clean ledger"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset Test Claims</span>
+              </button>
+            )}
+            <button
+              onClick={() => window.print()}
+              className="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold rounded-xl flex items-center gap-1.5 transition-colors border border-slate-200 dark:border-slate-700"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Download Passbook PDF</span>
+            </button>
+          </div>
         </div>
 
         <div className="overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-700">
