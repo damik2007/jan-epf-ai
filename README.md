@@ -24,21 +24,19 @@
 > 8. **National Exchequer Impact**: ₹1,785 Cr Saved & 200/200 Gold-Seal PyTests Passed
 
 <div align="center">
-  <video src="https://github.com/damik2007/jan-epf-ai/raw/main/docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4" controls="controls" width="100%" poster="https://raw.githubusercontent.com/damik2007/jan-epf-ai/main/docs/demo_clips_inspection/clip_1_frame_1.jpg">
-    <a href="https://github.com/damik2007/jan-epf-ai/raw/main/docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4">
-      <img src="https://raw.githubusercontent.com/damik2007/jan-epf-ai/main/docs/demo/demo_preview.gif" alt="Jan-EPF AI Master Product Demo Video Preview" width="100%" />
+  <video src="docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4" controls="controls" width="100%" poster="docs/demo_clips_inspection/clip_1_frame_1.jpg">
+    <a href="docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4">
+      <img src="docs/demo/demo_preview.gif" alt="Jan-EPF AI Master Product Demo Video Preview" width="100%" />
     </a>
   </video>
   <p>
-    <a href="https://github.com/damik2007/jan-epf-ai/raw/main/docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4">
+    <a href="docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4">
       <img src="https://img.shields.io/badge/▶%EF%B8%8F%20Direct%201080p%20Stream%20with%20Audio-Jan__EPF__AI__Master__Product__Demo.mp4-red?style=for-the-badge&logo=youtube" alt="Play Video" />
     </a>
   </p>
 </div>
 
-https://github.com/damik2007/jan-epf-ai/raw/main/docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4
-
-▶️ **Watch / Download Master MP4 (1080p):** [`docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4`](docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4)  
+▶️ **Watch / Download Master MP4 (1080p with Full Sound):** [`docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4`](docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4)  
 🌐 **Live Interactive Deployment:** [`https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007`](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007) *(Passcode: `damik2007`)*
 
 ## 🏛️ Live Production Deployment Endpoints
