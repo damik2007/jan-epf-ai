@@ -25,7 +25,7 @@
 
 [![Jan-EPF AI Master Product Demo Video](docs/demo/demo_preview.gif)](https://github.com/damik2007/jan-epf-ai/blob/main/docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4)
 
-▶️ **Click to Play Full Video Directly in GitHub (with Audio & Controls):** [**`docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4`**](https://github.com/damik2007/jan-epf-ai/blob/main/docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4)  
+▶️ **Click to Play Full Video Directly in GitHub (with Audio & Controls):** [**`docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4`**](https://github.com/damik2007/jan-epf-ai/blob/main/docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4) *(🔊 Click speaker icon on GitHub player to unmute sound)*  
 🌐 **Live Interactive Deployment:** [https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007) *(Passcode: `damik2007`)*
 
 ## 🏛️ Live Production Deployment Endpoints
