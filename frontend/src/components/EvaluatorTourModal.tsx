@@ -139,10 +139,10 @@ export function EvaluatorTourModal() {
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-saffron hover:bg-amber-400 text-sovereign-darkest font-black text-xs shadow-lg transition-all hover:scale-105 border border-amber-300 ring-2 ring-saffron/30"
+        className="inline-flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-full bg-saffron hover:bg-amber-400 text-sovereign-darkest font-black text-xs shadow-lg transition-all hover:scale-105 border border-amber-300 ring-2 ring-saffron/30 shrink-0 whitespace-nowrap min-h-[36px]"
         title="Quick 60-Second Guided Tour for Hackathon Judges"
       >
-        <Sparkles className="w-3.5 h-3.5" />
+        <Sparkles className="w-3.5 h-3.5 shrink-0" />
         <span>⚡ Judges 60s Tour</span>
       </button>
 

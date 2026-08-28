@@ -35,11 +35,17 @@ export default function RootLayout({
         <EvaluatorGate>
           <CitizenProvider>
             <Navbar />
-            <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-40 md:pt-40 lg:pt-40 pb-32 sm:pb-24">
+            {/* 
+              pt-18 (72px) on mobile clears the 56px single-row header with generous headroom.
+              lg:pt-36 (144px) on desktop clears the 3-tier enterprise header.
+              pb-28 (112px) on mobile ensures full scrolling clearance above the 64px bottom nav & floating AI Agent.
+              lg:pb-16 on desktop.
+            */}
+            <main className="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 pt-18 sm:pt-20 lg:pt-36 pb-28 sm:pb-28 lg:pb-16">
               {children}
             </main>
             <VoiceAssistant />
-            <footer className="bg-sovereign-darkest text-slate-400 text-xs border-t border-sovereign-navy py-6 mt-12">
+            <footer className="bg-sovereign-darkest text-slate-400 text-xs border-t border-sovereign-navy py-6 mt-12 mb-16 md:mb-0">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                   <div>

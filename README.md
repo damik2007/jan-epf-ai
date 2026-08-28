@@ -7,8 +7,35 @@
 [![DPDP Act 2023 Compliant](https://img.shields.io/badge/Security-DPDP%20Act%202023%20S%2B-blue.svg?style=flat-square)](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/architecture?key=damik2007)
 [![Statutory Code Coverage](https://img.shields.io/badge/Coverage-95%25%20Statutory-success.svg?style=flat-square)](https://github.com/damik2007/jan-epf-ai)
 [![Sovereign Ops Center](https://img.shields.io/badge/Ops%20Suite-LLMOps%20•%20AiOps%20•%20MLOps%20•%20SecOps-purple.svg?style=flat-square)](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/benchmarks?key=damik2007)
+[![Master Product Demo](https://img.shields.io/badge/Demo%20Video-1080p%20Full%20HD%20(2m37s)-red.svg?style=flat-square&logo=youtube)](docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4)
 
 ---
+
+## 🎬 Master Product Demo Video (1080p Full HD • 2m 37s)
+
+> **Complete 8-Part Synchronized Product Demo Walkthrough:**
+> 1. **Elder Accessibility**: WCAG AAA Senior Citizen Mode & EPS-95 Digital Pension
+> 2. **Emergency Advance**: Para 68J Medical Claim Sanctioned in <0.05ms with 0% TDS Form 15G
+> 3. **Autonomous Career**: Form 13 Job Transfer with ECR Timestamp Date-of-Exit deduction
+> 4. **Triple-Split Passbook**: 8.25% Sovereign Compounding & Pension Fund Visualization
+> 5. **Self-Healing KYC**: NPCI Sub-200ms Penny Drop & Wagner-Fischer Indic Typo Resolution
+> 6. **Sovereign Agent Harness**: 6-Layer Devin/Glean Agent with Presidio Zero-Trust PII Masking
+> 7. **Sovereign Ops Suite**: LLMOps, AiOps, MLOps (0% Actuary Drift), SecOps Audit
+> 8. **National Exchequer Impact**: ₹1,785 Cr Saved & 200/200 Gold-Seal PyTests Passed
+
+<div align="center">
+  <a href="docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4">
+    <img src="docs/demo/demo_preview.gif" alt="Jan-EPF AI Master Product Demo Video Preview" width="100%" style="border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.3);" />
+  </a>
+  <p>
+    <a href="docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4">
+      <img src="https://img.shields.io/badge/▶%EF%B8%8F%20Click%20To%20Play%20Full%201080p%20Demo%20Video-Jan__EPF__AI__Master__Product__Demo.mp4-red?style=for-the-badge&logo=youtube" alt="Play Video" />
+    </a>
+  </p>
+</div>
+
+▶️ **Watch / Download Master MP4 (1080p):** [`docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4`](docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4)  
+🌐 **Live Interactive Deployment:** [`https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007`](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007) *(Passcode: `damik2007`)*
 
 ## 🏛️ Live Production Deployment Endpoints
 

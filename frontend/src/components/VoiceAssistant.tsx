@@ -1010,8 +1010,8 @@ export const VoiceAssistant: React.FC = () => {
         isOpen
           ? isExpanded
             ? "inset-2 sm:inset-6 max-w-7xl mx-auto w-[96vw] sm:w-auto h-[94vh] sm:h-[90vh]"
-            : "bottom-3 sm:bottom-4 right-2 sm:right-6 w-[95vw] sm:w-[520px] h-[86vh] sm:h-[85vh] max-h-[92vh]"
-          : "bottom-5 right-4 sm:right-6"
+            : "bottom-20 sm:bottom-4 right-2 sm:right-6 w-[95vw] sm:w-[520px] h-[76vh] sm:h-[85vh] max-h-[88vh]"
+          : "bottom-20 md:bottom-5 right-3 sm:right-6"
       }`}
     >
       {/* 1. HIGH-CONTRAST SOLID OBSIDIAN DARK CONTAINER */}

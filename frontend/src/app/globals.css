@@ -15,10 +15,13 @@
 }
 
 /* ELDER COMFORT MODE (Senior Citizen Friendly - WCAG AAA 7:1 Contrast, Obsidian Navy & Warm Gold) */
+.senior-mode main {
+  font-size: 112% !important;
+}
+
 html.senior-mode,
 body.senior-mode,
 .senior-mode {
-  font-size: 118% !important;
   --background: #081026 !important;
   --foreground: #fdf4dc !important;
   --card: #0f1c3f !important;
@@ -65,19 +68,29 @@ body.senior-mode,
   font-weight: 800 !important;
 }
 
-.senior-mode button,
-.senior-mode a,
-.senior-mode input,
-.senior-mode select {
+.senior-mode main button,
+.senior-mode main a,
+.senior-mode main input,
+.senior-mode main select,
+.senior-mode [role="dialog"] button,
+.senior-mode [role="dialog"] input,
+.senior-mode [role="dialog"] select {
   min-height: 52px !important;
   border-radius: 1rem !important;
+}
+
+.senior-mode header button,
+.senior-mode header a,
+.senior-mode header select {
+  min-height: unset !important;
+  border-radius: 0.5rem !important;
 }
 
 .senior-mode .bg-sovereign-navy,
 .senior-mode .bg-sovereign-darkest {
   background-color: #050a18 !important;
   color: #ffffff !important;
-  border: 2px solid rgba(212, 175, 55, 0.6) !important;
+  border-color: rgba(212, 175, 55, 0.4) !important;
 }
 
 /* ==============================================================================
