@@ -7,7 +7,7 @@
 [![DPDP Act 2023 Compliant](https://img.shields.io/badge/Security-DPDP%20Act%202023%20S%2B-blue.svg?style=flat-square)](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/architecture?key=damik2007)
 [![Statutory Code Coverage](https://img.shields.io/badge/Coverage-95%25%20Statutory-success.svg?style=flat-square)](https://github.com/damik2007/jan-epf-ai)
 [![Sovereign Ops Center](https://img.shields.io/badge/Ops%20Suite-LLMOps%20•%20AiOps%20•%20MLOps%20•%20SecOps-purple.svg?style=flat-square)](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/benchmarks?key=damik2007)
-[![Master Product Demo](https://img.shields.io/badge/Demo%20Video-1080p%20Full%20HD%20(2m37s)-red.svg?style=flat-square&logo=youtube)](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/demo?key=damik2007)
+[![Master Product Demo](https://img.shields.io/badge/Demo%20Video-1080p%20Full%20HD%20(2m37s)-red.svg?style=flat-square&logo=youtube)](https://github.com/damik2007/jan-epf-ai/blob/main/docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4)
 
 ---
 
@@ -23,20 +23,10 @@
 > 7. **Sovereign Ops Suite**: LLMOps, AiOps, MLOps (0% Actuary Drift), SecOps Audit
 > 8. **National Exchequer Impact**: ₹1,785 Cr Saved & 200/200 Gold-Seal PyTests Passed
 
-<div align="center">
-  <a href="https://frontend-blue-tau-0e2bu1kwsk.vercel.app/demo?key=damik2007">
-    <img src="docs/demo/demo_preview.gif" alt="Jan-EPF AI Master Product Demo Video Preview" width="100%" />
-  </a>
-  <p>
-    <a href="https://frontend-blue-tau-0e2bu1kwsk.vercel.app/demo?key=damik2007">
-      <img src="https://img.shields.io/badge/▶%EF%B8%8F%20Watch%20Full%201080p%20HD%20Video%20Theater%20with%20Audio%20%26%20Chapters-Jan__EPF__AI-red?style=for-the-badge&logo=youtube" alt="Play Video" />
-    </a>
-  </p>
-</div>
+[![Jan-EPF AI Master Product Demo Video](docs/demo/demo_preview.gif)](https://github.com/damik2007/jan-epf-ai/blob/main/docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4)
 
-- 🎬 **Watch Full 1080p HD Video Theater (Live Player with Audio & Chapters):** [https://frontend-blue-tau-0e2bu1kwsk.vercel.app/demo?key=damik2007](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/demo?key=damik2007)
-- 📥 **Download Official Release MP4 (1080p Master):** [https://github.com/damik2007/jan-epf-ai/releases/tag/v1.0.0-gold-seal](https://github.com/damik2007/jan-epf-ai/releases/tag/v1.0.0-gold-seal)
-- 🌐 **Live Interactive Deployment:** [https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007) *(Passcode: `damik2007`)*
+▶️ **Click to Play Full Video Directly in GitHub (with Audio & Controls):** [**`docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4`**](https://github.com/damik2007/jan-epf-ai/blob/main/docs/demo/Jan_EPF_AI_Master_Product_Demo.mp4)  
+🌐 **Live Interactive Deployment:** [https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007](https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007) *(Passcode: `damik2007`)*
 
 ## 🏛️ Live Production Deployment Endpoints
 
