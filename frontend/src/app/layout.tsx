@@ -64,8 +64,8 @@ export default function RootLayout({
                       damikreddy2007@gmail.com
                     </a>
                     <span className="text-slate-600">•</span>
-                    <a href="https://github.com/damik2007/jan-epf-ai" target="_blank" rel="noreferrer" className="text-slate-300 hover:text-saffron transition-colors">
-                      Private GitHub Repository
+                    <a href="https://github.com/damik2007/jan-epf-ai" target="_blank" rel="noreferrer" className="text-slate-300 hover:text-saffron transition-colors font-medium">
+                      GitHub Repo
                     </a>
                   </div>
                 </div>

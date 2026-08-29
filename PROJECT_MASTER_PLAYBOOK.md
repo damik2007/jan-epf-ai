@@ -70,5 +70,5 @@ python scripts/capture_all_6_0_screenshots.py
 
 ---
 
-## 🔒 Confidentiality & Repository Governance
-*This repository is strictly private. Production deployment is active at `https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007`.*
+## 🇮🇳 Open-Source Sovereign DPI Governance
+*This repository is public and open-source under the MIT License. Production deployment is active at `https://frontend-blue-tau-0e2bu1kwsk.vercel.app/?key=damik2007`.*

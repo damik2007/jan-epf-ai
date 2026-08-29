@@ -226,5 +226,5 @@ tests/test_sovereign_agent_harness_5_0.py ......                         [100%]
 
 ---
 
-## 🔒 Confidentiality Notice
-*Private repository maintained strictly for Indian Digital Public Infrastructure evaluations. Unauthorized reproduction or dissemination is strictly prohibited under applicable digital infrastructure regulations.*
+## 🇮🇳 Open-Source Sovereign DPI License
+*Open-source Digital Public Infrastructure prototype for 70 million Indian formal-sector workers released under the MIT License. Built for the Build What Moves India Hackathon (Varun Mayya × OpenAI).*
