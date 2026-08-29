@@ -209,9 +209,11 @@ export default function MySavingsHub() {
             </p>
           </div>
           <div className="text-right">
-            <span className="text-xs text-slate-500 dark:text-slate-400">{t.totalBalanceLabel}</span>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              {activeCitizen.pension_details ? "Settled Retirement Corpus" : t.totalBalanceLabel}
+            </span>
             <div className="text-2xl font-black text-sovereign-navy dark:text-white font-mono">
-              ₹{totalBal.toLocaleString("en-IN")}
+              {activeCitizen.pension_details ? "₹5,80,000" : `₹${totalBal.toLocaleString("en-IN")}`}
             </div>
           </div>
         </div>
@@ -237,13 +239,13 @@ export default function MySavingsHub() {
           </div>
           <div className="flex flex-col sm:flex-row justify-between gap-1 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" /> {t.employeeShare}: ₹{empShare.toLocaleString("en-IN")}
+              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" /> {activeCitizen.pension_details ? "Settled Employee Share: ₹3,15,000" : `${t.employeeShare}: ₹${empShare.toLocaleString("en-IN")}`}
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" /> {t.employerShare}: ₹{emprShare.toLocaleString("en-IN")}
+              <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" /> {activeCitizen.pension_details ? "Settled Employer Share: ₹2,65,000" : `${t.employerShare}: ₹${emprShare.toLocaleString("en-IN")}`}
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" /> {t.pensionFundShare}: ₹{epsShare.toLocaleString("en-IN")}
+              <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" /> {activeCitizen.pension_details ? "EPS-95 Monthly Pension: ₹4,250/mo" : `${t.pensionFundShare}: ₹${epsShare.toLocaleString("en-IN")}`}
             </span>
           </div>
         </div>
@@ -251,27 +253,39 @@ export default function MySavingsHub() {
         {/* Breakdown Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
           <div className="p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50/40 dark:bg-emerald-950/20">
-            <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 uppercase">{t.employeeShare}</span>
+            <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 uppercase">
+              {activeCitizen.pension_details ? "Monthly EPS-95 Pension" : t.employeeShare}
+            </span>
             <div className="text-lg font-extrabold text-emerald-950 dark:text-emerald-200 font-mono mt-1">
-              ₹{empShare.toLocaleString("en-IN")}
+              {activeCitizen.pension_details ? `₹${activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")}/mo` : `₹${empShare.toLocaleString("en-IN")}`}
             </div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Tax-Free Withdrawable</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+              {activeCitizen.pension_details ? "Direct Bank Deposit (PNB)" : "Tax-Free Withdrawable"}
+            </p>
           </div>
 
           <div className="p-3.5 rounded-xl border border-blue-200 dark:border-blue-800/60 bg-blue-50/40 dark:bg-blue-950/20">
-            <span className="text-[10px] font-bold text-blue-800 dark:text-blue-300 uppercase">{t.employerShare}</span>
+            <span className="text-[10px] font-bold text-blue-800 dark:text-blue-300 uppercase">
+              {activeCitizen.pension_details ? "Annual Pension" : t.employerShare}
+            </span>
             <div className="text-lg font-extrabold text-blue-950 dark:text-blue-200 font-mono mt-1">
-              ₹{emprShare.toLocaleString("en-IN")}
+              {activeCitizen.pension_details ? `₹${(activeCitizen.pension_details.monthly_pension_amount * 12).toLocaleString("en-IN")}/yr` : `₹${emprShare.toLocaleString("en-IN")}`}
             </div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{t.interestAccrualBadge}</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+              {activeCitizen.pension_details ? "Guaranteed for Life" : t.interestAccrualBadge}
+            </p>
           </div>
 
           <div className="p-3.5 rounded-xl border border-amber-200 dark:border-amber-800/60 bg-amber-50/40 dark:bg-amber-950/20">
-            <span className="text-[10px] font-bold text-amber-800 dark:text-amber-300 uppercase">{t.interestAccrualBadge}</span>
+            <span className="text-[10px] font-bold text-amber-800 dark:text-amber-300 uppercase">
+              {activeCitizen.pension_details ? "DLC Status" : t.interestAccrualBadge}
+            </span>
             <div className="text-lg font-extrabold text-amber-950 dark:text-amber-200 font-mono mt-1">
-              ₹{(summary.interest_credited_current_fy || 27400).toLocaleString("en-IN")}
+              {activeCitizen.pension_details ? "Valid (Nov 2026)" : `₹${(summary.interest_credited_current_fy || 27400).toLocaleString("en-IN")}`}
             </div>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Sovereign Yield</p>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">
+              {activeCitizen.pension_details ? "Jeevan Pramaan Active" : "Sovereign Yield"}
+            </p>
           </div>
         </div>
       </div>
@@ -674,72 +688,172 @@ export default function MySavingsHub() {
                 </tr>
               ))}
 
-              {/* Standard Monthly ECR Credits */}
-              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
-                <td className="p-3 font-mono text-slate-600 dark:text-slate-400">14-Jul-2026</td>
-                <td className="p-3 font-medium text-slate-900 dark:text-white">
-                  <span>Monthly Wage Contribution (ECR Challan #98234)</span>
-                  <span className="block text-[10px] text-slate-500 dark:text-slate-400">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
-                </td>
-                <td className="p-3">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700">
-                    CREDIT (Salary)
-                  </span>
-                </td>
-                <td className="p-3 font-mono font-bold text-emerald-700 dark:text-emerald-400">
-                  + ₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")}
-                </td>
-                <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
-                  Deposit on 14-Jul-2026 (On-Time)
-                </td>
-                <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
-                  ₹{totalBal.toLocaleString("en-IN")}
-                </td>
-              </tr>
+              {/* Senior Pensioner EPS-95 Ledger OR Standard Monthly ECR Credits */}
+              {activeCitizen.pension_details ? (
+                <>
+                  <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
+                    <td className="p-3 font-mono text-slate-600 dark:text-slate-400">01-Aug-2026</td>
+                    <td className="p-3 font-medium text-slate-900 dark:text-white">
+                      <span>Monthly EPS-95 Pension Credit (PPO #{activeCitizen.pension_details.ppo_number})</span>
+                      <span className="block text-[10px] text-slate-500 dark:text-slate-400">Direct Benefit Transfer • Punjab National Bank (A/c ending 7890)</span>
+                    </td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
+                        CREDIT (Pension)
+                      </span>
+                    </td>
+                    <td className="p-3 font-mono font-bold text-amber-700 dark:text-amber-400">
+                      + ₹{activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")}
+                    </td>
+                    <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                      <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> Disbursed (DLC Active)
+                      </span>
+                    </td>
+                    <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                      ₹{activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")} / mo
+                    </td>
+                  </tr>
 
-              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
-                <td className="p-3 font-mono text-slate-600 dark:text-slate-400">12-Jun-2026</td>
-                <td className="p-3 font-medium text-slate-900 dark:text-white">
-                  <span>Monthly Wage Contribution (ECR Challan #97102)</span>
-                  <span className="block text-[10px] text-slate-500 dark:text-slate-400">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
-                </td>
-                <td className="p-3">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700">
-                    CREDIT (Salary)
-                  </span>
-                </td>
-                <td className="p-3 font-mono font-bold text-emerald-700 dark:text-emerald-400">
-                  + ₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")}
-                </td>
-                <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
-                  Deposit on 12-Jun-2026 (On-Time)
-                </td>
-                <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
-                  ₹{(totalBal - ((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12)).toLocaleString("en-IN")}
-                </td>
-              </tr>
+                  <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
+                    <td className="p-3 font-mono text-slate-600 dark:text-slate-400">01-Jul-2026</td>
+                    <td className="p-3 font-medium text-slate-900 dark:text-white">
+                      <span>Monthly EPS-95 Pension Credit (PPO #{activeCitizen.pension_details.ppo_number})</span>
+                      <span className="block text-[10px] text-slate-500 dark:text-slate-400">Direct Benefit Transfer • Punjab National Bank (A/c ending 7890)</span>
+                    </td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
+                        CREDIT (Pension)
+                      </span>
+                    </td>
+                    <td className="p-3 font-mono font-bold text-amber-700 dark:text-amber-400">
+                      + ₹{activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")}
+                    </td>
+                    <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                      <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> Disbursed (On-Time)
+                      </span>
+                    </td>
+                    <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                      ₹{activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")} / mo
+                    </td>
+                  </tr>
 
-              <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
-                <td className="p-3 font-mono text-slate-600 dark:text-slate-400">31-Mar-2026</td>
-                <td className="p-3 font-medium text-slate-900 dark:text-white">
-                  <span>FY 2025-26 Annual Statutory Interest Credit (8.25%)</span>
-                  <span className="block text-[10px] text-slate-500 dark:text-slate-400">EPFO Central Board of Trustees Annual Compound Settlement</span>
-                </td>
-                <td className="p-3">
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
-                    CREDIT (Interest)
-                  </span>
-                </td>
-                <td className="p-3 font-mono font-bold text-amber-700 dark:text-amber-400">
-                  + ₹{(activeCitizen.passbook_summary?.interest_credited_current_fy || 27400).toLocaleString("en-IN")}
-                </td>
-                <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
-                  Central CBT Statutory Order #2026-EPF-825
-                </td>
-                <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
-                  ₹{(totalBal - 58000).toLocaleString("en-IN")}
-                </td>
-              </tr>
+                  <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
+                    <td className="p-3 font-mono text-slate-600 dark:text-slate-400">01-Jun-2026</td>
+                    <td className="p-3 font-medium text-slate-900 dark:text-white">
+                      <span>Monthly EPS-95 Pension Credit (PPO #{activeCitizen.pension_details.ppo_number})</span>
+                      <span className="block text-[10px] text-slate-500 dark:text-slate-400">Direct Benefit Transfer • Punjab National Bank (A/c ending 7890)</span>
+                    </td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
+                        CREDIT (Pension)
+                      </span>
+                    </td>
+                    <td className="p-3 font-mono font-bold text-amber-700 dark:text-amber-400">
+                      + ₹{activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")}
+                    </td>
+                    <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                      <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> Disbursed (On-Time)
+                      </span>
+                    </td>
+                    <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                      ₹{activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")} / mo
+                    </td>
+                  </tr>
+
+                  <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200 bg-slate-50/50 dark:bg-slate-800/20">
+                    <td className="p-3 font-mono text-slate-600 dark:text-slate-400">31-Jan-2018</td>
+                    <td className="p-3 font-medium text-slate-900 dark:text-white">
+                      <span>Final Superannuation Full Settlement (Form 19 & 10C)</span>
+                      <span className="block text-[10px] text-slate-500 dark:text-slate-400">Accumulated EPF Employee & Employer Corpus Disbursed at Retirement</span>
+                    </td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200 border border-purple-300 dark:border-purple-700">
+                        FULL SETTLEMENT
+                      </span>
+                    </td>
+                    <td className="p-3 font-mono font-bold text-purple-700 dark:text-purple-400">
+                      ₹5,80,000
+                    </td>
+                    <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                      Disbursed at Superannuation
+                    </td>
+                    <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                      ₹0 (Corpus Settled)
+                    </td>
+                  </tr>
+                </>
+              ) : (
+                <>
+                  <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
+                    <td className="p-3 font-mono text-slate-600 dark:text-slate-400">14-Jul-2026</td>
+                    <td className="p-3 font-medium text-slate-900 dark:text-white">
+                      <span>Monthly Wage Contribution (ECR Challan #98234)</span>
+                      <span className="block text-[10px] text-slate-500 dark:text-slate-400">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
+                    </td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700">
+                        CREDIT (Salary)
+                      </span>
+                    </td>
+                    <td className="p-3 font-mono font-bold text-emerald-700 dark:text-emerald-400">
+                      + ₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")}
+                    </td>
+                    <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                      Deposit on 14-Jul-2026 (On-Time)
+                    </td>
+                    <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                      ₹{totalBal.toLocaleString("en-IN")}
+                    </td>
+                  </tr>
+
+                  <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
+                    <td className="p-3 font-mono text-slate-600 dark:text-slate-400">12-Jun-2026</td>
+                    <td className="p-3 font-medium text-slate-900 dark:text-white">
+                      <span>Monthly Wage Contribution (ECR Challan #97102)</span>
+                      <span className="block text-[10px] text-slate-500 dark:text-slate-400">{activeCitizen.active_employment?.establishment_name || "Precision Auto Components"}</span>
+                    </td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 border border-emerald-300 dark:border-emerald-700">
+                        CREDIT (Salary)
+                      </span>
+                    </td>
+                    <td className="p-3 font-mono font-bold text-emerald-700 dark:text-emerald-400">
+                      + ₹{((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12).toLocaleString("en-IN")}
+                    </td>
+                    <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                      Deposit on 12-Jun-2026 (On-Time)
+                    </td>
+                    <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                      ₹{(totalBal - ((activeCitizen.passbook_summary?.monthly_wage || 26000) * 0.12)).toLocaleString("en-IN")}
+                    </td>
+                  </tr>
+
+                  <tr className="hover:bg-slate-50 dark:hover:bg-slate-800/40 text-slate-800 dark:text-slate-200">
+                    <td className="p-3 font-mono text-slate-600 dark:text-slate-400">31-Mar-2026</td>
+                    <td className="p-3 font-medium text-slate-900 dark:text-white">
+                      <span>FY 2025-26 Annual Statutory Interest Credit (8.25%)</span>
+                      <span className="block text-[10px] text-slate-500 dark:text-slate-400">EPFO Central Board of Trustees Annual Compound Settlement</span>
+                    </td>
+                    <td className="p-3">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200 border border-amber-300 dark:border-amber-700">
+                        CREDIT (Interest)
+                      </span>
+                    </td>
+                    <td className="p-3 font-mono font-bold text-amber-700 dark:text-amber-400">
+                      + ₹{(activeCitizen.passbook_summary?.interest_credited_current_fy || 27400).toLocaleString("en-IN")}
+                    </td>
+                    <td className="p-3 text-slate-600 dark:text-slate-400 text-[11px]">
+                      Central CBT Statutory Order #2026-EPF-825
+                    </td>
+                    <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
+                      ₹{Math.max(0, totalBal - 58000).toLocaleString("en-IN")}
+                    </td>
+                  </tr>
+                </>
+              )}
             </tbody>
           </table>
         </div>

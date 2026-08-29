@@ -730,7 +730,7 @@ export default function CitizenLandingPage() {
           <div className="bg-white/5 backdrop-blur-md border border-white/15 p-5 rounded-2xl w-full lg:w-80 shadow-2xl space-y-3 shrink-0">
             <div className="flex justify-between items-center text-xs text-slate-300">
               <div className="flex items-center gap-1.5">
-                <span>{t.totalBalanceLabel}</span>
+                <span>{activeCitizen.pension_details ? (t.monthlyPensionLabel || "Monthly EPS-95 Pension") : t.totalBalanceLabel}</span>
                 <button
                   type="button"
                   onClick={togglePrivacyMode}
@@ -745,23 +745,47 @@ export default function CitizenLandingPage() {
             <div className="text-3xl sm:text-4xl font-black tracking-tight font-mono text-white flex items-center">
               {privacyMode ? (
                 <span className="tracking-widest text-slate-300 font-sans select-none">₹ ••••••••</span>
+              ) : activeCitizen.pension_details ? (
+                <span className="text-amber-300">
+                  ₹{activeCitizen.pension_details.monthly_pension_amount.toLocaleString("en-IN")}
+                  <span className="text-sm font-normal text-slate-300 font-sans ml-1.5">/ mo</span>
+                </span>
               ) : (
                 <span>₹{displayBalance.toLocaleString("en-IN")}</span>
               )}
             </div>
             <div className="space-y-2 pt-2 border-t border-white/10 text-xs text-slate-200 font-mono">
-              <div className="flex justify-between items-center">
-                <span className="text-slate-300">{t.employeeShareLabel || "Employee Share (12%):"}</span>
-                <span className="font-bold text-white">
-                  {privacyMode ? "₹ ••••••" : `₹${employeeShare.toLocaleString("en-IN")}`}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-slate-300">{t.fyInterestLabel || "FY Interest (8.25%):"}</span>
-                <span className="font-bold text-amber-300">
-                  {privacyMode ? "₹ •••••" : `₹${interestEarned.toLocaleString("en-IN")}`}
-                </span>
-              </div>
+              {activeCitizen.pension_details ? (
+                <>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Annual Pension (EPS-95):</span>
+                    <span className="font-bold text-white">
+                      {privacyMode ? "₹ ••••••" : `₹${(activeCitizen.pension_details.monthly_pension_amount * 12).toLocaleString("en-IN")} / yr`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Digital Life Certificate:</span>
+                    <span className="font-bold text-emerald-400">
+                      Active (Valid Nov 2026)
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">{t.employeeShareLabel || "Employee Share (12%):"}</span>
+                    <span className="font-bold text-white">
+                      {privacyMode ? "₹ ••••••" : `₹${employeeShare.toLocaleString("en-IN")}`}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">{t.fyInterestLabel || "FY Interest (8.25%):"}</span>
+                    <span className="font-bold text-amber-300">
+                      {privacyMode ? "₹ •••••" : `₹${interestEarned.toLocaleString("en-IN")}`}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
